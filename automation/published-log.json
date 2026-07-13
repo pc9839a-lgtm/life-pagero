@@ -1,0 +1,101 @@
+{
+  "lastPublishedAt": "2026-07-13",
+  "items": [
+    {
+      "slug": "used-car-transfer-documents",
+      "title": "개인 간 중고차 명의이전 준비서류와 확인 순서",
+      "category": "car",
+      "publishedAt": "2026-07-13",
+      "reviewedAt": "2026-07-13",
+      "path": "/car/used-car-transfer-documents/"
+    },
+    {
+      "slug": "early-scrappage-guide",
+      "title": "노후차 조기폐차 지원 대상과 지역 공고 확인 방법",
+      "category": "support",
+      "publishedAt": "2026-07-13",
+      "reviewedAt": "2026-07-13",
+      "path": "/support/early-scrappage-guide/"
+    },
+    {
+      "slug": "car-inspection-reservation",
+      "title": "자동차 검사 예약 순서와 당일 준비물 체크리스트",
+      "category": "car",
+      "publishedAt": "2026-07-13",
+      "reviewedAt": "2026-07-13",
+      "path": "/car/car-inspection-reservation/"
+    },
+    {
+      "slug": "car-inspection-period",
+      "title": "자동차 검사기간 조회 방법과 검사 종류 구분하기",
+      "category": "car",
+      "publishedAt": "2026-07-13",
+      "reviewedAt": "2026-07-13",
+      "path": "/car/car-inspection-period/"
+    },
+    {
+      "slug": "car-inspection-late-penalty",
+      "title": "자동차 검사기간을 넘겼을 때 과태료와 처리 순서",
+      "category": "car",
+      "publishedAt": "2026-07-13",
+      "reviewedAt": "2026-07-13",
+      "path": "/car/car-inspection-late-penalty/"
+    },
+    {
+      "slug": "car-tax-relief-guide",
+      "title": "자동차 취득세·자동차세 감면 대상 확인하는 방법",
+      "category": "support",
+      "publishedAt": "2026-07-13",
+      "reviewedAt": "2026-07-13",
+      "path": "/support/car-tax-relief-guide/"
+    },
+    {
+      "slug": "ev-subsidy-search",
+      "title": "전기차 보조금 지역별 잔여 물량과 지원액 확인 방법",
+      "category": "support",
+      "publishedAt": "2026-07-13",
+      "reviewedAt": "2026-07-13",
+      "path": "/support/ev-subsidy-search/"
+    },
+    {
+      "slug": "government-support-search",
+      "title": "정부 지원사업을 공식 사이트에서 찾는 가장 빠른 방법",
+      "category": "support",
+      "publishedAt": "2026-07-13",
+      "reviewedAt": "2026-07-13",
+      "path": "/support/government-support-search/"
+    },
+    {
+      "slug": "support-eligibility-check",
+      "title": "정부지원사업 대상 조건과 제외요건 정확히 읽는 법",
+      "category": "support",
+      "publishedAt": "2026-07-13",
+      "reviewedAt": "2026-07-13",
+      "path": "/support/support-eligibility-check/"
+    },
+    {
+      "slug": "support-application-documents",
+      "title": "정부지원사업 신청서류 준비 순서와 공고문 체크리스트",
+      "category": "support",
+      "publishedAt": "2026-07-13",
+      "reviewedAt": "2026-07-13",
+      "path": "/support/support-application-documents/"
+    },
+    {
+      "slug": "used-car-online-transfer",
+      "title": "중고차 온라인 이전등록 가능한 조건과 진행 순서",
+      "category": "car",
+      "publishedAt": "2026-07-13",
+      "reviewedAt": "2026-07-13",
+      "path": "/car/used-car-online-transfer/"
+    },
+    {
+      "slug": "used-car-transfer-cost",
+      "title": "중고차 이전비용 계산할 때 포함되는 항목 정리",
+      "category": "car",
+      "publishedAt": "2026-07-13",
+      "reviewedAt": "2026-07-13",
+      "path": "/car/used-car-transfer-cost/"
+    }
+  ]
+}

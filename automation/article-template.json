@@ -1,0 +1,20 @@
+{
+  "title": "12자 이상의 구체적인 제목",
+  "description": "45~180자의 검색 설명. 질문과 해결 범위를 명확히 적습니다.",
+  "slug": "english-kebab-slug",
+  "category": "car",
+  "publishedAt": "2026-07-13",
+  "updatedAt": "2026-07-13",
+  "reviewedAt": "2026-07-13",
+  "author": "생활비서 편집팀",
+  "featured": false,
+  "evergreen": false,
+  "keywords": ["핵심 키워드", "세부 키워드", "질문형 키워드"],
+  "keyPoints": ["핵심 요약 1", "핵심 요약 2", "핵심 요약 3"],
+  "sources": [{ "name": "공식기관명", "url": "https://example.go.kr/", "checkedAt": "2026-07-13" }],
+  "faqs": [{ "question": "질문 1", "answer": "답변 1" }, { "question": "질문 2", "answer": "답변 2" }],
+  "primaryCta": { "label": "관련 안내 확인", "href": "/car/related-slug/" },
+  "officialCta": { "label": "공식 사이트에서 확인", "href": "https://example.go.kr/" },
+  "noindex": false,
+  "body": "도입 문단입니다.\n\n## 첫 번째 소제목\n\n본문을 충분히 작성합니다."
+}
