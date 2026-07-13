@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npm run validate:content && node scripts/build.mjs",
+    "build": "npm run validate:content && node scripts/build.mjs && node scripts/remove-editorial-policy.mjs",
     "dev": "npm run build && npx serve dist",
     "preview": "npx serve dist",
     "validate:content": "node scripts/validate-content.mjs",
-    "check": "npm run validate:content && node --check scripts/build.mjs"
+    "check": "npm run validate:content && node --check scripts/build.mjs && node --check scripts/remove-editorial-policy.mjs"
   },
   "engines": { "node": ">=20" }
 }
