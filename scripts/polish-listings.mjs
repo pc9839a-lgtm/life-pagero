@@ -29,7 +29,7 @@ for (const file of htmlFiles) {
     const image = post.series.parts[0].image;
     const alt = post.series.parts[0].imageAlt || post.title;
     const hrefEscaped = href.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const pattern = new RegExp(`<a class="post-thumb(?: [^"]*)?" href="${hrefEscaped}">[\\s\\S]*?<\\/a>`, 'g');
+    const pattern = new RegExp(`<a class="post-thumb(?: [^"]*)?" href="${hrefEscaped}"[^>]*>[\\s\\S]*?<\\/a>`, 'g');
     const replacement = `<a class="post-thumb has-image" href="${href}"><img src="${esc(image)}" alt="${esc(alt)}" width="520" height="292" loading="lazy" decoding="async"></a>`;
     const next = html.replace(pattern, replacement);
     if (next !== html) {
