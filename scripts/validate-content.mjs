@@ -21,6 +21,24 @@ for (const rel of files) {
   if (!Array.isArray(data.keyPoints) || data.keyPoints.length < 3) errors.push(`${rel}: at least 3 key points required`);
   if (!Array.isArray(data.faqs) || data.faqs.length < 2) errors.push(`${rel}: at least 2 FAQs required`);
   if (!Array.isArray(data.sources) || data.sources.length < 1) errors.push(`${rel}: source required`);
+  if (data.series !== undefined) {
+    const parts = data.series?.parts;
+    if (!Array.isArray(parts) || parts.length !== 3) {
+      errors.push(`${rel}: series must contain exactly 3 parts`);
+    } else {
+      parts.forEach((part, index) => {
+        const label = `series part ${index + 1}`;
+        if (!part.title || part.title.length < 8) errors.push(`${rel}: ${label} title too short`);
+        if (!part.description || part.description.length < 35 || part.description.length > 180) errors.push(`${rel}: ${label} description must be 35-180 chars`);
+        if (!Array.isArray(part.keyPoints) || part.keyPoints.length < 3) errors.push(`${rel}: ${label} needs at least 3 key points`);
+        if (!part.body || part.body.length < 600) errors.push(`${rel}: ${label} body too thin (${(part.body || '').length})`);
+        if (index < 2 && (!part.nextLabel || part.nextLabel.length < 6)) errors.push(`${rel}: ${label} nextLabel required`);
+      });
+      const totalSeriesLength = parts.reduce((sum, part) => sum + (part.body || '').length, 0);
+      if (totalSeriesLength < 1800) errors.push(`${rel}: series total body too thin (${totalSeriesLength})`);
+      if (!data.officialCta?.href || !/^https:\/\//.test(data.officialCta.href)) errors.push(`${rel}: series requires an official HTTPS CTA`);
+    }
+  }
   const urls = (data.sources || []).map((source) => source.url).filter(Boolean);
   if (!urls.some((url) => { try { return official.some((host) => new URL(url).hostname.endsWith(host)); } catch { return false; } })) errors.push(`${rel}: official source required`);
   const text = JSON.stringify(data);
