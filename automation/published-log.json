@@ -11,7 +11,7 @@
     },
     {
       "slug": "early-scrappage-guide",
-      "title": "노후차 조기폐차 지원 대상과 지역 공고 확인 방법",
+      "title": "2026 노후차 조기폐차 지원 대상·신청 순서",
       "category": "support",
       "publishedAt": "2026-07-13",
       "reviewedAt": "2026-07-13",
@@ -43,7 +43,7 @@
     },
     {
       "slug": "car-tax-relief-guide",
-      "title": "자동차 취득세·자동차세 감면 대상 확인하는 방법",
+      "title": "2026 자동차 취득세·자동차세 감면 대상 확인",
       "category": "support",
       "publishedAt": "2026-07-13",
       "reviewedAt": "2026-07-13",
@@ -51,35 +51,35 @@
     },
     {
       "slug": "ev-subsidy-search",
-      "title": "전기차 보조금 지역별 잔여 물량과 지원액 확인 방법",
+      "title": "2026 전기차 보조금 차종별 지원액·지역 잔여예산 조회",
       "category": "support",
       "publishedAt": "2026-07-13",
       "reviewedAt": "2026-07-13",
       "path": "/support/ev-subsidy-search/"
     },
     {
-      "slug": "government-support-search",
-      "title": "정부 지원사업을 공식 사이트에서 찾는 가장 빠른 방법",
+      "slug": "energy-voucher-2026",
+      "title": "2026 에너지바우처 신청기간·대상·사용방법",
       "category": "support",
       "publishedAt": "2026-07-13",
       "reviewedAt": "2026-07-13",
-      "path": "/support/government-support-search/"
+      "path": "/support/energy-voucher-2026/"
     },
     {
-      "slug": "support-eligibility-check",
-      "title": "정부지원사업 대상 조건과 제외요건 정확히 읽는 법",
+      "slug": "earned-income-tax-credit-late-2026",
+      "title": "2026 근로·자녀장려금 기한 후 신청 기간과 방법",
       "category": "support",
       "publishedAt": "2026-07-13",
       "reviewedAt": "2026-07-13",
-      "path": "/support/support-eligibility-check/"
+      "path": "/support/earned-income-tax-credit-late-2026/"
     },
     {
-      "slug": "support-application-documents",
-      "title": "정부지원사업 신청서류 준비 순서와 공고문 체크리스트",
+      "slug": "culture-card-2026",
+      "title": "2026 문화누리카드 발급·재충전·잔액 확인",
       "category": "support",
       "publishedAt": "2026-07-13",
       "reviewedAt": "2026-07-13",
-      "path": "/support/support-application-documents/"
+      "path": "/support/culture-card-2026/"
     },
     {
       "slug": "used-car-online-transfer",
