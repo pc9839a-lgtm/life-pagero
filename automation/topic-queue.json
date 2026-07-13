@@ -4,8 +4,13 @@
     "category": "car",
     "title": "2026 자동차세 연납 신청 시기·할인·환급 확인",
     "priority": 1,
-    "status": "queued",
-    "officialSources": ["https://www.wetax.go.kr/"]
+    "status": "published",
+    "slug": "car-tax-annual-payment-2026",
+    "publishedAt": "2026-07-14",
+    "officialSources": [
+      "https://www.wetax.go.kr/",
+      "https://www.paju.go.kr/news/user/BD_newsView.do?newsSeq=1138&q_ctgCd=1001"
+    ]
   },
   {
     "id": "car-registration-certificate-reissue",
@@ -13,7 +18,10 @@
     "title": "자동차등록증 재발급 온라인·방문 신청 방법",
     "priority": 2,
     "status": "queued",
-    "officialSources": ["https://www.car365.go.kr/", "https://www.gov.kr/"]
+    "officialSources": [
+      "https://www.car365.go.kr/",
+      "https://www.gov.kr/"
+    ]
   },
   {
     "id": "car-joint-ownership-change",
@@ -21,7 +29,10 @@
     "title": "자동차 공동명의 변경 준비서류·취득세 확인",
     "priority": 3,
     "status": "queued",
-    "officialSources": ["https://www.car365.go.kr/", "https://www.wetax.go.kr/"]
+    "officialSources": [
+      "https://www.car365.go.kr/",
+      "https://www.wetax.go.kr/"
+    ]
   },
   {
     "id": "traffic-fine-check",
@@ -29,7 +40,9 @@
     "title": "교통 과태료·범칙금 조회와 납부 방법",
     "priority": 4,
     "status": "queued",
-    "officialSources": ["https://www.efine.go.kr/"]
+    "officialSources": [
+      "https://www.efine.go.kr/"
+    ]
   },
   {
     "id": "license-plate-replacement",
@@ -37,7 +50,9 @@
     "title": "자동차 번호판 교체 사유별 비용·신청서류",
     "priority": 5,
     "status": "queued",
-    "officialSources": ["https://www.car365.go.kr/"]
+    "officialSources": [
+      "https://www.car365.go.kr/"
+    ]
   },
   {
     "id": "car-deregistration-scrap",
@@ -45,7 +60,10 @@
     "title": "폐차 후 자동차 말소등록·세금 환급 확인",
     "priority": 6,
     "status": "queued",
-    "officialSources": ["https://www.car365.go.kr/", "https://www.wetax.go.kr/"]
+    "officialSources": [
+      "https://www.car365.go.kr/",
+      "https://www.wetax.go.kr/"
+    ]
   },
   {
     "id": "ev-charger-subsidy-2026",
@@ -53,7 +71,9 @@
     "title": "2026 전기차 충전시설 설치 지원 대상·신청",
     "priority": 7,
     "status": "queued",
-    "officialSources": ["https://ev.or.kr/"]
+    "officialSources": [
+      "https://ev.or.kr/"
+    ]
   },
   {
     "id": "small-business-management-voucher-2026",
@@ -61,7 +81,10 @@
     "title": "2026 소상공인 경영안정바우처 대상·사용처·신청",
     "priority": 8,
     "status": "queued",
-    "officialSources": ["https://voucher.sbiz24.kr/", "https://www.sbiz24.kr/"]
+    "officialSources": [
+      "https://voucher.sbiz24.kr/",
+      "https://www.sbiz24.kr/"
+    ]
   },
   {
     "id": "national-learning-card-2026",
@@ -69,7 +92,9 @@
     "title": "2026 국민내일배움카드 대상·지원한도·신청방법",
     "priority": 9,
     "status": "queued",
-    "officialSources": ["https://www.work24.go.kr/"]
+    "officialSources": [
+      "https://www.work24.go.kr/"
+    ]
   },
   {
     "id": "durunuri-support-2026",
@@ -77,6 +102,8 @@
     "title": "2026 두루누리 사회보험료 지원 대상·신청방법",
     "priority": 10,
     "status": "queued",
-    "officialSources": ["https://www.insurancesupport.or.kr/"]
+    "officialSources": [
+      "https://www.insurancesupport.or.kr/"
+    ]
   }
 ]
