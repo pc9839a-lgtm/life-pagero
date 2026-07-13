@@ -1,6 +1,6 @@
 {
-  "title": "12자 이상의 구체적인 제목",
-  "description": "45~180자의 검색 설명. 질문과 해결 범위를 명확히 적습니다.",
+  "title": "12자 이상의 구체적인 콘텐츠 대표 제목",
+  "description": "45~180자의 대표 검색 설명. 전체 콘텐츠가 해결하는 질문과 범위를 적습니다.",
   "slug": "english-kebab-slug",
   "category": "car",
   "publishedAt": "2026-07-13",
@@ -10,11 +10,46 @@
   "featured": false,
   "evergreen": false,
   "keywords": ["핵심 키워드", "세부 키워드", "질문형 키워드"],
-  "keyPoints": ["핵심 요약 1", "핵심 요약 2", "핵심 요약 3"],
-  "sources": [{ "name": "공식기관명", "url": "https://example.go.kr/", "checkedAt": "2026-07-13" }],
-  "faqs": [{ "question": "질문 1", "answer": "답변 1" }, { "question": "질문 2", "answer": "답변 2" }],
-  "primaryCta": { "label": "관련 안내 확인", "href": "/car/related-slug/" },
-  "officialCta": { "label": "공식 사이트에서 확인", "href": "https://example.go.kr/" },
+  "keyPoints": ["전체 핵심 요약 1", "전체 핵심 요약 2", "전체 핵심 요약 3"],
+  "sources": [
+    {
+      "name": "공식기관명",
+      "url": "https://example.go.kr/",
+      "checkedAt": "2026-07-13"
+    }
+  ],
+  "faqs": [
+    { "question": "질문 1", "answer": "답변 1" },
+    { "question": "질문 2", "answer": "답변 2" }
+  ],
+  "officialCta": {
+    "label": "공식 사이트에서 확인",
+    "href": "https://example.go.kr/"
+  },
+  "series": {
+    "parts": [
+      {
+        "title": "1단계 제목",
+        "description": "1단계에서 설명할 대상, 기본개념, 우선 확인사항을 35~180자로 적습니다.",
+        "keyPoints": ["1단계 요약 1", "1단계 요약 2", "1단계 요약 3"],
+        "nextLabel": "2단계 내용 확인하기",
+        "body": "600자 이상의 1단계 본문"
+      },
+      {
+        "title": "2단계 제목",
+        "description": "2단계에서 설명할 조회, 비용, 예외조건, 실제 진행순서를 35~180자로 적습니다.",
+        "keyPoints": ["2단계 요약 1", "2단계 요약 2", "2단계 요약 3"],
+        "nextLabel": "3단계 내용 확인하기",
+        "body": "600자 이상의 2단계 본문"
+      },
+      {
+        "title": "3단계 제목",
+        "description": "3단계에서 설명할 준비서류, 신청, 후속조치와 공식 사이트 이동 내용을 적습니다.",
+        "keyPoints": ["3단계 요약 1", "3단계 요약 2", "3단계 요약 3"],
+        "body": "600자 이상의 3단계 본문"
+      }
+    ]
+  },
   "noindex": false,
-  "body": "도입 문단입니다.\n\n## 첫 번째 소제목\n\n본문을 충분히 작성합니다."
+  "body": "세 단계 본문을 합친 1,500자 이상의 전체 원문. 호환성과 검수용으로 유지합니다."
 }
