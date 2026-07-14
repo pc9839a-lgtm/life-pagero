@@ -17,10 +17,13 @@
     "category": "car",
     "title": "자동차등록증 재발급 온라인·방문 신청 방법",
     "priority": 2,
-    "status": "queued",
+    "status": "published",
+    "slug": "car-registration-certificate-reissue",
+    "publishedAt": "2026-07-15",
     "officialSources": [
       "https://www.car365.go.kr/",
-      "https://www.gov.kr/"
+      "https://plus.gov.kr/minwon/",
+      "https://www.law.go.kr/법령/자동차등록규칙"
     ]
   },
   {
