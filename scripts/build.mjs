@@ -4,7 +4,7 @@ import path from 'node:path';
 const ROOT=process.cwd(),DIST=path.join(ROOT,'dist'),PUBLIC=path.join(ROOT,'public'),CONTENT=path.join(ROOT,'content','posts');
 const SITE_URL=(process.env.PUBLIC_SITE_URL||'https://life.pagero.kr').replace(/\/$/,'');
 const EMAIL=process.env.PUBLIC_CONTACT_EMAIL||'info@pagero.kr';
-const ADSENSE=process.env.PUBLIC_ADSENSE_CLIENT||'';
+const ADSENSE=process.env.PUBLIC_ADSENSE_CLIENT||'ca-pub-1906196934401001';
 const SLOTS={top:process.env.PUBLIC_AD_SLOT_TOP||'',mid:process.env.PUBLIC_AD_SLOT_MID||'',bottom:process.env.PUBLIC_AD_SLOT_BOTTOM||''};
 const SITE={name:'생활비서',tagline:'자동차 행정과 생활지원 정책을 쉽게',description:'자동차 세금·검사·이전등록과 정부지원·생활정책을 공식 출처 기반으로 정리하는 생활정보 사이트입니다.'};
 const CAT={car:{label:'자동차 생활행정',short:'자동차',icon:'CAR',desc:'자동차 검사, 이전등록, 세금, 과태료와 차량 관련 지원제도를 정리합니다.'},support:{label:'정부지원·생활정책',short:'지원정책',icon:'GOV',desc:'중앙정부와 지자체 지원사업의 신청 조건과 서류를 안내합니다.'}};
