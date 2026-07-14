@@ -7,4 +7,4 @@ Allow: /
 User-agent: GPTBot
 Disallow: /
 
-Sitemap: https://life.pagero.kr/sitemap-index.xml
+Sitemap: https://life.pagero.kr/sitemap.xml
