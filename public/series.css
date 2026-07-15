@@ -1,1 +1,28 @@
-.series-progress,.series-kicker{display:none!important}.series-photo{margin:0;background:#e9edf3;overflow:hidden;border:1px solid #e1e5ea}.series-photo img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}.series-part-title{margin:0 0 20px;font-size:28px;line-height:1.3;letter-spacing:-.04em;color:#172033}.series-actions{display:grid;grid-template-columns:minmax(120px,.45fr) minmax(210px,1fr);gap:12px;padding:28px 0 8px;margin-top:36px;border-top:1px solid #e3e6eb}.series-actions>span{display:block}.series-actions .wp-button,.series-actions .wp-button-secondary{min-height:52px}.series-next{font-size:16px}.series-next span{font-size:20px;line-height:1}.article-content>.key-summary{margin-top:0}@media(max-width:680px){.series-photo{margin-left:-18px;margin-right:-18px;border-left:0;border-right:0}.series-part-title{font-size:23px}.series-actions{grid-template-columns:1fr}.series-actions>span{display:none}.series-actions .wp-button{order:1}.series-actions .wp-button-secondary{order:2}}
+.series-progress,.series-kicker{display:none!important}
+.series-photo{margin:0;background:#e9edf3;overflow:hidden;border:1px solid #e1e5ea}
+.series-photo img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+.series-part-title{margin:0 0 20px;font-size:28px;line-height:1.3;letter-spacing:-.04em;color:#172033}
+.series-part-description{margin:-10px 0 22px;color:#5f6b7b;font-size:16px}
+.series-full-guide{display:grid;gap:48px}
+.series-full-part{scroll-margin-top:24px}
+.series-full-part+.series-full-part{padding-top:44px;border-top:1px solid #e3e6eb}
+.series-full-part>.series-photo{margin-bottom:26px}
+.series-detail-link{margin:24px 0 0}
+.series-detail-link a{font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.series-actions{display:grid;grid-template-columns:minmax(120px,.45fr) minmax(210px,1fr);gap:12px;padding:28px 0 8px;margin-top:36px;border-top:1px solid #e3e6eb}
+.series-actions>span{display:block}
+.series-actions .wp-button,.series-actions .wp-button-secondary{min-height:52px}
+.series-next{font-size:16px}
+.series-next span{font-size:20px;line-height:1}
+.article-content>.key-summary{margin-top:0}
+@media(max-width:680px){
+  .series-photo{margin-left:-18px;margin-right:-18px;border-left:0;border-right:0}
+  .series-part-title{font-size:23px}
+  .series-part-description{font-size:15px}
+  .series-full-guide{gap:38px}
+  .series-full-part+.series-full-part{padding-top:36px}
+  .series-actions{grid-template-columns:1fr}
+  .series-actions>span{display:none}
+  .series-actions .wp-button{order:1}
+  .series-actions .wp-button-secondary{order:2}
+}
