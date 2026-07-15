@@ -14,6 +14,9 @@ const pagePath = (post, pageNumber) => pageNumber === 1
   : `/${post.category}/${post.slug}/${pageNumber}/`;
 const pageFile = (pathname) => path.join(DIST, pathname.replace(/^\//, ''), 'index.html');
 const count = (html, pattern) => [...html.matchAll(pattern)].length;
+const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, (char) => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+}[char]));
 
 function assertSingle(html, pattern, label, pathname) {
   const matches = count(html, pattern);
@@ -65,14 +68,15 @@ for (const post of posts) {
 
   const baseHtml = fs.readFileSync(baseFile, 'utf8');
   const firstImage = post.series?.parts?.[0]?.image;
+  const escapedFirstImage = firstImage ? escapeHtml(firstImage) : '';
   assertSingle(baseHtml, /<meta\s+name="robots"[^>]*>/gi, 'robots meta tag', basePath);
   assertSingle(baseHtml, /<link\s+rel="canonical"[^>]*>/gi, 'canonical tag', basePath);
   if (!baseHtml.includes('<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">')) {
     throw new Error(`Base article is not indexable: ${basePath}`);
   }
   if (!baseHtml.includes(`<link rel="canonical" href="${baseUrl}">`)) throw new Error(`Invalid base canonical: ${basePath}`);
-  if (firstImage && !baseHtml.includes(`<meta property="og:image" content="${firstImage}">`)) throw new Error(`Missing article og:image: ${basePath}`);
-  if (firstImage && !baseHtml.includes(`<meta name="twitter:image" content="${firstImage}">`)) throw new Error(`Missing article twitter:image: ${basePath}`);
+  if (firstImage && !baseHtml.includes(`<meta property="og:image" content="${escapedFirstImage}">`)) throw new Error(`Missing article og:image: ${basePath}`);
+  if (firstImage && !baseHtml.includes(`<meta name="twitter:image" content="${escapedFirstImage}">`)) throw new Error(`Missing article twitter:image: ${basePath}`);
   if (!baseHtml.includes('"@type":"Article"') || !baseHtml.includes('"image":[')) throw new Error(`Article schema image missing: ${basePath}`);
   if (!baseHtml.includes('"@type":"BreadcrumbList"')) throw new Error(`Breadcrumb schema missing: ${basePath}`);
   if (baseHtml.includes('"@type":"FAQPage"')) throw new Error(`FAQ schema must not describe content shown only on the final continuation page: ${basePath}`);
@@ -101,7 +105,7 @@ for (const post of posts) {
       throw new Error(`Visible progress-stage UI leaked into ${continuationPath}`);
     }
     const part = post.series?.parts?.[pageNumber - 1];
-    if (part?.image && !html.includes(`<img src="${part.image}"`)) throw new Error(`Continuation image missing: ${continuationPath}`);
+    if (part?.image && !html.includes(`<img src="${escapeHtml(part.image)}"`)) throw new Error(`Continuation image missing: ${continuationPath}`);
   }
 }
 
