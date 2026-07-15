@@ -13,6 +13,7 @@ const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((entr
 const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, (char) => ({
   '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 }[char]));
+const safeJson = (value) => JSON.stringify(value).replace(/</g, '\\u003c');
 const canonicalUrl = (pathname) => `${SITE_URL}${pathname}`;
 const pagePath = (post, pageNumber) => pageNumber === 1
   ? `/${post.category}/${post.slug}/`
@@ -32,20 +33,22 @@ function replaceSingleCanonical(html, url) {
 
 function rewriteStructuredData(html, { indexable, image }) {
   let hasBreadcrumb = false;
+  let hasFaq = false;
   html = html.replace(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g, (full, raw) => {
     let data;
     try { data = JSON.parse(raw); } catch { return full; }
     const type = data?.['@type'];
-    if (type === 'FAQPage') return '';
-    if (!indexable && (type === 'Article' || type === 'BreadcrumbList')) return '';
+
+    if (!indexable && ['Article', 'FAQPage', 'BreadcrumbList'].includes(type)) return '';
     if (type === 'Article') {
       data.image = [image];
-      return `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
+      return `<script type="application/ld+json">${safeJson(data)}</script>`;
     }
     if (type === 'BreadcrumbList') hasBreadcrumb = true;
+    if (type === 'FAQPage') hasFaq = true;
     return full;
   });
-  return { html, hasBreadcrumb };
+  return { html, hasBreadcrumb, hasFaq };
 }
 
 function finalizePage({ post, pageNumber, indexable }) {
@@ -81,7 +84,20 @@ function finalizePage({ post, pageNumber, indexable }) {
         { '@type': 'ListItem', position: 3, name: post.title, item: selfUrl },
       ],
     };
-    html = html.replace('</head>', `<script type="application/ld+json">${JSON.stringify(breadcrumb).replace(/</g, '\\u003c')}</script></head>`);
+    html = html.replace('</head>', `<script type="application/ld+json">${safeJson(breadcrumb)}</script></head>`);
+  }
+
+  if (indexable && !structured.hasFaq) {
+    const faq = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: (post.faqs || []).map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      })),
+    };
+    html = html.replace('</head>', `<script type="application/ld+json">${safeJson(faq)}</script></head>`);
   }
 
   fs.writeFileSync(file, html);
@@ -119,4 +135,4 @@ fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap);
 const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap><loc>${SITE_URL}/sitemap.xml</loc><lastmod>${latestDate}</lastmod></sitemap>\n</sitemapindex>\n`;
 fs.writeFileSync(path.join(DIST, 'sitemap-index.xml'), sitemapIndex);
 
-console.log(`SEO finalized: ${posts.length} indexable article(s), ${entries.length} sitemap URL(s); continuation pages are noindex,follow with self-canonical URLs.`);
+console.log(`SEO finalized: ${posts.length} indexable article(s), ${entries.length} sitemap URL(s); complete base pages retain FAQ schema and continuations remain clean self-canonical noindex pages.`);

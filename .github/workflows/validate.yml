@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  schedule:
+    - cron: '17 18 * * *'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -16,14 +19,14 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Validate source
         run: npm run check
       - name: Build and validate output
@@ -47,3 +50,16 @@ jobs:
       - name: Fail when build validation failed
         if: steps.site_build.outputs.status != '0'
         run: exit 1
+      - name: Check official links and external images
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run validate:external 2>&1 | tee external.log
+      - name: Upload external validation log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: external-validation-log
+          path: external.log
+          if-no-files-found: error
+          retention-days: 1
