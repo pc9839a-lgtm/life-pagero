@@ -31,7 +31,9 @@
     "category": "car",
     "title": "자동차 공동명의 변경 준비서류·취득세 확인",
     "priority": 3,
-    "status": "queued",
+    "status": "published",
+    "slug": "car-joint-ownership-change",
+    "publishedAt": "2026-07-16",
     "officialSources": [
       "https://www.car365.go.kr/",
       "https://www.wetax.go.kr/"
