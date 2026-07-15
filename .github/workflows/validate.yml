@@ -25,6 +25,25 @@ jobs:
         with:
           node-version: 20
       - name: Validate source
-        run: npm run check
+        id: source_check
+        shell: bash
+        run: |
+          set +e
+          npm run check > check.log 2>&1
+          status=$?
+          cat check.log
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Upload validation log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-log
+          path: check.log
+          if-no-files-found: error
+          retention-days: 1
+      - name: Fail when source validation failed
+        if: steps.source_check.outputs.status != '0'
+        run: exit 1
       - name: Build and validate output
         run: npm run build
