@@ -43,15 +43,14 @@ async function request(record, method) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
-    const headers = {
-      'user-agent': 'life-pagero-link-validator/1.0',
-      accept: record.types.has('image') ? 'image/avif,image/webp,image/*,*/*;q=0.8' : 'text/html,application/xhtml+xml,application/json,*/*;q=0.8',
-    };
-    if (method === 'GET') headers.range = 'bytes=0-2047';
-
     const response = await fetch(record.url, {
       method,
-      headers,
+      headers: {
+        'user-agent': 'Mozilla/5.0 (compatible; life-pagero-link-validator/1.0)',
+        accept: record.types.has('image')
+          ? 'image/avif,image/webp,image/*,*/*;q=0.8'
+          : 'text/html,application/xhtml+xml,application/json,*/*;q=0.8',
+      },
       redirect: 'follow',
       signal: controller.signal,
     });
@@ -68,12 +67,22 @@ async function inspect(record) {
 
   for (let attempt = 1; attempt <= 2; attempt += 1) {
     try {
-      response = await request(record, 'HEAD');
-      if ([405, 501].includes(response.status)) response = await request(record, 'GET');
+      try {
+        response = await request(record, 'HEAD');
+      } catch (headError) {
+        networkError = headError;
+        response = await request(record, 'GET');
+      }
+
+      if (response.status >= 400) {
+        response = await request(record, 'GET');
+      }
+
       networkError = null;
       break;
     } catch (error) {
       networkError = error;
+      response = undefined;
       if (attempt < 2) await new Promise((resolve) => setTimeout(resolve, 500));
     }
   }
