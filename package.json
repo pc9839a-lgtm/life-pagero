@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/apply-content-updates.mjs && npm run validate:content && node scripts/build.mjs && node scripts/build-series.mjs && node scripts/polish-series.mjs && node scripts/polish-listings.mjs && node scripts/remove-editorial-policy.mjs && node scripts/validate-build-output.mjs",
+    "build": "node scripts/apply-content-updates.mjs && npm run validate:content && node scripts/build.mjs && node scripts/build-series.mjs && node scripts/polish-series.mjs && node scripts/polish-listings.mjs && node scripts/remove-editorial-policy.mjs && node scripts/seo-finalize.mjs && node scripts/validate-build-output.mjs",
     "dev": "npm run build && npx serve dist",
     "preview": "npx serve dist",
     "validate:content": "node scripts/validate-content.mjs",
-    "check": "node --check scripts/apply-content-updates.mjs && node scripts/apply-content-updates.mjs && npm run validate:content && node --check scripts/build.mjs && node --check scripts/build-series.mjs && node --check scripts/polish-series.mjs && node --check scripts/polish-listings.mjs && node --check scripts/remove-editorial-policy.mjs && node --check scripts/validate-build-output.mjs"
+    "check": "node --check scripts/apply-content-updates.mjs && node scripts/apply-content-updates.mjs && npm run validate:content && node --check scripts/build.mjs && node --check scripts/build-series.mjs && node --check scripts/polish-series.mjs && node --check scripts/polish-listings.mjs && node --check scripts/remove-editorial-policy.mjs && node --check scripts/seo-finalize.mjs && node --check scripts/validate-build-output.mjs"
   },
   "engines": {
     "node": ">=20"
