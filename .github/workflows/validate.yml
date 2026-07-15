@@ -51,4 +51,23 @@ jobs:
         if: steps.site_build.outputs.status != '0'
         run: exit 1
       - name: Check official links and external images
-        run: npm run validate:external
+        id: external_check
+        shell: bash
+        run: |
+          set +e
+          npm run validate:external > external.log 2>&1
+          status=$?
+          cat external.log
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Upload external validation log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: external-validation-log
+          path: external.log
+          if-no-files-found: error
+          retention-days: 1
+      - name: Fail when external validation failed
+        if: steps.external_check.outputs.status != '0'
+        run: exit 1
