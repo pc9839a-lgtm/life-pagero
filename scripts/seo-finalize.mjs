@@ -21,8 +21,9 @@ const pagePath = (post, pageNumber) => pageNumber === 1
   : `/${post.category}/${post.slug}/${pageNumber}/`;
 const pageFile = (pathname) => path.join(DIST, pathname.replace(/^\//, ''), 'index.html');
 
-function upsertMeta(html, selector, tag) {
-  const pattern = new RegExp(`<meta ${selector}="[^"]+"[^>]*>`, 'i');
+function upsertMeta(html, attribute, key, tag) {
+  const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = new RegExp(`<meta\\s+${attribute}="${escapedKey}"[^>]*>`, 'i');
   if (pattern.test(html)) return html.replace(pattern, tag);
   return html.replace('</head>', `${tag}</head>`);
 }
@@ -70,13 +71,14 @@ function finalizePage({ post, pageNumber, indexable }) {
   html = upsertMeta(
     html,
     'name',
+    'robots',
     `<meta name="robots" content="${indexable ? 'index,follow,max-image-preview:large,max-snippet:-1' : 'noindex,follow,max-image-preview:large,max-snippet:-1'}">`
   );
-  html = upsertMeta(html, 'property', `<meta property="og:image" content="${escapeHtml(image)}">`);
-  html = upsertMeta(html, 'property', `<meta property="og:image:alt" content="${escapeHtml(imageAlt)}">`);
-  html = upsertMeta(html, 'name', `<meta name="twitter:card" content="summary_large_image">`);
-  html = upsertMeta(html, 'name', `<meta name="twitter:image" content="${escapeHtml(image)}">`);
-  html = upsertMeta(html, 'name', `<meta name="twitter:image:alt" content="${escapeHtml(imageAlt)}">`);
+  html = upsertMeta(html, 'property', 'og:image', `<meta property="og:image" content="${escapeHtml(image)}">`);
+  html = upsertMeta(html, 'property', 'og:image:alt', `<meta property="og:image:alt" content="${escapeHtml(imageAlt)}">`);
+  html = upsertMeta(html, 'name', 'twitter:card', '<meta name="twitter:card" content="summary_large_image">');
+  html = upsertMeta(html, 'name', 'twitter:image', `<meta name="twitter:image" content="${escapeHtml(image)}">`);
+  html = upsertMeta(html, 'name', 'twitter:image:alt', `<meta name="twitter:image:alt" content="${escapeHtml(imageAlt)}">`);
 
   const structured = rewriteStructuredData(html, { indexable, image });
   html = structured.html;
