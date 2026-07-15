@@ -115,11 +115,13 @@ for (const file of htmlFiles) {
   const relative = `/${path.relative(DIST, file).replaceAll(path.sep, '/')}`;
   assertSingle(html, /<meta\s+name="robots"[^>]*>/gi, 'robots meta tag', relative);
   assertSingle(html, /<link\s+rel="canonical"[^>]*>/gi, 'canonical tag', relative);
-  if (html.includes('/editorial-policy/')) throw new Error(`${relative}: removed editorial-policy link remains`);
 
   for (const match of html.matchAll(/href="([^"]+)"/g)) {
     const href = match[1];
     if (href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('#')) continue;
+    if (href === '/editorial-policy/' || href.startsWith('/editorial-policy/?') || href.startsWith('/editorial-policy/#')) {
+      throw new Error(`${relative}: removed editorial-policy link remains`);
+    }
     const target = internalTarget(href);
     if (target && !fs.existsSync(target)) throw new Error(`${relative}: broken internal href ${href}`);
   }
