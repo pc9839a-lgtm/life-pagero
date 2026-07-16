@@ -44,7 +44,9 @@
     "category": "car",
     "title": "교통 과태료·범칙금 조회와 납부 방법",
     "priority": 4,
-    "status": "queued",
+    "status": "published",
+    "slug": "traffic-fine-check-payment",
+    "publishedAt": "2026-07-17",
     "officialSources": [
       "https://www.efine.go.kr/"
     ]
