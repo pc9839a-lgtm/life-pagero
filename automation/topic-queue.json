@@ -56,9 +56,12 @@
     "category": "car",
     "title": "자동차 번호판 교체 사유별 비용·신청서류",
     "priority": 5,
-    "status": "queued",
+    "status": "published",
+    "slug": "license-plate-replacement",
+    "publishedAt": "2026-07-18",
     "officialSources": [
-      "https://www.car365.go.kr/"
+      "https://m.gov.kr/mw/AA020InfoCappView.do?CappBizCD=15000000326&HighCtgCD=A03007",
+      "https://www.law.go.kr/LSW/LsiJoLinkP.do?docType=JO&joNo=003600000&languageType=KO&lsNm=%EC%9E%90%EB%8F%99%EC%B0%A8%EB%93%B1%EB%A1%9D%EA%B7%9C%EC%B9%99&paras=1"
     ]
   },
   {
