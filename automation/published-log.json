@@ -1,6 +1,14 @@
 {
-  "lastPublishedAt": "2026-07-18",
+  "lastPublishedAt": "2026-07-19",
   "items": [
+    {
+      "slug": "car-scrap-deregistration-tax-refund",
+      "title": "폐차 후 자동차 말소등록·세금 환급 확인",
+      "category": "car",
+      "publishedAt": "2026-07-19",
+      "reviewedAt": "2026-07-19",
+      "path": "/car/car-scrap-deregistration-tax-refund/"
+    },
     {
       "slug": "license-plate-replacement",
       "title": "자동차 번호판 교체 사유별 비용·신청서류",

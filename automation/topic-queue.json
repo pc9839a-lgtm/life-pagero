@@ -69,9 +69,12 @@
     "category": "car",
     "title": "폐차 후 자동차 말소등록·세금 환급 확인",
     "priority": 6,
-    "status": "queued",
+    "status": "published",
+    "slug": "car-scrap-deregistration-tax-refund",
+    "publishedAt": "2026-07-19",
     "officialSources": [
-      "https://www.car365.go.kr/",
+      "https://www.car365.go.kr/ccpt/carlife/scrcar/ersrPrcsProcssView.do",
+      "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=15000000329&HighCtgCD=A03007",
       "https://www.wetax.go.kr/"
     ]
   },
