@@ -1,6 +1,14 @@
 {
-  "lastPublishedAt": "2026-07-17",
+  "lastPublishedAt": "2026-07-18",
   "items": [
+    {
+      "slug": "license-plate-replacement",
+      "title": "자동차 번호판 교체 사유별 비용·신청서류",
+      "category": "car",
+      "publishedAt": "2026-07-18",
+      "reviewedAt": "2026-07-18",
+      "path": "/car/license-plate-replacement/"
+    },
     {
       "slug": "traffic-fine-check-payment",
       "title": "교통 과태료·범칙금 조회와 납부 방법",
