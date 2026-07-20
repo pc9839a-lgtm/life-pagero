@@ -117,6 +117,13 @@ for (const post of posts) {
     }
   }
 
+  for (const source of post.sources || []) {
+    const sourceLink = `<a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.name)}</a>`;
+    if (!baseHtml.includes(sourceLink)) {
+      throw new Error(`Base page missing clickable official source "${source.name}": ${basePath}`);
+    }
+  }
+
   if (!urls.includes(baseUrl)) throw new Error(`Indexable article missing from sitemap: ${basePath}`);
 
   const total = Array.isArray(post.series?.parts) ? post.series.parts.length : 1;
