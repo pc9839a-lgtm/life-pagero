@@ -1,6 +1,14 @@
 {
-  "lastPublishedAt": "2026-07-19",
+  "lastPublishedAt": "2026-07-20",
   "items": [
+    {
+      "slug": "ev-charger-installation-subsidy-2026",
+      "title": "2026 전기차 공용 완속충전시설 설치 보조금 신청",
+      "category": "support",
+      "publishedAt": "2026-07-20",
+      "reviewedAt": "2026-07-20",
+      "path": "/support/ev-charger-installation-subsidy-2026/"
+    },
     {
       "slug": "car-scrap-deregistration-tax-refund",
       "title": "폐차 후 자동차 말소등록·세금 환급 확인",
