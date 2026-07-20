@@ -110,19 +110,26 @@
     "category": "support",
     "title": "2026 국민내일배움카드 대상·지원한도·신청방법",
     "priority": 9,
-    "status": "queued",
+    "status": "published",
     "officialSources": [
-      "https://www.work24.go.kr/"
-    ]
+      "https://www.work24.go.kr/hr/h/a/1100/selectIssuGudn.do",
+      "https://m.work24.go.kr/cm/c/f/1100/selecSystInfo.do?currentPageNo=1&recordCountPerPage=10&systClId=SC00000004&systId=SI00000351"
+    ],
+    "slug": "national-learning-card-2026",
+    "publishedAt": "2026-07-20"
   },
   {
     "id": "durunuri-support-2026",
     "category": "support",
     "title": "2026 두루누리 사회보험료 지원 대상·신청방법",
     "priority": 10,
-    "status": "queued",
+    "status": "published",
     "officialSources": [
-      "https://www.insurancesupport.or.kr/"
-    ]
+      "https://www.moel.go.kr/info/publict/publictDataView.do?bbs_seq=20260600516",
+      "https://insurancesupport.or.kr/durunuri/intro.php",
+      "https://www.nps.or.kr/pnsinfo/ntpsklg/getOHAF0006M0.do"
+    ],
+    "slug": "durunuri-social-insurance-support-2026",
+    "publishedAt": "2026-07-20"
   }
 ]
