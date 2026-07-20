@@ -94,13 +94,16 @@
   {
     "id": "small-business-management-voucher-2026",
     "category": "support",
-    "title": "2026 소상공인 경영안정바우처 대상·사용처·신청",
+    "title": "2026 소상공인 경영안정 바우처 25만원 신청·사용처",
     "priority": 8,
-    "status": "queued",
+    "status": "published",
     "officialSources": [
       "https://voucher.sbiz24.kr/",
-      "https://www.sbiz24.kr/"
-    ]
+      "https://www.mss.go.kr/site/smba/ex/bbs/View.do?bcIdx=1065100&cbIdx=310",
+      "https://www.mss.go.kr/site/smba/ex/bbs/View.do?bcIdx=1065091&cbIdx=86"
+    ],
+    "slug": "small-business-management-voucher-2026",
+    "publishedAt": "2026-07-20"
   },
   {
     "id": "national-learning-card-2026",
