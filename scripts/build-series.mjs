@@ -133,16 +133,6 @@ function summary(part) {
   return `<section class="key-summary"><h2>핵심 내용</h2><ul>${part.keyPoints.map((point) => `<li>${escapeHtml(point)}</li>`).join('')}</ul></section>`;
 }
 
-function fullGuide(post) {
-  return `<div class="series-full-guide" data-full-guide="true">${post.series.parts.map((part, index) => {
-    const detailPath = pagePath(post, index + 1);
-    const detailLink = index === 0
-      ? ''
-      : `<p class="series-detail-link"><a href="${detailPath}">${escapeHtml(part.title)}만 따로 보기</a></p>`;
-    return `<section class="series-full-part" data-part="${index + 1}" id="content-${index + 1}">${photo(part, index === 0)}<h2 class="series-part-title">${escapeHtml(part.title)}</h2><p class="series-part-description">${escapeHtml(part.description)}</p>${summary(part)}${index === 1 ? ad('mid') : ''}${markdownToHtml(part.body)}${detailLink}</section>`;
-  }).join('')}</div>`;
-}
-
 function actions(post, part, pageNumber, total) {
   const previousPath = pageNumber > 1 ? pagePath(post, pageNumber - 1) : '';
   const nextPath = pageNumber < total ? pagePath(post, pageNumber + 1) : '';
@@ -157,16 +147,13 @@ function actions(post, part, pageNumber, total) {
 
 function articleShell(post, part, pageNumber, total) {
   const isBase = pageNumber === 1;
+  const isLast = pageNumber === total;
   const headerDescription = isBase ? post.description : part.description;
-  const body = isBase
-    ? `${ad('top')}${fullGuide(post)}`
-    : `${photo(part)}<div class="article-content"><h2 class="series-part-title">${escapeHtml(part.title)}</h2>${summary(part)}${ad('top')}${markdownToHtml(part.body)}${ad('mid')}`;
+  const partContent = `${photo(part, isBase)}<h2 class="series-part-title">${escapeHtml(part.title)}</h2><p class="series-part-description">${escapeHtml(part.description)}</p>${summary(part)}${ad('top')}${markdownToHtml(part.body)}${pageNumber === 2 ? ad('mid') : ''}`;
+  const sourceBlock = sources(post, isBase || isLast);
+  const faqBlock = isBase || isLast ? faqs(post) : '';
 
-  if (isBase) {
-    return `<article class="article-shell">${breadcrumbs(post, pageNumber, part)}<header class="article-header"><span class="badge ${post.category}">${CATEGORY[post.category].short}</span><h1>${escapeHtml(post.title)}</h1><p class="article-dek">${escapeHtml(headerDescription)}</p><div class="article-meta"><span>작성 ${fmtDate(post.publishedAt)}</span><span>수정 ${fmtDate(post.updatedAt)}</span><span>공식자료 확인 ${fmtDate(post.reviewedAt)}</span><span>${escapeHtml(post.author)}</span></div></header><div class="article-content">${body}<div class="disclaimer">생활비서는 정부기관이 아니며 신청 결과를 보장하지 않습니다. 공식 공고와 담당기관 안내를 최종 기준으로 확인하세요.</div>${actions(post, part, pageNumber, total)}${sources(post, true)}${faqs(post)}</div></article>`;
-  }
-
-  return `<article class="article-shell">${breadcrumbs(post, pageNumber, part)}<header class="article-header"><span class="badge ${post.category}">${CATEGORY[post.category].short}</span><h1>${escapeHtml(post.title)}</h1><p class="article-dek">${escapeHtml(headerDescription)}</p><div class="article-meta"><span>작성 ${fmtDate(post.publishedAt)}</span><span>수정 ${fmtDate(post.updatedAt)}</span><span>공식자료 확인 ${fmtDate(post.reviewedAt)}</span><span>${escapeHtml(post.author)}</span></div></header>${body}<div class="disclaimer">생활비서는 정부기관이 아니며 신청 결과를 보장하지 않습니다. 공식 공고와 담당기관 안내를 최종 기준으로 확인하세요.</div>${actions(post, part, pageNumber, total)}${sources(post, pageNumber === total)}${pageNumber === total ? faqs(post) : ''}</div></article>`;
+  return `<article class="article-shell">${breadcrumbs(post, pageNumber, part)}<header class="article-header"><span class="badge ${post.category}">${CATEGORY[post.category].short}</span><h1>${escapeHtml(post.title)}</h1><p class="article-dek">${escapeHtml(headerDescription)}</p><div class="article-meta"><span>작성 ${fmtDate(post.publishedAt)}</span><span>수정 ${fmtDate(post.updatedAt)}</span><span>공식자료 확인 ${fmtDate(post.reviewedAt)}</span><span>${escapeHtml(post.author)}</span></div></header><div class="article-content">${partContent}<div class="disclaimer">생활비서는 정부기관이 아니며 신청 결과를 보장하지 않습니다. 공식 공고와 담당기관 안내를 최종 기준으로 확인하세요.</div>${actions(post, part, pageNumber, total)}${sourceBlock}${faqBlock}</div></article>`;
 }
 
 function replaceSingleTag(html, pattern, tag) {
@@ -251,4 +238,4 @@ for (const post of seriesPosts) {
   post.series.parts.forEach((part, index) => writePage(post, part, index + 1, total, baseHtml));
 }
 
-console.log(`Built ${seriesPosts.length} article series with complete indexable base pages, clean noindex continuations, and no visible progress UI.`);
+console.log(`Built ${seriesPosts.length} article series with one distinct section per page, indexable first pages, and clean noindex continuations.`);
