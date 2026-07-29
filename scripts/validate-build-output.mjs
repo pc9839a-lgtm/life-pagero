@@ -77,7 +77,8 @@ for (const post of posts) {
   if (!fs.existsSync(baseFile)) throw new Error(`Missing base article page: ${basePath}`);
 
   const baseHtml = fs.readFileSync(baseFile, 'utf8');
-  const firstImage = post.series?.parts?.[0]?.image;
+  const firstPart = post.series?.parts?.[0];
+  const firstImage = firstPart?.image;
   const escapedFirstImage = firstImage ? escapeHtml(firstImage) : '';
 
   assertSingle(baseHtml, /<meta\s+name="robots"[^>]*>/gi, 'robots meta tag', basePath);
@@ -102,18 +103,32 @@ for (const post of posts) {
     throw new Error(`Breadcrumb schema missing: ${basePath}`);
   }
   if (!baseHtml.includes('"@type":"FAQPage"')) {
-    throw new Error(`FAQ schema missing from the complete visible base page: ${basePath}`);
+    throw new Error(`FAQ schema missing from the indexable first page: ${basePath}`);
   }
-  if (!baseHtml.includes('class="series-full-guide"') || !baseHtml.includes('data-full-guide="true"')) {
-    throw new Error(`Complete indexable guide missing from base page: ${basePath}`);
+  if (!firstPart) {
+    throw new Error(`First series part missing: ${basePath}`);
+  }
+  if (!baseHtml.includes(`<h2 class="series-part-title">${escapeHtml(firstPart.title)}</h2>`)) {
+    throw new Error(`Base page missing first part title "${firstPart.title}": ${basePath}`);
+  }
+  if (firstImage && !baseHtml.includes(`<img src="${escapedFirstImage}"`)) {
+    throw new Error(`Base page missing first part image: ${basePath}`);
+  }
+  if (baseHtml.includes('class="series-full-guide"') || baseHtml.includes('data-full-guide="true"')) {
+    throw new Error(`Base page still contains the former all-in-one guide wrapper: ${basePath}`);
   }
 
-  for (const [index, part] of post.series.parts.entries()) {
-    if (!baseHtml.includes(`data-part="${index + 1}"`)) {
-      throw new Error(`Base page missing full content part ${index + 1}: ${basePath}`);
+  for (const laterPart of post.series.parts.slice(1)) {
+    if (baseHtml.includes(`<h2 class="series-part-title">${escapeHtml(laterPart.title)}</h2>`)) {
+      throw new Error(`Base page contains continuation content "${laterPart.title}": ${basePath}`);
     }
-    if (!baseHtml.includes(`<h2 class="series-part-title">${escapeHtml(part.title)}</h2>`)) {
-      throw new Error(`Base page missing part title "${part.title}": ${basePath}`);
+  }
+
+  const total = Array.isArray(post.series?.parts) ? post.series.parts.length : 1;
+  if (total > 1) {
+    const nextPath = pagePath(post, 2);
+    if (!baseHtml.includes(`href="${nextPath}"`)) {
+      throw new Error(`Base page missing next-content link: ${basePath}`);
     }
   }
 
@@ -126,7 +141,6 @@ for (const post of posts) {
 
   if (!urls.includes(baseUrl)) throw new Error(`Indexable article missing from sitemap: ${basePath}`);
 
-  const total = Array.isArray(post.series?.parts) ? post.series.parts.length : 1;
   for (let pageNumber = 2; pageNumber <= total; pageNumber += 1) {
     const continuationPath = pagePath(post, pageNumber);
     const continuationUrl = `${SITE_URL}${continuationPath}`;
@@ -155,6 +169,15 @@ for (const post of posts) {
     if (part?.image && !html.includes(`<img src="${escapeHtml(part.image)}"`)) {
       throw new Error(`Continuation image missing: ${continuationPath}`);
     }
+    if (part && !html.includes(`<h2 class="series-part-title">${escapeHtml(part.title)}</h2>`)) {
+      throw new Error(`Continuation page missing its own part title "${part.title}": ${continuationPath}`);
+    }
+    for (const [index, otherPart] of post.series.parts.entries()) {
+      if (index === pageNumber - 1) continue;
+      if (html.includes(`<h2 class="series-part-title">${escapeHtml(otherPart.title)}</h2>`)) {
+        throw new Error(`Continuation page contains another part "${otherPart.title}": ${continuationPath}`);
+      }
+    }
   }
 }
 
@@ -182,4 +205,4 @@ for (const file of htmlFiles) {
   }
 }
 
-console.log(`Build output validated: ${urls.length} sitemap URL(s), ${posts.length} complete base guides, ${htmlFiles.length} HTML file(s), no duplicate SEO tags, progress UI, editorial-policy output, or broken internal links.`);
+console.log(`Build output validated: ${urls.length} sitemap URL(s), ${posts.length} indexable first pages, ${htmlFiles.length} HTML file(s), distinct series content per page, no duplicate SEO tags, progress UI, editorial-policy output, or broken internal links.`);
