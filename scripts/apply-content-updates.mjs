@@ -7,7 +7,6 @@ const CHECK_ONLY = process.argv.includes('--check');
 const bundleDirs = [
   path.join(ROOT, 'automation', 'content-bundle'),
   path.join(ROOT, 'automation', 'inspection-bundle'),
-  path.join(ROOT, 'automation', 'publish-bundle-20260805'),
 ];
 const allowedRoots = [
   path.join(ROOT, 'content'),
