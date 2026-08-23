@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const DIST = path.resolve('dist');
 const CONTENT_ROOT = path.resolve('content/posts');
-const SITE_URL = 'https://life.pagero.kr';
+const SITE_URL = (process.env.PUBLIC_SITE_URL || 'https://pagero.kr/life').replace(/\/$/, '');
 
 const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
   const full = path.join(dir, entry.name);
@@ -38,7 +38,7 @@ function internalTarget(href) {
 
 const requiredOutputs = [
   ['index.html', '<!doctype html>'],
-  ['robots.txt', 'Sitemap: https://life.pagero.kr/sitemap.xml'],
+  ['robots.txt', `Sitemap: ${SITE_URL}/sitemap.xml`],
   ['sitemap.xml', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'],
   ['sitemap-index.xml', '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'],
 ];
