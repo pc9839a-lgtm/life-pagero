@@ -1,6 +1,14 @@
 {
-  "lastPublishedAt": "2026-09-07",
+  "lastPublishedAt": "2026-09-09",
   "items": [
+    {
+      "slug": "heating-energy-support-2026",
+      "title": "2026 겨울 에너지바우처 사용기간·잔액·난방비 사용방법",
+      "category": "support",
+      "publishedAt": "2026-09-09",
+      "reviewedAt": "2026-09-09",
+      "path": "/support/heating-energy-support-2026/"
+    },
     {
       "slug": "flu-vaccination-children-2026",
       "title": "2026-2027 어린이 인플루엔자 무료접종 대상·기간·준비물",
