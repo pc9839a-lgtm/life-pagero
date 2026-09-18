@@ -55,25 +55,6 @@ function readOverrides() {
   return overrides;
 }
 
-function validateBundledJson(relativePath, content, target) {
-  if (!relativePath.endsWith('.json')) return true;
-  try {
-    JSON.parse(content);
-    return true;
-  } catch (error) {
-    if (fs.existsSync(target)) {
-      try {
-        JSON.parse(fs.readFileSync(target, 'utf8'));
-        console.warn(`Skipping malformed bundled JSON for ${relativePath}; preserving valid repository file (${error.message}).`);
-        return false;
-      } catch {
-        // Fall through: neither the bundle nor repository copy is valid.
-      }
-    }
-    throw new Error(`Invalid bundled JSON for ${relativePath}: ${error.message}`);
-  }
-}
-
 let validated = 0;
 let applied = 0;
 const seenTargets = new Set();
@@ -106,10 +87,9 @@ for (const bundleDir of bundleDirs) {
     const target = resolveSafeTarget(relativePath);
     if (seenTargets.has(target)) throw new Error(`Duplicate bundle target: ${relativePath}`);
     seenTargets.add(target);
-    const shouldApply = validateBundledJson(relativePath, content, target);
     validated += 1;
 
-    if (!CHECK_ONLY && shouldApply) {
+    if (!CHECK_ONLY) {
       fs.mkdirSync(path.dirname(target), { recursive: true });
       fs.writeFileSync(target, content, 'utf8');
       applied += 1;
