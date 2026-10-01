@@ -1,5 +1,5 @@
 life-pagero deployment health marker
-updated: 2026-07-13 16:24 KST
+updated: 2026-10-01 10:05 KST
 source: GitHub main branch
 build: npm run build
 output: dist
