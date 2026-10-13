@@ -15,6 +15,17 @@ const allowedRoots = [
 ];
 const overrideFile = path.join(ROOT, 'automation', 'url-overrides.json');
 
+// Keep newer fact-checked edits made directly to these published posts from
+// being replaced by an older compressed content/inspection bundle on deploy.
+// Future bundles with a strictly newer updatedAt still take precedence.
+const PROTECTED_EDITORIAL_POSTS = new Set([
+  'content/posts/car/car-inspection-period.json',
+  'content/posts/car/car-registration-certificate-reissue.json',
+  'content/posts/support/basic-pension-2026.json',
+  'content/posts/support/child-allowance-2026.json',
+]);
+
+
 const isInside = (candidate, parent) => candidate === parent || candidate.startsWith(`${parent}${path.sep}`);
 
 function resolveSafeTarget(relativePath) {
@@ -90,6 +101,17 @@ for (const bundleDir of bundleDirs) {
     validated += 1;
 
     if (!CHECK_ONLY) {
+      const normalized = relativePath.split(path.sep).join('/');
+      if (PROTECTED_EDITORIAL_POSTS.has(normalized) && fs.existsSync(target)) {
+        const current = JSON.parse(fs.readFileSync(target, 'utf8'));
+        const incoming = JSON.parse(content);
+        const currentDate = Date.parse(current.updatedAt || '');
+        const incomingDate = Date.parse(incoming.updatedAt || '');
+        if (Number.isFinite(currentDate) && Number.isFinite(incomingDate) && currentDate >= incomingDate) {
+          console.log('Preserved newer reviewed post:', normalized, current.updatedAt, '(bundle:', incoming.updatedAt + ')');
+          continue;
+        }
+      }
       fs.mkdirSync(path.dirname(target), { recursive: true });
       fs.writeFileSync(target, content, 'utf8');
       applied += 1;
