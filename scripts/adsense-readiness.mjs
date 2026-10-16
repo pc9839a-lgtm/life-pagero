@@ -42,8 +42,8 @@ function rewriteJsonLd(html, post, part, pageNumber, url) {
     }
 
     if (data?.['@type'] === 'Article') {
-      data.headline = part.title;
-      data.description = part.description;
+      data.headline = pageNumber === 1 ? post.title : part.title;
+      data.description = pageNumber === 1 ? post.description : part.description;
       data.mainEntityOfPage = url;
       data.author = {
         '@type': 'Organization',
@@ -61,16 +61,17 @@ function rewriteArticlePage(html, post, part, pageNumber) {
   const pathname = pagePath(post, pageNumber);
   const url = `${SITE_URL}${pathname}`;
   const basePath = pagePath(post, 1);
-  const pageTitle = `${part.title} | 생활비서`;
+  const pageTitle = `${pageNumber === 1 ? post.title : part.title} | 생활비서`;
+  const pageDescription = pageNumber === 1 ? post.description : part.description;
 
   html = replaceSingle(html, /<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(pageTitle)}</title>`);
-  html = replaceSingle(html, /<meta\s+name="description"[^>]*>/i, `<meta name="description" content="${escapeHtml(part.description)}">`);
+  html = replaceSingle(html, /<meta\s+name="description"[^>]*>/i, `<meta name="description" content="${escapeHtml(pageDescription)}">`);
   html = replaceSingle(html, /<meta\s+property="og:title"[^>]*>/i, `<meta property="og:title" content="${escapeHtml(pageTitle)}">`);
-  html = replaceSingle(html, /<meta\s+property="og:description"[^>]*>/i, `<meta property="og:description" content="${escapeHtml(part.description)}">`);
+  html = replaceSingle(html, /<meta\s+property="og:description"[^>]*>/i, `<meta property="og:description" content="${escapeHtml(pageDescription)}">`);
 
   const headerPattern = /(<header class="article-header">[\s\S]*?<span class="badge [^"]+">[\s\S]*?<\/span>)<h1>[\s\S]*?<\/h1>/i;
-  const seriesLink = `<p class="article-series-name"><a href="${basePath}">${escapeHtml(post.title)}</a></p>`;
-  html = html.replace(headerPattern, `$1${seriesLink}<h1>${escapeHtml(part.title)}</h1>`);
+  const seriesLink = pageNumber === 1 ? '' : `<p class="article-series-name"><a href="${basePath}">${escapeHtml(post.title)}</a></p>`;
+  html = html.replace(headerPattern, `$1${seriesLink}<h1>${escapeHtml(pageNumber === 1 ? post.title : part.title)}</h1>`);
 
   html = html.replace(
     /<span>생활비서 편집팀<\/span>/g,
