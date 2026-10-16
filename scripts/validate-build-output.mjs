@@ -118,9 +118,10 @@ for (const post of posts) {
     throw new Error(`Base page still contains the former all-in-one guide wrapper: ${basePath}`);
   }
 
+  // Every substantive section must be visible on the indexable first URL.
   for (const laterPart of post.series.parts.slice(1)) {
-    if (baseHtml.includes(`<h2 class="series-part-title">${escapeHtml(laterPart.title)}</h2>`)) {
-      throw new Error(`Base page contains continuation content "${laterPart.title}": ${basePath}`);
+    if (!baseHtml.includes(`<h2 class="series-part-title">${escapeHtml(laterPart.title)}</h2>`)) {
+      throw new Error(`Base page is missing full-guide section "${laterPart.title}": ${basePath}`);
     }
   }
 
