@@ -149,7 +149,12 @@ function articleShell(post, part, pageNumber, total) {
   const isBase = pageNumber === 1;
   const isLast = pageNumber === total;
   const headerDescription = isBase ? post.description : part.description;
-  const partContent = `${photo(part, isBase)}<h2 class="series-part-title">${escapeHtml(part.title)}</h2><p class="series-part-description">${escapeHtml(part.description)}</p>${summary(part)}${ad('top')}${markdownToHtml(part.body)}${pageNumber === 2 ? ad('mid') : ''}`;
+  // The canonical first URL must contain the COMPLETE guide. Optional
+  // continuation URLs remain available for focused reading, but are noindex.
+  const partsToRender = isBase ? post.series.parts : [part];
+  const partContent = partsToRender.map((section, sectionIndex) =>
+    `${photo(section, isBase && sectionIndex === 0)}<h2 class="series-part-title">${escapeHtml(section.title)}</h2><p class="series-part-description">${escapeHtml(section.description)}</p>${summary(section)}${sectionIndex === 0 ? ad('top') : ''}${markdownToHtml(section.body)}${((isBase && sectionIndex === 1) || pageNumber === 2) ? ad('mid') : ''}`
+  ).join('\n');
   const sourceBlock = sources(post, isBase || isLast);
   const faqBlock = isBase || isLast ? faqs(post) : '';
 
