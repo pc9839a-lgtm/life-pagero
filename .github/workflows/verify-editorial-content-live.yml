@@ -64,6 +64,36 @@ jobs:
               '계산기 합계',
               'article-data-table',
             ],
+            'https://pagero.kr/life/car/car-inspection-reservation/':[
+              '정기검사와 종합검사를 구분해서 예약하는 방법',
+              '공단 검사소와 민간 지정검사소',
+              'article-data-table',
+              'main.kotsa.or.kr/portal/contents.do?menuCode=01010102',
+            ],
+            'https://pagero.kr/life/car/car-inspection-late-penalty/':[
+              '검사기간 초과와 부적합 재검사기간 초과를 구분하세요',
+              '수수료와 과태료는 서로 다른 돈입니다',
+              'article-data-table',
+              'main.kotsa.or.kr/portal/bbs/faq_list.do',
+            ],
+            'https://f90695a0.life-pagero.pages.dev/car/car-inspection-reservation/':[
+              '공단 검사소와 민간 지정검사소',
+              'article-data-table',
+            ],
+            'https://f90695a0.life-pagero.pages.dev/car/car-inspection-late-penalty/':[
+              '수수료와 과태료는 서로 다른 돈입니다',
+              'article-data-table',
+            ],
+            'https://cruiseplay-dyt.pages.dev/blog/cruise-deposit-final-payment-cancellation-guide/':[
+              '같은 날짜에 취소해도 환불액이 달라지는 이유',
+              'royalcaribbean.com/faq/questions/booking-cancellation-refund-policy',
+              'ncl.com/terms',
+            ],
+            'https://cruiseplay-dyt.pages.dev/blog/cruise-onboard-payment-guide/':[
+              "두 번 결제된 것처럼",
+              'royalcaribbean.com/faq/questions/will-holds-be-placed-on-my-credit-card',
+              '99.75',
+            ],
             'https://cruiseplay-dyt.pages.dev/blog/shore-excursion-guide/':[
               '선사 투어와 자유여행의 가장 큰 차이',
               'will-the-ship-wait-for-guests-on-a-shore-excursion',
