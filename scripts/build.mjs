@@ -6,7 +6,7 @@ const DIST = path.join(ROOT, 'dist');
 const PUBLIC = path.join(ROOT, 'public');
 const CONTENT = path.join(ROOT, 'content', 'posts');
 
-const SITE_URL = (process.env.PUBLIC_SITE_URL || 'https://life.pagero.kr').replace(/\/$/, '');
+const SITE_URL = (process.env.PUBLIC_SITE_URL || 'https://pagero.kr/life').replace(/\/$/, '');
 const EMAIL = process.env.PUBLIC_CONTACT_EMAIL || 'info@pagero.kr';
 const ADSENSE_CLIENT = process.env.PUBLIC_ADSENSE_CLIENT || 'ca-pub-1906196934401001';
 const ADSENSE_VERIFY_ENABLED = process.env.PUBLIC_ADSENSE_VERIFY_ENABLED !== 'false';
