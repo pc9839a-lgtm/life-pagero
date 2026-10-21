@@ -64,6 +64,11 @@ jobs:
               '계산기 합계',
               'article-data-table',
             ],
+            'https://cruiseplay-dyt.pages.dev/blog/cruise-cabin-location-guide/':[
+              '선박별 데크플랜에서 시작합니다',
+              'royalcaribbean.com/cruise-ships/harmony-of-the-seas/deck-plans',
+              'www.cdc.gov/yellow-book/hcp/travel-air-sea/motion-sickness.html',
+            ],
             'https://cruiseplay-dyt.pages.dev/blog/cabin-type-comparison/':[
               '보장객실(GTY)',
               'what-is-a-guarantee-stateroom',
