@@ -96,17 +96,21 @@ function markdown(src = '') {
 
   const flushParagraph = () => {
     if (!paragraph.length) return;
-    output.push(`<p>${inline(paragraph.join(' '))}</p>`);
+    output.push('<p>' + inline(paragraph.join(' ')) + '</p>');
     paragraph = [];
   };
   const flushList = () => {
     if (!list) return;
-    output.push(`</${list}>`);
+    output.push('</' + list + '>');
     list = '';
   };
+  const tableCells = line => line.trim()
+    .replace(/^\|/, '').replace(/\|$/, '')
+    .split(/(?<!\\)\|/)
+    .map(v => v.replace(/\\\|/g, '|').trim());
 
-  for (const line of lines) {
-    const trimmed = line.trim();
+  for (let i = 0; i < lines.length; i += 1) {
+    const trimmed = lines[i].trim();
     const heading = trimmed.match(/^(#{2,4})\s+(.+)$/);
     const unordered = trimmed.match(/^[-*]\s+(.+)$/);
     const ordered = trimmed.match(/^\d+\.\s+(.+)$/);
@@ -116,10 +120,30 @@ function markdown(src = '') {
       flushList();
       continue;
     }
+    if (trimmed.startsWith('|') && i + 1 < lines.length) {
+      const headers = tableCells(trimmed);
+      const dividers = tableCells(lines[i + 1] || '');
+      if (headers.length >= 2 && headers.length === dividers.length
+          && dividers.every(v => /^:?-{3,}:?$/.test(v))) {
+        flushParagraph();
+        flushList();
+        const headings = headers.map(x => '<th scope="col">' + inline(x) + '</th>').join('');
+        output.push('<div class="article-table-scroll"><table class="article-data-table"><thead><tr>' + headings + '</tr></thead><tbody>');
+        i += 2;
+        for (; i < lines.length && lines[i].trim().startsWith('|'); i += 1) {
+          const cells = tableCells(lines[i]);
+          if (cells.length !== headers.length) break;
+          output.push('<tr>' + cells.map(x => '<td>' + inline(x) + '</td>').join('') + '</tr>');
+        }
+        i -= 1;
+        output.push('</tbody></table></div>');
+        continue;
+      }
+    }
     if (heading) {
       flushParagraph();
       flushList();
-      output.push(`<h${heading[1].length}>${inline(heading[2])}</h${heading[1].length}>`);
+      output.push('<h' + heading[1].length + '>' + inline(heading[2]) + '</h' + heading[1].length + '>');
       continue;
     }
     if (unordered || ordered) {
@@ -128,14 +152,13 @@ function markdown(src = '') {
       if (list !== nextList) {
         flushList();
         list = nextList;
-        output.push(`<${nextList}>`);
+        output.push('<' + nextList + '>');
       }
-      output.push(`<li>${inline((unordered || ordered)[1])}</li>`);
+      output.push('<li>' + inline((unordered || ordered)[1]) + '</li>');
       continue;
     }
     paragraph.push(trimmed);
   }
-
   flushParagraph();
   flushList();
   return output.join('\n');
