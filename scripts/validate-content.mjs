@@ -140,6 +140,33 @@ for (const relative of files) {
     errors.push(`${relative}: official source required`);
   }
 
+  // New articles are held to substantive-source standards. Legacy content is
+  // reported by scripts/editorial-quality-audit.mjs instead of silently deleted.
+  if ((data.publishedAt || '') >= '2026-10-21') {
+    const primarySources = (data.sources || []).filter(source => {
+      if (!isOfficialUrl(source.url)) return false;
+      try {
+        const uri = new URL(source.url);
+        return (uri.pathname && uri.pathname !== '/') || Boolean(uri.search);
+      } catch {return false;}
+    });
+    const distinct = new Set(primarySources.map(source => source.url));
+    if (distinct.size < 2) {
+      errors.push(relative + ': new article needs at least 2 distinct direct official source URLs; homepage URLs alone are insufficient');
+    }
+    const pubTime = Date.parse(data.publishedAt || '');
+    for (const source of primarySources) {
+      const checked = Date.parse(source.checkedAt || '');
+      if (!Number.isFinite(checked) || !Number.isFinite(pubTime)
+          || Math.abs(pubTime - checked) > 31 * 86400000) {
+        errors.push(relative + ': direct source check date must be within 31 days of publication: ' + source.url);
+      }
+    }
+    if (!/(?:사례|예시|상황별|조건별|비교|결정표|선택 기준|계산)/.test(data.body || '')) {
+      errors.push(relative + ': new article needs a case, concrete comparison, decision table or calculation relevant to the topic');
+    }
+  }
+
   const text = JSON.stringify(data);
   for (const phrase of banned) {
     if (text.includes(phrase)) errors.push(`${relative}: banned phrase ${phrase}`);
