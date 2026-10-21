@@ -19,17 +19,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: Check production canonical and ads.txt via real HTTP
+      - name: Check canonical pagero.kr/life proxy and ads.txt via real HTTP
         shell: bash
         run: |
           python - <<'PY'
           import time, urllib.request
-          root = 'https://life.pagero.kr'
+          root = 'https://pagero.kr/life'
           checks = {
-            root + '/': ('text/html', '<link rel="canonical" href="https://life.pagero.kr/">'),
-            root + '/robots.txt': ('text/plain', 'Sitemap: https://life.pagero.kr/sitemap.xml'),
+            root + '/': ('text/html', '<link rel="canonical" href="https://pagero.kr/life/">'),
+            root + '/robots.txt': ('text/plain', 'Sitemap: https://pagero.kr/life/sitemap.xml'),
             root + '/ads.txt': ('text/plain', 'google.com, pub-1906196934401001, DIRECT, f08c47fec0942fa0'),
-            root + '/sitemap.xml': ('xml', '<loc>https://life.pagero.kr/'),
+            root + '/sitemap.xml': ('xml', '<loc>https://pagero.kr/life/'),
           }
           pending = dict(checks)
           for attempt in range(1, 11):
@@ -53,5 +53,5 @@ jobs:
             if attempt < 10: time.sleep(20)
           if pending:
             raise SystemExit('FAIL live production endpoints: ' + ', '.join(pending))
-          print('PASS: real production canonical, robots, sitemap and ads.txt validated', flush=True)
+          print('PASS: live /life proxy canonical, robots, sitemap and ads.txt validated', flush=True)
           PY
