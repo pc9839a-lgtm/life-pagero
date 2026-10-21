@@ -137,7 +137,7 @@ if (!CHECK_ONLY && fs.existsSync(editorialRoot)) {
     // Never merge a reviewed patch into a different category/slug after bundle hydration.
     const pieces = patch.target.replace(/\\/g, '/').split('/');
     const expectedCategory = pieces[2];
-    const expectedSlug = pieces[3]?.replace(/\\.json$/, '');
+    const expectedSlug = pieces[3]?.replace(/\.json$/, '');
     if (article.category !== expectedCategory || article.slug !== expectedSlug) {
       throw new Error(
         'Editorial target has been repurposed by content bundle: ' + patch.target
