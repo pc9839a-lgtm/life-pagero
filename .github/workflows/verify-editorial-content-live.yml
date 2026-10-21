@@ -126,6 +126,17 @@ jobs:
               'article-data-table',
               'car365.go.kr/ccpt/cvlcpt/guid/detailGuidance.do',
             ],
+            'https://dff1958f.life-pagero.pages.dev/support/government-support-search/':[
+              '찾았다',
+              '신청할 수 있다',
+              'article-data-table',
+              'plus.gov.kr/portal/benefitV2/benefitEasyFind',
+            ],
+            'https://dff1958f.life-pagero.pages.dev/support/support-eligibility-check/':[
+              '자격충족·신청완료·선정완료',
+              'article-data-table',
+              'mecar.or.kr/lpm/info/oldCarEarlyScrapping.do',
+            ],
             'https://pagero.kr/life/support/government-support-search/':[
               '찾았다',
               '신청할 수 있다',
