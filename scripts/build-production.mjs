@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 
-const canonicalSiteUrl = process.env.PUBLIC_SITE_URL || 'https://pagero.kr/life';
+const canonicalSiteUrl = process.env.PUBLIC_SITE_URL || 'https://life.pagero.kr';
 const env = {
   ...process.env,
   PUBLIC_SITE_URL: canonicalSiteUrl,
