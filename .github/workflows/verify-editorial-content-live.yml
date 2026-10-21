@@ -20,6 +20,11 @@ jobs:
           python - <<'PY'
           import time, urllib.request
           checks={
+            'https://ed6e9fd0.life-pagero.pages.dev/support/ev-subsidy-search/':[
+              '출고잔여',
+              'article-data-table',
+              'https://ev.or.kr/nportal/buySupprt/initSubsidyPaymentCheckAction.do',
+            ],
             'https://pagero.kr/life/support/ev-subsidy-search/':[
               '출고잔여',
               '2026년 공식 지원 대상',
