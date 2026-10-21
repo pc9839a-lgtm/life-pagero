@@ -31,6 +31,24 @@ jobs:
               'article-data-table',
               'https://ev.or.kr/nportal/buySupprt/initSubsidyPaymentCheckAction.do',
             ],
+            'https://pagero.kr/life/car/used-car-online-transfer/':[
+              '온라인 이전등록 가능 여부부터 확인하는 공식 순서',
+              '자동차365',
+              '정부24',
+              'article-data-table',
+              'www.car365.go.kr/ccpt/cvlcpt/guid/detailGuidance.do',
+              'm.gov.kr/mw/AA020InfoCappView.do',
+            ],
+            'https://1ebdf3ab.life-pagero.pages.dev/car/used-car-online-transfer/':[
+              '온라인 이전등록 가능 여부부터 확인하는 공식 순서',
+              'article-data-table',
+            ],
+            'https://cruiseplay-dyt.pages.dev/blog/first-cruise-common-mistakes/':[
+              '공식 안내를 비교하면',
+              'www.msccruises.com/int/manage-booking/before-you-go/embarkation',
+              'www.royalcaribbean.com/faq/questions/cruise-ship-port-arrival-time',
+              '출항 당일 항공편을 택할 때의 위험 비교',
+            ],
             'https://cruiseplay-dyt.pages.dev/blog/cruise-balcony-cabin-guide/':[
               '실제 이용 1회당 비용',
               'Harmony of the Seas',
