@@ -4,7 +4,7 @@ import path from 'node:path';
 const ROOT = process.cwd();
 const DIST = path.join(ROOT, 'dist');
 const CONTENT = path.join(ROOT, 'content', 'posts');
-const SITE_URL = (process.env.PUBLIC_SITE_URL || 'https://pagero.kr/life').replace(/\/$/, '');
+const SITE_URL = (process.env.PUBLIC_SITE_URL || 'https://life.pagero.kr').replace(/\/$/, '');
 const ADSENSE_CLIENT = process.env.PUBLIC_ADSENSE_CLIENT || 'ca-pub-1906196934401001';
 const ADSENSE_ADS_ENABLED = process.env.PUBLIC_ADSENSE_ADS_ENABLED === 'true';
 const AD_SLOTS = {
