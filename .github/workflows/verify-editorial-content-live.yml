@@ -147,6 +147,21 @@ jobs:
               'msccruises.com/int/manage-booking/before-you-go/cruise-passenger-fee',
               '€80',
             ],
+            'https://cruiseplay-dyt.pages.dev/blog/cruise-muster-drill-guide/':[
+              '안전훈련은 영상만 시청하면 끝나는 것이 아닙니다',
+              'imo.org/en/mediacentre/pressbriefings/pages/45-solas-eif-.aspx',
+              'royalcaribbean.com/faq/questions/muster-drill-onboard-safety',
+            ],
+            'https://cruiseplay-dyt.pages.dev/blog/cruise-all-aboard-time-guide/':[
+              '30분 전 귀선이 모든 기항지의 공식 규칙일까요',
+              'royalcaribbean.com/faq/questions/do-i-need-to-book-a-shore-excursion',
+              'are-the-shore-excursion-times-based-on-the-ship-time',
+            ],
+            'https://cruiseplay-dyt.pages.dev/blog/cruise-onboard-medical-center-guide/':[
+              '선내 의료센터의 한계와 실제 치료비 확인 기준',
+              'cdc.gov/yellow-book/hcp/travel-air-sea/cruise-ship-travel.html',
+              'cdc.gov/yellow-book/hcp/health-care-abroad/travel-insurance.html',
+            ],
             'https://cruiseplay-dyt.pages.dev/blog/cruise-disembarkation-flight-time-guide/':[
               '하선 시 선박의 항구 입항시각',
               'msccruises.com/int/terms-conditions',
