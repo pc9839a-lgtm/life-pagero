@@ -43,6 +43,37 @@ jobs:
               '온라인 이전등록 가능 여부부터 확인하는 공식 순서',
               'article-data-table',
             ],
+            'https://pagero.kr/life/support/car-tax-relief-guide/':[
+              '다자녀 취득세 감면은',
+              '140만 원',
+              '70만 원',
+              '등록일부터 1년 이내',
+              'article-data-table',
+            ],
+            'https://475cfa38.life-pagero.pages.dev/support/car-tax-relief-guide/':[
+              '다자녀 취득세 감면은',
+              'article-data-table',
+            ],
+            'https://pagero.kr/life/car/used-car-transfer-cost/':[
+              '계산기 합계',
+              '1,285,000원',
+              'article-data-table',
+              'regCstCalcView.do',
+            ],
+            'https://475cfa38.life-pagero.pages.dev/car/used-car-transfer-cost/':[
+              '계산기 합계',
+              'article-data-table',
+            ],
+            'https://cruiseplay-dyt.pages.dev/blog/cabin-type-comparison/':[
+              '보장객실(GTY)',
+              'what-is-a-guarantee-stateroom',
+              '시야 제한',
+            ],
+            'https://cruiseplay-dyt.pages.dev/blog/extra-cruise-costs/':[
+              '2026년 MSC 서비스 차지를',
+              '€168',
+              'hotel-service-charge',
+            ],
             'https://cruiseplay-dyt.pages.dev/blog/first-cruise-common-mistakes/':[
               '공식 안내를 비교하면',
               'www.msccruises.com/int/manage-booking/before-you-go/embarkation',
