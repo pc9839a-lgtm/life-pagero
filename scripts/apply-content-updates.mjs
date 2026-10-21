@@ -133,16 +133,20 @@ if (!CHECK_ONLY && fs.existsSync(editorialRoot)) {
     }
     if (!fs.existsSync(target)) throw new Error('Editorial patch target not found: ' + patch.target);
     const article = JSON.parse(fs.readFileSync(target, 'utf8'));
-    if (!Array.isArray(article.series?.parts) || article.series.parts.length < 1) {
-      throw new Error('Editorial patch target missing rich series: ' + patch.target);
-    }
+    // Standalone posts have no series.parts. Preserve their reviewed edits in
+    // the canonical article body; for serialized posts, preserve each part too.
+    const parts = Array.isArray(article.series?.parts) ? article.series.parts : null;
     for (const piece of patch.sections || []) {
-      const part = article.series.parts[piece.partIndex];
-      if (!part || !piece.text || typeof piece.text !== 'string') {
+      if (!piece.text || typeof piece.text !== 'string'
+          || !Number.isInteger(piece.partIndex) || piece.partIndex < 0) {
         throw new Error('Editorial patch section invalid: ' + file);
       }
+      const part = parts ? parts[piece.partIndex] : null;
+      if (parts && !part) {
+        throw new Error('Editorial patch refers to missing series part: ' + file);
+      }
       const heading = piece.text.split('\n')[0].trim();
-      if (!part.body.includes(heading)) {
+      if (part && !part.body.includes(heading)) {
         part.body = part.body.trimEnd() + '\n\n' + piece.text.trim() + '\n';
       }
       if (!article.body?.includes(heading)) {
