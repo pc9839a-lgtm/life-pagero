@@ -184,5 +184,16 @@ jobs:
             if attempt<7:time.sleep(12)
           if pending:
             raise SystemExit('FAIL: published content evidence missing on: '+', '.join(pending))
+          for path, bad_fragment in [
+            ('energy-voucher-2026', '찾았다'),
+            ('earned-income-tax-credit-late-2026', '자격충족·신청완료·선정완료')
+          ]:
+            url='https://pagero.kr/life/support/'+path+'/'
+            req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (compatible; EditorialValueVerify/1.0)','Cache-Control':'no-cache'})
+            with urllib.request.urlopen(req,timeout=15) as response:
+              body=response.read(1600000).decode('utf-8','replace')
+            if bad_fragment in body:
+              raise SystemExit('ERROR: unrelated generic guide text mixed into policy page: '+url)
+            print('PASS policy integrity:',url,flush=True)
           print('PASS: live content has the real sourced article sections and rendered decision table',flush=True)
           PY
