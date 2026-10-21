@@ -50,20 +50,21 @@ function markdownToHtml(markdown) {
   const output = [];
   let paragraph = [];
   let listType = null;
-
   const flushParagraph = () => {
     if (!paragraph.length) return;
-    output.push(`<p>${inlineMarkdown(paragraph.join(' '))}</p>`);
+    output.push('<p>' + inlineMarkdown(paragraph.join(' ')) + '</p>');
     paragraph = [];
   };
   const closeList = () => {
     if (!listType) return;
-    output.push(`</${listType}>`);
+    output.push('</' + listType + '>');
     listType = null;
   };
+  const tableCells = line => line.trim().replace(/^\|/,'').replace(/\|$/,'')
+    .split(/(?<!\\)\|/).map(s => s.replace(/\\\|/g,'|').trim());
 
-  for (const line of lines) {
-    const trimmed = line.trim();
+  for (let i = 0; i < lines.length; i += 1) {
+    const trimmed = lines[i].trim();
     const heading = trimmed.match(/^(#{2,4})\s+(.+)$/);
     const unordered = trimmed.match(/^[-*]\s+(.+)$/);
     const ordered = trimmed.match(/^\d+\.\s+(.+)$/);
@@ -73,29 +74,44 @@ function markdownToHtml(markdown) {
       closeList();
       continue;
     }
+    if (trimmed.startsWith('|') && i + 1 < lines.length) {
+      const headers = tableCells(trimmed);
+      const separators = tableCells(lines[i+1]);
+      if (headers.length >= 2 && headers.length === separators.length
+        && separators.every(x => /^:?-{3,}:?$/.test(x))) {
+        flushParagraph();closeList();
+        output.push('<div class="article-table-scroll"><table class="article-data-table"><thead><tr>' +
+          headers.map(x => '<th scope="col">' + inlineMarkdown(x) + '</th>').join('') + '</tr></thead><tbody>');
+        i += 2;
+        for (; i < lines.length && lines[i].trim().startsWith('|'); i += 1) {
+          const cells = tableCells(lines[i]);
+          if (cells.length !== headers.length) break;
+          output.push('<tr>' + cells.map(x => '<td>' + inlineMarkdown(x) + '</td>').join('') + '</tr>');
+        }
+        i -= 1;
+        output.push('</tbody></table></div>');
+        continue;
+      }
+    }
     if (heading) {
-      flushParagraph();
-      closeList();
-      const level = heading[1].length;
-      output.push(`<h${level}>${inlineMarkdown(heading[2])}</h${level}>`);
+      flushParagraph(); closeList();
+      const level=heading[1].length;
+      output.push('<h' + level + '>' + inlineMarkdown(heading[2]) + '</h' + level + '>');
       continue;
     }
     if (unordered || ordered) {
       flushParagraph();
       const nextType = unordered ? 'ul' : 'ol';
       if (listType !== nextType) {
-        closeList();
-        listType = nextType;
-        output.push(`<${listType}>`);
+        closeList();listType=nextType;
+        output.push('<' + listType + '>');
       }
-      output.push(`<li>${inlineMarkdown((unordered || ordered)[1])}</li>`);
+      output.push('<li>' + inlineMarkdown((unordered||ordered)[1]) + '</li>');
       continue;
     }
     paragraph.push(trimmed);
   }
-
-  flushParagraph();
-  closeList();
+  flushParagraph();closeList();
   return output.join('\n');
 }
 
