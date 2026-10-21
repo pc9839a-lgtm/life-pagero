@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const DIST = path.resolve('dist');
 const CONTENT_ROOT = path.resolve('content/posts');
-const SITE_URL = (process.env.PUBLIC_SITE_URL || 'https://life.pagero.kr').replace(/\/$/, '');
+const SITE_URL = (process.env.PUBLIC_SITE_URL || 'https://pagero.kr/life').replace(/\/$/, '');
 const CONTACT_EMAIL = process.env.PUBLIC_CONTACT_EMAIL || 'info@pagero.kr';
 const ADSENSE_CLIENT = process.env.PUBLIC_ADSENSE_CLIENT || 'ca-pub-1906196934401001';
 const TODAY = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date());
