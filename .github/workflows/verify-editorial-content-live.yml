@@ -114,6 +114,12 @@ jobs:
               '€168',
               'hotel-service-charge',
             ],
+            'https://pagero.kr/life/support/energy-voucher-2026/':[
+              '에너지바우처',
+            ],
+            'https://pagero.kr/life/support/earned-income-tax-credit-late-2026/':[
+              '근로장려금',
+            ],
             'https://pagero.kr/life/support/early-scrappage-guide/':[
               '폐차부터 하면 안 되는 이유',
               '3.5톤 미만·이상 차량',
@@ -125,28 +131,6 @@ jobs:
               '의무보험',
               'article-data-table',
               'car365.go.kr/ccpt/cvlcpt/guid/detailGuidance.do',
-            ],
-            'https://dff1958f.life-pagero.pages.dev/support/government-support-search/':[
-              '찾았다',
-              '신청할 수 있다',
-              'article-data-table',
-              'plus.gov.kr/portal/benefitV2/benefitEasyFind',
-            ],
-            'https://dff1958f.life-pagero.pages.dev/support/support-eligibility-check/':[
-              '자격충족·신청완료·선정완료',
-              'article-data-table',
-              'mecar.or.kr/lpm/info/oldCarEarlyScrapping.do',
-            ],
-            'https://pagero.kr/life/support/government-support-search/':[
-              '찾았다',
-              '신청할 수 있다',
-              'article-data-table',
-              'plus.gov.kr/portal/benefitV2/benefitEasyFind',
-            ],
-            'https://pagero.kr/life/support/support-eligibility-check/':[
-              '자격충족·신청완료·선정완료',
-              'article-data-table',
-              'mecar.or.kr/lpm/info/oldCarEarlyScrapping.do',
             ],
             'https://cruiseplay-dyt.pages.dev/blog/cruise-seasick-tips/':[
               'CDC 2026 가이드',
