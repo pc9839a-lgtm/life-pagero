@@ -119,6 +119,53 @@ for (const bundleDir of bundleDirs) {
   }
 }
 
+// Editorial additions are applied AFTER compressed bundles so reviewed
+// analysis, direct sources and user decision tables cannot silently disappear.
+// Patches are append-only to matching series sections and never change unrelated posts.
+const editorialRoot = path.join(ROOT, 'automation', 'editorial-patches');
+let editorialPatchesApplied = 0;
+if (!CHECK_ONLY && fs.existsSync(editorialRoot)) {
+  for (const file of fs.readdirSync(editorialRoot).filter(name => name.endsWith('.json')).sort()) {
+    const patch = JSON.parse(fs.readFileSync(path.join(editorialRoot, file), 'utf8'));
+    const target = resolveSafeTarget(patch.target);
+    if (!target.startsWith(path.join(ROOT, 'content', 'posts') + path.sep)) {
+      throw new Error('Editorial patch may modify content/posts only: ' + file);
+    }
+    if (!fs.existsSync(target)) throw new Error('Editorial patch target not found: ' + patch.target);
+    const article = JSON.parse(fs.readFileSync(target, 'utf8'));
+    if (!Array.isArray(article.series?.parts) || article.series.parts.length < 1) {
+      throw new Error('Editorial patch target missing rich series: ' + patch.target);
+    }
+    for (const piece of patch.sections || []) {
+      const part = article.series.parts[piece.partIndex];
+      if (!part || !piece.text || typeof piece.text !== 'string') {
+        throw new Error('Editorial patch section invalid: ' + file);
+      }
+      const heading = piece.text.split('\n')[0].trim();
+      if (!part.body.includes(heading)) {
+        part.body = part.body.trimEnd() + '\n\n' + piece.text.trim() + '\n';
+      }
+      if (!article.body?.includes(heading)) {
+        article.body = String(article.body || '').trimEnd() + '\n\n' + piece.text.trim() + '\n';
+      }
+    }
+    const sources = Array.isArray(article.sources) ? article.sources : [];
+    const additions = Array.isArray(patch.sources) ? patch.sources : [];
+    article.sources = [...additions, ...sources].filter((source,index,array) =>
+      array.findIndex(item => item.url === source.url) === index);
+    const incomingDate = Date.parse(patch.updatedAt || '');
+    const currentDate = Date.parse(article.updatedAt || '');
+    if (!Number.isFinite(incomingDate)) throw new Error('Invalid editorial updatedAt: ' + file);
+    if (!Number.isFinite(currentDate) || incomingDate >= currentDate) {
+      article.updatedAt = patch.updatedAt;
+      article.reviewedAt = patch.reviewedAt || article.reviewedAt;
+    }
+    fs.writeFileSync(target, JSON.stringify(article,null,2) + '\n', 'utf8');
+    editorialPatchesApplied += 1;
+    console.log('Preserved verified editorial sections:', patch.target, 'sections:', (patch.sections || []).length);
+  }
+}
+
 const overrides = readOverrides();
 let replacements = 0;
 if (!CHECK_ONLY && Object.keys(overrides).length) {
