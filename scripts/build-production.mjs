@@ -1,6 +1,10 @@
 import { spawnSync } from 'node:child_process';
 
-const canonicalSiteUrl = process.env.PUBLIC_SITE_URL || 'https://life.pagero.kr';
+const canonicalSiteUrl = (process.env.PUBLIC_SITE_URL || 'https://life.pagero.kr').replace(/\/$/, '');
+const expectedSiteUrl = 'https://life.pagero.kr';
+if (canonicalSiteUrl !== expectedSiteUrl) {
+  throw new Error(`Wrong production canonical host: ${canonicalSiteUrl}; expected ${expectedSiteUrl}. Fix PUBLIC_SITE_URL in the Cloudflare Pages deployment configuration.`);
+}
 const env = {
   ...process.env,
   PUBLIC_SITE_URL: canonicalSiteUrl,
