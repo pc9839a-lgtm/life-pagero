@@ -114,6 +114,49 @@ jobs:
               '€168',
               'hotel-service-charge',
             ],
+            'https://pagero.kr/life/support/early-scrappage-guide/':[
+              '폐차부터 하면 안 되는 이유',
+              '3.5톤 미만·이상 차량',
+              'article-data-table',
+              'mecar.or.kr/lpm/info/oldCarEarlyScrapping.do',
+            ],
+            'https://pagero.kr/life/car/used-car-transfer-documents/':[
+              '이전등록 서류를 준비하기 전에 온라인 가능 여부부터 판단',
+              '의무보험',
+              'article-data-table',
+              'car365.go.kr/ccpt/cvlcpt/guid/detailGuidance.do',
+            ],
+            'https://pagero.kr/life/support/government-support-search/':[
+              '찾았다',
+              '신청할 수 있다',
+              'article-data-table',
+              'plus.gov.kr/portal/benefitV2/benefitEasyFind',
+            ],
+            'https://pagero.kr/life/support/support-eligibility-check/':[
+              '자격충족·신청완료·선정완료',
+              'article-data-table',
+              'mecar.or.kr/lpm/info/oldCarEarlyScrapping.do',
+            ],
+            'https://cruiseplay-dyt.pages.dev/blog/cruise-seasick-tips/':[
+              'CDC 2026 가이드',
+              'cdc.gov/yellow-book/hcp/travel-air-sea/motion-sickness.html',
+              'table-wrap',
+            ],
+            'https://cruiseplay-dyt.pages.dev/blog/cruise-travel-insurance-guide/':[
+              '선내 의료비',
+              'cdc.gov/yellow-book/hcp/travel-air-sea/cruise-ship-travel.html',
+              '의료후송',
+            ],
+            'https://cruiseplay-dyt.pages.dev/blog/cruise-cost-breakdown/':[
+              '항로별 기항지 부담금',
+              'msccruises.com/int/manage-booking/before-you-go/cruise-passenger-fee',
+              '€80',
+            ],
+            'https://cruiseplay-dyt.pages.dev/blog/cruise-disembarkation-flight-time-guide/':[
+              '하선 시 선박의 항구 입항시각',
+              'msccruises.com/int/terms-conditions',
+              '6시간',
+            ],
             'https://cruiseplay-dyt.pages.dev/blog/first-cruise-common-mistakes/':[
               '공식 안내를 비교하면',
               'www.msccruises.com/int/manage-booking/before-you-go/embarkation',
