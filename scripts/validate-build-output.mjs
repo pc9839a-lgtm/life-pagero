@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const DIST = path.resolve('dist');
 const CONTENT_ROOT = path.resolve('content/posts');
-const SITE_URL = (process.env.PUBLIC_SITE_URL || 'https://life.pagero.kr').replace(/\/$/, '');
+const SITE_URL = (process.env.PUBLIC_SITE_URL || 'https://pagero.kr/life').replace(/\/$/, '');
 
 const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
   const full = path.join(dir, entry.name);
