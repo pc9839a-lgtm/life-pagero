@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 
-const canonicalSiteUrl = 'https://life.pagero.kr';
+const canonicalSiteUrl = 'https://pagero.kr/life';
 const configuredSiteUrl = (process.env.PUBLIC_SITE_URL || '').replace(/\/$/, '');
 if (configuredSiteUrl && configuredSiteUrl !== canonicalSiteUrl) {
   console.warn(`[seo] Ignoring obsolete PUBLIC_SITE_URL=${configuredSiteUrl}; production canonical is ${canonicalSiteUrl}`);
