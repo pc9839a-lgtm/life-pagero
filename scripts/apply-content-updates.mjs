@@ -133,6 +133,19 @@ if (!CHECK_ONLY && fs.existsSync(editorialRoot)) {
     }
     if (!fs.existsSync(target)) throw new Error('Editorial patch target not found: ' + patch.target);
     const article = JSON.parse(fs.readFileSync(target, 'utf8'));
+    // Content bundles may reuse a historical JSON filename for a NEW public article.
+    // Never merge a reviewed patch into a different category/slug after bundle hydration.
+    const pieces = patch.target.replace(/\\/g, '/').split('/');
+    const expectedCategory = pieces[2];
+    const expectedSlug = pieces[3]?.replace(/\\.json$/, '');
+    if (article.category !== expectedCategory || article.slug !== expectedSlug) {
+      throw new Error(
+        'Editorial target has been repurposed by content bundle: ' + patch.target
+        + ' => ' + article.category + '/' + article.slug
+        + ' (expected ' + expectedCategory + '/' + expectedSlug + ')'
+      );
+    }
+
     // Standalone posts have no series.parts. Preserve their reviewed edits in
     // the canonical article body; for serialized posts, preserve each part too.
     const parts = Array.isArray(article.series?.parts) ? article.series.parts : null;
