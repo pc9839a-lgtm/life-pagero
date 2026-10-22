@@ -1,0 +1,30 @@
+name: Verify LIFE editorial guide archive
+on:
+  push:
+    branches: [main, fix/life-editorial-archive-20261022]
+    paths:
+      - scripts/build.mjs
+      - public/life-editorial-20261022.css
+      - scripts/editorial-home-coverage-check.mjs
+      - .github/workflows/verify-life-editorial-archive.yml
+  pull_request:
+    paths:
+      - scripts/build.mjs
+      - public/life-editorial-20261022.css
+      - scripts/editorial-home-coverage-check.mjs
+      - .github/workflows/verify-life-editorial-archive.yml
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build final publisher pages with curated content patches
+        run: npm run build
+      - name: Prove every published article is visible from editorial homepage
+        run: node scripts/editorial-home-coverage-check.mjs
