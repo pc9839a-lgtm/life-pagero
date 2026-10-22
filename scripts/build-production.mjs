@@ -14,6 +14,7 @@ const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const steps = [
   ['node', ['scripts/apply-content-updates.mjs']],
   ['node', ['scripts/curate-redundant-homepage-citations.mjs']],
+  ['node', ['scripts/curate-published-primary-sources.mjs']],
   [npm, ['run', 'validate:content']],
   ['node', ['scripts/build.mjs']],
   ['node', ['scripts/build-series.mjs']],
