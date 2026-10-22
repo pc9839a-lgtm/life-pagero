@@ -35,10 +35,15 @@ jobs:
           assert.equal(a.common_paragraph_count,0,'Shared long paragraphs added');
           const ids=['car-inspection-period','culture-card-2026','energy-voucher-2026','earned-income-tax-credit-late-2026'];
           for(const slug of ids){
-            const row=a.articles.find(x=>x.file.endsWith('/'+slug+'.json'));
-            assert(row,'Missing selected publicly published post '+slug);
-            const html=fs.readFileSync('dist/'+row.file.replace('content/posts/','').replace('.json','/index.html'),'utf8');
+            // Some historical JSON filenames are deliberately reused by content bundle hydration.
+            // Resolve by the ACTUAL published slug, never assume filename == slug.
+            const row=a.articles.find(x=>{
+              const p=JSON.parse(fs.readFileSync('content/posts/'+x.file,'utf8'));
+              return p.slug===slug;
+            });
+            assert(row,'Missing selected publicly published slug '+slug);
             const doc=JSON.parse(fs.readFileSync('content/posts/'+row.file,'utf8'));
+            const html=fs.readFileSync('dist/'+doc.category+'/'+doc.slug+'/index.html','utf8');
             assert(doc.officialCta?.href,'Original official action missing '+slug);
             assert(html.includes('2026년 10월 23일 확인'),'First-page comparison missing '+slug);
             assert(html.includes('<table'),'First-page comparison table missing '+slug);
