@@ -4,9 +4,9 @@ on:
     branches: [main, fix/adsense-life-primary-source-comparison-20261022]
     paths:
       - scripts/apply-content-updates.mjs
-      - automation/editorial-patches/support-eligibility-check-20261022.json
-      - automation/editorial-patches/government-support-search-20261022.json
-      - automation/editorial-patches/support-application-documents-20261022.json
+      - automation/editorial-patches/emergency-welfare-livelihood-2026-extra.json
+      - automation/editorial-patches/flu-vaccination-children-2026-factfix.json
+      - automation/editorial-patches/disabled-child-allowance-2026-comparison.json
       - scripts/verify-adsense-three-guides.mjs
       - .github/workflows/verify-life-official-comparisons.yml
   pull_request:
@@ -38,7 +38,7 @@ jobs:
           const fs=require('node:fs');
           const audit=JSON.parse(fs.readFileSync('editorial-quality-report.json','utf8'));
           if(audit.flagged>23)throw Error('New source comparisons did not reduce flagged guides from 26 to at most 23');
-          const targets=['support-eligibility-check','government-support-search','support-application-documents'];
+          const targets=['emergency-welfare-livelihood-2026','flu-vaccination-children-2026','disabled-child-allowance-2026'];
           for(const slug of targets){
             const row=audit.articles.find(r=>r.file.includes(slug+'.json'));
             if(!row || row.issue_count)throw Error(slug+' still flagged: '+JSON.stringify(row?.issues));
