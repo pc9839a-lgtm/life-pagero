@@ -23,7 +23,7 @@ jobs:
         with: { node-version: '22' }
       - name: Build published articles, not stale historical source filenames
         run: npm run build
-      - name: Audit 45 articles, remaining generic sources, duplicate text, and 4 original comparisons
+      - name: Audit 45 articles, remaining generic sources, duplicate text, and 5 original comparisons
         run: |
           node scripts/editorial-quality-audit.mjs
           node - <<'JS'
@@ -33,7 +33,7 @@ jobs:
           assert.equal(a.flagged,0,'Unresolved content triage: '+JSON.stringify(a.articles.filter(x=>x.issue_count).map(x=>[x.file,x.issues])));
           assert.equal(a.any_homepage_source,0,'Generic homepage citations remain in published source lists');
           assert.equal(a.common_paragraph_count,0,'Shared long paragraphs added');
-          const ids=['car-inspection-period','culture-card-2026','energy-voucher-2026','earned-income-tax-credit-late-2026'];
+          const ids=['car-inspection-period','culture-card-2026','energy-voucher-2026','earned-income-tax-credit-late-2026','used-car-transfer-cost'];
           for(const slug of ids){
             // Some historical JSON filenames are deliberately reused by content bundle hydration.
             // Resolve by the ACTUAL published slug, never assume filename == slug.
@@ -49,5 +49,5 @@ jobs:
             assert(html.includes('<table'),'First-page comparison table missing '+slug);
             assert(doc.sources.length>=2,'Two specific official records must remain '+slug);
           }
-          console.log('PASS: 45 indexed guides, 0 heuristic source flags, 0 shared long paragraphs; 4 substantive official comparisons in primary HTML');
+          console.log('PASS: 45 indexed guides, 0 heuristic source flags, 0 shared long paragraphs; 5 substantive official comparisons in primary HTML');
           JS
