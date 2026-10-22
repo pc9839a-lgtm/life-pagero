@@ -1,7 +1,7 @@
 name: LIFE original-content review
 on:
   push:
-    branches: [main, fix/adsense-published-quality-audit-20261022]
+    branches: [main]
     paths:
       - .github/workflows/editorial-quality-audit.yml
       - scripts/editorial-quality-audit.mjs
