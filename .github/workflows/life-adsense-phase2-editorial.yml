@@ -1,0 +1,48 @@
+name: LIFE AdSense phase 2 — 18 published guide source quality
+on:
+  push:
+    branches: [main, fix/life-adsense-source-precision-20261023]
+    paths:
+      - scripts/build-production.mjs
+      - scripts/curate-published-primary-sources.mjs
+      - .github/workflows/life-adsense-phase2-editorial.yml
+  pull_request:
+    paths:
+      - scripts/build-production.mjs
+      - scripts/curate-published-primary-sources.mjs
+      - .github/workflows/life-adsense-phase2-editorial.yml
+permissions:
+  contents: read
+jobs:
+  editorial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: Build published articles, not stale historical source filenames
+        run: npm run build
+      - name: Audit 45 articles, remaining generic sources, duplicate text, and 4 original comparisons
+        run: |
+          node scripts/editorial-quality-audit.mjs
+          node - <<'JS'
+          const fs=require('node:fs'),assert=require('node:assert/strict');
+          const a=JSON.parse(fs.readFileSync('editorial-quality-report.json','utf8'));
+          assert.equal(a.article_count,45,'Published article count changed');
+          assert.equal(a.flagged,0,'Unresolved content triage: '+JSON.stringify(a.articles.filter(x=>x.issue_count).map(x=>[x.file,x.issues])));
+          assert.equal(a.any_homepage_source,0,'Generic homepage citations remain in published source lists');
+          assert.equal(a.common_paragraph_count,0,'Shared long paragraphs added');
+          const ids=['car-inspection-period','culture-card-2026','energy-voucher-2026','earned-income-tax-credit-late-2026'];
+          for(const slug of ids){
+            const row=a.articles.find(x=>x.file.endsWith('/'+slug+'.json'));
+            assert(row,'Missing selected publicly published post '+slug);
+            const html=fs.readFileSync('dist/'+row.file.replace('content/posts/','').replace('.json','/index.html'),'utf8');
+            const doc=JSON.parse(fs.readFileSync('content/posts/'+row.file,'utf8'));
+            assert(doc.officialCta?.href,'Original official action missing '+slug);
+            assert(html.includes('2026년 10월 23일 확인'),'First-page comparison missing '+slug);
+            assert(html.includes('<table'),'First-page comparison table missing '+slug);
+            assert(doc.sources.length>=2,'Two specific official records must remain '+slug);
+          }
+          console.log('PASS: 45 indexed guides, 0 heuristic source flags, 0 shared long paragraphs; 4 substantive official comparisons in primary HTML');
+          JS
