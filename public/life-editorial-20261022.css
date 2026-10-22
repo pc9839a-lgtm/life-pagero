@@ -1,0 +1,19 @@
+/* Accessible article archive added to LIFE publisher homepage. */
+.life-archive{margin-top:24px}
+.life-archive .section-header{margin-bottom:23px}
+.life-archive-kicker{margin:0 0 7px;color:#376081;font-size:11px!important;font-weight:750;letter-spacing:.14em}
+.life-archive .section-header h2{margin:0 0 9px}
+.life-archive .section-header p{max-width:770px}
+.life-archive-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+.life-archive-group{min-width:0}
+.life-archive-group h3{font-size:19px;margin:0 0 10px;letter-spacing:-.035em}
+.life-archive-group h3 a{color:#14283b}
+.life-archive-group ul{margin:0;padding:0;list-style:none;border-top:1px solid #dbe3eb}
+.life-archive-group li{border-bottom:1px solid #e5ebf0}
+.life-archive-group li a{display:block;padding:13px 2px 12px;color:#1b3147;text-decoration:none}
+.life-archive-group li a:hover .life-archive-title,.life-archive-group li a:focus-visible .life-archive-title{color:#1769e0;text-decoration:underline;text-underline-offset:3px}
+.life-archive-title{display:block;font-weight:650;line-height:1.55;overflow-wrap:anywhere}
+.life-archive-date{display:block;margin-top:3px;color:#637589;font-size:12px;letter-spacing:-.01em}
+.life-archive-note{font-size:13px;color:#526479;margin:22px 0 0}
+.life-archive-note a{font-weight:700;text-decoration:underline;text-underline-offset:2px}
+@media(max-width:690px){.life-archive-grid{grid-template-columns:1fr;gap:25px}.life-archive{margin-top:17px}.life-archive-group h3{font-size:18px}}
