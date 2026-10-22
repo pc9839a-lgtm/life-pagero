@@ -168,34 +168,7 @@ if (!CHECK_ONLY && fs.existsSync(editorialRoot)) {
     }
     const sources = Array.isArray(article.sources) ? article.sources : [];
     const additions = Array.isArray(patch.sources) ? patch.sources : [];
-    // Explicitly retire generic directory/home URLs only after a reviewed
-    // replacement supplies at least two official record-level sources.
-    const retiredUrls = patch.retireGenericSourceUrls || [];
-    if (!Array.isArray(retiredUrls) || retiredUrls.some(url => typeof url !== 'string')) {
-      throw new Error('Invalid retired source list: ' + file);
-    }
-    if (retiredUrls.length) {
-      const directSources = additions.filter(source => {
-        try {
-          const u = new URL(source.url);
-          return u.protocol === 'https:' && (u.pathname !== '/' || Boolean(u.search));
-        } catch { return false; }
-      });
-      if (new Set(directSources.map(source => source.url)).size < 2) {
-        throw new Error('Retiring homepage sources requires at least two specific official replacement records: ' + file);
-      }
-      for (const retired of retiredUrls) {
-        if (!sources.some(source => source.url === retired)) {
-          throw new Error('Source retirement missing from original post: ' + file + ' ' + retired);
-        }
-        const u = new URL(retired);
-        if (u.pathname !== '/' || u.search) {
-          throw new Error('Refusing to retire non-homepage citation: ' + file + ' ' + retired);
-        }
-      }
-    }
-    const activeSources = sources.filter(source => !retiredUrls.includes(source.url));
-    article.sources = [...additions, ...activeSources].filter((source,index,array) =>
+    article.sources = [...additions, ...sources].filter((source,index,array) =>
       array.findIndex(item => item.url === source.url) === index);
     const incomingDate = Date.parse(patch.updatedAt || '');
     const currentDate = Date.parse(article.updatedAt || '');
