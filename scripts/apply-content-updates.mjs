@@ -146,6 +146,30 @@ if (!CHECK_ONLY && fs.existsSync(editorialRoot)) {
       );
     }
 
+    // Correct verifiably stale claims inside the existing published article,
+    // rather than appending a contradictory paragraph below the incorrect claim.
+    // Exact expected text and article identity are mandatory fail-closed gates.
+    for (const correction of patch.literalCorrections || []) {
+      if (!correction || typeof correction.from !== 'string' || !correction.from
+          || typeof correction.to !== 'string' || !correction.to || correction.from === correction.to) {
+        throw new Error('Invalid correction for editorial patch: ' + file);
+      }
+      let count = 0;
+      const fields = [
+        [article, 'body'], [article, 'description'],
+        ...((article.series?.parts || []).flatMap(part => [[part, 'body'], [part, 'description']]))
+      ];
+      for (const [obj, field] of fields) {
+        const original = String(obj[field] || '');
+        if (!original.includes(correction.from)) continue;
+        count += original.split(correction.from).length - 1;
+        obj[field] = original.split(correction.from).join(correction.to);
+      }
+      if (!count || count > 12) {
+        throw new Error('Expected controlled old fact not found or excessive replacement ('+count+'): '+file+' ['+correction.from+']');
+      }
+      console.log('Corrected reviewed fact:', article.slug, 'occurrences:', count);
+    }
     // Standalone posts have no series.parts. Preserve their reviewed edits in
     // the canonical article body; for serialized posts, preserve each part too.
     const parts = Array.isArray(article.series?.parts) ? article.series.parts : null;
