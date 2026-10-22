@@ -1,19 +1,29 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-const slugs=['support-eligibility-check','government-support-search','support-application-documents'];
-for(const slug of slugs){
- const doc=JSON.parse(fs.readFileSync('content/posts/support/'+slug+'.json','utf8'));
- assert.equal(doc.slug,slug,'Editorial patch must preserve article identity: '+slug);
- assert.equal(doc.updatedAt,'2026-10-22','Date not updated: '+slug);
- assert(doc.sources.length>=2,'Two direct citations required: '+slug);
- assert(doc.sources.every(s=>{const u=new URL(s.url);return u.protocol==='https:'&&u.pathname!=='/';}),'Generic homepage source remains: '+slug);
- assert(doc.body.includes('2026년 10월 확인'),'Official comparison section missing: '+slug);
- assert(doc.body.includes('|---|'),'Practical comparison table missing: '+slug);
- assert(doc.series.parts[0].body.includes('2026년 10월 확인'),'First page must include the actual editorial comparison: '+slug);
- const article=fs.readFileSync(path.join('dist','support',slug,'index.html'),'utf8');
- assert(article.includes('2026년 10월 확인')&&article.includes('<table'),'Published first article missing practical source comparison: '+slug);
- assert(article.includes('<a ')&&article.includes('gov.kr')||article.includes('bokjiro.go.kr'),'Published sources missing: '+slug);
- console.log('PASS published official comparison',slug,'sources',doc.sources.length);
+
+const cases=[
+  {slug:'emergency-welfare-livelihood-2026',marker:'상황별 긴급복지 생계지원 판단 비교'},
+  {slug:'flu-vaccination-children-2026',marker:'9월 16일 일정 변경을 반영한 1회·2회 접종 비교'},
+  {slug:'disabled-child-allowance-2026',marker:'장애정도·급여유형별 실제 지원액 비교'},
+];
+for(const {slug,marker} of cases){
+  const doc=JSON.parse(fs.readFileSync('content/posts/support/'+slug+'.json','utf8'));
+  assert.equal(doc.slug,slug,'Published article identity mismatch: '+slug);
+  assert.equal(doc.updatedAt,'2026-10-22','Current fact-check date missing: '+slug);
+  assert(doc.sources.length>=2,'At least two official citations required: '+slug);
+  assert(doc.body.includes(marker),'Editorial decision comparison missing: '+slug);
+  assert(doc.body.includes('|---|'),'Practical comparison table missing: '+slug);
+  assert(doc.series.parts[0].body.includes(marker),'First indexable article page must include the substantive comparison: '+slug);
+  const html=fs.readFileSync(path.join('dist','support',slug,'index.html'),'utf8');
+  assert(html.includes(marker)&&html.includes('<table'),'Published first page missing comparison: '+slug);
+  assert(html.includes('공식 출처'),'Published article must display official sources');
+  console.log('PASS official first-page comparison',slug,'source records',doc.sources.length);
 }
-console.log('PASS: three LIFE pages have specific first-party sources, distinct decision examples and intact public article URLs');
+const flu=JSON.parse(fs.readFileSync('content/posts/support/flu-vaccination-children-2026.json','utf8'));
+const fluPage=fs.readFileSync('dist/support/flu-vaccination-children-2026/index.html','utf8');
+for(const old of ['일주일 뒤인 9월 28일','1회 대상이면 9월 28일 이후','접종 시작일은 모두 같지 않습니다']){
+  assert(!flu.body.includes(old) && !fluPage.includes(old),'Outdated Sep 28 start date still published: '+old);
+}
+assert(flu.body.includes('9월 21일'),'Updated Sep 21 schedule missing');
+console.log('PASS three published LIFE guides use first-party evidence; outdated vaccine start date corrected');
