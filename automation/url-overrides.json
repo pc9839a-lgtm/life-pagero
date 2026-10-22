@@ -1,3 +1,8 @@
 {
-  "https://www.energyv.or.kr/info/applyInfo.do": "https://www.energyv.or.kr/info/apl_info.do"
+  "https://www.energyv.or.kr/info/applyInfo.do": "https://www.energyv.or.kr/info/apl_info.do",
+  "https://www.law.go.kr/법령/지방세법/제128조": "https://www.law.go.kr/lsInfoP.do?lsId=001649",
+  "https://www.law.go.kr/LSW/LsiJoLinkP.do?docType=JO&joNo=003600000&languageType=KO&lsNm=%EC%9E%90%EB%8F%99%EC%B0%A8%EB%93%B1%EB%A1%9D%EA%B7%9C%EC%B9%99&paras=1": "https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=286693",
+  "https://www.law.go.kr/법령/도로교통법": "https://www.law.go.kr/LSW/lsInfoP.do?lsId=001638",
+  "https://www.law.go.kr/LSW//admRulInfoP.do?admRulSeq=2100000280438&chrClsCd=010201": "https://www.law.go.kr/admRulInfoP.do?admRulSeq=2100000280438",
+  "https://www.law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1029336275": "https://www.law.go.kr/LSW/lsInfoP.do?lsId=000130"
 }
