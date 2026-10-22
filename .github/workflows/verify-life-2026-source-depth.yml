@@ -1,0 +1,66 @@
+name: LIFE 2026 source-depth and decision comparison QA
+on:
+  push:
+    branches: [main, fix/adsense-life-source-quality-batch2-20261022]
+    paths:
+      - scripts/build-production.mjs
+      - scripts/curate-redundant-homepage-citations.mjs
+      - automation/editorial-patches/heating-energy-support-2026-practical-choices.json
+      - automation/editorial-patches/parental-leave-2026-three-scenarios.json
+      - automation/editorial-patches/infant-diaper-formula-2026-decision-guide.json
+      - automation/editorial-patches/car-tax-annual-2026-current-window.json
+      - .github/workflows/verify-life-2026-source-depth.yml
+  pull_request:
+    paths:
+      - scripts/build-production.mjs
+      - scripts/curate-redundant-homepage-citations.mjs
+      - automation/editorial-patches/**
+      - .github/workflows/verify-life-2026-source-depth.yml
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rehydrate content, apply sourced decision tables, and build 45 final public articles
+        run: npm run build
+      - name: Check revised article content and broad source reduction
+        shell: bash
+        run: |
+          node scripts/editorial-quality-audit.mjs
+          node - <<'JS'
+          const fs=require('node:fs');
+          const assert=require('node:assert/strict');
+          const a=JSON.parse(fs.readFileSync('editorial-quality-report.json','utf8'));
+          console.log('SOURCE_QA_SUMMARY',JSON.stringify({articles:a.article_count,flagged:a.flagged,homepage:a.any_homepage_source,duplicateParagraphs:a.common_paragraph_count}));
+          assert.equal(a.article_count,45);
+          assert.equal(a.common_paragraph_count,0);
+          assert(a.flagged<=20,'Expected 3+ formerly flagged cases to be corrected');
+          assert(a.any_homepage_source<20,'Expected to retire at least one redundant homepage citation');
+          const slugs=['heating-energy-support-2026','2026-september-parental-leave-changes','low-income-diaper-formula-support-2026'];
+          for(const slug of slugs){
+            const d=JSON.parse(fs.readFileSync('content/posts/support/'+slug+'.json','utf8'));
+            const html=fs.readFileSync('dist/support/'+slug+'/index.html','utf8');
+            assert.equal(d.updatedAt,'2026-10-22',slug+' date');
+            assert(d.body.includes('2026년 10월 확인'),slug+' comparison heading');
+            assert(d.body.includes('|---|'),slug+' decision table');
+            assert(d.series.parts[0].body.includes('2026년 10월 확인'),slug+' indexable first-page inclusion');
+            assert(html.includes('2026년 10월 확인')&&html.includes('<table'),slug+' published HTML');
+            const row=a.articles.find(x=>x.file.endsWith('/'+slug+'.json'));
+            assert(row && !row.issue_count,slug+' should have no quality warnings: '+JSON.stringify(row?.issues));
+          }
+          const tax=JSON.parse(fs.readFileSync('content/posts/car/car-tax-annual-payment-2026.json','utf8'));
+          const taxhtml=fs.readFileSync('dist/car/car-tax-annual-payment-2026/index.html','utf8');
+          assert.equal(tax.updatedAt,'2026-10-22');
+          assert(tax.body.includes('2026년 10월 기준으로 지금 해야 하는 일'));
+          assert(taxhtml.includes('2027년 1월') && taxhtml.includes('<table'));
+          assert(!tax.body.includes('올해 남은 정기 신청 기회는 9월 연납입니다.'));
+          assert(!taxhtml.includes('2026년 7월 14일 기준으로'));
+          console.log('PASS: no expired September 2026 tax instructions remain on the public indexable article');
+          console.log('PASS: source-supported comparisons exist on indexable first pages, quality improves');
+          JS
