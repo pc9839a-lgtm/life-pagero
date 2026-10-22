@@ -138,7 +138,7 @@ for (const [slug, retireUrls] of expectedHome.entries()) {
   const newRecords = directAdditions[slug] || [];
   for(const record of newRecords) {
     const u = new URL(record.url);
-    if(u.protocol !== 'https:' || u.pathname==='/' || !/^(?:[a-z0-9-]+\.)*(?:go\.kr|or\.kr|gov\.kr)$/.test(u.hostname)) {
+    if(u.protocol !== 'https:' || u.pathname==='/' || !/^(?:(?:[a-z0-9-]+\.)*(?:go\.kr|or\.kr|gov\.kr)|www\.mnuri\.kr)$/.test(u.hostname)) {
       throw Error('Replacement requires specific official record '+slug+' '+record.url);
     }
   }
