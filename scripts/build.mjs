@@ -223,7 +223,7 @@ function page({ pathname, title, description, body, type = 'website', schema = [
     .map((item) => `<script type="application/ld+json">${safe(item)}</script>`)
     .join('');
 
-  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(fullTitle)}</title><meta name="description" content="${esc(description)}"><link rel="canonical" href="${url}"><meta name="robots" content="${noindex ? 'noindex,follow' : 'index,follow,max-image-preview:large,max-snippet:-1'}"><meta property="og:locale" content="ko_KR"><meta property="og:type" content="${type}"><meta property="og:site_name" content="${SITE.name}"><meta property="og:title" content="${esc(fullTitle)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${url}"><meta property="og:image" content="${SITE_URL}/og-default.svg"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.svg"><link rel="manifest" href="/manifest.webmanifest"><link rel="alternate" type="application/rss+xml" href="/rss.xml"><link rel="stylesheet" href="/styles.css">${adsenseVerification()}${json}</head><body>${header(pathname)}<main id="main-content">${body}</main>${footer()}</body></html>`;
+  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(fullTitle)}</title><meta name="description" content="${esc(description)}"><link rel="canonical" href="${url}"><meta name="robots" content="${noindex ? 'noindex,follow' : 'index,follow,max-image-preview:large,max-snippet:-1'}"><meta property="og:locale" content="ko_KR"><meta property="og:type" content="${type}"><meta property="og:site_name" content="${SITE.name}"><meta property="og:title" content="${esc(fullTitle)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${url}"><meta property="og:image" content="${SITE_URL}/og-default.svg"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.svg"><link rel="manifest" href="/manifest.webmanifest"><link rel="alternate" type="application/rss+xml" href="/rss.xml"><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/life-editorial-20261022.css">${adsenseVerification()}${json}</head><body>${header(pathname)}<main id="main-content">${body}</main>${footer()}</body></html>`;
 }
 
 function card(post) {
@@ -286,6 +286,17 @@ function article(post) {
   });
 }
 
+function articleArchive(visiblePosts) {
+  const remaining = posts.filter((post) => !visiblePosts.includes(post));
+  if (!remaining.length) return '';
+  const blocks = Object.entries(CAT).map(([category, meta]) => {
+    const matches = remaining.filter((post) => post.category === category);
+    if (!matches.length) return '';
+    return `<section class="life-archive-group" aria-label="${esc(meta.label)}"><h3><a href="/${category}/">${esc(meta.label)} <span aria-hidden="true">↗</span></a></h3><ul>${matches.map((post) => `<li><a href="/${post.category}/${post.slug}/"><span class="life-archive-title">${esc(post.title)}</span><span class="life-archive-date">공식자료 확인 ${fmt(post.reviewedAt)}</span></a></li>`).join('')}</ul></section>`;
+  }).filter(Boolean).join('');
+  return `<section class="section life-archive" aria-label="전체 생활정보 가이드"><div class="section-header"><div><p class="life-archive-kicker">LIFE EDITORIAL ARCHIVE</p><h2>분야별 생활정보 전체보기</h2><p>추천 글 외에 발행된 가이드도 공식자료 확인일과 함께 살펴볼 수 있습니다. 총 ${posts.length}개 가이드를 직접 연결했습니다.</p></div></div><div class="life-archive-grid">${blocks}</div><p class="life-archive-note">제도·금액·기한은 바뀔 수 있으므로 최종 신청 전에 각 글의 공식자료와 담당기관 공고를 확인하세요. <a href="/editorial-standards/">콘텐츠 작성·검수 기준 ↗</a></p></section>`;
+}
+
 function listing(key) {
   const category = CAT[key];
   const list = posts.filter((post) => post.category === key);
@@ -307,11 +318,12 @@ mkdir(DIST);
 copy(PUBLIC, DIST);
 
 const featured = posts.filter((post) => post.featured).slice(0, 8);
+const homepageFeatured = featured.length ? featured : posts.slice(0, 8);
 write('/', page({
   pathname: '/',
   title: SITE.name,
   description: SITE.description,
-  body: `<div class="site-shell"><div class="content-grid"><div class="main-column"><section class="hero"><span class="hero-kicker">LIFE ADMINISTRATION GUIDE</span><h1>복잡한 생활행정과 지원정책을 쉽게 확인하세요.</h1><p>자동차 검사·이전등록·세금부터 정부와 지자체 지원사업까지 공식 출처와 확인일을 기준으로 정리합니다.</p><div class="hero-actions"><a class="wp-button" href="/car/">자동차 정보 보기</a><a class="wp-button-secondary" href="/support/">지원정책 찾기</a></div></section><section class="section"><div class="category-grid">${Object.entries(CAT).map(([key, category]) => `<article class="category-panel"><span class="category-icon">${category.icon}</span><h3>${category.label}</h3><p>${category.desc}</p><a class="wp-button-secondary" href="/${key}/">${category.short} 글 보기</a></article>`).join('')}</div></section><section class="section"><div class="section-header"><div><h2>최신 확인 콘텐츠</h2><p>공식자료 확인일과 출처를 공개합니다.</p></div></div><div class="post-list">${(featured.length ? featured : posts).map(card).join('')}</div></section></div>${side()}</div></div>`,
+  body: `<div class="site-shell"><div class="content-grid"><div class="main-column"><section class="hero"><span class="hero-kicker">LIFE ADMINISTRATION GUIDE</span><h1>복잡한 생활행정과 지원정책을 쉽게 확인하세요.</h1><p>자동차 검사·이전등록·세금부터 정부와 지자체 지원사업까지 공식 출처와 확인일을 기준으로 정리합니다.</p><div class="hero-actions"><a class="wp-button" href="/car/">자동차 정보 보기</a><a class="wp-button-secondary" href="/support/">지원정책 찾기</a></div></section><section class="section"><div class="category-grid">${Object.entries(CAT).map(([key, category]) => `<article class="category-panel"><span class="category-icon">${category.icon}</span><h3>${category.label}</h3><p>${category.desc}</p><a class="wp-button-secondary" href="/${key}/">${category.short} 글 보기</a></article>`).join('')}</div></section><section class="section"><div class="section-header"><div><h2>최신 확인 콘텐츠</h2><p>공식자료 확인일과 출처를 공개합니다.</p></div></div><div class="post-list">${homepageFeatured.map(card).join('')}</div></section>${articleArchive(homepageFeatured)}</div>${side()}</div></div>`,
 }));
 write('/car/', listing('car'));
 write('/support/', listing('support'));
