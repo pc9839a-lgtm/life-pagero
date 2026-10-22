@@ -1,7 +1,7 @@
 name: LIFE original-content review
 on:
   push:
-    branches: [main]
+    branches: [main, fix/adsense-published-quality-audit-20261022]
     paths:
       - .github/workflows/editorial-quality-audit.yml
       - scripts/editorial-quality-audit.mjs
@@ -22,7 +22,7 @@ jobs:
           node-version: 22
       - name: Audit all public LIFE articles for originality signals
         run: |
-          node --check scripts/editorial-quality-audit.mjs
+          # Audit the actual production-effective content after bundles and verified editorial patches.\n          npm run build\n          node --check scripts/editorial-quality-audit.mjs
           node scripts/editorial-quality-audit.mjs
       - uses: actions/upload-artifact@v4
         with:
