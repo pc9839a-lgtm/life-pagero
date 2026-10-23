@@ -330,7 +330,20 @@ write('/support/', listing('support'));
 for (const post of posts) write(`/${post.category}/${post.slug}/`, article(post));
 
 staticPage('/about/', '사이트 소개', '생활비서 운영 목적과 정보 제공 기준입니다.', `<h1>생활비서는 어떤 사이트인가요?</h1><p>자동차 생활행정과 정부·공공기관의 생활지원 정보를 읽기 쉬운 언어로 정리하는 독립 정보 사이트입니다.</p><h2>정부기관과의 관계</h2><p><strong>정부기관이나 공공기관의 공식 사이트가 아닙니다.</strong> 지원금 지급이나 민원 처리를 대행하지 않으며 결과를 보장하지 않습니다.</p><h2>운영 주체</h2><p>운영: 생활비서 편집팀<br>문의: <a href="mailto:${EMAIL}">${EMAIL}</a></p><h2>작성·검수 방식</h2><p>생활비서 편집팀은 정부 부처·공공기관·지자체가 공개한 안내와 법령을 확인한 뒤 대상, 기간, 금액, 신청 순서를 독자가 대조하기 쉬운 형태로 정리합니다. 각 글에 공식자료 확인일과 원문 링크를 표시하며, 제도 내용이 달라지면 확인일과 수정일을 함께 갱신합니다.</p><p>개별 신청자의 자격을 판정하거나 법률·세무 상담을 제공하지 않습니다. 실제 신청 전에는 글 하단의 공식 출처와 담당기관 안내를 최종 기준으로 확인해야 합니다.</p><h2>오류 수정 원칙</h2><p>공식 출처 변경, 링크 오류, 수치·기간 오류 제보를 확인하면 원문을 다시 대조한 뒤 수정합니다. 오류 제보는 <a href="mailto:${EMAIL}">${EMAIL}</a>로 받을 수 있습니다.</p><h2>광고와 편집의 분리</h2><p>광고주는 글의 선정과 평가에 관여하지 않으며 광고와 본문·이동 버튼을 구분합니다.</p>`);
-staticPage('/privacy-policy/', '개인정보처리방침', '생활비서의 개인정보와 쿠키 처리 안내입니다.', `<h1>개인정보처리방침</h1><p>시행일: 2026년 7월 13일</p><h2>수집 정보</h2><p>회원가입 기능은 없습니다. 서버와 보안 서비스가 접속 로그를 처리할 수 있습니다.</p><h2>쿠키와 광고</h2><p>Google AdSense 적용 시 광고 제공과 성과 측정을 위해 쿠키 또는 유사 기술이 사용될 수 있습니다.</p><h2>문의</h2><p><a href="mailto:${EMAIL}">${EMAIL}</a></p>`);
+staticPage('/privacy-policy/', '개인정보처리방침', '생활비서의 개인정보 및 Google 광고 쿠키·사용자 설정 안내입니다.', `<h1>개인정보처리방침</h1>
+<p>시행일: 2026년 10월 23일</p>
+<p>생활비서는 회원가입 없이 이용할 수 있는 독립 생활정보 사이트입니다. 본 안내는 사이트 접속 과정에서 처리될 수 있는 정보와 광고 관련 기술을 설명합니다.</p>
+<h2>1. 처리될 수 있는 정보</h2>
+<p>사이트 방문 시 호스팅·보안 서비스 제공 과정에서 접속 시각, IP 주소, 브라우저·기기 정보, 요청 URL, 오류·보안 로그 등이 처리될 수 있습니다. 사이트 자체에는 방문자의 회원가입 기능이 없습니다. 이메일 문의 시 이용자가 직접 보낸 이메일 주소와 문의 내용이 답변에 사용될 수 있습니다.</p>
+<h2>2. 광고 및 제3자 쿠키</h2>
+<p>생활비서는 Google AdSense 게시자 확인 스크립트를 사용할 수 있으며, 광고를 실제로 게재하는 경우 Google을 포함한 제3자 광고 사업자가 이전에 방문한 웹사이트 등의 정보를 바탕으로 광고를 제공하기 위해 쿠키를 설정하거나 읽을 수 있습니다. 광고 제공·성과 측정 과정에서 웹 비콘, IP 주소, 기타 온라인 식별자가 사용될 수 있습니다.</p>
+<p>Google 광고 쿠키는 이용자의 본 사이트 또는 다른 사이트 방문 정보를 활용해 Google과 파트너가 광고를 제공하는 데 사용될 수 있습니다. 실제 광고 게재 여부와 무관하게 브라우저 및 광고 관련 설정에 따라 데이터 처리가 달라질 수 있습니다.</p>
+<p>Google의 데이터 사용 방식은 <a href="https://policies.google.com/technologies/partner-sites?hl=ko" target="_blank" rel="noopener noreferrer">Google 파트너 사이트 이용 시 데이터 사용 안내</a>에서 확인할 수 있습니다.</p>
+<h2>3. 광고 개인 맞춤설정 관리</h2>
+<p>이용자는 <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer">Google 광고 설정</a>에서 Google의 개인 맞춤 광고를 관리하거나 해제할 수 있습니다. 다른 참여 광고 사업자에 대해서는 <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">AboutAds 선택 도구</a>를 참고할 수 있습니다. 브라우저에서 쿠키를 차단하거나 삭제할 수도 있습니다.</p>
+<h2>4. 외부 링크와 문의</h2>
+<p>공식 신청·조회 사이트를 여는 경우 해당 외부 사이트의 개인정보 처리기준이 적용됩니다. 생활비서는 외부 기관의 신청 정보나 신청 결과를 대신 수집·처리하지 않습니다.</p>
+<p>개인정보 및 사이트 운영 문의: <a href="mailto:${EMAIL}">${EMAIL}</a>. 공개된 처리 방식에 변경이 있으면 이 페이지의 내용을 갱신합니다.</p>`);
 staticPage('/contact/', '문의', '콘텐츠 오류와 운영 문의 방법입니다.', `<h1>문의</h1><p>내용 오류, 공식 출처 변경, 링크 오류에 관한 문의를 받습니다.</p><p><a class="wp-button" href="mailto:${EMAIL}">${EMAIL}</a></p><p>지원금 신청 대행, 민원 처리, 개별 자격 판정은 제공하지 않습니다.</p>`);
 
 const searchScript = `<script>let i=[];const q=document.querySelector('#page-search'),r=document.querySelector('#search-results'),e=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));fetch('/search-index.json').then(x=>x.json()).then(x=>{i=x;const v=new URLSearchParams(location.search).get('q')||'';q.value=v;if(v)go(v)});function go(v){v=v.trim().toLowerCase();const f=i.filter(p=>[p.title,p.description,...p.keywords].join(' ').toLowerCase().includes(v));r.innerHTML=f.length?f.map(p=>'<article class="search-result"><h2><a href="'+p.url+'">'+e(p.title)+'</a></h2><p>'+e(p.description)+'</p></article>').join(''):'<p>일치하는 글이 없습니다.</p>'}document.querySelector('#page-search-form').addEventListener('submit',x=>{x.preventDefault();go(q.value);history.replaceState(null,'','?q='+encodeURIComponent(q.value))});</script>`;
