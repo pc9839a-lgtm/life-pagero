@@ -252,7 +252,7 @@ for (const slug of decisionPages) {
   if (count(html,/class="reader-decision"/g)!==1) {
     throw new Error('Canonical guide needs exactly one editorial decision table: '+slug);
   }
-  const section=html.match(/<section class="reader-decision"[\\s\\S]*?<\\/section>/)?.[0] || '';
+  const section=html.match(/<section class="reader-decision"[\s\S]*?<\/section>/)?.[0] || '';
   if (!section.includes('공식자료 확인') || count(section,/<tr>/g)<3) {
     throw new Error('Decision table must offer source-dated real next steps: '+slug);
   }
