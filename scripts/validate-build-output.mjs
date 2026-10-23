@@ -206,4 +206,33 @@ for (const file of htmlFiles) {
   }
 }
 
+// AdSense phase 3: validate the generated public privacy notice and identity,
+// not just that the policy URL exists. Never mistake this for Google approval.
+const privacyFile = path.join(DIST, 'privacy-policy', 'index.html');
+if (!fs.existsSync(privacyFile)) throw new Error('Privacy policy output is missing');
+const privacyHtml = fs.readFileSync(privacyFile, 'utf8');
+for (const required of [
+  'Google AdSense', '제3자', '쿠키', '웹 비콘', 'IP 주소',
+  'https://adssettings.google.com/',
+  'https://policies.google.com/technologies/partner-sites',
+]) {
+  if (!privacyHtml.includes(required)) throw new Error(`AdSense privacy disclosure missing: ${required}`);
+}
+const client = process.env.PUBLIC_ADSENSE_CLIENT || 'ca-pub-1906196934401001';
+const publisherId = client.match(/^ca-pub-(\\d+)$/)?.[1];
+if (!publisherId) throw new Error('AdSense publisher client format is invalid');
+const adsTxtFile = path.join(DIST, 'ads.txt');
+if (!fs.existsSync(adsTxtFile)) throw new Error('Publisher ads.txt output is missing');
+const adsTxt = fs.readFileSync(adsTxtFile, 'utf8');
+if (!adsTxt.includes(`google.com, pub-${publisherId}, DIRECT, f08c47fec0942fa0`)) {
+  throw new Error('Publisher ads.txt and PUBLIC_ADSENSE_CLIENT are inconsistent');
+}
+if (process.env.PUBLIC_ADSENSE_ADS_ENABLED !== 'true') {
+  for (const file of htmlFiles) {
+    if (fs.readFileSync(file, 'utf8').includes('data-enabled="true"')) {
+      throw new Error(`Unexpected live ad slot before ads are enabled: ${path.relative(DIST, file)}`);
+    }
+  }
+}
+
 console.log(`Build output validated: ${urls.length} sitemap URL(s), ${posts.length} indexable first pages, ${htmlFiles.length} HTML file(s), distinct series content per page, no duplicate SEO tags, progress UI, editorial-policy output, or broken internal links.`);
