@@ -22,6 +22,7 @@ const steps = [
   ['node', ['scripts/seo-finalize.mjs']],
   ['node', ['scripts/add-naver-verification.mjs']],
   ['node', ['scripts/adsense-readiness.mjs']],
+  ['node', ['scripts/add-reader-decision-guides.mjs']],
   ['node', ['scripts/validate-build-output.mjs']],
 ];
 
