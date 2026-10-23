@@ -235,4 +235,45 @@ if (process.env.PUBLIC_ADSENSE_ADS_ENABLED !== 'true') {
   }
 }
 
+// Editorial value gate: practical scenario tables must appear only on canonical
+// first pages, keep the official-source review dates visible and preserve links.
+const decisionPages = [
+  'car/car-inspection-period',
+  'car/car-inspection-reservation',
+  'car/used-car-transfer-documents',
+  'car/used-car-transfer-cost',
+  'support/child-allowance-2026',
+  'support/parental-benefit-2026',
+  'support/livelihood-benefit-2026',
+  'support/housing-benefit-2026',
+];
+for (const slug of decisionPages) {
+  const html=fs.readFileSync(path.join(DIST,slug,'index.html'),'utf8');
+  if (count(html,/class="reader-decision"/g)!==1) {
+    throw new Error('Canonical guide needs exactly one editorial decision table: '+slug);
+  }
+  const section=html.match(/<section class="reader-decision"[\\s\\S]*?<\\/section>/)?.[0] || '';
+  if (!section.includes('공식자료 확인') || count(section,/<tr>/g)<3) {
+    throw new Error('Decision table must offer source-dated real next steps: '+slug);
+  }
+  if (!html.includes('/life-editorial-20261022.css')) {
+    throw new Error('Decision table styles missing: '+slug);
+  }
+  const source=path.join(CONTENT_ROOT,slug+'.json');
+  const post=JSON.parse(fs.readFileSync(source,'utf8'));
+  for (let page=2;page<= (post.series?.parts?.length || 1);page++) {
+    const file=pageFile('/'+slug+'/'+page+'/');
+    if(fs.existsSync(file) && fs.readFileSync(file,'utf8').includes('class="reader-decision"')) {
+      throw new Error('Decision table must not duplicate on continuation: '+slug+'/'+page);
+    }
+  }
+}
+const policy=fs.readFileSync(path.join(DIST,'editorial-standards','index.html'),'utf8');
+if (!policy.includes('작성·검수 기준 확인일: 2026-10-23')) {
+  throw new Error('Editorial policy must expose a stable reviewed date, not build time');
+}
+if (!sitemap.includes('<loc>'+SITE_URL+'/editorial-standards/</loc><lastmod>2026-10-23</lastmod>')) {
+  throw new Error('Editorial policy sitemap lastmod must reflect the genuine editorial date');
+}
+
 console.log(`Build output validated: ${urls.length} sitemap URL(s), ${posts.length} indexable first pages, ${htmlFiles.length} HTML file(s), distinct series content per page, no duplicate SEO tags, progress UI, editorial-policy output, or broken internal links.`);
