@@ -35,3 +35,18 @@
 .life-path-card a:hover,.life-path-card a:focus-visible{color:#1162b4;text-decoration:underline;text-underline-offset:3px}
 .life-path-card small{display:block;color:#63768a;font-size:12px;line-height:1.6;margin-top:2px}
 @media(max-width:690px){.life-path-grid{grid-template-columns:1fr;gap:12px}.life-path-card{padding:20px 18px 16px}.life-path-card h3{font-size:18px}.life-pathways{margin-top:20px}}
+
+/* Situation-specific decisions shown inside original source-backed guides. */
+.reader-decision{margin:28px 0 32px;padding:24px 22px 20px;border:1px solid #dbe6ed;border-radius:16px;background:#f8fbfd}
+.reader-decision h2{font-size:22px;line-height:1.45;color:#142d42;margin:0 0 8px}
+.reader-decision>p{font-size:14px;line-height:1.75;color:#485d70;margin:0 0 14px}
+.decision-table-wrap{overflow-x:auto;max-width:100%}
+.reader-decision table{width:100%;border-spacing:0;border-collapse:collapse;table-layout:auto}
+.reader-decision th,.reader-decision td{font-size:14px;line-height:1.65;text-align:left;vertical-align:top;padding:12px 10px;border-bottom:1px solid #dfe6ee;overflow-wrap:anywhere}
+.reader-decision thead th{font-size:12px;font-weight:750;color:#536d84;background:#edf4f8}
+.reader-decision tbody th{font-weight:700;color:#1c3447;width:30%}
+.reader-decision td{color:#374d61}
+.reader-decision td a{display:block;color:#185b96;font-weight:750;text-underline-offset:3px}
+.decision-date{display:block;color:#65778b;font-size:12px;margin-top:5px}
+.reader-decision tbody tr:last-child th,.reader-decision tbody tr:last-child td{border-bottom:0}
+@media(max-width:690px){.reader-decision{padding:19px 14px;margin:23px 0 25px}.reader-decision h2{font-size:20px}.reader-decision th,.reader-decision td{padding:11px 8px;font-size:13px}.reader-decision tbody th{width:31%}.decision-date{font-size:11px}}
