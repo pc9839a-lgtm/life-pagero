@@ -219,7 +219,7 @@ for (const required of [
   if (!privacyHtml.includes(required)) throw new Error(`AdSense privacy disclosure missing: ${required}`);
 }
 const client = process.env.PUBLIC_ADSENSE_CLIENT || 'ca-pub-1906196934401001';
-const publisherId = client.match(/^ca-pub-(\\d+)$/)?.[1];
+const publisherId = client.match(/^ca-pub-(\d+)$/)?.[1];
 if (!publisherId) throw new Error('AdSense publisher client format is invalid');
 const adsTxtFile = path.join(DIST, 'ads.txt');
 if (!fs.existsSync(adsTxtFile)) throw new Error('Publisher ads.txt output is missing');
