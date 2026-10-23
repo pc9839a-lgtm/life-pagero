@@ -17,3 +17,21 @@
 .life-archive-note{font-size:13px;color:#526479;margin:22px 0 0}
 .life-archive-note a{font-weight:700;text-decoration:underline;text-underline-offset:2px}
 @media(max-width:690px){.life-archive-grid{grid-template-columns:1fr;gap:25px}.life-archive{margin-top:17px}.life-archive-group h3{font-size:18px}}
+
+/* Context-first editorial navigation: plain HTML links, no JS dependency. */
+.life-pathways{margin-top:26px}
+.life-pathways .section-header{margin-bottom:18px}
+.life-pathways .section-header p{max-width:790px}
+.life-path-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.life-path-card{min-width:0;background:#fff;border:1px solid #dfe7ee;border-radius:15px;padding:23px 22px 17px}
+.life-path-card h3{font-size:19px;letter-spacing:-.035em;line-height:1.4;color:#152d43;margin:0 0 8px}
+.life-path-card>p{color:#50647a;font-size:14px;line-height:1.7;margin:0 0 12px}
+.life-path-card ol{padding:0;margin:0;list-style:none;border-top:1px solid #e8eef3}
+.life-path-card li{display:flex;gap:11px;padding:12px 0;border-bottom:1px solid #edf1f5}
+.life-path-card li:last-child{border-bottom:0;padding-bottom:2px}
+.life-path-card li>div{min-width:0}
+.life-path-number{flex:0 0 25px;height:25px;display:grid;place-items:center;border-radius:50%;background:#e9f1fb;color:#245584;font-weight:750;font-size:12px}
+.life-path-card a{color:#1c3651;text-decoration:none;font-weight:700;line-height:1.5}
+.life-path-card a:hover,.life-path-card a:focus-visible{color:#1162b4;text-decoration:underline;text-underline-offset:3px}
+.life-path-card small{display:block;color:#63768a;font-size:12px;line-height:1.6;margin-top:2px}
+@media(max-width:690px){.life-path-grid{grid-template-columns:1fr;gap:12px}.life-path-card{padding:20px 18px 16px}.life-path-card h3{font-size:18px}.life-pathways{margin-top:20px}}

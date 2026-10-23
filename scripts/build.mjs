@@ -297,6 +297,64 @@ function articleArchive(visiblePosts) {
   return `<section class="section life-archive" aria-label="전체 생활정보 가이드"><div class="section-header"><div><p class="life-archive-kicker">LIFE EDITORIAL ARCHIVE</p><h2>분야별 생활정보 전체보기</h2><p>추천 글 외에 발행된 가이드도 공식자료 확인일과 함께 살펴볼 수 있습니다. 총 ${posts.length}개 가이드를 직접 연결했습니다.</p></div></div><div class="life-archive-grid">${blocks}</div><p class="life-archive-note">제도·금액·기한은 바뀔 수 있으므로 최종 신청 전에 각 글의 공식자료와 담당기관 공고를 확인하세요. <a href="/editorial-standards/">콘텐츠 작성·검수 기준 ↗</a></p></section>`;
 }
 
+
+/**
+ * Task-first editorial pathways. Each label opens a verified existing guide,
+ * not an eligibility estimate or a shortened duplicate of the original article.
+ * The dates come from article source records; no invented freshness claims.
+ */
+function decisionGuide() {
+  const scenarios = [
+    {
+      id: 'inspection',
+      name: '자동차 검사, 어디서 시작할까요?',
+      description: '검사 시기를 확인한 뒤 예약을 살펴보세요. 기한을 놓쳤다면 과태료 안내부터 확인합니다.',
+      steps: [
+        ['검사기간·검사 종류 확인', 'car', 'car-inspection-period'],
+        ['예약 방법·당일 준비물 확인', 'car', 'car-inspection-reservation'],
+        ['기한 초과 시 처리 순서 확인', 'car', 'car-inspection-late-penalty'],
+      ],
+    },
+    {
+      id: 'transfer',
+      name: '중고차 명의이전을 준비한다면?',
+      description: '필요한 서류, 예상 비용의 구성, 온라인 신청이 가능한 조건을 따로 비교해 보세요.',
+      steps: [
+        ['명의이전 서류 점검', 'car', 'used-car-transfer-documents'],
+        ['이전비용 항목 비교', 'car', 'used-car-transfer-cost'],
+        ['온라인 이전등록 가능 조건 확인', 'car', 'used-car-online-transfer'],
+      ],
+    },
+    {
+      id: 'parenting',
+      name: '아동·양육 지원을 알아본다면?',
+      description: '아동수당과 부모급여는 이름과 대상 기준이 다른 제도입니다. 해당하는 연령·신청방법을 각각 확인하세요.',
+      steps: [
+        ['아동수당 대상·신청방법 확인', 'support', 'child-allowance-2026'],
+        ['부모급여 대상·신청방법 확인', 'support', 'parental-benefit-2026'],
+      ],
+    },
+    {
+      id: 'livelihood',
+      name: '기초연금·생계급여가 궁금하다면?',
+      description: '두 제도는 적용 기준과 심사 내용이 다릅니다. 본인 상황에 맞는 조건을 각 공식 출처에서 확인하세요.',
+      steps: [
+        ['기초연금 기준 살펴보기', 'support', 'basic-pension-2026'],
+        ['생계급여 기준 살펴보기', 'support', 'livelihood-benefit-2026'],
+      ],
+    },
+  ];
+  const cards = scenarios.map((scenario) => {
+    const links = scenario.steps.map(([label, category, slug], i) => {
+      const post = posts.find((item) => item.category === category && item.slug === slug);
+      if (!post) throw new Error(`Missing published decision-guide target: ${category}/${slug}`);
+      return `<li><span class="life-path-number" aria-hidden="true">${i + 1}</span><div><a href="/${post.category}/${post.slug}/">${esc(label)} <span aria-hidden="true">↗</span></a><small>공식자료 확인 ${fmt(post.reviewedAt)}</small></div></li>`;
+    }).join('');
+    return `<article class="life-path-card" data-path="${scenario.id}"><h3>${esc(scenario.name)}</h3><p>${esc(scenario.description)}</p><ol>${links}</ol></article>`;
+  }).join('');
+  return `<section class="section life-pathways" aria-labelledby="life-pathways-title"><div class="section-header"><div><p class="life-archive-kicker">상황별 길찾기</p><h2 id="life-pathways-title">지금 필요한 정보부터 확인하세요</h2><p>신청 자격을 자동 판정하는 서비스가 아닙니다. 준비 순서와 비교할 제도를 안내하며, 실제 기준은 연결된 글의 공식 출처·확인일을 기준으로 확인해야 합니다.</p></div></div><div class="life-path-grid">${cards}</div></section>`;
+}
+
 function listing(key) {
   const category = CAT[key];
   const list = posts.filter((post) => post.category === key);
@@ -323,7 +381,7 @@ write('/', page({
   pathname: '/',
   title: SITE.name,
   description: SITE.description,
-  body: `<div class="site-shell"><div class="content-grid"><div class="main-column"><section class="hero"><span class="hero-kicker">LIFE ADMINISTRATION GUIDE</span><h1>복잡한 생활행정과 지원정책을 쉽게 확인하세요.</h1><p>자동차 검사·이전등록·세금부터 정부와 지자체 지원사업까지 공식 출처와 확인일을 기준으로 정리합니다.</p><div class="hero-actions"><a class="wp-button" href="/car/">자동차 정보 보기</a><a class="wp-button-secondary" href="/support/">지원정책 찾기</a></div></section><section class="section"><div class="category-grid">${Object.entries(CAT).map(([key, category]) => `<article class="category-panel"><span class="category-icon">${category.icon}</span><h3>${category.label}</h3><p>${category.desc}</p><a class="wp-button-secondary" href="/${key}/">${category.short} 글 보기</a></article>`).join('')}</div></section><section class="section"><div class="section-header"><div><h2>최신 확인 콘텐츠</h2><p>공식자료 확인일과 출처를 공개합니다.</p></div></div><div class="post-list">${homepageFeatured.map(card).join('')}</div></section>${articleArchive(homepageFeatured)}</div>${side()}</div></div>`,
+  body: `<div class="site-shell"><div class="content-grid"><div class="main-column"><section class="hero"><span class="hero-kicker">LIFE ADMINISTRATION GUIDE</span><h1>복잡한 생활행정과 지원정책을 쉽게 확인하세요.</h1><p>자동차 검사·이전등록·세금부터 정부와 지자체 지원사업까지 공식 출처와 확인일을 기준으로 정리합니다.</p><div class="hero-actions"><a class="wp-button" href="/car/">자동차 정보 보기</a><a class="wp-button-secondary" href="/support/">지원정책 찾기</a></div></section><section class="section"><div class="category-grid">${Object.entries(CAT).map(([key, category]) => `<article class="category-panel"><span class="category-icon">${category.icon}</span><h3>${category.label}</h3><p>${category.desc}</p><a class="wp-button-secondary" href="/${key}/">${category.short} 글 보기</a></article>`).join('')}</div></section>${decisionGuide()}<section class="section"><div class="section-header"><div><h2>최신 확인 콘텐츠</h2><p>공식자료 확인일과 출처를 공개합니다.</p></div></div><div class="post-list">${homepageFeatured.map(card).join('')}</div></section>${articleArchive(homepageFeatured)}</div>${side()}</div></div>`,
 }));
 write('/car/', listing('car'));
 write('/support/', listing('support'));
