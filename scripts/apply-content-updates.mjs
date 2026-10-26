@@ -23,6 +23,8 @@ const PROTECTED_EDITORIAL_POSTS = new Set([
   'content/posts/car/car-registration-certificate-reissue.json',
   'content/posts/support/basic-pension-2026.json',
   'content/posts/support/child-allowance-2026.json',
+  'content/posts/car/car-tax-annual-payment-2026.json',
+  'content/posts/car/car-tax-second-half-2026.json',
 ]);
 
 
@@ -133,6 +135,16 @@ if (!CHECK_ONLY && fs.existsSync(editorialRoot)) {
     }
     if (!fs.existsSync(target)) throw new Error('Editorial patch target not found: ' + patch.target);
     const article = JSON.parse(fs.readFileSync(target, 'utf8'));
+    // A source article reviewed after this older editorial patch must win.
+    // Both the compressed bundle and the patch itself can contain stale deadlines.
+    const targetName = patch.target.replace(/\\/g, '/');
+    if (PROTECTED_EDITORIAL_POSTS.has(targetName)
+        && Number.isFinite(Date.parse(article.updatedAt || ''))
+        && Number.isFinite(Date.parse(patch.updatedAt || ''))
+        && Date.parse(article.updatedAt) > Date.parse(patch.updatedAt)) {
+      console.log('Preserved newer editorial correction (skipped older patch):', targetName, article.updatedAt, patch.updatedAt);
+      continue;
+    }
     // Content bundles may reuse a historical JSON filename for a NEW public article.
     // Never merge a reviewed patch into a different category/slug after bundle hydration.
     const pieces = patch.target.replace(/\\/g, '/').split('/');

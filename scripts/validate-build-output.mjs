@@ -276,4 +276,24 @@ if (!sitemap.includes('<loc>'+SITE_URL+'/editorial-standards/</loc><lastmod>2026
   throw new Error('Editorial policy sitemap lastmod must reflect the genuine editorial date');
 }
 
+// Editorial freshness gate: both updated, indexable car-tax documents must
+// actually contain the corrected October 2026 guidance in the HTML users read.
+for (const [slug, phrases] of [
+  ['car-tax-annual-payment-2026', ['2026년 10월 26일 현재 연납 신청은', '2027년 공식', '마감 후 확인할 체크리스트']],
+  ['car-tax-second-half-2026', ['2026년 10월 26일 현재', '12월 16~31일']],
+]) {
+  const permalink = '/car/' + slug + '/';
+  const html = fs.readFileSync(pageFile(permalink), 'utf8');
+  for (const phrase of phrases) {
+    if (!html.includes(phrase)) throw new Error(slug + ': corrected editorial information is absent from real built HTML: ' + phrase);
+  }
+  if (!html.includes('"dateModified":"2026-10-26"')) {
+    throw new Error(slug + ': article schema must reflect the verified editorial change date');
+  }
+  const expected = SITE_URL + permalink;
+  if (!sitemap.includes('<loc>' + expected + '</loc><lastmod>2026-10-26</lastmod>')) {
+    throw new Error(slug + ': sitemap lastmod must show 2026-10-26 content modification');
+  }
+}
+
 console.log(`Build output validated: ${urls.length} sitemap URL(s), ${posts.length} indexable first pages, ${htmlFiles.length} HTML file(s), distinct series content per page, no duplicate SEO tags, progress UI, editorial-policy output, or broken internal links.`);
