@@ -115,6 +115,10 @@ for (const bundleDir of bundleDirs) {
 
     if (!CHECK_ONLY) {
       const normalized = relativePath.split(path.sep).join('/');
+      if (['content/posts/support/government-support-search.json','content/posts/support/support-eligibility-check.json','content/posts/support/support-application-documents.json'].includes(normalized)) {
+        try { console.log('BUNDLE_FILE_IDENTITY', normalized, JSON.parse(content).slug); }
+        catch { console.log('BUNDLE_FILE_IDENTITY_INVALID', normalized); }
+      }
       if (PROTECTED_EDITORIAL_POSTS.has(normalized) && fs.existsSync(target)) {
         const current = JSON.parse(fs.readFileSync(target, 'utf8'));
         const incoming = JSON.parse(content);
