@@ -25,6 +25,10 @@ const PROTECTED_EDITORIAL_POSTS = new Set([
   'content/posts/support/child-allowance-2026.json',
   'content/posts/car/car-tax-annual-payment-2026.json',
   'content/posts/car/car-tax-second-half-2026.json',
+  // November 2026 official-source revisions supersede older bundles and editorial patches.
+  'content/posts/support/child-support-advance-payment-2026.json',
+  'content/posts/support/2026-september-parental-leave-changes.json',
+  'content/posts/support/flu-vaccination-children-2026.json',
 ]);
 
 
