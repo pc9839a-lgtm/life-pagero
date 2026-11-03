@@ -20,6 +20,9 @@ const overrideFile = path.join(ROOT, 'automation', 'url-overrides.json');
 // Future bundles with a strictly newer updatedAt still take precedence.
 const PROTECTED_EDITORIAL_POSTS = new Set([
   'content/posts/car/car-inspection-period.json',
+  'content/posts/car/car-inspection-reservation.json',
+  'content/posts/car/car-inspection-late-penalty.json',
+  'content/posts/car/car-inspection-fall-check-2026.json',
   'content/posts/car/car-registration-certificate-reissue.json',
   'content/posts/support/basic-pension-2026.json',
   'content/posts/support/child-allowance-2026.json',
