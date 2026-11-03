@@ -45,7 +45,14 @@ jobs:
             const doc=JSON.parse(fs.readFileSync('content/posts/'+row.file,'utf8'));
             const html=fs.readFileSync('dist/'+doc.category+'/'+doc.slug+'/index.html','utf8');
             assert(doc.officialCta?.href,'Original official action missing '+slug);
-            assert(html.includes('2026년 10월 23일 확인'),'First-page comparison missing '+slug);
+            const reviewedMarker = slug === 'car-inspection-period'
+              ? '검사 유효기간과 실제 검사 가능기간은 다릅니다'
+              : '2026년 10월 23일 확인';
+            assert(html.includes(reviewedMarker),'First-page comparison missing '+slug);
+            if (slug === 'car-inspection-period') {
+              assert.equal(doc.reviewedAt,'2026-11-03','New inspection legal-period fact-check not preserved');
+              assert(html.includes('만료일 전 90일'),'Inspection date calculation missing');
+            }
             assert(html.includes('<table'),'First-page comparison table missing '+slug);
             assert(doc.sources.length>=2,'Two specific official records must remain '+slug);
           }
