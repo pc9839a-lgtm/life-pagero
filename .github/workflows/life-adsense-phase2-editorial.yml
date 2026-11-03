@@ -45,13 +45,28 @@ jobs:
             const doc=JSON.parse(fs.readFileSync('content/posts/'+row.file,'utf8'));
             const html=fs.readFileSync('dist/'+doc.category+'/'+doc.slug+'/index.html','utf8');
             assert(doc.officialCta?.href,'Original official action missing '+slug);
-            const reviewedMarker = slug === 'car-inspection-period'
-              ? '검사 유효기간과 실제 검사 가능기간은 다릅니다'
-              : '2026년 10월 23일 확인';
+            const novemberComparisons = {
+              'car-inspection-period': '검사 유효기간과 실제 검사 가능기간은 다릅니다',
+              'energy-voucher-2026': '11월 에너지바우처: 신청·사용·재신청 구분',
+              'earned-income-tax-credit-late-2026': '2026년 11월 근로장려금 기한 후 신청',
+              'culture-card-2026': '2026 문화누리카드: 발급은 11월 30일까지',
+            };
+            const reviewedMarker = novemberComparisons[slug] || '2026년 10월 23일 확인';
             assert(html.includes(reviewedMarker),'First-page comparison missing '+slug);
+            if (Object.hasOwn(novemberComparisons,slug)) {
+              assert.equal(doc.reviewedAt,'2026-11-03','November official fact-check not preserved: '+slug);
+            }
             if (slug === 'car-inspection-period') {
-              assert.equal(doc.reviewedAt,'2026-11-03','New inspection legal-period fact-check not preserved');
               assert(html.includes('만료일 전 90일'),'Inspection date calculation missing');
+            }
+            if (slug === 'energy-voucher-2026') {
+              assert(html.includes('12월 31일') && html.includes('월 지급금이 아니라'),'Energy voucher deadline or annual amount distinction missing');
+            }
+            if (slug === 'earned-income-tax-credit-late-2026') {
+              assert(html.includes('12월 1일') && html.includes('2025년 연간 소득'),'Earned income tax credit late deadline or earning year missing');
+            }
+            if (slug === 'culture-card-2026') {
+              assert(html.includes('11월 30일') && html.includes('12월 31일'),'Culture card issuance/use deadlines missing');
             }
             assert(html.includes('<table'),'First-page comparison table missing '+slug);
             assert(doc.sources.length>=2,'Two specific official records must remain '+slug);
