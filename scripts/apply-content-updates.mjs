@@ -32,6 +32,10 @@ const PROTECTED_EDITORIAL_POSTS = new Set([
   'content/posts/support/child-support-advance-payment-2026.json',
   'content/posts/support/2026-september-parental-leave-changes.json',
   'content/posts/support/flu-vaccination-children-2026.json',
+  // The revised three-step support workflow replaces older July bundled articles.
+  'content/posts/support/government-support-search.json',
+  'content/posts/support/support-eligibility-check.json',
+  'content/posts/support/support-application-documents.json',
 ]);
 
 
