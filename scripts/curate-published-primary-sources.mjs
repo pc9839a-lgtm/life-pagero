@@ -156,7 +156,7 @@ for (const [slug, retireUrls] of expectedHome.entries()) {
       try {
         const u = new URL(s.url);
         return u.protocol === 'https:' && u.pathname !== '/'
-          && (/\\.kotsa\\.or\\.kr$/.test(u.hostname) || /\\.gov\\.kr$/.test(u.hostname) || /\\.go\\.kr$/.test(u.hostname))
+          && (u.hostname.endsWith('.kotsa.or.kr') || u.hostname.endsWith('.gov.kr') || u.hostname.endsWith('.go.kr'))
           && Date.parse(s.checkedAt || '') >= Date.parse('2026-10-21');
       } catch { return false; }
     });
