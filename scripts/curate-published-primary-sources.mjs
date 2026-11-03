@@ -117,6 +117,15 @@ const additions = {
 };
 
 const TODAY = '2026-10-23';
+// A later, fully reviewed inspection cluster supersedes the October
+// one-time citation cleanup. Protect the primary source record and the
+// articles' unique user intent; still fail closed on weak evidence.
+const NEWER_REVIEWED_INSPECTION = new Set([
+  'car-inspection-period',
+  'car-inspection-reservation',
+  'car-inspection-late-penalty',
+  'car-inspection-fall-check-2026',
+]);
 const root = path.resolve('content/posts');
 const walk = dir => fs.readdirSync(dir, {withFileTypes:true}).flatMap(e => {
   const full = path.join(dir,e.name);
@@ -140,6 +149,29 @@ for (const [slug, retireUrls] of expectedHome.entries()) {
   const existing = Array.isArray(post.sources) ? post.sources : [];
   if (!post.officialCta?.href) throw Error('Missing official service/action link: '+slug);
   originalActions.set(slug,JSON.stringify(post.officialCta));
+
+  if (NEWER_REVIEWED_INSPECTION.has(slug)
+      && Date.parse(post.reviewedAt || '') > Date.parse(TODAY)) {
+    const verified = existing.filter(s => {
+      try {
+        const u = new URL(s.url);
+        return u.protocol === 'https:' && u.pathname !== '/'
+          && (/\\.kotsa\\.or\\.kr$/.test(u.hostname) || /\\.gov\\.kr$/.test(u.hostname) || /\\.go\\.kr$/.test(u.hostname))
+          && Date.parse(s.checkedAt || '') >= Date.parse('2026-10-21');
+      } catch { return false; }
+    });
+    if (verified.length < 2) throw Error('Newer inspection guide lacks two verified direct sources: ' + slug);
+    if (retireUrls.some(url => existing.some(s => s.url === url))) {
+      throw Error('Newer inspection guide still contains superseded portal homepage citations: ' + slug);
+    }
+    if (!post.series?.parts || post.series.parts.length !== 3
+        || post.series.parts.some(p => (p.body || '').length < 1000)) {
+      throw Error('Newer inspection guide missing substantive parts: ' + slug);
+    }
+    changed.push({slug,removed:0,remaining:existing.length,portal:post.officialCta.href,comparison:true,preservedNewerReview:true});
+    console.log('SOURCE_PRECISION',JSON.stringify(changed.at(-1)));
+    continue;
+  }
 
   const missing = retireUrls.filter(url => !existing.some(s=>s.url===url));
   if(missing.length) throw Error('Publisher source list drift for '+slug+': '+missing.join(', '));
