@@ -13,7 +13,7 @@ for(const {slug,marker,reviewDate='2026-10-22'} of cases){
   assert.equal(doc.updatedAt,reviewDate,'Current fact-check date missing: '+slug);
   assert(doc.sources.length>=2,'At least two official citations required: '+slug);
   assert(doc.body.includes(marker),'Editorial decision comparison missing: '+slug);
-  assert(doc.body.includes('|---|'),'Practical comparison table missing: '+slug);
+  assert(/^\|\s*---/m.test(doc.body),'Practical comparison table missing: '+slug);
   assert(doc.series.parts[0].body.includes(marker),'First indexable article page must include the substantive comparison: '+slug);
   const html=fs.readFileSync(path.join('dist','support',slug,'index.html'),'utf8');
   assert(html.includes(marker)&&html.includes('<table'),'Published first page missing comparison: '+slug);
