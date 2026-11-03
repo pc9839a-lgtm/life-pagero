@@ -33,14 +33,14 @@ const directAdditions = {
     {name: '한국교통안전공단 종합검사 대상지역·배출가스 검사', url: 'https://main.kotsa.or.kr/portal/contents.do?menuCode=01010300', checkedAt: '2026-10-23'},
   ],
   'culture-card-2026': [
-    {name: '문화누리카드 2026 사업대상·지원금액·추가지원', url: 'https://www.mnuri.kr/munhwa/introduceNuri.do', checkedAt: '2026-10-23'},
-    {name: '문화누리카드 잔액 사용·기한·취소 안내', url: 'https://www.mnuri.kr/useOfCard/useInfo.do', checkedAt: '2026-10-23'},
+    {name: '문화누리카드 2026 사업대상·지원금액·추가지원', url: 'https://www.mnuri.kr/munhwa/introduceNuri.do', checkedAt: '2026-11-03'},
+    {name: '문화누리카드 잔액 사용·기한·취소 안내', url: 'https://www.mnuri.kr/useOfCard/useInfo.do', checkedAt: '2026-11-03'},
   ],
   'energy-voucher-2026': [
-    {name: '2026 에너지바우처 세대별 연간 지원금·사용기간', url: 'https://www.energyv.or.kr/info/support_info.do', checkedAt: '2026-10-23'},
+    {name: '2026 에너지바우처 세대별 연간 지원금·사용기간', url: 'https://www.energyv.or.kr/info/support_info.do', checkedAt: '2026-11-03'},
   ],
   'earned-income-tax-credit-late-2026': [
-    {name: '국세청 근로·자녀장려금 2025 귀속 소득·재산 신청요건', url: 'https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7783&mi=2449', checkedAt: '2026-10-23'},
+    {name: '국세청 근로·자녀장려금 2025 귀속 소득·재산 신청요건', url: 'https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7783&mi=2449', checkedAt: '2026-11-03'},
   ],
 };
 
