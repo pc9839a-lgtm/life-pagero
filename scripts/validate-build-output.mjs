@@ -50,6 +50,13 @@ for (const [relativePath, expected] of requiredOutputs) {
   if (!content.includes(expected)) throw new Error(`Invalid build output: ${relativePath}`);
 }
 
+const originHeaderPath = path.join(DIST, '_headers');
+if (!fs.existsSync(originHeaderPath)) throw new Error('Missing Cloudflare immutable-origin _headers');
+const originHeaders = fs.readFileSync(originHeaderPath, 'utf8');
+if (!/^\/\*\s*\n\s*X-Robots-Tag:\s*noindex,\s*follow,\s*noarchive/m.test(originHeaders)) {
+  throw new Error('Cloudflare immutable Pages origin must remain noindex; public pagero.kr proxy strips X-Robots-Tag');
+}
+
 if (fs.existsSync(path.join(DIST, 'editorial-policy'))) {
   throw new Error('Removed editorial-policy directory must not be generated');
 }
