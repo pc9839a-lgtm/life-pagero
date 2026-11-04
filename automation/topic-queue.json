@@ -93,13 +93,16 @@
   {
     "id": "year-end-tax-precheck-2026",
     "category": "support",
-    "title": "2026 연말정산 미리보기 전 준비할 공제자료·확인순서",
+    "title": "2026 연말정산 미리보기 12월 18일 마감·카드 사용액·예상세액 확인",
     "priority": 34,
-    "status": "queued",
+    "status": "published",
     "officialSources": [
-      "https://www.nts.go.kr/",
+      "https://www.korea.kr/multi/visualNewsView.do?newsId=148974171",
+      "https://www.korea.kr/news/policyNewsView.do?newsId=148974766",
       "https://www.hometax.go.kr/"
-    ]
+    ],
+    "slug": "year-end-tax-precheck-2026",
+    "publishedAt": "2026-11-04"
   },
   {
     "id": "car-tax-second-half-2026",
