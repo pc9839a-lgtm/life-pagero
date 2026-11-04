@@ -23,13 +23,14 @@ jobs:
         with: { node-version: '22' }
       - name: Build published articles, not stale historical source filenames
         run: npm run build
-      - name: Audit 45 articles, remaining generic sources, duplicate text, and 5 original comparisons
+      - name: Audit published article set, remaining generic sources and substantive comparisons
         run: |
           node scripts/editorial-quality-audit.mjs
           node - <<'JS'
           const fs=require('node:fs'),assert=require('node:assert/strict');
           const a=JSON.parse(fs.readFileSync('editorial-quality-report.json','utf8'));
-          assert.equal(a.article_count,45,'Published article count changed');
+          assert(a.article_count>=45,'Published article set unexpectedly shrank');
+          assert(a.articles.some(x=>JSON.parse(fs.readFileSync('content/posts/'+x.file,'utf8')).slug==='year-end-tax-precheck-2026'),'New 2026 tax preview publication is not in the live article set');
           assert.equal(a.flagged,0,'Unresolved content triage: '+JSON.stringify(a.articles.filter(x=>x.issue_count).map(x=>[x.file,x.issues])));
           assert.equal(a.any_homepage_source,0,'Generic homepage citations remain in published source lists');
           assert.equal(a.common_paragraph_count,0,'Shared long paragraphs added');
@@ -71,5 +72,5 @@ jobs:
             assert(html.includes('<table'),'First-page comparison table missing '+slug);
             assert(doc.sources.length>=2,'Two specific official records must remain '+slug);
           }
-          console.log('PASS: 45 indexed guides, 0 heuristic source flags, 0 shared long paragraphs; 5 substantive official comparisons in primary HTML');
+          console.log('PASS: all published guides including new tax preview, 0 heuristic source flags, 0 shared long paragraphs; 5 substantive official comparisons in primary HTML');
           JS

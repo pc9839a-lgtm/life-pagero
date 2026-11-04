@@ -303,4 +303,35 @@ for (const [slug, phrases] of [
   }
 }
 
+
+// Verify the newly published 2026 year-end preview article is present in the
+// FINAL output (not merely the source JSON or an outdated compressed bundle).
+const taxPreviewSlug='year-end-tax-precheck-2026';
+const taxPreviewPath='/support/'+taxPreviewSlug+'/';
+const taxPreviewHtml=fs.readFileSync(pageFile(taxPreviewPath),'utf8');
+for(const phrase of [
+  '2026년 10월 28일','12월 18일','1~9월','10~12월',
+  '900만원 + 300만원 = 1,200만원','전년도 지급명세서',
+  '2027년',
+]) {
+  if(!taxPreviewHtml.includes(phrase)) throw new Error('2026 year-end tax guide is missing content: '+phrase);
+}
+if(!taxPreviewHtml.includes('rel="canonical" href="https://pagero.kr/life'+taxPreviewPath+'"')){
+  throw new Error('2026 year-end tax guide has incorrect canonical URL');
+}
+if(!taxPreviewHtml.includes('"dateModified":"2026-11-04"')){
+  throw new Error('New tax guide article structured-data date is incorrect');
+}
+if(!sitemap.includes('<loc>https://pagero.kr/life'+taxPreviewPath+'</loc><lastmod>2026-11-04</lastmod>')){
+  throw new Error('2026 year-end tax guide is missing from first-page sitemap');
+}
+for(const name of ['calendar','inputs','checklist']){
+  const filename='year-end-tax-precheck-2026-'+name+'.svg';
+  const asset=path.join(DIST,'images',filename);
+  if(!fs.existsSync(asset)) throw new Error('Original tax guide infographic not copied: '+filename);
+  if(!taxPreviewHtml.includes('/life/images/'+filename)){
+    throw new Error('Original infographic absent from canonical article: '+filename);
+  }
+}
+
 console.log(`Build output validated: ${urls.length} sitemap URL(s), ${posts.length} indexable first pages, ${htmlFiles.length} HTML file(s), distinct series content per page, no duplicate SEO tags, progress UI, editorial-policy output, or broken internal links.`);
