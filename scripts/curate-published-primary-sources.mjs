@@ -177,7 +177,7 @@ for (const file of posts) {
   if(bySlug.has(post.slug)) throw Error('Duplicate published slug: '+post.slug);
   bySlug.set(post.slug,{file,post});
 }
-if(bySlug.size !== 45) throw Error('Unexpected published count '+bySlug.size);
+if(bySlug.size < 45) throw Error('Existing published article set shrank: '+bySlug.size);
 const originalActions = new Map();
 const changed = [];
 
