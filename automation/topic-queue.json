@@ -98,7 +98,8 @@
     "status": "published",
     "officialSources": [
       "https://www.korea.kr/multi/visualNewsView.do?newsId=148974171",
-      "https://www.korea.kr/news/policyNewsView.do?newsId=148974766",
+      "https://d.nts.go.kr/nts/na/ntt/selectNttInfo.do?mi=2205&nttSn=1355059",
+      "https://www.nts.go.kr/nts/na/ntt/selectNttInfo.do?bbsId=1083&mi=7133&nttSn=1350319",
       "https://www.hometax.go.kr/"
     ],
     "slug": "year-end-tax-precheck-2026",
