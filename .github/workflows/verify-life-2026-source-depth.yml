@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Rehydrate content, apply sourced decision tables, and build 45 final public articles
+      - name: Rehydrate content, apply sourced decision tables, and build all currently published public articles
         run: npm run build
       - name: Check revised article content and broad source reduction
         shell: bash
@@ -38,7 +38,7 @@ jobs:
           const assert=require('node:assert/strict');
           const a=JSON.parse(fs.readFileSync('editorial-quality-report.json','utf8'));
           console.log('SOURCE_QA_SUMMARY',JSON.stringify({articles:a.article_count,flagged:a.flagged,homepage:a.any_homepage_source,duplicateParagraphs:a.common_paragraph_count}));
-          assert.equal(a.article_count,45);
+          assert(a.article_count>=46,'2026-11 source depth must include the 46th year-end preview article');
           assert.equal(a.common_paragraph_count,0);
           assert(a.flagged<=20,'Expected 3+ formerly flagged cases to be corrected');
           assert(a.any_homepage_source<20,'Expected to retire at least one redundant homepage citation');
