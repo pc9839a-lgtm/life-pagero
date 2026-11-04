@@ -23,6 +23,7 @@ const steps = [
   ['node', ['scripts/add-naver-verification.mjs']],
   ['node', ['scripts/adsense-readiness.mjs']],
   ['node', ['scripts/add-reader-decision-guides.mjs']],
+  ['node', ['scripts/inject-tenping-ad.mjs']],
   ['node', ['scripts/validate-build-output.mjs']],
 ];
 
