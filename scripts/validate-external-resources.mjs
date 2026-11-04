@@ -62,6 +62,20 @@ async function request(record, method) {
 }
 
 async function inspect(record) {
+  // Original editorial SVGs are served by the canonical /life/ proxy.
+  // Verify the checked-in asset instead of requesting an as-yet unpublished URL.
+  const localImageUrl = new URL(record.url);
+  if (record.types.has('image') && localImageUrl.origin === 'https://pagero.kr'
+      && /^\/life\/images\/[a-z0-9-]+\.svg$/.test(localImageUrl.pathname)) {
+    const name = path.basename(localImageUrl.pathname);
+    const file = path.resolve('public/images', name);
+    if (!fs.existsSync(file)) return { level: 'error', message: 'missing original SVG file: ' + name };
+    const svg = fs.readFileSync(file, 'utf8');
+    if (!svg.includes('<svg ') || !svg.includes('viewBox=') || svg.length < 800) {
+      return { level: 'error', message: 'incomplete original SVG asset: ' + name };
+    }
+    return { level: 'ok', message: 'original first-party SVG validated locally' };
+  }
   let response;
   let networkError;
 
