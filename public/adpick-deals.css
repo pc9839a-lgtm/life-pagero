@@ -9,16 +9,23 @@
 }
 .life-editorial .adpick-deals .portal-breadcrumbs a{color:#687280;}
 .life-editorial .adpick-deals .portal-breadcrumbs a:hover{color:var(--brand,#e95731);}
+.life-editorial .adpick-hero{
+  margin:0 0 36px;padding:37px 44px 34px;border-radius:11px;background:#202833;
+}
+.life-editorial .adpick-eyebrow{
+  display:block;margin-bottom:11px;color:#ff9c80;letter-spacing:.12em;
+  font-size:11px;font-weight:850;
+}
 .life-editorial .adpick-page-heading{margin:0 0 25px;}
 .life-editorial .adpick-page-heading h1{
-  margin:0 0 8px;padding:0;border:0;color:#1b2128;
-  font-size:clamp(29px,3.5vw,40px);font-weight:850;letter-spacing:-.06em;line-height:1.22;
+  margin:0 0 9px;padding:0;border:0;color:#fff;
+  font-size:clamp(32px,4vw,46px);font-weight:850;letter-spacing:-.06em;line-height:1.22;
 }
 .life-editorial .adpick-page-heading p{
-  margin:0;color:#67717b;font-size:14px;line-height:1.65;
+  margin:0;color:#c5ccd4;font-size:14px;line-height:1.65;
 }
 .life-editorial .adpick-search{
-  display:flex;align-items:stretch;gap:9px;width:100%;max-width:820px;margin:0 0 39px;
+  display:flex;align-items:stretch;gap:9px;width:100%;max-width:870px;margin:0;
 }
 .life-editorial .adpick-search-field{
   position:relative;display:flex;align-items:center;flex:1;min-width:0;
@@ -48,7 +55,7 @@
 .life-editorial .adpick-search button:focus-visible,.life-editorial .adpick-filter:focus-visible{
   outline:2px solid var(--brand,#e95731);outline-offset:3px;
 }
-.life-editorial .adpick-products{min-width:0;}
+.life-editorial .adpick-products{min-width:0;padding-top:2px;}
 .life-editorial .adpick-section-head{margin:0 0 15px;display:flex;align-items:center;justify-content:space-between;}
 .life-editorial .adpick-section-head h2{
   margin:0;padding:0;color:#1c2229;font-size:22px;letter-spacing:-.045em;line-height:1.35;font-weight:820;
@@ -85,6 +92,23 @@
   background:#fff;color:#20262d;text-decoration:none;box-shadow:none;
   transition:border-color .15s ease;
 }
+/* Featured first product; the remaining products retain their original grid. */
+.life-editorial .adpick-card--featured{
+  grid-column:span 2;display:grid;grid-template-columns:1fr 1fr;min-height:270px;
+  border-color:#dfe2e5;
+}
+.life-editorial .adpick-card--featured .adpick-card-photo{
+  height:100%;min-height:270px;aspect-ratio:auto;
+}
+.life-editorial .adpick-card--featured .adpick-card-photo img{padding:22px;}
+.life-editorial .adpick-card--featured .adpick-card-info{
+  justify-content:center;padding:27px 26px 23px;
+}
+.life-editorial .adpick-card--featured .adpick-product-name{
+  font-size:18px;line-height:1.48;max-height:82px;min-height:0;-webkit-line-clamp:3;
+}
+.life-editorial .adpick-card--featured .adpick-price strong{font-size:27px;}
+.life-editorial .adpick-card--featured .adpick-mall{font-size:13px;}
 .life-editorial .adpick-card:hover,.life-editorial .adpick-card:focus-visible{
   border-color:#d6a18f;color:#20262d;text-decoration:none;outline-offset:2px;
 }
@@ -152,14 +176,17 @@
 .life-editorial .adpick-home-link:hover{color:#fff;background:var(--brand-dark,#b93e20);}
 @media(max-width:980px){
   .life-editorial .adpick-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 12px;}
+  .life-editorial .adpick-card--featured{grid-column:span 3;}
 }
 @media(max-width:700px){
   .life-editorial .adpick-deals{padding:6px 0 42px;}
   .life-editorial .adpick-deals .portal-breadcrumbs{margin-bottom:17px;}
+  .life-editorial .adpick-hero{padding:26px 18px 23px;margin:0 0 30px;border-radius:9px;}
+  .life-editorial .adpick-eyebrow{margin-bottom:9px;font-size:10px;}
   .life-editorial .adpick-page-heading{margin-bottom:20px;}
-  .life-editorial .adpick-page-heading h1{font-size:29px;margin-bottom:7px;}
+  .life-editorial .adpick-page-heading h1{font-size:31px;margin-bottom:7px;}
   .life-editorial .adpick-page-heading p{font-size:13px;}
-  .life-editorial .adpick-search{gap:7px;margin-bottom:29px;}
+  .life-editorial .adpick-search{gap:7px;margin:0;}
   .life-editorial .adpick-search input{height:48px;font-size:14px;padding-left:44px;}
   .life-editorial .adpick-search-field::before{left:16px;}
   .life-editorial .adpick-search-field::after{left:29px;}
@@ -171,6 +198,17 @@
   .life-editorial .adpick-feed-row{min-height:35px;margin-bottom:9px;}
   .life-editorial .adpick-meta{font-size:11px;padding-bottom:8px;}
   .life-editorial .adpick-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 9px;}
+  .life-editorial .adpick-card--featured{
+    grid-column:span 2;grid-template-columns:minmax(0,42%) minmax(0,1fr);min-height:164px;
+  }
+  .life-editorial .adpick-card--featured .adpick-card-photo{height:100%;min-height:164px;}
+  .life-editorial .adpick-card--featured .adpick-card-photo img{padding:8px;}
+  .life-editorial .adpick-card--featured .adpick-card-info{padding:13px 11px;justify-content:center;}
+  .life-editorial .adpick-card--featured .adpick-product-name{
+    font-size:13px;max-height:55px;-webkit-line-clamp:3;line-height:1.43;
+  }
+  .life-editorial .adpick-card--featured .adpick-price strong{font-size:20px;}
+  .life-editorial .adpick-card--featured .adpick-mall{font-size:11px;}
   .life-editorial .adpick-card{border-radius:9px;}
   .life-editorial .adpick-card-photo img{padding:7px;}
   .life-editorial .adpick-card-info{padding:10px 10px 11px;}
