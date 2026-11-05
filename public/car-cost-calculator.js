@@ -14,6 +14,15 @@ if(form){
     electric:['전비 (km/kWh)','충전 단가 (원/kWh)'],
     hybrid:['연비 (km/L)','주유 단가 (원/L)']
   };
+  const sampleFuelValues={
+    petrol:[13,1700],hybrid:[16,1700],diesel:[15,1600],
+    lpg:[10,1000],electric:[5,300]
+  };
+  byId('car-fuel').addEventListener('change',()=>{
+    const [efficiency,price]=sampleFuelValues[byId('car-fuel').value]||sampleFuelValues.petrol;
+    byId('car-efficiency').value=efficiency;
+    byId('car-unit-price').value=price;
+  });
   const updateFuel=()=>{
     const type=byId('car-fuel').value;
     const [eff,price]=names[type]||names.petrol;
