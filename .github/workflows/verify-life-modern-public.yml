@@ -1,0 +1,70 @@
+name: Verify LIFE modern public design
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/verify-life-modern-public.yml"
+      - "public/life-modern.css"
+      - "public/life-modern.js"
+      - "scripts/redesign-life-ui.mjs"
+      - "scripts/build-production.mjs"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Verify responsive production assets, discovery and article preservation
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re,time,urllib.request
+          BASE='https://pagero.kr/life'
+          def fetch(path):
+              req=urllib.request.Request(BASE+path,headers={
+                'User-Agent':'Mozilla/5.0 (PageRoLifeModernProductionQA)',
+                'Cache-Control':'no-cache',
+                'Pragma':'no-cache',
+              })
+              with urllib.request.urlopen(req,timeout=22) as res:
+                  return res.status, dict(res.headers), res.read(1300000).decode('utf-8','replace')
+          def validate():
+              homeStatus,homeHeaders,home=fetch('/')
+              if homeStatus!=200:return 'home-http'
+              tests={
+                'proxy':homeHeaders.get('X-Pagero-Life-Proxy')=='1',
+                'theme':'class="life-modern life-modern-home"' in home,
+                'hero':'id="portal-home-q"' in home and 'role="search"' in home,
+                'subjects':home.count('class="modern-topic-icon"')==6,
+                'archive':'class="modern-all-articles"' in home,
+                'ads-after-content':'class="modern-sponsored-area"' in home and home.index('class="modern-sponsored-area"')>home.index('class="modern-all-articles"'),
+                'canonical':'<link rel="canonical" href="'+BASE+'/">' in home,
+              }
+              for category in ['car','support']:
+                  status,_,html=fetch('/'+category+'/')
+                  tests[category+'-filter']=(status==200 and 'id="modern-list-filter"' in html and 'id="modern-list-empty"' in html and 'class="life-modern life-modern-category"' in html)
+              for category,slug in [('car','car-inspection-period'),('support','child-allowance-2026')]:
+                  status,_,html=fetch('/'+category+'/'+slug+'/')
+                  body=re.search(r'<div class="article-content">([\s\S]*?)<div class="disclaimer">',html)
+                  tests[slug+'-body']=(status==200 and body and len(body.group(1))>5000 and not re.search(r'<h[234](?:\s[^>]*)?>',body.group(1)) and 'class="life-modern life-modern-article"' in html)
+              s,_,css=fetch('/life-modern.css')
+              tests['css']=s==200 and '.life-modern-home .portal-topic-grid' in css and '@media(max-width:700px)' in css
+              s,_,js=fetch('/life-modern.js')
+              tests['script']=s==200 and 'modern-list-filter' in js and 'addEventListener("input", update)' in js
+              print('MODERN_PUBLIC_AUDIT',tests,flush=True)
+              failed=[k for k,v in tests.items() if not v]
+              return ','.join(failed)
+          for attempt in range(1,21):
+              try:
+                  failed=validate()
+                  if not failed:
+                      print('LIFE_MODERN_PUBLIC_VERIFIED',BASE,'attempt',attempt,flush=True)
+                      break
+                  print('PUBLIC_NOT_UPDATED',attempt,failed,flush=True)
+              except Exception as e:
+                  print('PUBLIC_RETRY',attempt,type(e).__name__,str(e)[:160],flush=True)
+              if attempt==20:raise SystemExit('Modern LIFE production not fully published')
+              time.sleep(13)
+          PY
