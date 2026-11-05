@@ -53,7 +53,9 @@ const snapshots=await Promise.all(probes.flatMap(([origin,base])=>checks.map(asy
     oldDeveloperCopy:body.includes("상품 데이터를 별도로 저장하거나"),
     oldCommissionTab:body.includes("수익 추천"),
     cache:response.headers.get("cf-cache-status"),proxy:response.headers.get("x-pagero-life-proxy"),
-    etag:response.headers.get("etag")};
+    etag:response.headers.get("etag"),
+    adpickResources:asset==="deals-html"?[...body.matchAll(/(?:href|src)="([^"]*adpick-deals[^"]*)"/g)].map(m=>m[1]):undefined,
+    isEditorialBody:asset==="deals-html"?body.includes("life-editorial"):undefined};
  }catch(e){return {origin,asset,error:String(e.message||e)}}
  finally{clearTimeout(timeout)}
 })));
