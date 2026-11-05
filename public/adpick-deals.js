@@ -53,7 +53,6 @@ async function load(params){
   target.replaceChildren();
  }
 }
-tabs.addEventListener("click",()=>{});
 form.addEventListener("submit",event=>{
  event.preventDefault();const value=form.elements.q.value.trim();
  if(value.length<2)return;
