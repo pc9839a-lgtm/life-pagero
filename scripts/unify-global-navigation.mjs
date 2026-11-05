@@ -12,7 +12,8 @@ const ITEMS=[
   {href:'/finance/savings/',label:'예·적금',section:'savings'},
   {href:'/finance/markets/',label:'주식·코인',section:'markets'},
   {href:'/car/',label:'자동차',section:'car'},
-  {href:'/support/',label:'지원금',section:'support'}
+  {href:'/support/',label:'지원금',section:'support'},
+  {href:'/deals/',label:'핫딜',section:'deals'}
 ];
 const esc=str=>String(str).replace(/[&<>"']/g,c=>({
   '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
@@ -29,6 +30,7 @@ const section=pathname=>{
   if(pathname.startsWith('/finance/'))return 'finance';
   if(pathname.startsWith('/car/'))return 'car';
   if(pathname.startsWith('/support/'))return 'support';
+  if(pathname.startsWith('/deals/'))return 'deals';
   return '';
 };
 const render=active=>'<nav class="main-nav" aria-label="전체 메뉴"><div class="nav-inner">'
@@ -54,4 +56,4 @@ for(const file of files(DIST).filter(p=>p.endsWith('.html'))){
   changed++;
 }
 if(changed<140)throw Error('[nav] Too few navigation documents: '+changed);
-console.log('[nav] One identical 7-link menu across '+changed+' pages; '+skipped+' non-site pages skipped.');
+console.log('[nav] One identical 8-link menu across '+changed+' pages; '+skipped+' non-site pages skipped.');
