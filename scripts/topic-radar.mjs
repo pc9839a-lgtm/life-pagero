@@ -56,6 +56,8 @@ export function scoreItem(item,groups,existing,now=new Date()){
   const text=(item.title||'')+' '+(item.description||'');
   const matches=groups.map(g=>({...g,hits:g.keywords.filter(k=>text.includes(k))}))
     .filter(g=>g.hits.length).sort((a,b)=>b.hits.length-a.hits.length);
+  // Preserve existing editorial exclusion of insurance-related content.
+  if(/보험|보험금|보험료/.test(text))return null;
   if(!matches.length||!ACTION.test(text))return null;
   const published=Date.parse(item.publishedAt||'');
   const age=Number.isFinite(published)?Math.floor((now.getTime()-published)/86400000):null;
