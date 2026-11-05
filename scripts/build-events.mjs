@@ -55,7 +55,7 @@ function renderPage(pathname,title,description,body,{schema=null,noindex=false}=
     else html=html.replace('</head>','<meta name="robots" content="noindex,follow"></head>');
   }
   html=html.replace('</head>','<link rel="stylesheet" href="/events-ui.css">'
-    +(pathname==='/events/'?'<script defer src="/events-ui.js"></script>':'')
+    +'<script defer src="/events-ui.js"></script>'
     +(schema?'<script type="application/ld+json">'+JSON.stringify(schema).replaceAll('<','\\u003c')+'</script>':'')
     +'</head>');
   if((html.match(/<h1(?:\s[^>]*)?>/g)||[]).length!==1)throw Error('[events] H1 count '+pathname);
