@@ -39,7 +39,8 @@ const body='<div class="site-shell"><article class="portal-page finance-page sav
   +'<nav class="portal-breadcrumbs" aria-label="현재 위치"><a href="/">홈</a> / '
   +'<a href="/finance/">금융</a> / 적금 계산기</nav>'
   +'<div class="savings-page-head"><h1>적금 계산기</h1>'
-  +'<a href="/finance/savings/">예·적금 금리 확인</a></div>'
+  +'<div class="savings-page-links"><a href="/finance/savings/">예·적금 금리 확인</a>'
+  +'<a href="https://finlife.fss.or.kr/" target="_blank" rel="noopener noreferrer">공식 금리 비교</a></div></div>'
   +'<div class="calculator-workspace savings-workspace">'
   +'<form id="savings-calculator-form" novalidate>'
   +'<div class="calculator-form-header"><strong>조건 입력</strong><span>입력하면 바로 계산됩니다</span></div>'
@@ -64,10 +65,6 @@ const body='<div class="site-shell"><article class="portal-page finance-page sav
   +'<th scope="col">납입액</th><th scope="col">운용 기간</th>'
   +'<th scope="col">세전 이자</th></tr></thead><tbody id="savings-schedule"></tbody>'
   +'</table></div></details>'
-  +'<p class="savings-calc-note">매월 초 동일 금액 납입·월 단위 단리 기준의 예상 계산입니다. '
-  +'일반과세 15.4% 또는 비과세를 선택할 수 있습니다. 실제 이자는 납입일, 일할 계산, 반올림, '
-  +'우대금리와 세금 적용 조건에 따라 달라질 수 있습니다. 입력 금리는 가정값이며 실제 판매 금리가 아닙니다. '
-  +'<a href="https://finlife.fss.or.kr/" target="_blank" rel="noopener noreferrer">금융감독원 상품 비교</a></p>'
   +'</article></div>';
 let html=read('finance/index.html');
 check(html.includes('<main id="main-content">'),'finance shell missing');
