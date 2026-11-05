@@ -340,3 +340,15 @@
 @media(prefers-reduced-motion:reduce){
   .life-modern * {scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
+
+.life-modern .modern-sponsored-area {margin-top:52px;border-top:1px solid #e9edf3;padding-top:24px}
+.life-modern .modern-sponsored-area .modern-section-heading h2 {font-size:15px;color:#8490a0;font-weight:660;letter-spacing:-.02em}
+.life-modern .modern-sponsored-area>.life-coupang-placement {max-width:800px;margin:22px auto}
+.life-modern .modern-sponsored-area .life-sponsor-collection {margin:20px auto 0}
+.life-modern .modern-sponsored-area .life-affiliate-placement--top {margin:22px auto}
+.life-modern .modern-list-toolbar+.post-list>[hidden] {display:none!important}
+.life-modern [hidden] {display:none!important}
+@media(max-width:700px){
+  .life-modern .modern-sponsored-area {margin-top:34px;padding-top:20px}
+  .life-modern .modern-sponsored-area .modern-section-heading h2 {font-size:14px}
+}
