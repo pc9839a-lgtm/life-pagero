@@ -1,0 +1,71 @@
+name: Verify actual LIVE finance rates visible in browser
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-finance-production-browser.yml'
+      - 'public/finance-live.js'
+      - 'scripts/enhance-finance.mjs'
+      - 'public/finance-experience.css'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  live-finance-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install browser driver
+        run: |
+          npm install --no-save --no-package-lock playwright-core@1.56.1
+          which google-chrome
+      - name: Verify real public UI and real FSS API response
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import {chromium} from 'playwright-core';
+          const browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--no-sandbox']});
+          const base='https://pagero.kr/life';
+          const check=async(viewport)=>{
+            const page=await browser.newPage({viewport});
+            let lastApi='unobserved',lastJsError='';
+            page.on('pageerror',e=>{lastJsError=e.message;});
+            page.on('response',response=>{
+              if(response.url().includes('/finance/api/products'))lastApi=String(response.status());
+            });
+            const progress=[];
+            for(let attempt=1;attempt<=5;attempt++){
+              try{
+                const url=base+'/finance/savings/';
+                await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
+                await page.locator('#finance-rate-panel').waitFor({state:'visible',timeout:40000});
+                const rows=await page.locator('#finance-products tbody tr').count();
+                const text=await page.locator('#finance-products').innerText();
+                if(rows<10||!/\d\.\d{2}%/.test(text))throw new Error('No visible real numeric rates');
+                progress.push('savings '+rows+' visible rows');
+                await page.goto(base+'/finance/',{waitUntil:'domcontentloaded',timeout:30000});
+                await page.locator('#finance-rate-preview').waitFor({state:'visible',timeout:40000});
+                const previewCount=await page.locator('.finance-preview-card').count();
+                if(previewCount!==3)throw new Error('Expected 3 visible preview cards: '+previewCount);
+                const previewText=await page.locator('#finance-rate-preview').innerText();
+                if(!/\d\.\d{2}%/.test(previewText))throw new Error('Missing preview numeric interest');
+                progress.push('finance overview '+previewCount+' visible real-rate cards');
+                console.log('LIVE_FINANCE_VISIBLE_PASS',viewport.width,progress.join(' + '),'API',lastApi,flush=true);
+                await page.close();
+                return;
+              }catch(error){
+                console.log('LIVE_FINANCE_ATTEMPT',viewport.width,attempt,'api',lastApi,'js',lastJsError,'reason',String(error.message).slice(0,180));
+                if(attempt===5){await page.close();throw error;}
+                await page.waitForTimeout(12000);
+              }
+            }
+          };
+          try{
+            for(const viewport of [{width:1280,height:900},{width:390,height:844}])await check(viewport);
+            console.log('FINANCE_RATE_VISIBLE_ON_PRODUCTION_DESKTOP_AND_MOBILE');
+          }finally{await browser.close();}
+          NODE
