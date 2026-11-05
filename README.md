@@ -65,3 +65,13 @@ AdSense 소유권 확인과 실제 광고 노출을 분리합니다.
 
 개발 순서와 SEO 품질 통제는 automation/GROWTH_SYSTEM_2026_KO.md를 참고하세요.
 현재 운영 코드상 공개 카테고리는 여전히 car·support 2개이며 나머지 18개 분야는 확장 후보 분류입니다.
+
+## 애드픽 핫딜 연동
+
+- 별도 URL: `/deals/` (공개 정적 페이지 + JS 상품 목록).
+- Cloudflare Pages Functions: `/deals/api`가 애드픽 공식 핫딜 JSON API에서 상품을 가져옵니다.
+- Cloudflare Pages 환경변수 `ADPICK_AFFID`에 **애드픽 쇼핑메이트 회원 아이디**를 설정해야 실상품을 표시합니다. 아이디를 코드나 공개 HTML에 넣지 마세요.
+- 애드픽 공식 문서: https://adpick.co.kr/?ac=guide&md=hotdealapi&tac=sdk
+- 상품 URL은 애드픽 응답의 `buyurl`을 그대로 사용합니다. 임의 재생성/변조하지 않습니다.
+- 2시간 엣지 캐시, 기존 제휴배너/콘텐츠/AdSense 설정은 변경하지 않습니다. **엣지 캐시는 POP별이므로 글로벌 분당 1회 호출 상한을 엄격히 보장하지 않습니다.** 트래픽 증가 시 중앙 집중식 갱신 저장소(KV/D1 + 단일 스케줄 작업)로 전환해야 합니다.
+- 실제 애드픽 데이터, 구매 링크, Cloudflare 배포는 회원아이디 설정 후 별도 운영 검증이 필요합니다.
