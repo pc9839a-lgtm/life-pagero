@@ -47,8 +47,12 @@ for(const [name,html,canonical] of [
 yes(today.includes('data-news-filter')&&today.includes('data-weather-city'),
   'full page must allow weather city and news category selection');
 
-yes(today.includes('class="site-shell today-shell"'),
-  'Today screen must use full available site width');
+yes(today.includes('class="today-viewport"') &&
+  today.includes('class="today-wide-content"'),
+  'Today screen must use isolated full-viewport wrappers');
+yes(!today.includes('class="site-shell today-shell"') &&
+  !today.includes('class="portal-page finance-page today-page"'),
+  'Old 890px site-shell/portal-page wrapper still constrains Today screen');
 yes(today.includes('class="today-vertical-list"')&&!today.includes('class="today-full-grid"'),
   'Today screen must have one vertical column with no three-card grid');
 const order=['data-today-news','data-today-weather','data-today-stocks','data-today-crypto']
@@ -56,8 +60,14 @@ const order=['data-today-news','data-today-weather','data-today-stocks','data-to
 yes(order.every((position,index)=>position>=0&&(index===0||position>order[index-1])),
   'News, weather, stocks and crypto must be rendered in vertical priority order');
 const dashboardCss=read('today-dashboard.css');
-yes(dashboardCss.includes('.life-modern .portal-page.today-page{width:100%;max-width:none'),
-  'Today page remains constrained to narrow 890px container');
+const wideCss=read('today-wide.css');
+yes(wideCss.includes('#main-content>.today-viewport') &&
+  wideCss.includes('width:100%') && wideCss.includes('max-width:none'),
+  'Today dedicated stylesheet must use 100% viewport with no max-width cap');
+yes(today.includes('href="/today-wide.css"'),
+  'New uncached full-viewport CSS is not linked from Today page');
+yes(!markets.includes('href="/today-wide.css"'),
+  'Today-only viewport override leaked into another page');
 yes(dashboardCss.includes('.today-vertical-list{display:flex;flex-direction:column'),
   'Today page must stack full-width blocks on desktop and mobile');
 const dashboardJs=read('today-dashboard.js');

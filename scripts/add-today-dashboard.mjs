@@ -53,7 +53,7 @@ write('index.html',home);
 const template=read('finance/index.html');
 const title='오늘의 날씨·주요뉴스·증권·코인 정보 | 생활비서';
 const description='지역별 기상청 날씨 관측, 언론사 최신 뉴스 헤드라인, 코스피·코스닥 자료와 업비트 원화 코인 시세를 출처 및 기준시각과 함께 확인합니다.';
-const fullBody='<div class="site-shell today-shell"><article class="portal-page finance-page today-page">'
+const fullBody='<div class="today-viewport"><article class="today-wide-content">'
   +'<nav class="portal-breadcrumbs" aria-label="현재 위치"><a href="/">홈</a> / 오늘의 정보</nav>'
   +'<h1>오늘의 정보</h1>'
   +'<p class="today-page-intro">날씨, 주요뉴스, 증권, 코인 자료를 한곳에서 확인할 수 있습니다. '
@@ -94,6 +94,7 @@ const schema={'@context':'https://schema.org','@type':'CollectionPage',
 page=page.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g,'');
 page=page.replace('</head>','<script type="application/ld+json">'+JSON.stringify(schema)+'</script>'
   +'<link rel="stylesheet" href="/today-dashboard.css">'
+  +'<link rel="stylesheet" href="/today-wide.css">'
   +'<script defer src="/today-dashboard.js"></script></head>');
 write('today/index.html',page);
 
