@@ -17,6 +17,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  live_css:
+    name: Live CSS delivery audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect public and Pages origin CSS
+        run: node scripts/audit-live-life-css.mjs
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 15
