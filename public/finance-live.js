@@ -92,7 +92,18 @@
     fields.term?.addEventListener('change',renderProducts);
     fields.sort?.addEventListener('change',renderProducts);
     fields.query?.addEventListener('input',renderProducts);
-    loadProducts();
+    const embedded=document.getElementById('finance-initial-products');
+    if(embedded){
+      try{
+        const initial=JSON.parse(embedded.textContent);
+        if(!Array.isArray(initial.products)||!initial.products.length)throw new Error('empty');
+        allProducts=initial.products;
+        renderProducts();
+        if(source)source.textContent='금융감독원 · '+time(initial.retrievedAt);
+        if(ratePanel)ratePanel.hidden=false;
+        if(rateOfficial)rateOfficial.hidden=true;
+      }catch(error){loadProducts();}
+    }else{loadProducts();}
   }
 
   async function loadRatePreview(){
@@ -126,7 +137,7 @@
       console.warn('[finance] Could not load verified preview:',error?.name||'unavailable');
     }finally {clearTimeout(timeout);}
   }
-  loadRatePreview();
+  if(preview && preview.dataset.preloaded!=='true')loadRatePreview();
 
   const issuesEl=document.getElementById('finance-issues');
   const issuePanel=document.getElementById('finance-issues-panel');
