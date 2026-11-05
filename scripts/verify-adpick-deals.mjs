@@ -9,7 +9,7 @@ const home=read("index.html"),page=read("deals/index.html");
 const origin=read("life-editorial-20261105.css");
 check(home.includes('class="adpick-home-entry"'),'homepage shortcut missing');
 check(home.includes('href="/deals/"'),'homepage route missing');
-check(home.includes('href="/adpick-deals.css"'),'homepage shortcut style missing');
+check(home.includes('href="/adpick-deals.css?v=20261106c"'),'homepage shortcut style missing');
 check(page.includes('<h1>오늘의 핫딜</h1>'),'standalone deals H1 missing');
 check(home.includes('<h2>오늘의 핫딜</h2>'),'homepage deals title missing');
 for(const unwanted of ['수익 추천', '애드픽 비즈 API 제공', '상품 데이터를 별도로 저장하거나', '가격 인하 상품이라는 의미가 아닙니다']) {
