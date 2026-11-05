@@ -22,7 +22,7 @@ function moveBlock(html,regex,moved){
 function redesignHome(html){
   html=html.replace('<div class="site-shell">','<div class="site-shell home-shell">')
     .replace('<div class="content-grid">','<div class="content-grid home-grid">');
-  check(html.includes('class="portal-home-hero"'),'home search hero missing');
+  check(html.includes('class="hero portal-home-hero"'),'home search hero missing');
   html=html.replace('<section class="hero portal-home-hero">',
     '<section class="hero portal-home-hero"><span class="modern-eyebrow">생활비서 · 생활정보 검색</span>');
   html=html.replace('<h1>생활에 필요한 정보, 바로 찾아보세요.</h1>',
