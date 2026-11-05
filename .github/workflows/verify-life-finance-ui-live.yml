@@ -1,0 +1,67 @@
+name: Verify LIFE finance pages have no API error banners
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-life-finance-ui-live.yml'
+      - 'public/finance-live.js'
+      - 'scripts/enhance-finance.mjs'
+      - 'public/finance-experience.css'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Verify official links, hidden unverified widgets and no warning strings
+        shell: bash
+        run: |
+          python - <<'PY'
+          import time,urllib.request,re
+          root='https://pagero.kr/life'
+          def read(path):
+              request=urllib.request.Request(root+path,headers={
+                'User-Agent':'Mozilla/5.0 (LifeFinanceUISmoke)',
+                'Cache-Control':'no-cache','Pragma':'no-cache'
+              })
+              with urllib.request.urlopen(request,timeout=20) as reply:
+                  return reply.status,reply.read(1100000).decode('utf8','replace')
+          banned=['실시간 공시 데이터 사용 불가','최신 공시 미확인',
+                  '상품 데이터 인증키가 연결되지 않아','공시 데이터 연결을 확인하고 있습니다.',
+                  '현재 자동 수집을 사용할 수 없습니다.','자료 수집 중…']
+          def audit():
+              pages={}
+              for name in ['/finance/','/finance/savings/','/finance/markets/','/finance-live.js']:
+                  code,body=read(name)
+                  pages[name]=body
+                  if code!=200:raise ValueError(name+' not HTTP 200')
+                  bad=[s for s in banned if s in body]
+                  if bad:raise ValueError(name+' has visible error message '+str(bad))
+              hub,savings,markets,frontend=(pages[s] for s in ['/finance/','/finance/savings/','/finance/markets/','/finance-live.js'])
+              checks={
+                'hub-source-links':'id="finance-rates-official"' in hub and 'id="finance-issues-official"' in hub,
+                'no-5-field-error-form-on-hub':'id="finance-products"' not in hub,
+                'savings-official-link':'id="finance-rates-official"' in savings and 'https://finlife.fss.or.kr/' in savings,
+                'savings-table-hidden':'id="finance-rate-panel" aria-labelledby="bank-rates-heading" hidden' in savings,
+                'markets-official-links':'id="finance-issues-official"' in markets and 'https://dart.fss.or.kr/' in markets,
+                'markets-RSS-hidden':'id="finance-issues-panel" aria-labelledby="issues-heading" hidden' in markets,
+                'runtime-hide-on-error':'if(ratePanel)ratePanel.hidden=true' in frontend and 'if(issuePanel)issuePanel.hidden=true' in frontend,
+                'runtime-show-only-on-success':'if(ratePanel)ratePanel.hidden=false' in frontend and 'if(issuePanel)issuePanel.hidden=false' in frontend,
+              }
+              print('FINANCE_PUBLIC_NO_ERROR_CHECK',checks,flush=True)
+              failed=[k for k,v in checks.items() if not v]
+              return failed
+          for attempt in range(1,20):
+              try:
+                  failed=audit()
+                  if not failed:
+                      print('FINANCE_NO_WARNING_LIVE_VERIFIED',root,'attempt',attempt,flush=True)
+                      break
+                  print('FINANCE_LIVE_PENDING',attempt,failed,flush=True)
+              except Exception as e:
+                  print('FINANCE_LIVE_RETRY',attempt,type(e).__name__,str(e)[:160],flush=True)
+              if attempt==19:raise SystemExit('Finance no-warning change not fully live')
+              time.sleep(10)
+          PY
