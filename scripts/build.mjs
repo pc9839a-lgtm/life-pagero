@@ -387,7 +387,7 @@ write('/car/', listing('car'));
 write('/support/', listing('support'));
 for (const post of posts) write(`/${post.category}/${post.slug}/`, article(post));
 
-staticPage('/about/', '사이트 소개', '생활비서 운영 정보', `<h1>생활비서</h1><p>자동차 검사·세금·이전등록, 정부지원금, 생활행정 정보를 다룹니다.</p><p>정부기관이 아니며 신청·심사·지급을 대행하거나 보장하지 않습니다.</p><p>문의: <a href="mailto:${EMAIL}">${EMAIL}</a></p>`);
+staticPage('/about/', '사이트 소개', '생활비서 운영 정보', `<h1>생활비서</h1><p>자동차 검사 · 세금 · 이전등록 · 정부지원금 · 생활행정</p><p>정부기관이 아니며 신청·심사·지급을 대행하거나 보장하지 않습니다.</p><p>문의: <a href="mailto:${EMAIL}">${EMAIL}</a></p>`);
 staticPage('/privacy-policy/', '개인정보처리방침', '생활비서의 개인정보 및 Google 광고 쿠키·사용자 설정 안내입니다.', `<h1>개인정보처리방침</h1>
 <p>시행일: 2026년 10월 23일</p>
 <p>생활비서는 회원가입 없이 이용할 수 있는 독립 생활정보 사이트입니다. 본 안내는 사이트 접속 과정에서 처리될 수 있는 정보와 광고 관련 기술을 설명합니다.</p>
