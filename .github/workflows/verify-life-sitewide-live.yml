@@ -1,0 +1,118 @@
+name: Verify LIFE sitewide UI and source links in production
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-life-sitewide-live.yml'
+      - 'scripts/add-today-dashboard.mjs'
+      - 'public/today-dashboard.js'
+      - 'public/finance-live.js'
+      - 'public/today-dashboard.css'
+      - 'scripts/enhance-finance.mjs'
+      - 'scripts/build-production.mjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check-public:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - name: Crawl homepage, sitemap, 46 guides, source widgets, links and assets
+        run: |
+          python - <<'PY'
+          import concurrent.futures,datetime,html,json,re,time,urllib.error,urllib.parse,urllib.request,xml.etree.ElementTree as ET
+          ROOT='https://pagero.kr/life'
+          UA='Mozilla/5.0 (PageRoLifeSitewideIntegrityChecker)'
+          def get(path,timeout=15):
+            req=urllib.request.Request(ROOT+path,headers={'User-Agent':UA,'Cache-Control':'no-cache'})
+            try:
+              with urllib.request.urlopen(req,timeout=timeout) as resp:
+                raw=resp.read(1600000)
+                return resp.status,raw.decode('utf8','replace')
+            except urllib.error.HTTPError as exc:
+              return exc.code,exc.read(160000).decode('utf8','replace')
+          def verify():
+            status,xml=get('/sitemap.xml')
+            if status!=200:raise AssertionError('Sitemap HTTP '+str(status))
+            tree=ET.fromstring(xml)
+            urls=[(tag.text or '') for tag in tree.iter() if tag.tag.rsplit('}',1)[-1]=='loc']
+            paths=[]
+            for url in urls:
+              if url.startswith(ROOT+'/'):
+                paths.append(url[len(ROOT):])
+            if len(set(paths))<55:raise AssertionError('Sitemap listing incomplete: '+str(len(set(paths))))
+            article_paths=[p for p in paths if re.fullmatch('/(?:car|support)/[^/]+/',p)]
+            if len(article_paths)!=46:raise AssertionError('46 canonical guide URLs expected, got '+str(len(article_paths)))
+            allpaths=list(dict.fromkeys(paths+[p+str(part)+'/' for p in article_paths for part in [2,3]]))
+            def check_page(p):
+              try:
+                code,body=get(p)
+                errs=[]
+                if code!=200:errs.append('HTTP'+str(code))
+                if len(re.findall(r'<h1(?:\s[^>]*)?>',body))!=1:errs.append('H1')
+                if len(re.findall(r'<link rel="canonical"',body))!=1:errs.append('canonical')
+                if 'class="life-modern ' not in body:errs.append('theme')
+                if len(body)<1500:errs.append('shortHTML')
+                return p,errs,len(body)
+              except Exception as e:return p,[str(e)[:95]],0
+            with concurrent.futures.ThreadPoolExecutor(max_workers=12) as ex:
+              entries=list(ex.map(check_page,allpaths))
+            errors=[(p,e) for p,e,_ in entries if e]
+            if errors:raise AssertionError('Public page violations: '+str(errors[:12]))
+            banned=['실시간 공시 데이터 사용 불가','최신 공시 미확인',
+              '상품 데이터 인증키가 연결되지','기상청 인증키가',
+              'RSS 수집 불가','재시도 예정','관측 조회 중','뉴스 헤드라인 조회 중',
+              '증권 자료 확인 중','KRW 시세 조회 중','언론사 RSS 확인 중',
+              '자료를 확인하고 있습니다.']
+            critical=['/','/finance/','/finance/savings/','/finance/markets/','/today/']
+            bodies={}
+            for p in critical:
+              c,b=get(p)
+              if c!=200:raise AssertionError(p+' not 200')
+              bodies[p]=b
+              bad=[word for word in banned if word in b]
+              if bad:raise AssertionError(p+' unwanted text: '+str(bad))
+            home=bodies['/']
+            if 'class="today-glance"' in home:raise AssertionError('Home crowded with 4 source widgets')
+            if home.count('class="portal-topic-card compact-topic"')!=6:raise AssertionError('Home category count')
+            popular=re.search(r'<section class="compact-popular"[\s\S]*?</section>',home)
+            if not popular or popular.group(0).count('<li><a href=')!=3:raise AssertionError('Home popular links count')
+            if '<a href="/today/">오늘의 정보</a>' not in home:raise AssertionError('Today navigation still missing')
+            if 'data-today-weather' not in bodies['/today/']:raise AssertionError('Today screen removed')
+            for p in ['/finance/','/finance/savings/','/finance/markets/']:
+              if not any(a in bodies[p] for a in ['https://finlife.fss.or.kr/','https://dart.fss.or.kr/']):
+                raise AssertionError('Finance source missing '+p)
+            for p in ['/finance/savings/']:
+              if 'id="finance-rate-panel" aria-labelledby="bank-rates-heading" hidden' not in bodies[p]:
+                raise AssertionError('Unverified rate selector leaked')
+            for asset in ['/life-compact.css','/life-compact.js','/life-modern.css',
+              '/finance-live.js','/today-dashboard.js','/today-dashboard.css']:
+              status,body=get(asset)
+              if status!=200 or len(body)<300:raise AssertionError('Missing asset '+asset+' '+str(status))
+              bad=[v for v in banned if v in body]
+              if bad:raise AssertionError('Visible UI errors in '+asset+': '+str(bad))
+            # Diagnostic only: API backends may correctly reject unconfigured external data.
+            states={}
+            for endpoint in ['/finance/api/products?kind=deposit&group=bank',
+                             '/today/api/weather?city=seoul','/today/api/stocks',
+                             '/today/api/crypto','/today/api/news','/finance/api/issues']:
+              try:
+                code,payload=get(endpoint,timeout=12)
+                try:stage=json.loads(payload).get('status','unknown')
+                except:stage='non-JSON'
+                states[endpoint.split('?')[0]]={'http':code,'status':stage}
+              except Exception as e:states[endpoint.split('?')[0]]={'http':'timeout','status':type(e).__name__}
+            print('LIVE_CRAWL_PAGES',len(entries),'SITEMAP',len(set(paths)),'GUIDES',len(article_paths),
+                  'MIN_HTML_BYTES',min(size for _,_,size in entries),flush=True)
+            print('LIVE_SOURCE_STATES',json.dumps(states,ensure_ascii=False),flush=True)
+            print('SITEWIDE_LIVE_VERIFIED',ROOT,'ZERO_UI_WARNINGS','ZERO_BROKEN_PAGES',flush=True)
+          for attempt in range(1,12):
+            try:
+              verify()
+              break
+            except Exception as e:
+              print('SITEWIDE_LIVE_RETRY',attempt,type(e).__name__,str(e)[:450],flush=True)
+              if attempt==11:raise
+              time.sleep(12)
+          PY
