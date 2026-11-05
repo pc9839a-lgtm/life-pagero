@@ -30,7 +30,7 @@ const css = [
   '.life-coupang-widget{max-width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain}',
   '.life-coupang-widget iframe{max-width:100%;border:0}',
   '.life-coupang-disclosure{font-size:12px;line-height:1.6;color:#68717e;text-align:left;margin:10px 0 0;word-break:keep-all}',
-  '@media(max-width:700px){.life-coupang-placement{margin:25px auto 30px}}',
+  '@media(max-width:700px){.life-coupang-placement{margin:25px auto 30px}.life-coupang-widget{max-width:320px;margin-inline:auto}}',
 ].join('\n');
 fs.writeFileSync(path.join(DIST, 'coupang-banner.css'), css + '\n');
 
@@ -41,7 +41,7 @@ const options = JSON.stringify({
   id: BANNER.id,
   template: BANNER.template,
   trackingCode: BANNER.trackingCode,
-  width: BANNER.desktop.width,
+  width: '100%',
   height: BANNER.desktop.height,
   tsource: BANNER.tsource,
 });
@@ -49,7 +49,7 @@ const inline = [
   '(function(){',
   'var options=' + options + ';',
   'if(window.matchMedia("(max-width:700px)").matches){',
-  'options.width=window.innerWidth<352?"100%":"' + BANNER.mobile.width + '";',
+  'options.width="100%";',
   'options.height="' + BANNER.mobile.height + '";',
   '}',
   'new PartnersCoupang.G(options);',
