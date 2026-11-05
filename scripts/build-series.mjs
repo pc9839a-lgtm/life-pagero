@@ -95,9 +95,7 @@ function markdownToHtml(markdown) {
     }
     if (heading) {
       flushParagraph(); closeList();
-      const level = Math.min(4, heading[1].length);
-      const descriptive = heading[2].replace(/^실제 상황에 적용해 보기:\s*/, '');
-      output.push('<h' + level + ' class="article-subheading">' + inlineMarkdown(descriptive) + '</h' + level + '>');
+      // Publisher explicitly chose an article style without visible subheadings.
       continue;
     }
     if (unordered || ordered) {
