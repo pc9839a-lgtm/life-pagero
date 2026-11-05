@@ -23,9 +23,9 @@ jobs:
         run: node --test scripts/events.test.mjs
       - name: Fetch approved free public data
         env:
-          TOUR_API_KEY: \${{ secrets.TOUR_API_KEY }}
-          KOPIS_API_KEY: \${{ secrets.KOPIS_API_KEY }}
-          SEOUL_EVENT_API_KEY: \${{ secrets.SEOUL_EVENT_API_KEY }}
+          TOUR_API_KEY: ${{ secrets.TOUR_API_KEY }}
+          KOPIS_API_KEY: ${{ secrets.KOPIS_API_KEY }}
+          SEOUL_EVENT_API_KEY: ${{ secrets.SEOUL_EVENT_API_KEY }}
         run: node scripts/sync-events.mjs
       - name: Validate site output before publishing snapshot
         run: npm run build
