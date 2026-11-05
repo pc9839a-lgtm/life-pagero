@@ -5,7 +5,7 @@ const DIST=path.resolve('dist');
 const EXPECTED=[
   ['/', '홈'], ['/today/','오늘'], ['/finance/','금융'],
   ['/finance/savings/','예·적금'], ['/finance/markets/','주식·코인'],
-  ['/car/','자동차'], ['/support/','지원금']
+  ['/car/','자동차'], ['/support/','지원금'], ['/deals/','핫딜']
 ];
 const read=relative=>fs.readFileSync(path.join(DIST,relative),'utf8');
 const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(ent=>{
@@ -40,6 +40,7 @@ for(const absolute of walk(DIST).filter(p=>p.endsWith('.html'))){
   else if(pathname.startsWith('/finance/'))want=2;
   else if(pathname.startsWith('/car/'))want=5;
   else if(pathname.startsWith('/support/'))want=6;
+  else if(pathname.startsWith('/deals/'))want=7;
   const currentIndices=entries.flatMap((entry,i)=>entry[2]?[i]:[]);
   if(currentIndices.length!==(want<0?0:1) || (want>=0&&currentIndices[0]!==want))
     fail('active section selection',relative);
@@ -63,4 +64,4 @@ for(const p of ['index.html','today/index.html','finance/index.html','finance/sa
   'car/index.html','support/index.html','about/index.html','search/index.html']){
   if(!read(p).includes('aria-label="전체 메뉴"'))fail('global header lost',p);
 }
-console.log('[nav-qa] '+checked+' HTML documents share an identical seven-link menu, correct active state, one stylesheet and working links.');
+console.log('[nav-qa] '+checked+' HTML documents share an identical eight-link menu, correct active state, one stylesheet and working links.');
