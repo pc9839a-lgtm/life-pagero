@@ -43,6 +43,7 @@ const steps = [
   ['node', ['scripts/verify-verified-rich-guides.mjs']],
   ['node', ['scripts/trim-life-ui-copy.mjs']],
   ['node', ['scripts/verify-trimmed-life-ui.mjs']],
+  ['node', ['scripts/verify-sitewide-clean-ui.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);
