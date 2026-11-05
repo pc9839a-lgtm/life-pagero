@@ -55,6 +55,21 @@ for(const file of walk(DIST).filter(f=>f.endsWith('.html'))){
     if(!visibleText(updated)){deletedParagraphs++;return '';}
     return '<p'+attrs+'>'+updated+'</p>';
   });
+  // Keep source-backed facts in place. Normalize narrated wording only in
+  // visible text nodes, never script contents, links, attributes or metadata.
+  const protectedBlocks=[];
+  html=html.replace(/<(?:script|style)\b[^>]*>[\s\S]*?<\/(?:script|style)>/gi,block=>{
+    protectedBlocks.push(block);
+    return '__LIFE_CONTENT_SAFE_'+(protectedBlocks.length-1)+'__';
+  });
+  html=html.replace(/>([^<]*)</g,(whole,segment)=>'>'+segment
+    .replace(/정리합니다/g,'수록했습니다')
+    .replace(/안내합니다/g,'명시합니다')
+    .replace(/확인하세요/g,'확인해야 합니다')
+    .replace(/참고하세요/g,'참고할 수 있습니다')
+    .replace(/살펴보세요/g,'살펴볼 수 있습니다')
+    .replace(/읽어보세요/g,'읽을 수 있습니다')+'<');
+  html=html.replace(/__LIFE_CONTENT_SAFE_(\d+)__/g,(_,index)=>protectedBlocks[Number(index)]);
   // A standalone bold-only line is another generated pseudo-heading.
   html=html.replace(/<p>\s*<(?:strong|b)>[^<]{1,110}<\/(?:strong|b)>\s*<\/p>/gi,'');
   if(html!==original){fs.writeFileSync(file,html);changed++;}
