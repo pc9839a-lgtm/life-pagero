@@ -23,7 +23,18 @@ const aliases = [
   ['jeju',/제주/]
 ];
 export function regionOf(value) {
-  const text = String(value || '');
+  const text = String(value || '').trim();
+  // Prefer an explicitly stated province to city-name aliases:
+  // "경기도 광주시" must not be classified as 광주광역시.
+  const province=[
+    ['gyeonggi',/^(경기도|경기\s)/],['gangwon',/^(강원특별자치도|강원도)/],
+    ['chungbuk',/^충청북도/],['chungnam',/^충청남도/],
+    ['jeonbuk',/^(전북특별자치도|전라북도)/],['jeonnam',/^전라남도/],
+    ['gyeongbuk',/^경상북도/],['gyeongnam',/^경상남도/],
+    ['jeju',/^제주특별자치도/]
+  ];
+  const prefixed=province.find(([,pattern])=>pattern.test(text));
+  if(prefixed)return prefixed[0];
   return aliases.find(([,pattern])=>pattern.test(text))?.[0] || null;
 }
 export function isoDate(value) {
