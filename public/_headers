@@ -22,3 +22,16 @@
 
 /*.png
   Cache-Control: public, max-age=604800
+
+# Hot Deals changes are content-sensitive and must not outlive a deployment.
+/deals/
+  Cache-Control: no-store, max-age=0, must-revalidate
+
+/deals/*
+  Cache-Control: no-store, max-age=0, must-revalidate
+
+/adpick-deals.js
+  Cache-Control: no-cache, max-age=0, must-revalidate
+
+/adpick-deals.css
+  Cache-Control: no-cache, max-age=0, must-revalidate
