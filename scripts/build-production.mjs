@@ -43,6 +43,7 @@ const steps = [
   ['node', ['scripts/verify-verified-rich-guides.mjs']],
   ['node', ['scripts/trim-life-ui-copy.mjs']],
   ['node', ['scripts/verify-trimmed-life-ui.mjs']],
+  ['node', ['scripts/add-adpick-deals.mjs']],
   ['node', ['scripts/unify-global-navigation.mjs']],
   ['node', ['scripts/verify-global-navigation.mjs']],
   ['node', ['scripts/verify-sitewide-clean-ui.mjs']],
