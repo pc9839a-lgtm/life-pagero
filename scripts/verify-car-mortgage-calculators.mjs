@@ -21,7 +21,7 @@ for(const [relative,url,heading,script] of [
     'working JavaScript module not attached: '+relative);
   check(html.includes('class="life-modern life-editorial '),
     'sitewide magazine theme missing: '+relative);
-  check(html.includes('href="/life-editorial-20261105.css"'),
+  check(html.includes('href="/life-editorial-20261106.css"'),
     'single editorial stylesheet missing: '+relative);
   check(!html.includes('href="/life-global-nav.css"'),
     'legacy nav theme leaked to '+relative);
@@ -68,9 +68,9 @@ for(const path of ['car-cost-math.js','car-cost-calculator.js',
   check(fs.existsSync(root+'/'+path),'calculator implementation not copied: '+path);
   check(fs.statSync(root+'/'+path).size>1300,'impl suspiciously short: '+path);
 }
-const css=get('life-editorial-20261105.css');
+const css=get('life-editorial-20261106.css');
 for(const marker of ['.lifestyle-calc-page','.cost-field-grid',
-  '.cost-result','.mortgage-limit-rows','@media(max-width:540px)']){
+  '.cost-result','.mortgage-limit-rows','@media(max-width:700px)']){
   check(css.includes(marker),'responsive calculator CSS missing: '+marker);
 }
 console.log('[additional-tools-qa] PASS: car and mortgage calculators, required numeric fields, source caveat, correct menu links, mobile styles, SEO and original advertising.');

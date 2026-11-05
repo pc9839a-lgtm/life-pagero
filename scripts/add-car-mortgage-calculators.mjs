@@ -67,7 +67,10 @@ const carBody='<div class="site-shell"><article class="portal-page finance-page 
   +'<nav class="portal-breadcrumbs" aria-label="현재 위치"><a href="/">홈</a> / '
   +'<a href="/topics/">생활정보</a> / <a href="/car/">자동차</a> / 유지비 계산기</nav>'
   +'<h1>자동차 유지비 계산기</h1>'
-  +'<form id="car-cost-form" novalidate><div class="cost-field-grid">'
+  +'<div class="calculator-workspace car-workspace">'
+  +'<form id="car-cost-form" novalidate>'
+  +'<div class="calculator-form-header"><strong>차량과 운행 조건</strong><span>연비와 주행거리부터 입력하세요</span></div>'
+  +'<div class="cost-field-grid cost-primary-fields">'
   +'<label class="calc-field"><span>연료 유형</span><select id="car-fuel">'
   +'<option value="petrol">휘발유</option><option value="hybrid" selected>하이브리드</option>'
   +'<option value="diesel">경유</option><option value="lpg">LPG</option><option value="electric">전기</option></select></label>'
@@ -77,6 +80,8 @@ const carBody='<div class="site-shell"><article class="portal-page finance-page 
   +'<input id="car-efficiency" type="number" min="0.01" max="100" step="0.1" value="16" inputmode="decimal" required></label>'
   +'<label class="calc-field"><span id="car-unit-label">주유 단가 (원/L)</span>'
   +'<input id="car-unit-price" type="number" min="0" max="100000" step="10" value="1700" inputmode="numeric" required></label>'
+  +'</div><details class="cost-advanced"><summary>보험·세금·주차 등 유지비 수정</summary>'
+  +'<div class="cost-field-grid cost-extra-fields">'
   +annualField('insurance-year','보험료 (연간)',850000)
   +annualField('car-tax-year','자동차세 (연간)',280000)
   +monthlyField('parking-month','주차비 (월간)',40000)
@@ -87,7 +92,7 @@ const carBody='<div class="site-shell"><article class="portal-page finance-page 
   +annualField('tires-year','타이어 교체비 (연평균)',100000)
   +annualField('depreciation-year','감가상각 (연간, 선택)',0)
   +monthlyField('loan-monthly','차량대출 납부액 (월간, 선택)',0)
-  +'</div><p class="cost-examples">입력된 금액은 계산 예시이며, 실제 연료 가격·보험료·세금이 아닙니다.</p>'
+  +'</div></details><p class="cost-examples">보험·세금·기타 비용은 예시 금액으로 계산됩니다. 필요하면 위에서 수정하세요.</p>'
   +'<p id="car-cost-error" class="cost-error" hidden role="alert"></p>'
   +'<button class="cost-submit" type="submit">유지비 다시 계산</button></form>'
   +'<section class="cost-result" aria-label="자동차 유지비 예상 결과">'
@@ -98,6 +103,7 @@ const carBody='<div class="site-shell"><article class="portal-page finance-page 
   +'<div><span>1km당 비용</span><strong id="car-cost-per-km">—</strong></div>'
   +'<div><span>연간 주유·충전비</span><strong id="car-cost-fuel-total">—</strong></div>'
   +'</div></section>'
+  +'</div>'
   +'<details class="cost-breakdown" open><summary>비용 항목별 상세</summary>'
   +'<div class="cost-table-scroll"><table><thead><tr><th scope="col">항목</th>'
   +'<th scope="col">월평균</th><th scope="col">연간</th></tr></thead>'
@@ -118,7 +124,9 @@ const mortgageBody='<div class="site-shell"><article class="portal-page finance-
   +'<nav class="portal-breadcrumbs" aria-label="현재 위치"><a href="/">홈</a> / '
   +'<a href="/finance/">금융</a> / 주택담보대출 계산기</nav>'
   +'<h1>주택담보대출 한도·상환 계산기</h1>'
+  +'<div class="calculator-workspace mortgage-workspace">'
   +'<form id="mortgage-form" novalidate>'
+  +'<div class="calculator-form-header"><strong>대출 기본 조건</strong><span>주택가격·소득·금리 입력</span></div>'
   +'<div class="cost-field-grid">'
   +'<label class="calc-field"><span>주택 소재지 유형</span><select id="mortgage-area">'
   +'<option value="regulated">수도권 규제지역</option>'
@@ -133,6 +141,8 @@ const mortgageBody='<div class="site-shell"><article class="portal-page finance-
   +mortgageField('existing-debt-annual','기존대출 연간 원리금 (만원)',300,'min="0" max="1000000" step="10"')
   +mortgageField('rate','예상 실제 대출금리 (연 %)',4.5,'min="0" max="30" step="0.1"')
   +mortgageField('years','대출기간 (년)',30,'min="1" max="50" step="1"')
+  +'</div><details class="cost-advanced"><summary>LTV·DSR·규제값 직접 수정</summary>'
+  +'<div class="cost-field-grid cost-extra-fields">'
   +mortgageField('ltv','LTV (%)',70,'min="0" max="100" step="1"')
   +mortgageField('dsr','DSR (%)',40,'min="0" max="100" step="1"')
   +mortgageField('stress','DSR 스트레스 가산금리 (%p)',3,'min="0" max="15" step="0.1"')
@@ -140,7 +150,7 @@ const mortgageBody='<div class="site-shell"><article class="portal-page finance-
     'min="0" max="1000000" step="100"')
   +mortgageField('collateral-deduction','선순위·방공제 차감액 (만원)',0,
     'min="0" max="1000000" step="100"')
-  +'</div><p class="cost-examples">지역·생애최초 선택 시 일부 기준이 자동 입력됩니다. '
+  +'</div></details><p class="cost-examples">지역·생애최초 조건에 따라 규제값을 자동 반영합니다. '
   +'세부 대출 규정 및 본인 조건에 맞게 LTV·DSR·스트레스 금리와 차감액을 수정하세요.</p>'
   +'<p id="mortgage-error" class="cost-error" hidden role="alert"></p>'
   +'<button class="cost-submit" type="submit">예상 한도 계산</button></form>'
@@ -154,6 +164,7 @@ const mortgageBody='<div class="site-shell"><article class="portal-page finance-
   +'<div><span>보유금 대비 부족액</span><strong id="mortgage-shortfall">—</strong></div>'
   +'<div><span>총 예상 이자</span><strong id="mortgage-total-interest">—</strong></div>'
   +'</div><p class="cost-note" id="mortgage-cash-note"></p></section>'
+  +'</div>'
   +'<details class="cost-breakdown" open><summary>한도를 결정하는 기준</summary>'
   +'<div class="mortgage-limit-rows">'
   +'<div><span>LTV 적용 한도</span><strong id="mortgage-ltv-limit">—</strong></div>'
