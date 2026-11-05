@@ -54,7 +54,7 @@ jobs:
                 const previewText=await page.locator('#finance-rate-preview').innerText();
                 if(!/\d\.\d{2}%/.test(previewText))throw new Error('Missing preview numeric interest');
                 progress.push('finance overview '+previewCount+' visible real-rate cards');
-                console.log('LIVE_FINANCE_VISIBLE_PASS',viewport.width,progress.join(' + '),'API',lastApi,flush=true);
+                console.log('LIVE_FINANCE_VISIBLE_PASS',viewport.width,progress.join(' + '),'API',lastApi);
                 await page.close();
                 return;
               }catch(error){
