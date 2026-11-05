@@ -39,7 +39,7 @@ export async function onRequestGet(context) {
   if(context.env.KRX_PUBLIC_DISPLAY_ALLOWED!=='true'||!context.env.KRX_API_KEY)
     return json({
       status:'unconfigured',source:'한국거래소 KRX',
-      message:'KRX 지수 재게시 이용권한과 승인된 API 키가 설정되지 않았습니다.',
+      message:'현재 제공 가능한 증권 지수 자료가 없습니다.',
       sourceUrl:'https://data.krx.co.kr/',items:[]
     },503);
   return cached(context,'krx-daily-indices',21600,async ()=>{
