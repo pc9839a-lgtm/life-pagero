@@ -25,3 +25,9 @@
 .life-editorial .adpick-notes{margin-top:32px;color:#5b6879;font-size:13px;line-height:1.75}
 @media(max-width:960px){.life-editorial .adpick-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:700px){.life-editorial .adpick-deals{padding:18px 14px 48px}.life-editorial .adpick-deals h1{font-size:25px}.life-editorial .adpick-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.life-editorial .adpick-card-info{padding:10px;gap:6px}.life-editorial .adpick-product-name{font-size:13px}.life-editorial .adpick-price strong{font-size:16px}.life-editorial .adpick-section-head{align-items:start;flex-direction:column;gap:5px}}
+/* Search field uses the same neutral controls as the existing editorial theme. */
+.life-editorial .adpick-search{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-start;margin:16px 0}
+.life-editorial .adpick-search label{font-size:13px;font-weight:650;align-self:center}
+.life-editorial .adpick-search input{min-width:170px;flex:1 1 220px;padding:10px 12px;border:1px solid #c9d1dd;background:#fff;border-radius:8px;color:#24344c;font-size:14px}
+.life-editorial .adpick-search button{padding:9px 16px;border:0;border-radius:8px;background:#172b4b;color:white;font-weight:700;cursor:pointer}
+.life-editorial .adpick-search button:focus-visible,.life-editorial .adpick-filter:focus-visible{outline:2px solid #285da7;outline-offset:2px}
