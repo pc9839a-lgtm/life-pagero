@@ -7,13 +7,14 @@
   }[c]));
   const time = value => {
     const date = new Date(value);
-    if(!Number.isFinite(date.getTime())) return '일시 미확인';
+    if(!Number.isFinite(date.getTime())) return '';
     return new Intl.DateTimeFormat('ko-KR',{
       timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'
     }).format(date) + ' KST';
   };
   const products = document.getElementById('finance-products');
-  const status = document.getElementById('finance-products-status');
+  const ratePanel = document.getElementById('finance-rate-panel');
+  const rateOfficial = document.getElementById('finance-rates-official');
   const criteria = document.getElementById('finance-product-criteria');
   const source = document.getElementById('finance-products-source');
   let allProducts = [];
@@ -24,8 +25,7 @@
     sort: document.getElementById('finance-sort'),
     query: document.getElementById('finance-query')
   };
-  const rate = value => Number.isFinite(value) ? value.toFixed(2) + '%' : '미공시';
-  const official = '<a href="https://finlife.fss.or.kr/" target="_blank" rel="noopener noreferrer">금융감독원 금융상품한눈에에서 확인</a>';
+  const rate = value => Number.isFinite(value) ? value.toFixed(2) + '%' : '—';
   function renderProducts() {
     if(!products || !allProducts.length)return;
     const t=fields.term.value;
@@ -59,9 +59,8 @@
   }
   async function loadProducts(){
     if(!products)return;
-    if(status)status.textContent='금융감독원 공시 자료를 조회하는 중입니다.';
     if(criteria)criteria.textContent='';
-    products.innerHTML='<p class="finance-empty">상품 자료 조회 중…</p>';
+    products.replaceChildren();
     const kind=fields.kind.value, group=fields.group.value;
     const controller=new AbortController();
     const timeout=setTimeout(()=>controller.abort(),12000);
@@ -69,20 +68,21 @@
       const response=await fetch(prefix+'finance/api/products?kind='+encodeURIComponent(kind)
         +'&group='+encodeURIComponent(group),{signal:controller.signal});
       const data=await response.json();
-      if(!response.ok||data.status!=='ok')throw new Error(data.message||'공시 자료 연결 실패');
+      if(!response.ok||data.status!=='ok')throw new Error('Finance feed unavailable');
       allProducts=Array.isArray(data.products)?data.products:[];
-      if(source)source.textContent='금융감독원 금융상품한눈에 · 조회 '+time(data.retrievedAt)
-        +' · 공시 회차는 상품별로 다를 수 있습니다.';
-      if(status)status.textContent='공시 상품을 불러왔습니다. 최고금리는 우대조건 충족 시 적용될 수 있습니다.'
-        +(data.mayBeTruncated?' 일부 페이지는 조회 한도로 제외되었습니다.':'');
+      if(!allProducts.length)throw new Error('Empty verified products');
+      if(source)source.textContent='금융감독원 · '+time(data.retrievedAt);
       renderProducts();
+      if(ratePanel)ratePanel.hidden=false;
+      if(rateOfficial)rateOfficial.hidden=true;
     }catch(error){
+      // Unavailable backend is an internal concern, not an end-user notice.
+      // Retain the working official link instead of displaying empty data UI.
       allProducts=[];
-      const message=error?.name==='AbortError'?'조회 시간이 초과됐습니다.':String(error.message||'조회 실패');
-      if(status)status.textContent='실시간 공시 데이터 사용 불가: '+message;
-      if(source)source.textContent='최신 공시 미확인 · 실제 금리는 해당 금융회사에서 다시 확인해야 합니다.';
-      products.innerHTML='<div class="finance-source-empty"><p>현재 은행별 금리를 확인할 수 없습니다. 확인되지 않은 금리를 표시하지 않습니다.</p>'
-        +official+'</div>';
+      if(ratePanel)ratePanel.hidden=true;
+      if(rateOfficial)rateOfficial.hidden=false;
+      if(source)source.textContent='';
+      products.replaceChildren();
     }finally{clearTimeout(timeout);}
   }
   if(products){
@@ -95,7 +95,8 @@
   }
 
   const issuesEl=document.getElementById('finance-issues');
-  const issuesState=document.getElementById('finance-issues-status');
+  const issuePanel=document.getElementById('finance-issues-panel');
+  const issueOfficial=document.getElementById('finance-issues-official');
   const issuesType=document.getElementById('finance-issues-type');
   let allIssues=[];
   const issueLink=entry => '<li><a href="'+esc(entry.url)
@@ -118,17 +119,16 @@
     const timeout=setTimeout(()=>controller.abort(),13000);
     fetch(prefix+'finance/api/issues',{signal:controller.signal}).then(async response=>{
       const data=await response.json();
-      if(!response.ok||data.status!=='ok')throw new Error(data.message||'공식 발표 수집 실패');
-      allIssues=data.items||[];
-      if(issuesState)issuesState.textContent='공식 RSS 확인 '+time(data.retrievedAt)
-        +(data.partial?' · 일부 기관 수집 지연':'')
-        +' · 기사 전체가 아닌 발표·공시 제목입니다.';
+      if(!response.ok||data.status!=='ok')throw new Error('Official updates unavailable');
+      allIssues=Array.isArray(data.items)?data.items:[];
+      if(!allIssues.length)throw new Error('No verified updates');
       showIssues();
+      if(issuePanel)issuePanel.hidden=false;
+      if(issueOfficial)issueOfficial.hidden=true;
     }).catch(()=>{
-      if(issuesState)issuesState.textContent='최근 공식 발표를 확인할 수 없습니다.';
-      issuesEl.innerHTML='<p class="finance-empty">현재 자동 수집을 사용할 수 없습니다. '
-        +'<a href="https://dart.fss.or.kr/" target="_blank" rel="noopener noreferrer">DART 공시 확인</a>'
-        +' · <a href="https://www.bok.or.kr/" target="_blank" rel="noopener noreferrer">한국은행 발표 확인</a></p>';
+      if(issuePanel)issuePanel.hidden=true;
+      if(issueOfficial)issueOfficial.hidden=false;
+      issuesEl.replaceChildren();
     }).finally(()=>clearTimeout(timeout));
   }
 }());
