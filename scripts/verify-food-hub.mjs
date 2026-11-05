@@ -34,8 +34,7 @@ check(css.includes('@media(max-width:700px)'),'mobile breakpoint missing');
 for(const id of ['food-servings','food-show-recipe','food-shopping-list','food-shopping-count','food-copy','food-clear-done','food-clear-all','food-november-source']){
  check(page.includes('id="'+id+'"'),'missing functional food control '+id);
 }
-for(const marker of ['life_food_grocery_v1',"localStorage.getItem(storageKey)","localStorage.setItem(storageKey)","navigator.clipboard.writeText","quantityMissingNeverExists"]){
- if(marker==="quantityMissingNeverExists")continue;
+for(const marker of ['life_food_grocery_v1',"localStorage.getItem(storageKey)","localStorage.setItem(storageKey,","navigator.clipboard.writeText"]){
  check(js.includes(marker),'missing persistence or copy action '+marker);
 }
 const match=js.match(/const recipeRows=(\[[^\n]+\]);/);
