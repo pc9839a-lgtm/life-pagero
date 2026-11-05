@@ -176,3 +176,29 @@
  .life-modern .finance-official-shortcut a{min-height:48px;width:100%;font-size:13px}
  .life-modern .finance-official-shortcut--issues a{width:auto;flex:1;min-width:125px}
 }
+
+/* Actual published rate preview. Three numbers only, with a direct full-table link. */
+.life-modern .finance-preview-section{margin:18px 0 25px;padding:23px 23px 19px;border:1px solid #e3eaf2;border-radius:15px;background:#fff}
+.life-modern .finance-preview-section .finance-section-title{margin-bottom:14px;align-items:center}
+.life-modern .finance-preview-section .finance-section-title h2{font-size:19px;margin:0}
+.life-modern .finance-preview-section .finance-section-title>a{color:#2563eb;font-size:13px;font-weight:710}
+.life-modern .finance-rate-preview[hidden]{display:none!important}
+.life-modern .finance-preview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.life-modern .finance-preview-card{display:flex;flex-direction:column;align-items:flex-start;min-width:0;gap:5px;padding:16px;border:1px solid #e5eaf2;border-radius:12px;background:#fafcff;color:#25364a;text-decoration:none}
+.life-modern .finance-preview-card:hover{color:#1d4ed8;border-color:#b5cdfa;background:#f3f7ff}
+.life-modern .finance-preview-bank{font-size:12px;color:#64748b;font-weight:650}
+.life-modern .finance-preview-rate{font-size:27px;color:#2563eb;font-weight:800;letter-spacing:-.05em;line-height:1.3;font-variant-numeric:tabular-nums}
+.life-modern .finance-preview-product{font-size:13px;font-weight:690;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.life-modern .finance-preview-term{font-size:11px;color:#718096}
+.life-modern .finance-preview-more{display:inline-block;font-size:13px;font-weight:720;color:#2563eb;margin-top:13px}
+.life-modern .finance-preview-section .finance-official-shortcut{margin:0}
+@media(max-width:700px){
+ .life-modern .finance-preview-section{padding:16px 13px;margin:12px 0 18px}
+ .life-modern .finance-preview-section .finance-section-title h2{font-size:17px}
+ .life-modern .finance-preview-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ .life-modern .finance-preview-card{padding:12px 9px;border-radius:10px}
+ .life-modern .finance-preview-bank{font-size:11px}
+ .life-modern .finance-preview-rate{font-size:23px}
+ .life-modern .finance-preview-product{font-size:11px}
+ .life-modern .finance-preview-term{font-size:10px}
+}
