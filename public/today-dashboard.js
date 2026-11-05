@@ -29,7 +29,16 @@
     return a;
   };
   const fallback=(box,link,url)=>{
-    box.replaceChildren(external(url,link,'today-official-link'));
+    // If the card already has an official link, do not repeat it under an
+    // empty quote panel. Keep one usable action and no failure/status text.
+    const header=box.closest('.today-widget')?.querySelector('.today-widget-heading a[href^="https://"]');
+    if(header){
+      box.replaceChildren();
+      box.hidden=true;
+    }else{
+      box.hidden=false;
+      box.replaceChildren(external(url,link,'today-official-link'));
+    }
   };
   async function get(url){
     const controller=new AbortController();
@@ -57,7 +66,7 @@
         const details=create('p','today-weather-details',
           '습도 '+(data.humidityPercent==null?'—':fmt.format(data.humidityPercent)+'%')
           +' · 1시간 강수 '+(data.precipitationMm==null?'—':data.precipitationMm+'mm'));
-        box.replaceChildren(temp,summary,details);
+        box.hidden=false;box.replaceChildren(temp,summary,details);
         status(node,'기상청 · 관측 '+data.observationDate+' '+data.observationTime
           +' · 조회 '+localTime(data.retrievedAt));
       }catch(_){
@@ -89,7 +98,7 @@
       }
       if(!ul.childElementCount){
         fallback(box,'주요 뉴스 보기','https://www.yna.co.kr/');
-      }else box.replaceChildren(ul);
+      }else box.hidden=false;box.replaceChildren(ul);
     };
     const load=async()=>{
       status(node,'');
@@ -131,7 +140,7 @@
           list.append(a);
         }
         if(!list.childElementCount)throw Error('EMPTY_COINS');
-        box.replaceChildren(list);
+        box.hidden=false;box.replaceChildren(list);
         status(node,'업비트 KRW · 조회 '+localTime(data.retrievedAt)+' · 전일 종가 대비');
       }catch(_){
         fallback(box,'업비트 시세 보기','https://upbit.com/exchange?code=CRIX.UPBIT.KRW-BTC');
@@ -160,7 +169,7 @@
           result.append(a);
         }
         if(!result.childElementCount)throw Error('STOCKS_EMPTY');
-        box.replaceChildren(result);
+        box.hidden=false;box.replaceChildren(result);
         status(node,'KRX 영업일 종가 '+data.sourceDate+' · 조회 '+localTime(data.retrievedAt));
       }catch(_){
         fallback(box,'KRX 지수 보기',official);
