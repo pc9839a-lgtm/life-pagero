@@ -29,7 +29,7 @@ discovered → demand_checked → source_verified → draft_ready → editorial_
 마지막 확인일이 21일 이상 지난 글 재검토 요청, 결과를 하나의 GitHub 이슈와 Actions artifact에 기록.
 GitHub Actions 예약 시각은 한국시간 매일 오전 7시 15분이다.
 
-공식 피드: 금융위원회 보도자료, KOSIS 최근 수록자료, KOSIS 월간동향.
+공식 피드: 금융위원회 보도자료, 행정안전부 보도자료, 고용노동부 정책자료·알림, 서울시 복지·주택·경제. KOSIS 최근수록·월간동향은 기사 발굴용이 아닌 통계 참고용으로만 수집한다.
 2026년 7월 1일 RSS 서비스 종료를 공지한 정책브리핑 RSS를 사용하지 않는다.
 각 출처가 응답하지 않으면 성공으로 처리하지 않고 오류를 보고한다.
 
