@@ -27,8 +27,33 @@
     query: document.getElementById('finance-query')
   };
   const rate = value => Number.isFinite(value) ? value.toFixed(2) + '%' : '—';
-  function renderProducts() {
+  // PC keeps the full sortable comparison table. Mobile uses a native card
+  // list with large rate values, no horizontal scrolling and 12-at-a-time paging.
+  let mobileLimit=12;
+  const rateTableRow = row =>
+    '<tr><td><strong>'+esc(row.bank)+'</strong><span class="finance-product-sub">'+esc(row.joinWay)+'</span></td>'
+    +'<td><strong>'+esc(row.product)+'</strong>'
+    +(row.preferential
+      ? '<details class="finance-condition"><summary>우대조건</summary><p>'+esc(row.preferential)+'</p></details>'
+      : '')+'</td>'
+    +'<td>'+esc(row.term)+'개월</td><td class="finance-rate">'+rate(row.baseRate)+'</td>'
+    +'<td class="finance-rate finance-best">'+rate(row.maxRate)+'</td></tr>';
+  const rateMobileCard = row =>
+    '<article class="finance-mobile-rate-card">'
+    +'<div class="finance-mobile-rate-bank"><strong>'+esc(row.bank)+'</strong>'
+    +'<span>'+esc(row.term)+'개월</span></div>'
+    +'<h3 class="finance-mobile-rate-product">'+esc(row.product)+'</h3>'
+    +'<div class="finance-mobile-rate-values">'
+    +'<div class="finance-mobile-rate-value"><span>기본금리</span><strong>'+rate(row.baseRate)+'</strong></div>'
+    +'<div class="finance-mobile-rate-value finance-mobile-rate-best"><span>최고금리</span><strong>'+rate(row.maxRate)+'</strong></div>'
+    +'</div>'
+    +(row.preferential
+      ? '<details class="finance-mobile-rate-details"><summary>우대조건 보기</summary><p>'+esc(row.preferential)+'</p></details>'
+      : '')
+    +'</article>';
+  function renderProducts(resetMobile=true) {
     if(!products || !allProducts.length)return;
+    if(resetMobile)mobileLimit=12;
     const t=fields.term.value;
     const filter=String(fields.query.value||'').toLowerCase().trim();
     const chosen=allProducts.filter(row=>(t==='all'||String(row.term)===t)
@@ -43,20 +68,25 @@
     if(criteria)criteria.textContent='조건에 맞는 공시 상품 '+chosen.length+'건'
       +(chosen.length>80?' · 상위 80건 표시':'');
     if(!chosen.length){
-      products.innerHTML='<p class="finance-empty">선택한 조건의 공시 상품이 없습니다. 기간이나 금융권을 변경해 보세요.</p>';
+      products.innerHTML='<p class="finance-empty">검색 결과가 없습니다. 조건을 변경해 보세요.</p>';
       return;
     }
-    const body=chosen.slice(0,80).map(row=>
-      '<tr><td><strong>'+esc(row.bank)+'</strong><span class="finance-product-sub">'+esc(row.joinWay)+'</span></td>'
-      +'<td><strong>'+esc(row.product)+'</strong><details class="finance-condition"><summary>우대조건</summary><p>'
-      +esc(row.preferential||'세부 우대조건은 금융회사 상품설명서에서 확인해야 합니다.')+'</p></details></td>'
-      +'<td>'+row.term+'개월</td><td class="finance-rate">'+rate(row.baseRate)+'</td>'
-      +'<td class="finance-rate finance-best">'+rate(row.maxRate)+'</td></tr>'
-    ).join('');
-    products.innerHTML='<div class="finance-table-scroll"><table class="finance-rate-table">'
+    const displayed=chosen.slice(0,80);
+    const table=displayed.map(rateTableRow).join('');
+    const cards=displayed.slice(0,mobileLimit).map(rateMobileCard).join('');
+    const remaining=Math.max(0,displayed.length-mobileLimit);
+    products.innerHTML=
+      '<div class="finance-desktop-rates finance-table-scroll"><table class="finance-rate-table">'
       +'<thead><tr><th scope="col">금융회사</th><th scope="col">상품명·우대조건</th>'
       +'<th scope="col">기간</th><th scope="col">기본금리</th><th scope="col">최고금리</th></tr></thead>'
-      +'<tbody>'+body+'</tbody></table></div>';
+      +'<tbody>'+table+'</tbody></table></div>'
+      +'<div class="finance-mobile-rates" aria-label="금리 비교 결과">'
+      +'<div class="finance-mobile-rates-list">'+cards+'</div>'
+      +(remaining
+        ? '<button class="finance-mobile-rates-more" type="button">더 보기 ('+remaining+'건 남음)</button>'
+        : '')+'</div>';
+    const more=products.querySelector('.finance-mobile-rates-more');
+    if(more)more.addEventListener('click',()=>{mobileLimit+=12;renderProducts(false);});
   }
   async function loadProducts(){
     if(!products)return;
