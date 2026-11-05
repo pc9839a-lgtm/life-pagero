@@ -5,7 +5,7 @@ const modules={
   ...JSON.parse(fs.readFileSync(path.join(ROOT,'editorial-verified-calculations-a.json'),'utf8')),
   ...JSON.parse(fs.readFileSync(path.join(ROOT,'editorial-verified-calculations-b.json'),'utf8'))
 };
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let checked=0,tableCount=0;
 for(const [slug,parts] of Object.entries(modules)){
   const dir=slug.startsWith('car-')?'car':'support';
