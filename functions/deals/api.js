@@ -28,7 +28,7 @@ export async function onRequestGet({request,env}){
     const q=String(params.get("q")||"").trim();
     if(q.length<2||q.length>40)return reply({status:"invalid_query",items:[]},400);
     endpoint.searchParams.set("q",q);
-    endpoint.searchParams.set("p_data","life_deals_search");
+    endpoint.searchParams.set("p_data",params.get("src")==="food"?"life_food_search":"life_deals_search");
   }
   try{
     const response=await fetch(endpoint.href,{

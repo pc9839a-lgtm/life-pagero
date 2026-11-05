@@ -40,3 +40,41 @@
  .life-editorial .food-section-head{display:block}
  .life-editorial .food-month-label{margin-top:12px}
 }
+
+
+/* Functional recipe disclosure and persistent grocery checklist */
+.life-editorial .food-controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.life-editorial #food-servings{border:1px solid #d5dbe1;border-radius:5px;padding:9px 11px;background:#fff;color:#25303a;font-size:14px;min-width:84px}
+.life-editorial .food-recipe-details{margin-top:12px;padding:0;border:0}
+.life-editorial .food-recipe-details>summary{cursor:pointer;width:max-content;max-width:100%;padding:8px 0;font-size:13px;font-weight:750;color:var(--brand);list-style-position:inside}
+.life-editorial .food-ingredients,.life-editorial .food-steps{font-size:13px;color:#3a4550;line-height:1.75;padding-left:23px;margin:10px 0}
+.life-editorial .food-ingredients{list-style-type:disc}
+.life-editorial .food-steps{list-style-type:decimal}
+.life-editorial .food-recipe-details li{margin-bottom:4px}
+.life-editorial .food-add-basket{padding:9px 13px;margin:8px 0 4px;border:1px solid #364453;border-radius:5px;font-size:13px;font-weight:750;color:#273442;background:white;cursor:pointer}
+.life-editorial .food-add-basket:hover{background:#f4f6f8}
+.life-editorial .food-choice-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.life-editorial #food-show-recipe{appearance:none;border:0;background:transparent;color:var(--brand);font-size:13px;font-weight:750;padding:12px 6px;cursor:pointer}
+.life-editorial .food-shopping-count{font-size:13px;color:#616d78}
+.life-editorial .food-shopping-list{margin:10px 0 14px;border-top:1px solid #e5e8eb}
+.life-editorial .food-shopping-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #edf0f2;font-size:14px}
+.life-editorial .food-shopping-check{display:flex;flex:1;align-items:center;gap:10px;min-width:0;cursor:pointer;line-height:1.5;overflow-wrap:anywhere}
+.life-editorial .food-shopping-check input{width:18px;height:18px;flex:none;accent-color:var(--brand)}
+.life-editorial .food-checked{text-decoration:line-through;color:#9099a1}
+.life-editorial .food-shopping-search{font-size:12px;font-weight:740;color:var(--brand);white-space:nowrap}
+.life-editorial .food-shopping-remove{font-size:12px;color:#6a7580;border:0;background:transparent;padding:7px 4px;cursor:pointer}
+.life-editorial .food-shopping-actions{display:flex;flex-wrap:wrap;gap:8px;margin:9px 0 12px}
+.life-editorial .food-shopping-actions button{padding:9px 12px;border:1px solid #d7dde3;border-radius:5px;background:#fff;color:#34404d;font-size:12px;font-weight:740;cursor:pointer}
+.life-editorial .food-shopping-actions button:hover:not(:disabled){border-color:#7a8795}
+.life-editorial .food-shopping-actions button:disabled{opacity:.4;cursor:not-allowed}
+.life-editorial .food-hub button:focus-visible,.life-editorial .food-hub a:focus-visible,
+.life-editorial .food-hub select:focus-visible,.life-editorial .food-hub summary:focus-visible{outline:2px solid var(--brand);outline-offset:3px}
+@media(max-width:700px){
+ .life-editorial .food-controls{gap:10px}
+ .life-editorial .food-section-head{align-items:start}
+ .life-editorial .food-choice-actions{margin-top:8px}
+ .life-editorial #food-pick{margin-top:0}
+ .life-editorial .food-shopping-row{gap:9px}
+ .life-editorial .food-shopping-actions button{min-height:40px}
+}
+@media(max-width:370px){.life-editorial .food-controls{margin-top:10px}}
