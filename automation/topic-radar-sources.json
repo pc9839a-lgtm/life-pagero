@@ -6,24 +6,87 @@
     "allowHosts": [
       "fsc.go.kr"
     ],
-    "enabled": true
+    "enabled": true,
+    "candidateEligible": true
+  },
+  {
+    "id": "mois_press",
+    "name": "행정안전부 보도자료",
+    "url": "https://www.mois.go.kr/gpms/view/jsp/rss/rss.jsp?ctxCd=1012",
+    "allowHosts": [
+      "mois.go.kr"
+    ],
+    "enabled": true,
+    "candidateEligible": true
+  },
+  {
+    "id": "moel_policy",
+    "name": "고용노동부 정책자료",
+    "url": "https://www.moel.go.kr/rss/policy.do",
+    "allowHosts": [
+      "moel.go.kr"
+    ],
+    "enabled": true,
+    "candidateEligible": true
+  },
+  {
+    "id": "moel_notice",
+    "name": "고용노동부 알림",
+    "url": "https://www.moel.go.kr/rss/notice.do",
+    "allowHosts": [
+      "moel.go.kr"
+    ],
+    "enabled": true,
+    "candidateEligible": true
+  },
+  {
+    "id": "seoul_welfare",
+    "name": "서울시 복지",
+    "url": "https://mediahub.seoul.go.kr/news/rss/07",
+    "allowHosts": [
+      "seoul.go.kr"
+    ],
+    "enabled": true,
+    "candidateEligible": true
+  },
+  {
+    "id": "seoul_housing",
+    "name": "서울시 주택",
+    "url": "https://mediahub.seoul.go.kr/news/rss/03",
+    "allowHosts": [
+      "seoul.go.kr"
+    ],
+    "enabled": true,
+    "candidateEligible": true
+  },
+  {
+    "id": "seoul_economy",
+    "name": "서울시 경제",
+    "url": "https://mediahub.seoul.go.kr/news/rss/04",
+    "allowHosts": [
+      "seoul.go.kr"
+    ],
+    "enabled": true,
+    "candidateEligible": true
   },
   {
     "id": "kosis_new",
-    "name": "KOSIS 최근수록자료",
+    "name": "KOSIS 최근수록자료(통계 참고)",
     "url": "https://kosis.kr/rss/themesRss.do",
     "allowHosts": [
       "kosis.kr"
     ],
-    "enabled": true
+    "enabled": true,
+    "candidateEligible": false
   },
   {
     "id": "kosis_trend",
-    "name": "KOSIS 주요 월간동향",
+    "name": "KOSIS 월간동향(통계 참고)",
     "url": "https://kosis.kr/rss/trendRss.do",
     "allowHosts": [
       "kosis.kr"
     ],
-    "enabled": true
+    "enabled": true,
+    "candidateEligible": false
   }
 ]
