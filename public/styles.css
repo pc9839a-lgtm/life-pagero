@@ -55,3 +55,42 @@
 .life-sponsor-grid .life-affiliate-label{padding:10px 12px 0}
 @media(max-width:1050px){.life-sponsor-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:640px){.life-sponsor-grid{grid-template-columns:1fr}.life-sponsor-grid .life-affiliate-image img{max-height:260px}}
+
+
+/* Large, page-width affiliate units: preserve editorial separation and click disclosure. */
+.life-affiliate-placement{padding:16px 30px 28px}
+.life-affiliate{display:block;width:100%;max-width:none;margin:22px 0 32px;border:1px solid #d8e0ec;background:#fff;box-shadow:none;overflow:hidden}
+.life-affiliate-label{margin:0;padding:14px 20px 0;color:#657184;font-size:12px;font-weight:800;letter-spacing:.015em}
+.life-affiliate-image{display:block;margin:12px 18px 0;background:#fff}
+.life-affiliate-image img{display:block;width:100%;max-height:none;height:auto;object-fit:contain;border-radius:0}
+.life-affiliate-copy{padding:18px 20px 10px}
+.life-affiliate-title,.article-content .life-affiliate-title{margin:0 0 16px;font-size:21px;font-weight:700;line-height:1.5;letter-spacing:-.025em}
+.life-affiliate-action{display:flex;align-items:center;justify-content:center;min-height:56px;padding:14px 20px;font-size:18px;font-weight:750;line-height:1.45;color:#fff;background:#1769e0;text-decoration:none}
+.life-affiliate-action:hover,.life-affiliate-action:focus-visible{color:#fff;background:#104fae}
+.life-affiliate-notice,.article-content .life-affiliate-notice{margin:0;padding:4px 20px 18px;color:#667486;font-size:12px;line-height:1.6}
+.life-sponsor-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+.life-sponsor-grid .life-affiliate{margin:0 0 12px;max-width:none;display:block}
+.life-sponsor-grid .life-affiliate-image{min-height:0;display:block;margin:12px 18px 0}
+.life-sponsor-grid .life-affiliate-image img{height:auto;max-height:none;object-fit:contain}
+.life-sponsor-grid .life-affiliate-copy{display:block;padding:18px 20px 10px}
+.life-sponsor-grid .life-affiliate-title{font-size:21px;line-height:1.5;margin:0 0 16px}
+.life-sponsor-grid .life-affiliate-action{font-size:18px;min-height:56px}
+.life-sponsor-grid .life-affiliate-label{padding:14px 20px 0}
+.life-sponsor-collection{padding:26px 30px;border-top:1px solid #e5eaf1}
+.life-sponsor-category{background:#fff;border:1px solid #dfe4eb;box-shadow:var(--shadow);margin-bottom:20px}
+.life-sponsor-category .section-header h2{font-size:22px}
+.life-article-sponsor{margin:32px 0}
+.article-content .life-article-sponsor .life-affiliate{margin:0}
+@media(max-width:680px){
+  .life-affiliate-placement{padding:10px 14px 20px}
+  .life-sponsor-collection{padding:18px 14px}
+  .life-affiliate{margin:14px 0 22px}
+  .life-affiliate-label,.life-sponsor-grid .life-affiliate-label{padding:10px 14px 0}
+  .life-affiliate-image,.life-sponsor-grid .life-affiliate-image{margin:8px 10px 0}
+  .life-affiliate-image img,.life-sponsor-grid .life-affiliate-image img{max-height:none;height:auto}
+  .life-affiliate-copy,.life-sponsor-grid .life-affiliate-copy{padding:14px 14px 8px}
+  .life-affiliate-title,.life-sponsor-grid .life-affiliate-title,.article-content .life-affiliate-title{font-size:18px;line-height:1.5;margin:0 0 12px}
+  .life-affiliate-action,.life-sponsor-grid .life-affiliate-action{min-height:52px;font-size:16px;padding:13px 14px}
+  .life-affiliate-notice,.article-content .life-affiliate-notice{padding:4px 14px 14px}
+  .life-article-sponsor{margin:26px 0}
+}
