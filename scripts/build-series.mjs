@@ -95,7 +95,9 @@ function markdownToHtml(markdown) {
     }
     if (heading) {
       flushParagraph(); closeList();
-      // In-article subheadings are omitted; actual explanatory paragraphs/tables remain.
+      const level = Math.min(4, heading[1].length);
+      const descriptive = heading[2].replace(/^실제 상황에 적용해 보기:\s*/, '');
+      output.push('<h' + level + ' class="article-subheading">' + inlineMarkdown(descriptive) + '</h' + level + '>');
       continue;
     }
     if (unordered || ordered) {
