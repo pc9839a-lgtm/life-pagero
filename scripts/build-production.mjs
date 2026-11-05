@@ -46,6 +46,8 @@ const steps = [
   ['node', ['scripts/unify-global-navigation.mjs']],
   ['node', ['scripts/verify-global-navigation.mjs']],
   ['node', ['scripts/verify-sitewide-clean-ui.mjs']],
+  ['node', ['scripts/build-editorial-life.mjs']],
+  ['node', ['scripts/verify-editorial-life.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);
