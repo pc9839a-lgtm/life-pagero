@@ -10,6 +10,7 @@ test('KST week boundaries and tomorrow/weekend',()=>{
 });
 test('strict dates and ongoing overlap',()=>{
   assert.equal(isoDate('20260230'),null);
+  assert.equal(isoDate('2026.11.06'),'2026-11-06');
   const e=normalizeEvent({source:'TOUR',sourceId:'1',title:'가을 축제',startDate:'20261020',endDate:'20261108',region:'경상북도'});
   assert.ok(e);
   assert.equal(e.region,'gyeongbuk');
