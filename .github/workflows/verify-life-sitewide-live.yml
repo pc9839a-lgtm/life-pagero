@@ -78,7 +78,8 @@ jobs:
             if home.count('class="portal-topic-card compact-topic"')!=6:raise AssertionError('Home category count')
             popular=re.search(r'<section class="compact-popular"[\s\S]*?</section>',home)
             if not popular or popular.group(0).count('<li><a href=')!=3:raise AssertionError('Home popular links count')
-            if '<a href="/today/">오늘의 정보</a>' not in home:raise AssertionError('Today navigation still missing')
+            if not re.search(r'<a href="(?:/life)?/today/"[^>]*>오늘의 정보</a>',home):
+              raise AssertionError('Today navigation missing under /life/ proxy')
             if 'data-today-weather' not in bodies['/today/']:raise AssertionError('Today screen removed')
             for p in ['/finance/','/finance/savings/','/finance/markets/']:
               if not any(a in bodies[p] for a in ['https://finlife.fss.or.kr/','https://dart.fss.or.kr/']):
