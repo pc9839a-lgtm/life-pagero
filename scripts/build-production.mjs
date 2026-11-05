@@ -30,6 +30,7 @@ const steps = [
   ['node', ['scripts/inject-coupang-ad.mjs']],
   ['node', ['scripts/verify-editorial-depth.mjs']],
   ['node', ['scripts/remove-editorial-fluff.mjs']],
+  ['node', ['scripts/build-portal.mjs']],
   ['node', ['scripts/validate-build-output.mjs']],
   ['node', ['scripts/verify-verified-rich-guides.mjs']],
 ];
