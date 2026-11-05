@@ -12,6 +12,7 @@
       timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'
     }).format(date) + ' KST';
   };
+  const preview = document.getElementById('finance-rate-preview');
   const products = document.getElementById('finance-products');
   const ratePanel = document.getElementById('finance-rate-panel');
   const rateOfficial = document.getElementById('finance-rates-official');
@@ -63,7 +64,7 @@
     products.replaceChildren();
     const kind=fields.kind.value, group=fields.group.value;
     const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),12000);
+    const timeout=setTimeout(()=>controller.abort(),25000);
     try{
       const response=await fetch(prefix+'finance/api/products?kind='+encodeURIComponent(kind)
         +'&group='+encodeURIComponent(group),{signal:controller.signal});
@@ -93,6 +94,39 @@
     fields.query?.addEventListener('input',renderProducts);
     loadProducts();
   }
+
+  async function loadRatePreview(){
+    if(!preview)return;
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),25000);
+    try {
+      const response=await fetch(prefix+'finance/api/products?kind=deposit&group=bank',
+        {signal:controller.signal,cache:'no-store'});
+      const data=await response.json();
+      if(!response.ok||data.status!=='ok'||!Array.isArray(data.products)||!data.products.length)
+        throw new Error('No verified bank products');
+      const twelve=data.products.filter(item=>item.term===12&&Number.isFinite(item.baseRate));
+      const ranked=(twelve.length?twelve:data.products.filter(item=>Number.isFinite(item.baseRate)))
+        .sort((a,b)=>(b.baseRate??-1)-(a.baseRate??-1))
+        .slice(0,3);
+      if(!ranked.length)throw new Error('No published base rates');
+      preview.innerHTML='<div class="finance-preview-grid">'+ranked.map(item=>
+        '<a class="finance-preview-card" href="'+prefix+'finance/savings/">'+
+        '<span class="finance-preview-bank">'+esc(item.bank)+'</span>'+
+        '<strong class="finance-preview-rate">'+rate(item.baseRate)+'</strong>'+
+        '<span class="finance-preview-product">'+esc(item.product)+'</span>'+
+        '<span class="finance-preview-term">'+item.term+'개월 · 기본금리</span></a>').join('')+
+        '</div><a class="finance-preview-more" href="'+prefix+'finance/savings/">'+
+        '은행별 예금·적금 전체 비교 ›</a>';
+      preview.hidden=false;
+      if(rateOfficial)rateOfficial.hidden=true;
+    }catch(error){
+      preview.hidden=true;
+      if(rateOfficial)rateOfficial.hidden=false;
+      console.warn('[finance] Could not load verified preview:',error?.name||'unavailable');
+    }finally {clearTimeout(timeout);}
+  }
+  loadRatePreview();
 
   const issuesEl=document.getElementById('finance-issues');
   const issuePanel=document.getElementById('finance-issues-panel');

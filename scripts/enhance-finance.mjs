@@ -25,7 +25,11 @@ const ratesShortcut = '<div class="finance-official-shortcut" id="finance-rates-
   +'<a href="https://finlife.fss.or.kr/" target="_blank" rel="noopener noreferrer">'
   +'금융감독원에서 예·적금 금리 비교 <span aria-hidden="true">↗</span></a></div>';
 function bankPanel(compact=false) {
-  if(compact) return ratesShortcut;
+  if(compact) return '<section class="finance-preview-section" aria-labelledby="finance-preview-heading">'
+    +'<div class="finance-section-title"><h2 id="finance-preview-heading">예·적금 금리</h2>'
+    +'<a href="/finance/savings/">전체 비교 보기 ›</a></div>'
+    +ratesShortcut
+    +'<div class="finance-rate-preview" id="finance-rate-preview" hidden></div></section>';
   return ratesShortcut
     +'<section class="finance-data-section" id="finance-rate-panel" aria-labelledby="bank-rates-heading" hidden>'
     +'<div class="finance-section-title"><div><h2 id="bank-rates-heading">은행별 예금·적금</h2></div></div>'
@@ -67,7 +71,7 @@ const hub = breadcrumb()
 ;
 const savingsPage = breadcrumb('예금·적금 비교')
   +'<h1>예·적금 금리 확인</h1>'
-  +'<p class="finance-page-intro">금융감독원 공시에서 예금·적금 상품을 확인하세요.</p>'
+  +'<p class="finance-page-intro">은행별 기본금리와 최고금리를 비교해 보세요.</p>'
   +bankPanel()
   +'<section class="finance-plain-guide"><h2>예금과 적금 중 무엇을 비교해야 하나요?</h2>'
   +'<p><strong>정기예금</strong>은 목돈을 한 번에 맡기는 방식이고, <strong>적금</strong>은 매월 납입해 모으는 방식입니다. 적금의 연이율을 목돈 예금의 연이율과 그대로 비교하면 실제 만기 이자를 과대평가할 수 있습니다. 정기예금은 원금 전체의 예치기간을, 적금은 각 회차 납입금의 예치기간을 따로 계산해야 합니다.</p>'
@@ -181,7 +185,7 @@ const configurations=[
   ['finance/index.html','/finance/','금융정보 | 은행별 예적금·주식·경제 이슈 | 생활비서',
     '예금·적금 공식 비교공시, 기업 공시 조회, 대출 계산과 세금 정보를 확인할 수 있습니다.',hub,'live',template],
   ['finance/savings/index.html','/finance/savings/','예·적금 금리 확인 | 생활비서',
-    '금융감독원 예금·적금 공시 바로가기와 금융상품 기본금리·우대조건 안내.',savingsPage,'live',template],
+    '금융감독원 예금·적금 기본금리·최고금리 비교 및 상품별 우대조건 확인.',savingsPage,'live',template],
   ['finance/markets/index.html','/finance/markets/','주식시장 주요 이슈·기업 공시 | 생활비서',
     '최근 기업 공시, 주식시장 주요 공시, 한국은행 금융시장 발표와 금융정책 이슈를 출처·발표일과 함께 확인합니다.',marketsPage,'live',template],
   ['finance/loan-payment/index.html','/finance/loan-payment/','대출이자 계산기 | 원리금균등·원금균등·만기일시 | 생활비서',
