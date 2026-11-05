@@ -1,0 +1,71 @@
+name: LIFE Daily Topic Radar
+on:
+  schedule:
+    # Every day at 07:15 Asia/Seoul (22:15 UTC on the previous day).
+    - cron: "15 22 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: life-daily-topic-radar
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Test topic deduplication
+        run: node --test scripts/topic-radar.test.mjs
+      - name: Collect official sources and audit published content
+        id: collect
+        continue-on-error: true
+        run: node scripts/topic-radar.mjs --out "$RUNNER_TEMP/life-radar.md" --json "$RUNNER_TEMP/life-radar.json"
+      - name: Show report in the workflow summary
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/life-radar.md" ]; then
+            cat "$RUNNER_TEMP/life-radar.md" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No topic radar report: see logs." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Store candidates and source status
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: life-topic-radar-${{ github.run_number }}
+          path: |
+            ${{ runner.temp }}/life-radar.md
+            ${{ runner.temp }}/life-radar.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Update one reusable daily monitoring issue
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          if [ ! -f "$RUNNER_TEMP/life-radar.md" ]; then
+            echo "# 수집 프로그램 오류" > "$RUNNER_TEMP/life-radar.md"
+            echo "GitHub Actions 실행 로그를 확인하세요." >> "$RUNNER_TEMP/life-radar.md"
+          fi
+          existing=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --limit 100 --json number,title \
+            --jq '.[] | select(.title == "생활비서 주제 레이더 | 자동 점검") | .number' | head -n 1)
+          if [ -n "$existing" ]; then
+            gh issue edit "$existing" --repo "$GITHUB_REPOSITORY" --body-file "$RUNNER_TEMP/life-radar.md"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "생활비서 주제 레이더 | 자동 점검" \
+              --body-file "$RUNNER_TEMP/life-radar.md"
+          fi
+      - name: Flag RSS source outage
+        if: steps.collect.outcome != 'success'
+        run: |
+          echo "All official feeds failed, see the monitoring issue." >&2
+          exit 1
