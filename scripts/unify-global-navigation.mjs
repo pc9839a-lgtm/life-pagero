@@ -9,10 +9,7 @@ const ITEMS=[
   {href:'/',label:'홈',section:'home'},
   {href:'/today/',label:'오늘',section:'today'},
   {href:'/finance/',label:'금융',section:'finance'},
-  {href:'/finance/savings/',label:'예·적금',section:'savings'},
-  {href:'/finance/markets/',label:'주식·코인',section:'markets'},
-  {href:'/car/',label:'자동차',section:'car'},
-  {href:'/support/',label:'지원금',section:'support'}
+  {href:'/topics/',label:'생활정보',section:'topics'}
 ];
 const esc=str=>String(str).replace(/[&<>"']/g,c=>({
   '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
@@ -24,11 +21,10 @@ const files=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(ent=>{
 const section=pathname=>{
   if(pathname==='/')return 'home';
   if(pathname.startsWith('/today/'))return 'today';
-  if(pathname.startsWith('/finance/savings/'))return 'savings';
-  if(pathname.startsWith('/finance/markets/'))return 'markets';
   if(pathname.startsWith('/finance/'))return 'finance';
-  if(pathname.startsWith('/car/'))return 'car';
-  if(pathname.startsWith('/support/'))return 'support';
+  if(pathname.startsWith('/topics/') ||
+     pathname.startsWith('/car/') ||
+     pathname.startsWith('/support/'))return 'topics';
   return '';
 };
 const render=active=>'<nav class="main-nav" aria-label="전체 메뉴"><div class="nav-inner">'
@@ -54,4 +50,4 @@ for(const file of files(DIST).filter(p=>p.endsWith('.html'))){
   changed++;
 }
 if(changed<140)throw Error('[nav] Too few navigation documents: '+changed);
-console.log('[nav] One identical 7-link menu across '+changed+' pages; '+skipped+' non-site pages skipped.');
+console.log('[nav] One identical 4-link menu across '+changed+' pages; '+skipped+' non-site pages skipped.');
