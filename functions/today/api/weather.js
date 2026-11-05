@@ -34,7 +34,7 @@ export async function onRequestGet(context) {
   if(!auth)
     return json({status:'unconfigured',city,label:CITIES[city].label,
       source:'기상청 초단기실황',sourceUrl:SOURCE,
-      message:'기상청 인증키가 아직 연결되지 않았습니다.'},503);
+      message:'현재 제공 가능한 날씨 자료가 없습니다.'},503);
   return cached(context,'weather-'+city,1800,async () => {
     const coord=CITIES[city],base=kstBase(new Date());
     const api=new URL('https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst');
