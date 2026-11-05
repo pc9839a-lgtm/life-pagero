@@ -31,4 +31,20 @@ for(const [re,value,label] of [
 [/<\/head>/,'<link rel="stylesheet" href="/adpick-deals.css"><script defer src="/adpick-deals.js"></script></head>',"head"]
 ])html=replace(html,re,value,label);
 write("deals/index.html",html);
+
+// Feature entry below the homepage hero. Does not request the API on the home page.
+let home=read("index.html");
+const heroStart=home.indexOf('<section class="hero portal-home-hero">');
+if(heroStart<0)throw Error("[adpick-biz] homepage hero missing");
+const heroEnd=home.indexOf("</section>",heroStart);
+if(heroEnd<0)throw Error("[adpick-biz] homepage hero is unclosed");
+const insertAt=heroEnd+"</section>".length;
+const entry='<section class="adpick-home-entry" aria-label="핫딜 바로가기">'
++'<div><span class="adpick-home-tag">쇼핑</span><h2>오늘의 핫딜·추천상품</h2>'
++'<p>제휴 쇼핑몰의 인기 상품을 모아볼 수 있습니다. 실제 할인 여부와 가격은 판매처에서 확인하세요.</p></div>'
++'<a href="/deals/" class="adpick-home-link">핫딜 보러가기</a></section>';
+home=home.slice(0,insertAt)+entry+home.slice(insertAt);
+if(!home.includes('href="/adpick-deals.css"'))
+  home=home.replace('</head>','<link rel="stylesheet" href="/adpick-deals.css"></head>');
+write("index.html",home);
 console.log("[adpick-biz] /deals/ live affiliate widget added, no product data stored.");
