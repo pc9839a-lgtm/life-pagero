@@ -1,0 +1,31 @@
+name: LIFE visual smoke
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Capture production desktop and mobile
+        shell: bash
+        run: |
+          set -e
+          BROWSER="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
+          echo "Browser: $BROWSER"
+          mkdir -p screenshots
+          "$BROWSER" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --hide-scrollbars --window-size=1440,1100 --screenshot="screenshots/desktop-savings.png" "https://pagero.kr/life/finance/savings-calculator/"
+          "$BROWSER" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --hide-scrollbars --window-size=1440,1100 --screenshot="screenshots/desktop-mortgage.png" "https://pagero.kr/life/finance/mortgage-calculator/"
+          "$BROWSER" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --hide-scrollbars --window-size=1440,1100 --screenshot="screenshots/desktop-today.png" "https://pagero.kr/life/today/"
+          "$BROWSER" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --hide-scrollbars --window-size=390,844 --screenshot="screenshots/mobile-savings.png" "https://pagero.kr/life/finance/savings-calculator/"
+          find screenshots -type f -printf '%f %s bytes\n'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: life-visual-reference
+          path: screenshots/*.png
+          if-no-files-found: error
+          retention-days: 1
