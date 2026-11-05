@@ -58,3 +58,12 @@ test('Local tax refunds and voucher reimbursements remain eligible',()=>{
   const b=scoreItem({title:'서울사랑상품권 5% 환급',publishedAt:'2026-11-05'},groups,[],now);
   assert.equal(a.categoryId,'tax');assert.equal(b.categoryId,'shopping');
 });
+
+test('Personal rehabilitation topics can be reviewed without activating CPA leads',()=>{
+  const groups=[{id:'debt-relief',label:'개인회생·채무조정',risk:'high',keywords:['개인회생','개인파산','채무조정']}];
+  const scored=scoreItem({title:'개인회생 신청 자격과 변제계획',publishedAt:'2026-11-05'},groups,[],new Date('2026-11-05T12:00:00Z'));
+  assert.ok(scored);
+  assert.equal(scored.categoryId,'debt-relief');
+  assert.equal(scored.verified,false);
+  assert.equal(scored.risk,'high');
+});
