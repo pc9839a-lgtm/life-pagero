@@ -16,6 +16,7 @@ const steps = [
   ['node', ['scripts/curate-redundant-homepage-citations.mjs']],
   ['node', ['scripts/curate-published-primary-sources.mjs']],
   ['node', ['scripts/expand-editorial-depth.mjs']],
+  ['node', ['scripts/apply-verified-rich-guides.mjs']],
   ['node', ['scripts/replace-duplicate-editorial-images.mjs']],
   [npm, ['run', 'validate:content']],
   ['node', ['scripts/build.mjs']],
@@ -30,6 +31,7 @@ const steps = [
   ['node', ['scripts/verify-editorial-depth.mjs']],
   ['node', ['scripts/remove-editorial-fluff.mjs']],
   ['node', ['scripts/validate-build-output.mjs']],
+  ['node', ['scripts/verify-verified-rich-guides.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);
