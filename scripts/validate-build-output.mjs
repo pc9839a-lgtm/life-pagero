@@ -338,7 +338,7 @@ for (const slug of decisionPages) {
     throw new Error('Canonical guide needs exactly one editorial decision table: '+slug);
   }
   const section=html.match(/<section class="reader-decision"[\s\S]*?<\/section>/)?.[0] || '';
-  if (!section.includes('공식자료 확인') || count(section,/<tr>/g)<3) {
+  if (count(section,/<tr>/g)<3 || section.includes('아래 표는 선택할 글')) {
     throw new Error('Decision table must offer source-dated real next steps: '+slug);
   }
   if (!html.includes('/life-editorial-20261022.css')) {
