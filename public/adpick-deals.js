@@ -53,6 +53,7 @@ function render(items,params){
 async function load(params){
  const id=++requestId;
  const query=new URLSearchParams(params);
+ if(params.mode==="search"&&new URLSearchParams(location.search).get("src")==="food")query.set("src","food");
  status.textContent="상품을 조회하고 있습니다.";
  target.replaceChildren();
  try{
