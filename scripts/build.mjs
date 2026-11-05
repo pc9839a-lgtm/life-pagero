@@ -19,7 +19,7 @@ const SLOTS = {
 
 const SITE = {
   name: '생활비서',
-  tagline: '자동차 행정과 생활지원 정책을 쉽게',
+  tagline: '',
   description: '자동차 세금·검사·이전등록과 정부지원·생활정책을 공식 출처 기반으로 정리하는 생활정보 사이트입니다.',
 };
 const CAT = {
@@ -27,13 +27,13 @@ const CAT = {
     label: '자동차 생활행정',
     short: '자동차',
     icon: 'CAR',
-    desc: '자동차 검사, 이전등록, 세금, 과태료와 차량 관련 지원제도를 정리합니다.',
+    desc: '검사 · 이전등록 · 자동차세 · 과태료',
   },
   support: {
     label: '정부지원·생활정책',
     short: '지원정책',
     icon: 'GOV',
-    desc: '중앙정부와 지자체 지원사업의 신청 조건과 서류를 안내합니다.',
+    desc: '지원금 · 신청 조건 · 준비서류',
   },
 };
 
@@ -143,7 +143,7 @@ function markdown(src = '') {
     if (heading) {
       flushParagraph();
       flushList();
-      output.push('<h' + heading[1].length + '>' + inline(heading[2]) + '</h' + heading[1].length + '>');
+      // Intermediate article headings add no useful facts and are omitted.
       continue;
     }
     if (unordered || ordered) {
@@ -182,7 +182,7 @@ function nav(pathname) {
 }
 
 function header(pathname) {
-  return `<a class="skip-link" href="#main-content">본문 바로가기</a><header class="site-header"><div class="top-strip"><div class="top-strip-inner"><span>공식 출처와 확인일을 함께 표시합니다.</span><span>독립 생활정보 사이트 · 정부기관 아님</span></div></div><div class="header-inner"><a class="brand" href="/"><span class="brand-mark">생</span><span class="brand-copy"><strong>${SITE.name}</strong><span>${SITE.tagline}</span></span></a><form class="header-search" action="/search/" method="get"><input name="q" type="search" placeholder="자동차 검사, 지원금 검색" aria-label="사이트 검색"><button>검색</button></form></div><nav class="main-nav"><div class="nav-inner">${nav(pathname)}</div></nav></header>`;
+  return `<a class="skip-link" href="#main-content">본문 바로가기</a><header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark">생</span><span class="brand-copy"><strong>${SITE.name}</strong></span></a><form class="header-search" action="/search/" method="get"><input name="q" type="search" placeholder="자동차 검사, 지원금 검색" aria-label="사이트 검색"><button>검색</button></form></div><nav class="main-nav"><div class="nav-inner">${nav(pathname)}</div></nav></header>`;
 }
 
 function footer() {
@@ -232,7 +232,7 @@ function card(post) {
 }
 
 function side(current = '') {
-  return `<aside class="sidebar"><section class="sidebar-card"><h2>최근 확인 글</h2><ul class="sidebar-list">${posts.filter((post) => post.slug !== current).slice(0, 6).map((post) => `<li><a href="/${post.category}/${post.slug}/">${esc(post.title)}</a></li>`).join('')}</ul></section><section class="sidebar-card"><h2>안내</h2><p class="sidebar-note">지원조건과 금액은 바뀔 수 있습니다. 각 글의 확인일과 공식 출처를 함께 확인하세요.</p></section></aside>`;
+  return `<aside class="sidebar"><section class="sidebar-card"><h2>최근 확인 글</h2><ul class="sidebar-list">${posts.filter((post) => post.slug !== current).slice(0, 6).map((post) => `<li><a href="/${post.category}/${post.slug}/">${esc(post.title)}</a></li>`).join('')}</ul></section></aside>`;
 }
 
 function crumb(post) {
@@ -274,7 +274,7 @@ function article(post) {
       acceptedAnswer: { '@type': 'Answer', text: faq.answer },
     })),
   };
-  const body = `<div class="site-shell"><div class="content-grid"><article class="article-shell">${crumb(post)}<header class="article-header"><span class="badge ${post.category}">${CAT[post.category].short}</span><h1>${esc(post.title)}</h1><p class="article-dek">${esc(post.description)}</p><div class="article-meta"><span>작성 ${fmt(post.publishedAt)}</span><span>수정 ${fmt(post.updatedAt)}</span><span>공식자료 확인 ${fmt(post.reviewedAt)}</span><span>${esc(post.author)}</span></div></header><div class="article-content"><section class="key-summary"><h2>핵심 요약</h2><ul>${post.keyPoints.map((point) => `<li>${esc(point)}</li>`).join('')}</ul></section>${ad('top')}${markdown(post.body)}${ad('mid')}<div class="disclaimer">생활비서는 정부기관이 아니며 신청 결과를 보장하지 않습니다. 공식 공고와 담당기관 안내를 최종 기준으로 확인하세요.</div><div class="article-actions">${post.primaryCta ? `<a class="wp-button-secondary" href="${post.primaryCta.href}">${esc(post.primaryCta.label)}</a>` : ''}${post.officialCta ? `<a class="wp-button" href="${post.officialCta.href}" target="_blank" rel="noopener noreferrer">${esc(post.officialCta.label)}</a>` : ''}</div>${ad('bottom')}<section class="source-box"><h2>공식 출처</h2><ul class="source-list">${post.sources.map((source) => `<li><a href="${source.url}" target="_blank" rel="noopener noreferrer">${esc(source.name)}</a> · 확인 ${fmt(source.checkedAt)}</li>`).join('')}</ul></section><section class="faq-box"><h2>자주 묻는 질문</h2>${post.faqs.map((faq) => `<details class="faq-item"><summary>${esc(faq.question)}</summary><div><p>${esc(faq.answer)}</p></div></details>`).join('')}</section></div></article>${side(post.slug)}</div></div>`;
+  const body = `<div class="site-shell"><div class="content-grid"><article class="article-shell">${crumb(post)}<header class="article-header"><span class="badge ${post.category}">${CAT[post.category].short}</span><h1>${esc(post.title)}</h1><div class="article-meta"><span>작성 ${fmt(post.publishedAt)}</span><span>수정 ${fmt(post.updatedAt)}</span></div></header><div class="article-content">${ad('top')}${markdown(post.body)}${ad('mid')}<div class="disclaimer">정부기관이 아니며 신청 결과를 보장하지 않습니다.</div><div class="article-actions">${post.primaryCta ? `<a class="wp-button-secondary" href="${post.primaryCta.href}">${esc(post.primaryCta.label)}</a>` : ''}${post.officialCta ? `<a class="wp-button" href="${post.officialCta.href}" target="_blank" rel="noopener noreferrer">${esc(post.officialCta.label)}</a>` : ''}</div>${ad('bottom')}<section class="source-box"><h2>공식 출처</h2><ul class="source-list">${post.sources.map((source) => `<li><a href="${source.url}" target="_blank" rel="noopener noreferrer">${esc(source.name)}</a> · 확인 ${fmt(source.checkedAt)}</li>`).join('')}</ul></section><section class="faq-box"><h2>자주 묻는 질문</h2>${post.faqs.map((faq) => `<details class="faq-item"><summary>${esc(faq.question)}</summary><div><p>${esc(faq.answer)}</p></div></details>`).join('')}</section></div></article>${side(post.slug)}</div></div>`;
 
   return page({
     pathname,
@@ -292,9 +292,9 @@ function articleArchive(visiblePosts) {
   const blocks = Object.entries(CAT).map(([category, meta]) => {
     const matches = remaining.filter((post) => post.category === category);
     if (!matches.length) return '';
-    return `<section class="life-archive-group" aria-label="${esc(meta.label)}"><h3><a href="/${category}/">${esc(meta.label)} <span aria-hidden="true">↗</span></a></h3><ul>${matches.map((post) => `<li><a href="/${post.category}/${post.slug}/"><span class="life-archive-title">${esc(post.title)}</span><span class="life-archive-date">공식자료 확인 ${fmt(post.reviewedAt)}</span></a></li>`).join('')}</ul></section>`;
+    return `<section class="life-archive-group" aria-label="${esc(meta.label)}"><h3><a href="/${category}/">${esc(meta.label)} <span aria-hidden="true">↗</span></a></h3><ul>${matches.map((post) => `<li><a href="/${post.category}/${post.slug}/"><span class="life-archive-title">${esc(post.title)}</span></a></li>`).join('')}</ul></section>`;
   }).filter(Boolean).join('');
-  return `<section class="section life-archive" aria-label="전체 생활정보 가이드"><div class="section-header"><div><p class="life-archive-kicker">LIFE EDITORIAL ARCHIVE</p><h2>분야별 생활정보 전체보기</h2><p>추천 글 외에 발행된 가이드도 공식자료 확인일과 함께 살펴볼 수 있습니다. 총 ${posts.length}개 가이드를 직접 연결했습니다.</p></div></div><div class="life-archive-grid">${blocks}</div><p class="life-archive-note">제도·금액·기한은 바뀔 수 있으므로 최종 신청 전에 각 글의 공식자료와 담당기관 공고를 확인하세요. <a href="/editorial-standards/">콘텐츠 작성·검수 기준 ↗</a></p></section>`;
+  return `<section class="section life-archive" aria-label="전체 생활정보 가이드"><div class="section-header"><div><h2>분야별 생활정보 전체보기</h2></div></div><div class="life-archive-grid">${blocks}</div></section>`;
 }
 
 
@@ -358,7 +358,7 @@ function decisionGuide() {
 function listing(key) {
   const category = CAT[key];
   const list = posts.filter((post) => post.category === key);
-  const body = `<div class="site-shell"><div class="content-grid"><div><section class="category-hero"><h1>${category.label}</h1><p>${category.desc}</p></section><section class="main-column section"><div class="section-header"><div><h2>전체 글</h2><p>최근 확인일 기준입니다.</p></div></div><div class="post-list">${list.map(card).join('')}</div></section></div>${side()}</div></div>`;
+  const body = `<div class="site-shell"><div class="content-grid"><div><section class="category-hero"><h1>${category.label}</h1><p>${category.desc}</p></section><section class="main-column section"><div class="section-header"><div><h2>전체 글</h2></div></div><div class="post-list">${list.map(card).join('')}</div></section></div>${side()}</div></div>`;
   return page({ pathname: `/${key}/`, title: category.label, description: category.desc, body });
 }
 
@@ -381,7 +381,7 @@ write('/', page({
   pathname: '/',
   title: SITE.name,
   description: SITE.description,
-  body: `<div class="site-shell"><div class="content-grid"><div class="main-column"><section class="hero"><span class="hero-kicker">LIFE ADMINISTRATION GUIDE</span><h1>복잡한 생활행정과 지원정책을 쉽게 확인하세요.</h1><p>자동차 검사·이전등록·세금부터 정부와 지자체 지원사업까지 공식 출처와 확인일을 기준으로 정리합니다.</p><div class="hero-actions"><a class="wp-button" href="/car/">자동차 정보 보기</a><a class="wp-button-secondary" href="/support/">지원정책 찾기</a></div></section><section class="section"><div class="category-grid">${Object.entries(CAT).map(([key, category]) => `<article class="category-panel"><span class="category-icon">${category.icon}</span><h3>${category.label}</h3><p>${category.desc}</p><a class="wp-button-secondary" href="/${key}/">${category.short} 글 보기</a></article>`).join('')}</div></section>${decisionGuide()}<section class="section"><div class="section-header"><div><h2>최신 확인 콘텐츠</h2><p>공식자료 확인일과 출처를 공개합니다.</p></div></div><div class="post-list">${homepageFeatured.map(card).join('')}</div></section>${articleArchive(homepageFeatured)}</div>${side()}</div></div>`,
+  body: `<div class="site-shell"><div class="content-grid"><div class="main-column"><section class="hero"><h1>자동차 · 지원금 · 생활행정</h1><div class="hero-actions"><a class="wp-button" href="/car/">자동차 정보 보기</a><a class="wp-button-secondary" href="/support/">지원정책 찾기</a></div></section><section class="section"><div class="category-grid">${Object.entries(CAT).map(([key, category]) => `<article class="category-panel"><span class="category-icon">${category.icon}</span><h3>${category.label}</h3><p>${category.desc}</p><a class="wp-button-secondary" href="/${key}/">${category.short} 글 보기</a></article>`).join('')}</div></section><section class="section"><div class="section-header"><div><h2>최신 확인 콘텐츠</h2></div></div><div class="post-list">${homepageFeatured.map(card).join('')}</div></section>${articleArchive(homepageFeatured)}</div>${side()}</div></div>`,
 }));
 write('/car/', listing('car'));
 write('/support/', listing('support'));
