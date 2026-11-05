@@ -19,7 +19,7 @@ check(page.includes('삼치')&&page.includes('가리비')&&page.includes('해양
 check(page.includes('관련 상품 검색')&&page.includes('/deals/?q='),'ADPICK search handoff missing');
 check(page.includes('제휴 상품 링크를 통해 구매하면'),'affiliate disclosure missing');
 check(page.includes('src="/life-food.js"')&&page.includes('href="/life-food.css"'),'assets missing');
-check((nav.match(/<a href=/g)||[]).length===6,'six-link navigation missing');
+check((nav.match(/<a href=/g)||[]).length===7,'seven-link navigation missing');
 check(nav.includes('<a href="/food/" aria-current="page">먹거리</a>'),'food active menu missing');
 check(read('sitemap.xml').includes('<loc>https://pagero.kr/life/food/</loc>'),'sitemap missing');
 check(JSON.parse(read('search-index.json')).some(item=>item.url==='/food/'),'search index missing');
@@ -31,4 +31,4 @@ check(deals.includes('new URLSearchParams(location.search).get("q")'),'existing 
 check(deals.includes('rel="sponsored noopener noreferrer"')||deals.includes('a.rel="sponsored noopener noreferrer"'),'paid outbound link labeling lost');
 check(!js.includes('ADPICK_BIZ_API_KEY')&&!page.includes('ADPICK_BIZ_API_KEY'),'API key reference leaked');
 check(css.includes('@media(max-width:700px)'),'mobile breakpoint missing');
-console.log('[food-qa] PASS: six-link menu, monthly food, dinner selection, SEO, affiliate disclosure and live /deals/?q= handoff.');
+console.log('[food-qa] PASS: seven-link menu, monthly food, dinner selection, SEO, affiliate disclosure and live /deals/?q= handoff.');
