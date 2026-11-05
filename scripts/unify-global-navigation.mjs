@@ -8,12 +8,12 @@ const CSS='/life-global-nav.css';
 const ITEMS=[
   {href:'/',label:'홈',section:'home'},
   {href:'/today/',label:'오늘',section:'today'},
+  {href:'/deals/',label:'핫딜',section:'deals'},
   {href:'/finance/',label:'금융',section:'finance'},
   {href:'/finance/savings/',label:'예·적금',section:'savings'},
   {href:'/finance/markets/',label:'주식·코인',section:'markets'},
   {href:'/car/',label:'자동차',section:'car'},
-  {href:'/support/',label:'지원금',section:'support'},
-  {href:'/deals/',label:'핫딜',section:'deals'}
+  {href:'/support/',label:'지원금',section:'support'}
 ];
 const esc=str=>String(str).replace(/[&<>"']/g,c=>({
   '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
