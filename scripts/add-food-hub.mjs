@@ -30,16 +30,16 @@ const cards=items.map(item=>'<article class="food-card"><div class="food-card-to
 const months=Array.from({length:12},(_,i)=>'<option value="'+(i+1)+'"'+(i===10?' selected':'')+'>'+(i+1)+'월</option>').join('');
 const main='<div class="site-shell"><article class="food-hub">'
  +'<nav class="portal-breadcrumbs" aria-label="현재 위치"><a href="/">홈</a> / 제철음식</nav>'
- +'<header class="food-hero"><p class="food-eyebrow">식재료 · 집밥 · 장보기</p>'
- +'<h1>제철음식</h1><p>이번 달 먹기 좋은 재료를 살펴보고 오늘의 메뉴와 필요한 장보기까지 이어서 확인하세요.</p></header>'
- +'<section class="food-section" aria-labelledby="food-month-heading"><div class="food-section-head"><div><h2 id="food-month-heading">11월 제철 식재료</h2><p>지역과 수확·어획 시기에 따라 실제 제철은 달라질 수 있습니다.</p></div>'
+ +'<header class="food-hero">'
+ +'<h1>제철음식</h1></header>'
+ +'<section class="food-section" aria-labelledby="food-month-heading"><div class="food-section-head"><h2 id="food-month-heading">11월 제철 식재료</h2>'
  +'<label class="food-month-label" for="food-month">월 선택 <select id="food-month">'+months+'</select></label></div>'
  +'<div class="food-grid" id="food-list" aria-live="polite">'+cards+'</div>'
- +'<p class="food-source">2026년 11월 수산물 삼치·가리비류: <a href="https://www.mof.go.kr/doc/ko/selectDoc.do?bbsSeq=10&amp;docSeq=69193&amp;menuSeq=971" target="_blank" rel="noopener noreferrer">해양수산부 발표 확인</a></p></section>'
- +'<section class="food-section food-choice" aria-labelledby="food-choice-heading"><div><h2 id="food-choice-heading">오늘 뭐 먹지?</h2><p>이번 달 식재료를 활용한 집밥 메뉴를 하나 골라보세요.</p><p id="food-result" class="food-choice-result" role="status">오늘의 추천: 삼치 소금구이</p></div>'
+ +'<p class="food-source">지역과 시기에 따라 제철이 달라질 수 있습니다. 11월 수산물: <a href="https://www.mof.go.kr/doc/ko/selectDoc.do?bbsSeq=10&amp;docSeq=69193&amp;menuSeq=971" target="_blank" rel="noopener noreferrer">해양수산부 발표 확인</a></p></section>'
+ +'<section class="food-section food-choice" aria-labelledby="food-choice-heading"><div><h2 id="food-choice-heading">오늘 뭐 먹지?</h2><p id="food-result" class="food-choice-result" role="status">오늘의 추천: 삼치 소금구이</p></div>'
  +'<button id="food-pick" type="button">다른 메뉴 추천</button></section>'
- +'<section class="food-section food-shopping" aria-labelledby="food-shopping-heading"><h2 id="food-shopping-heading">이번 주 장보기</h2>'
- +'<p>필요한 재료를 먼저 정하고 구매하세요. 아래 링크는 기존 제휴 상품 검색 메뉴로 이동합니다.</p>'
+ +'<section class="food-section food-shopping" aria-labelledby="food-shopping-heading"><h2 id="food-shopping-heading">장보기</h2>'
+
  +'<a href="/deals/" class="food-all-deals">제휴 추천상품 전체 보기 <span aria-hidden="true">↗</span></a>'
  +'<p class="food-disclosure">제휴 상품 링크를 통해 구매하면 운영자가 수수료를 제공받을 수 있습니다. 실제 가격과 판매조건은 판매처에서 확인하세요.</p></section>'
  +'</article></div>';
