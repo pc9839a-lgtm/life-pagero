@@ -210,7 +210,8 @@ for (const post of posts) {
     + official + '</div></section>';
   html = html.replace(/(<header class="article-header">[\s\S]*?<\/header>)/, (_match, original) =>
     original + summary);
-  html = html.replace('<div class="article-content">', '<div class="article-content" id="portal-article-detail">');
+  // Preserve the exact .article-content container expected by editorial SEO QA.
+  html = html.replace('<div class="article-content">', '<span id="portal-article-detail" class="portal-article-anchor" aria-hidden="true"></span><div class="article-content">');
   write(pathname, html);
   articleCount++;
 }
