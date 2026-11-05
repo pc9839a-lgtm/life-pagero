@@ -41,19 +41,13 @@ const news=mode=>block('news',
   +'</div><p class="today-news-intro">기사 제목만 표시 · 클릭하면 언론사 원문 이동</p>'
   +'<div data-news-items><p class="today-empty">언론사 RSS 확인 중</p></div>','',mode);
 
-const glance='<section class="today-glance" aria-labelledby="today-glance-title">'
-  +'<div class="today-section-heading"><h2 id="today-glance-title">오늘의 정보</h2>'
-  +'<a href="/today/">모두 보기</a></div>'
-  +'<div class="today-three-grid">'+weather('compact')+stocks('compact')+crypto('compact')+'</div>'
-  +news('compact')
-  +'</section>';
 let home=read('index.html');
 const hero=home.match(/<section class="hero portal-home-hero">[\s\S]*?<\/section>/)?.[0];
 if(!hero || !home.includes('class="portal-topic-card compact-topic"'))
   throw Error('Today dashboard: compact homepage layout changed');
-home=home.replace(hero,hero+glance);
-home=home.replace('</head>','<link rel="stylesheet" href="/today-dashboard.css">'
-  +'<script defer src="/today-dashboard.js"></script></head>');
+// Keep the six-category + three-link homepage. Today's dynamic dashboard is
+// available from the existing /today/ navigation, not forced above categories.
+if(home.includes('class="today-glance"'))throw Error('Unexpected crowded homepage today panel');
 write('index.html',home);
 
 const template=read('finance/index.html');
