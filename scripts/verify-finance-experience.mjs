@@ -25,7 +25,7 @@ for(const href of ['/finance/savings/','/finance/markets/','/finance/loan-paymen
  if(!home.includes('href="'+href+'"'))throw Error('Homepage missing finance link: '+href);
 }
 const finance=url('finance/index.html');
-for(const token of ['id="finance-rates-official"','id="finance-issues-official"','금융감독원','DART']){
+for(const token of ['id="finance-rates-official"','id="finance-issues-official"','금융감독원','dart.fss.or.kr']){
  if(!finance.includes(token))throw Error('Finance hub missing a usable official destination: '+token);
 }
 if(finance.includes('id="finance-products"'))throw Error('Unconfigured product filters must not occupy finance hub');
