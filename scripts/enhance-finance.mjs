@@ -237,4 +237,17 @@ for(const [filename,pathname] of configurations){
     !html.includes('name="description"') ||
     !html.includes('name="robots"')) throw new Error('Finance SEO check failed: '+filename);
 }
+// Search must surface new finance pages as well as articles. Preserve all
+// existing post records; never index API-only data as permanent editorial text.
+const searchIndex=JSON.parse(read('search-index.json'));
+const financeIndex=[
+ {title:'은행별 정기예금·적금 금리 비교',description:'은행·저축은행의 기본금리와 최고 우대금리, 기간, 가입 조건 비교',keywords:['은행 예금 금리','정기예금 금리 비교','적금 금리 순위','저축은행 적금'],url:'/finance/savings/'},
+ {title:'주식시장 주요 이슈·기업 공시',description:'주식 공시·경제금융 이슈와 금융정책·기업발표 확인',keywords:['주식 이슈','오늘의 주요뉴스','주식 관련 뉴스','DART 기업 공시','코스피 코스닥'],url:'/finance/markets/'},
+ {title:'대출이자 계산기',description:'원리금균등 원금균등 만기일시상환 월 상환액과 총이자 비교',keywords:['대출 계산기','대출 이자 계산','대출 상환표','대출 원리금'],url:'/finance/loan-payment/'},
+ {title:'금융정보',description:'은행별 예적금 금리·주식 공시·금융경제 주요 이슈',keywords:['금융정보','은행별 금리','예금 적금','주식'],url:'/finance/'}
+];
+const slugs=new Set(searchIndex.map(item=>item.url));
+for(const page of financeIndex){if(!slugs.has(page.url)){searchIndex.push(page);slugs.add(page.url);}}
+write('search-index.json',JSON.stringify(searchIndex));
+
 console.log('Finance experience: bank disclosures and official issue feeds, plus 3 repayment methods; '+configurations.length+' pages checked.');
