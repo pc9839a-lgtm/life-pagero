@@ -3,9 +3,9 @@ import path from 'node:path';
 
 const DIST=path.resolve('dist');
 const EXPECTED=[
-  ['/', '홈'], ['/today/','오늘'], ['/finance/','금융'],
+  ['/', '홈'], ['/today/','오늘'], ['/deals/','핫딜'], ['/finance/','금융'],
   ['/finance/savings/','예·적금'], ['/finance/markets/','주식·코인'],
-  ['/car/','자동차'], ['/support/','지원금'], ['/deals/','핫딜']
+  ['/car/','자동차'], ['/support/','지원금']
 ];
 const read=relative=>fs.readFileSync(path.join(DIST,relative),'utf8');
 const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(ent=>{
@@ -35,12 +35,12 @@ for(const absolute of walk(DIST).filter(p=>p.endsWith('.html'))){
   let want=-1;
   if(pathname==='/')want=0;
   else if(pathname.startsWith('/today/'))want=1;
-  else if(pathname.startsWith('/finance/savings/'))want=3;
-  else if(pathname.startsWith('/finance/markets/'))want=4;
-  else if(pathname.startsWith('/finance/'))want=2;
-  else if(pathname.startsWith('/car/'))want=5;
-  else if(pathname.startsWith('/support/'))want=6;
-  else if(pathname.startsWith('/deals/'))want=7;
+  else if(pathname.startsWith('/deals/'))want=2;
+  else if(pathname.startsWith('/finance/savings/'))want=4;
+  else if(pathname.startsWith('/finance/markets/'))want=5;
+  else if(pathname.startsWith('/finance/'))want=3;
+  else if(pathname.startsWith('/car/'))want=6;
+  else if(pathname.startsWith('/support/'))want=7;
   const currentIndices=entries.flatMap((entry,i)=>entry[2]?[i]:[]);
   if(currentIndices.length!==(want<0?0:1) || (want>=0&&currentIndices[0]!==want))
     fail('active section selection',relative);
