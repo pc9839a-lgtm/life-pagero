@@ -56,6 +56,7 @@ const steps = [
   ['node', ['scripts/verify-savings-calculator.mjs']],
   ['node', ['scripts/verify-car-mortgage-calculators.mjs']],
   ['node', ['scripts/verify-adpick-deals.mjs']],
+  ['node', ['scripts/verify-food-hub.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);
