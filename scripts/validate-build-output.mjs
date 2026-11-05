@@ -254,7 +254,7 @@ for (const file of htmlFiles) {
     throw new Error('Coupang loader or initializer missing/duplicated in ' + relative);
   }
   if (!html.includes('"id":1046806') || !html.includes('"trackingCode":"AF2358798"')
-      || !html.includes('"height":"300"') || !html.includes('"height":"250"')
+      || !html.includes('"height":"300"') || !html.includes('options.width="100%"')
       || !html.includes('options.height="250"')
       || !html.includes('쿠팡 파트너스 활동의 일환')) {
     throw new Error('Coupang large banner, mobile fallback or disclosure missing in ' + relative);
