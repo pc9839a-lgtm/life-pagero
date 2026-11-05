@@ -10,7 +10,7 @@ const finite=(value,label,min,max)=>{
 };
 export function monthlyAnnuity(principalWon,ratePercent,years){
   const p=finite(principalWon,'대출원금',0,1000000000000);
-  const rate=finite(ratePercent,'이자율',0,35);
+  const rate=finite(ratePercent,'이자율',0,50);
   const term=finite(years,'대출기간',1,50);
   const months=Math.round(term*12);
   const r=rate/100/12;
@@ -18,7 +18,7 @@ export function monthlyAnnuity(principalWon,ratePercent,years){
 }
 export function maxPrincipalFromPayment(monthlyWon,ratePercent,years){
   const payment=finite(monthlyWon,'월 상환가능액',0,10000000000);
-  const rate=finite(ratePercent,'이자율',0,35);
+  const rate=finite(ratePercent,'이자율',0,50);
   const term=finite(years,'대출기간',1,50);
   const periods=Math.round(term*12),r=rate/100/12;
   return r===0?payment*periods:payment*(1-Math.pow(1+r,-periods))/r;
