@@ -164,8 +164,8 @@ for (const post of posts) {
     }
   }
   const articleSection = baseHtml.match(/<div class="article-content">([\s\S]*?)<div class="disclaimer">/)?.[1] || '';
-  if (baseHtml.includes('class="series-part-title"') || !/<h[234]\b/.test(articleSection)) {
-    throw new Error(`Semantic article subheadings missing or obsolete wrapper present: ${basePath}`);
+  if (baseHtml.includes('class="series-part-title"') || /<h[234](?:\s[^>]*)?>/.test(articleSection)) {
+    throw new Error(`Unwanted article subheadings remain: ${basePath}`);
   }
 
   const total = Array.isArray(post.series?.parts) ? post.series.parts.length : 1;

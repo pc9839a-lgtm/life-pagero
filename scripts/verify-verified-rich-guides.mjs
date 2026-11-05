@@ -17,16 +17,16 @@ for(const [slug,parts] of Object.entries(modules)){
   for(const [idx,m] of parts.entries()){
     if(headings.has(m.title))throw Error('Repeated module heading '+slug);
     headings.add(m.title);
-    const heading='<h2 class="article-subheading">'+esc(m.title)+'</h2>';
-    if(!main.includes(heading)||!main.includes(esc(publishWording(m.note)))||!main.includes(esc(publishWording(m.lead))))throw Error('Main page missing rich copy: '+slug+' part '+(idx+1));
+    // Article subheadings are intentionally omitted; verify paragraphs and tables.
+    if(!main.includes(esc(publishWording(m.note)))||!main.includes(esc(publishWording(m.lead))))throw Error('Main page missing rich copy: '+slug+' part '+(idx+1));
     for(const row of m.rows){
       if(!row.every(c=>main.includes(esc(c))))throw Error('Missing verified table row: '+slug+' part '+(idx+1));
     }
     const sect=main.split('<!-- life-body-part-'+(idx+1)+' -->')[1]?.split('<!-- life-body-part-'+(idx+2)+' -->')[0]||'';
-    if(!sect.includes('article-data-table')||!sect.includes(heading))throw Error('Module misplaced or table missing: '+slug+' part '+(idx+1));
+    if(!sect.includes('article-data-table')||!sect.includes(esc(publishWording(m.note))))throw Error('Module misplaced or table missing: '+slug+' part '+(idx+1));
     if(idx>0){
       const page=fs.readFileSync(path.join(DIST,dir,slug,String(idx+1),'index.html'),'utf8');
-      if(!page.includes(heading)||!page.includes(esc(m.rows[0][0])))throw Error('Continuation page absent: '+slug+' part '+(idx+1));
+      if(!page.includes(esc(publishWording(m.note)))||!page.includes(esc(m.rows[0][0])))throw Error('Continuation page absent: '+slug+' part '+(idx+1));
     }
     checked++;tableCount++;
   }
