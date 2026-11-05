@@ -30,9 +30,11 @@ function showEmpty(message,params){
 }
 function render(items,params){
  target.replaceChildren();
+ let shown=0;
  for(const p of items){
   if(!p||!https(p.commissionlink))continue;
-  const a=el("a","adpick-card");a.href=p.commissionlink;
+  const a=el("a",shown===0?"adpick-card adpick-card--featured":"adpick-card");a.href=p.commissionlink;
+  shown++;
   a.target="_blank";a.rel="sponsored noopener noreferrer";
   const image=el("div","adpick-card-photo");
   const source=https(p.photo);
