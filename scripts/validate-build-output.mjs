@@ -223,32 +223,45 @@ for (const post of posts) {
 
 const htmlFiles = walk(DIST).filter((file) => file.endsWith('.html'));
 
-// Coupang Partners: ensure every generated document has the intended number
-// of units and that the official library is not loaded once per placement.
+// Coupang Partners: validate large desktop body units, the right-rail unit,
+// the mobile fallback and one third-party loader per generated HTML page.
 const coupangCss = fs.readFileSync(path.join(DIST, 'coupang-banner.css'), 'utf8');
-if (!coupangCss.includes('max-width:320px') || !coupangCss.includes('max-width:680px')) {
-  throw new Error('Coupang responsive PC/mobile dimensions are missing');
+for (const token of ['1320px', 'max-width:300px', 'max-width:320px', '.life-coupang-placement--rail{display:none}']) {
+  if (!coupangCss.includes(token)) throw new Error('Coupang layout rule missing: ' + token);
 }
 for (const file of htmlFiles) {
   const relative = path.relative(DIST, file).replaceAll(path.sep, '/');
   const html = fs.readFileSync(file, 'utf8');
   if (!html.includes('</main>')) continue;
-  const expected = relative === 'index.html'
+
+  const expectedBody = relative === 'index.html'
     || /^(car|support)\/index\.html$/.test(relative)
     || /^(car|support)\/[^/]+\/index\.html$/.test(relative)
       ? 2 : 1;
-  const actual = count(html, /data-life-coupang-banner="sitewide-v3"/g);
-  if (actual !== expected) {
-    throw new Error('Coupang placement count mismatch in ' + relative + ': ' + actual + ' vs ' + expected);
+  const expectedRail = html.includes('<aside class="sidebar">') ? 1 : 0;
+  const actualBody = count(html, /data-life-coupang-kind="(?:body|middle)"/g);
+  const actualRail = count(html, /data-life-coupang-kind="rail"/g);
+  if (actualBody !== expectedBody || actualRail !== expectedRail) {
+    throw new Error('Coupang body/rail mismatch in ' + relative + ': ' + actualBody + '/' + actualRail
+      + ' expected ' + expectedBody + '/' + expectedRail);
+  }
+  const total = expectedBody + expectedRail;
+  if (count(html, /data-life-coupang-banner="sitewide-v4"/g) !== total) {
+    throw new Error('Coupang placement marker count mismatch: ' + relative);
   }
   if (count(html, /<script src="https:\/\/ads-partners\.coupang\.com\/g\.js"><\/script>/g) !== 1
-      || count(html, /new PartnersCoupang\.G\(options\)/g) !== expected) {
-    throw new Error('Coupang loader or initializer duplicated in ' + relative);
+      || count(html, /new PartnersCoupang\.G\(options\)/g) !== total) {
+    throw new Error('Coupang loader or initializer missing/duplicated in ' + relative);
   }
   if (!html.includes('"id":1046806') || !html.includes('"trackingCode":"AF2358798"')
-      || !html.includes('options.height="250"') || !html.includes('"height":"180"')
+      || !html.includes('"height":"300"') || !html.includes('"height":"250"')
+      || !html.includes('options.height="250"')
       || !html.includes('쿠팡 파트너스 활동의 일환')) {
-    throw new Error('Coupang desktop/mobile banner code or disclosure missing from ' + relative);
+    throw new Error('Coupang large banner, mobile fallback or disclosure missing in ' + relative);
+  }
+  if (expectedRail && (!html.includes('"height":"500"')
+    || html.indexOf('data-life-coupang-kind="rail"') <= html.indexOf('<aside class="sidebar">'))) {
+    throw new Error('Coupang rail unit missing from existing right sidebar in ' + relative);
   }
 }
 
