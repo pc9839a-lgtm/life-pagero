@@ -31,6 +31,7 @@ const steps = [
   ['node', ['scripts/verify-editorial-depth.mjs']],
   ['node', ['scripts/remove-editorial-fluff.mjs']],
   ['node', ['scripts/build-portal.mjs']],
+  ['node', ['scripts/enhance-finance.mjs']],
   ['node', ['scripts/validate-build-output.mjs']],
   ['node', ['scripts/verify-verified-rich-guides.mjs']],
 ];
