@@ -23,6 +23,13 @@ assert(html.includes('일반과세 15.4%')&&html.includes('비과세 0%'),
   'the two tax categories are not selectable');
 assert(html.includes('https://finlife.fss.or.kr/'),
   'official financial product data link missing');
+for(const phrase of ['매월 초 동일 금액 납입','일반과세 15.4% 또는 비과세를 선택할 수 있습니다',
+  '실제 판매 금리가 아닙니다','실제 이자는 납입일']){
+  assert(!html.includes(phrase),'unwanted explanatory boilerplate was restored: '+phrase);
+}
+assert(!html.includes('class="savings-calc-note"'),'verbose bottom disclaimer should be removed');
+assert(html.includes('class="savings-page-links"')&&html.includes('>공식 금리 비교</a>'),
+  'compact official rates link missing');
 assert(html.includes('data-life-coupang-kind="body"'),
   'original labelled advertiser placement missing');
 for(const asset of ['savings-math.js','savings-calculator.js']){
