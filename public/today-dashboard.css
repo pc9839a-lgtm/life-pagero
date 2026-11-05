@@ -90,3 +90,9 @@
   .today-page .today-weather-temp{font-size:32px}
   .today-page .today-news-title{font-size:13px}
 }
+
+/* Hide empty status captions; unavailable external data stays an official link, not a warning box. */
+.today-widget-meta:empty,.today-widget [data-weather-items][hidden],
+.today-widget [data-coin-items][hidden],.today-widget [data-stock-items][hidden],
+.today-widget [data-news-items][hidden]{display:none!important}
+.today-widget .today-official-link{display:inline-flex;align-items:center;min-height:38px;padding:5px 0;font-size:13px;text-decoration:none;font-weight:720}

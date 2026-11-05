@@ -41,7 +41,7 @@ export async function onRequestGet(context) {
   const key=context.env.FSS_API_KEY;
   if(!key)
     return json({status:'unconfigured',source:'금융감독원 금융상품한눈에',
-      message:'상품 데이터 인증키가 연결되지 않아 공시 금리를 표시할 수 없습니다.',
+      message:'현재 제공 가능한 공시 자료가 없습니다.',
       officialUrl:'https://finlife.fss.or.kr/'},503);
   const cacheKey=new Request(url.toString(),{method:'GET'});
   const cache=typeof caches==='object'&&caches.default?caches.default:null;

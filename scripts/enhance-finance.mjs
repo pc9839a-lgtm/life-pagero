@@ -57,7 +57,7 @@ const hub = breadcrumb()
   +'<h1>금융정보</h1>'
   +'<p class="finance-page-intro">금리 비교, 공시 조회, 대출 계산을 선택하세요.</p>'
   +'<div class="finance-hub-grid">'
-  +pageLink('/finance/savings/','예금·적금 비교','은행별 기본·우대금리와 가입기간')
+  +pageLink('/finance/savings/','예·적금 금리 확인','금융감독원 공식 비교공시')
   +pageLink('/finance/markets/','주식·경제 이슈','기업 공시와 통화·금융정책 발표')
   +pageLink('/finance/loan-payment/','대출 계산기','3가지 상환방식·월별 상환표')
   +pageLink('/support/year-end-tax-precheck-2026/','세금·환급','연말정산 미리보기·세금정보')
@@ -66,7 +66,7 @@ const hub = breadcrumb()
   +issuePanel()
 ;
 const savingsPage = breadcrumb('예금·적금 비교')
-  +'<h1>은행별 정기예금·적금 금리 비교</h1>'
+  +'<h1>예·적금 금리 확인</h1>'
   +'<p class="finance-page-intro">금융감독원 공시에서 예금·적금 상품을 확인하세요.</p>'
   +bankPanel()
   +'<section class="finance-plain-guide"><h2>예금과 적금 중 무엇을 비교해야 하나요?</h2>'
@@ -180,7 +180,7 @@ const oldCalc=read('finance/loan-payment/index.html');
 const configurations=[
   ['finance/index.html','/finance/','금융정보 | 은행별 예적금·주식·경제 이슈 | 생활비서',
     '예금·적금 공식 비교공시, 기업 공시 조회, 대출 계산과 세금 정보를 확인할 수 있습니다.',hub,'live',template],
-  ['finance/savings/index.html','/finance/savings/','은행별 예금·적금 금리 비교 | 생활비서',
+  ['finance/savings/index.html','/finance/savings/','예·적금 금리 확인 | 생활비서',
     '금융감독원 예금·적금 공시 바로가기와 금융상품 기본금리·우대조건 안내.',savingsPage,'live',template],
   ['finance/markets/index.html','/finance/markets/','주식시장 주요 이슈·기업 공시 | 생활비서',
     '최근 기업 공시, 주식시장 주요 공시, 한국은행 금융시장 발표와 금융정책 이슈를 출처·발표일과 함께 확인합니다.',marketsPage,'live',template],
@@ -197,13 +197,13 @@ let home=read('index.html');
 // The portal title and search snippet must reflect the actual banking and
 // market functions; preserve a single self-canonical and existing site schema.
 home=home.replace(/<title>[^<]*<\/title>/i,
- '<title>생활비서 | 은행 예적금 금리·주식 이슈·생활정보</title>');
+ '<title>생활비서 | 지원금·자동차·주거·금융 정보</title>');
 home=home.replace(/<meta name="description"[^>]*>/i,
  '<meta name="description" content="예금·적금 공식 비교공시 바로가기, 주식·경제 이슈, 세금·복지·자동차 생활정보를 확인하세요.">');
 home=home.replace(/<meta property="og:title"[^>]*>/i,
- '<meta property="og:title" content="생활비서 | 은행 예적금 금리·주식 이슈·생활정보">');
+ '<meta property="og:title" content="생활비서 | 지원금·자동차·주거·금융 정보">');
 home=home.replace(/<meta property="og:description"[^>]*>/i,
- '<meta property="og:description" content="은행별 예적금 금리, 주식·금융경제 이슈, 생활정보를 빠르게 확인할 수 있습니다.">');
+ '<meta property="og:description" content="지원금, 자동차, 주거, 금융 생활정보를 분야별로 찾을 수 있습니다.">');
 home=home.replace('예: 자동차 검사기간, 주거급여, 연말정산','예: 적금 금리, 주식 공시, 주거급여');
 home=home.replace('<a href="/finance/loan-payment/">대출 이자 계산</a>',
   '<a href="/finance/savings/">예·적금 금리</a><a href="/finance/markets/">주식·경제 이슈</a>'
@@ -254,10 +254,10 @@ for(const [filename,pathname] of configurations){
 // existing post records; never index API-only data as permanent editorial text.
 const searchIndex=JSON.parse(read('search-index.json'));
 const financeIndex=[
- {title:'은행별 정기예금·적금 금리 비교',description:'은행·저축은행의 기본금리와 최고 우대금리, 기간, 가입 조건 비교',keywords:['은행 예금 금리','정기예금 금리 비교','적금 금리 순위','저축은행 적금'],url:'/finance/savings/'},
+ {title:'예·적금 금리 확인',description:'금융감독원 금융상품한눈에 공시에서 예금과 적금 금리 확인',keywords:['은행 예금 금리','정기예금 금리 비교','적금 금리 순위','저축은행 적금'],url:'/finance/savings/'},
  {title:'주식시장 주요 이슈·기업 공시',description:'주식 공시·경제금융 이슈와 금융정책·기업발표 확인',keywords:['주식 이슈','오늘의 주요뉴스','주식 관련 뉴스','DART 기업 공시','코스피 코스닥'],url:'/finance/markets/'},
  {title:'대출이자 계산기',description:'원리금균등 원금균등 만기일시상환 월 상환액과 총이자 비교',keywords:['대출 계산기','대출 이자 계산','대출 상환표','대출 원리금'],url:'/finance/loan-payment/'},
- {title:'금융정보',description:'은행별 예적금 금리·주식 공시·금융경제 주요 이슈',keywords:['금융정보','은행별 금리','예금 적금','주식'],url:'/finance/'}
+ {title:'금융정보',description:'예·적금 공식 비교공시 연결, 기업 공시·금융정책과 대출 계산기',keywords:['금융정보','은행별 금리','예금 적금','주식'],url:'/finance/'}
 ];
 const slugs=new Set(searchIndex.map(item=>item.url));
 for(const page of financeIndex){if(!slugs.has(page.url)){searchIndex.push(page);slugs.add(page.url);}}

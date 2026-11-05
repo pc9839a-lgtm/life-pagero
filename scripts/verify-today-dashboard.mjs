@@ -7,10 +7,8 @@ const home=read('index.html');
 const today=read('today/index.html');
 const markets=read('finance/markets/index.html');
 const sitemap=read('sitemap.xml');
-yes(home.includes('id="today-glance-title"'),'compact homepage dashboard not inserted');
-yes(home.includes('data-today-weather')&&home.includes('data-today-news')&&
-  home.includes('data-today-stocks')&&home.includes('data-today-crypto'),
-  'homepage missing one of the four sources');
+yes(!home.includes('class="today-glance"')&&!home.includes('data-today-weather'),
+  'homepage must remain six icons and three links; today widgets belong on /today/');
 yes((home.match(/class="portal-topic-card compact-topic"/g)||[]).length===6,
   '6 established compact home categories changed');
 yes((home.match(/data-life-coupang-kind="(?:body|middle)"/g)||[]).length===2,
@@ -19,8 +17,8 @@ yes((home.match(/data-life-coupang-kind="rail"/g)||[]).length===1,
   'sidebar advertising count changed');
 yes((home.match(/data-affiliate="tenping-/g)||[]).length===4,
   'existing affiliate card placement changed');
-yes(home.indexOf('class="today-glance"')<home.indexOf('class="modern-sponsored-area"'),
-  'today information must appear before advertisements');
+yes(home.includes('class="modern-sponsored-area"'),
+  'existing advertisements lost');
 yes((home.match(/href="\/today\/"/g)||[]).length>=1,
   'home not linked to today page');
 for(const [name,html,canonical] of [
@@ -34,10 +32,15 @@ for(const [name,html,canonical] of [
     name+' canonical changed');
   yes((html.match(/<h1(?:\s[^>]*)?>/g)||[]).length===1,
     name+' must have one H1');
-  yes(html.includes('href="/today-dashboard.css"'),
-    name+' dashboard CSS missing');
-  yes(html.includes('src="/today-dashboard.js"'),
-    name+' dashboard client missing');
+  if(name!=='home'){
+    yes(html.includes('href="/today-dashboard.css"'),
+      name+' dashboard CSS missing');
+    yes(html.includes('src="/today-dashboard.js"'),
+      name+' dashboard client missing');
+  }else{
+    yes(!html.includes('src="/today-dashboard.js"'),
+      'homepage should not load unused finance/weather dashboard JS');
+  }
   yes(html.includes('name="robots" content="index,follow'),
     name+' indexability changed');
 }
@@ -57,4 +60,4 @@ yes(!index.some(x=>x.url.includes('today/api')),'API must never be in public sea
 for(const name of ['today-dashboard.css','today-dashboard.js']){
   yes(fs.statSync(path.join(DIST,name)).size>2500,'dashboard asset not generated: '+name);
 }
-console.log('[today-qa] Four source-backed modules, compact six-topic home, original-news links, finance embeds, SEO, ads and local search validated.');
+console.log('[today-qa] /today/ source-backed widgets, minimal homepage, verified source links, finance embeds, SEO, ads and search passed.');
