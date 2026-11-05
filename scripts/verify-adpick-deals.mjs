@@ -23,13 +23,13 @@ check(page.includes('name="robots" content="noindex,follow"'),'affiliate-only ro
 check(page.includes('data-deals-list')&&page.includes('data-deals-search'),'live deals and search controls missing');
 check(page.includes('href="/adpick-deals.css"')&&page.includes('src="/adpick-deals.js"'),'deals assets missing');
 check(page.includes('href="https://pagero.kr/life/deals/"'),'wrong canonical');
-check(origin.includes('grid-template-columns:repeat(5,minmax(0,1fr))'),'mobile 5-item navigation grid missing');
+check(origin.includes('grid-template-columns:repeat(3,minmax(0,1fr))'),'mobile 6-item navigation grid missing');
 check(fs.existsSync(path.join(DIST,"adpick-deals.js")),'deals frontend JS missing');
 check(fs.existsSync(path.join(DIST,"adpick-deals.css")),'deals CSS missing');
-for(const relative of ["index.html","today/index.html","finance/index.html","topics/index.html","deals/index.html"]){
+for(const relative of ["index.html","today/index.html","finance/index.html","topics/index.html","deals/index.html","food/index.html"]){
  const html=read(relative);
  const nav=html.match(/<nav\b[^>]*class="main-nav"[^>]*>[\s\S]*?<\/nav>/)?.[0]||"";
- check((nav.match(/<a href=/g)||[]).length===5,'five nav items not shown '+relative);
+ check((nav.match(/<a href=/g)||[]).length===6,'five nav items not shown '+relative);
  check(nav.includes('<a href="/deals/"'),'nav hot deals link missing '+relative);
 }
 const realFetch=globalThis.fetch;
