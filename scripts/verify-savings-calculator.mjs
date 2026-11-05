@@ -38,7 +38,7 @@ assert(get('sitemap.xml').includes('<loc>https://pagero.kr/life/finance/savings-
   'missing sitemap route');
 assert(JSON.parse(get('search-index.json')).some(r=>r.url==='/finance/savings-calculator/'),
   'missing site search entry');
-const theme=get('life-editorial-20261105.css');
+const theme=get('life-editorial-20261106.css');
 for(const part of ['.savings-calc-page','.savings-calc-fields',
   '.savings-calc-results','.savings-calc-metrics',
   '@media(max-width:700px)']){
