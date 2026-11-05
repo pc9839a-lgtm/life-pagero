@@ -19,42 +19,43 @@ const breadcrumb = (parent='') => '<nav class="portal-breadcrumbs" aria-label="�
 const official = '<a href="https://finlife.fss.or.kr/" target="_blank" rel="noopener noreferrer">금융감독원 금융상품한눈에</a>';
 const pageLink = (href,name,desc) => '<a class="finance-hub-card" href="'+href+'"><strong>'
   +esc(name)+'</strong><span>'+esc(desc)+'</span></a>';
+// Keep one working official destination visible. Interactive tables appear only
+// after an authenticated source actually supplies rows; never show diagnostics.
+const ratesShortcut = '<div class="finance-official-shortcut" id="finance-rates-official">'
+  +'<a href="https://finlife.fss.or.kr/" target="_blank" rel="noopener noreferrer">'
+  +'금융감독원에서 예·적금 금리 비교 <span aria-hidden="true">↗</span></a></div>';
 function bankPanel(compact=false) {
- return '<section class="finance-data-section" aria-labelledby="bank-rates-heading">'
-  +'<div class="finance-section-title"><div><h2 id="bank-rates-heading">은행별 예금·적금 금리 비교</h2>'
-  +'<p>기본금리와 우대조건 충족 시 최고금리를 구분해 비교합니다.</p></div>'
-  +'<a href="/finance/savings/">비교 사용법·주의사항</a></div>'
-  +'<div class="finance-filter-bar">'
-  +'<label>상품<select id="finance-kind"><option value="deposit">정기예금</option><option value="saving">적금</option></select></label>'
-  +'<label>금융권<select id="finance-group"><option value="bank">은행</option><option value="savingsbank">저축은행</option></select></label>'
-  +'<label>기간<select id="finance-term"><option value="12">12개월</option><option value="6">6개월</option><option value="24">24개월</option><option value="36">36개월</option><option value="all">전체</option></select></label>'
-  +'<label>정렬<select id="finance-sort"><option value="base">기본금리 높은 순</option><option value="max">최고 우대금리 높은 순</option></select></label>'
-  +'<label class="finance-filter-query">금융회사·상품명 검색<input type="search" id="finance-query" autocomplete="off" placeholder="예: 국민은행, 정기예금"></label>'
-  +'</div>'
-  +'<p id="finance-products-status" class="finance-data-status" role="status">공시 데이터 연결을 확인하고 있습니다.</p>'
-  +'<div class="finance-source-bar"><span id="finance-product-criteria"></span>'
-  +'<span id="finance-products-source">출처: 금융감독원 금융상품한눈에 · 조회 시점 미확인</span></div>'
-  +'<div id="finance-products"><p class="finance-empty">은행별 공시 자료를 불러오는 중입니다.</p></div>'
-  +'<p class="finance-data-disclaimer">최고금리는 우대조건을 모두 충족해야 적용될 수 있으며, 판매 중단·금리 변경이 공시에 늦게 반영될 수 있습니다. 가입 전 각 금융회사에 실제 적용금리를 확인하세요. '
-  +official+'</p></section>';
+  if(compact) return ratesShortcut;
+  return ratesShortcut
+    +'<section class="finance-data-section" id="finance-rate-panel" aria-labelledby="bank-rates-heading" hidden>'
+    +'<div class="finance-section-title"><div><h2 id="bank-rates-heading">은행별 예금·적금</h2></div></div>'
+    +'<div class="finance-filter-bar">'
+    +'<label>상품<select id="finance-kind"><option value="deposit">정기예금</option><option value="saving">적금</option></select></label>'
+    +'<label>금융권<select id="finance-group"><option value="bank">은행</option><option value="savingsbank">저축은행</option></select></label>'
+    +'<label>기간<select id="finance-term"><option value="12">12개월</option><option value="6">6개월</option><option value="24">24개월</option><option value="36">36개월</option><option value="all">전체</option></select></label>'
+    +'<label>정렬<select id="finance-sort"><option value="base">기본금리 높은 순</option><option value="max">최고 우대금리 높은 순</option></select></label>'
+    +'<label class="finance-filter-query">금융회사·상품명 검색<input type="search" id="finance-query" autocomplete="off" placeholder="은행·상품명"></label>'
+    +'</div><div class="finance-source-bar"><span id="finance-product-criteria"></span>'
+    +'<span id="finance-products-source"></span></div>'
+    +'<div id="finance-products"></div>'
+    +'<div class="finance-official-inline"><a href="https://finlife.fss.or.kr/" target="_blank" rel="noopener noreferrer">공식 공시 원문 ↗</a></div>'
+    +'</section>';
 }
 function issuePanel() {
- return '<section class="finance-data-section" aria-labelledby="issues-heading">'
- +'<div class="finance-section-title"><div><h2 id="issues-heading">주식·금융 주요 이슈</h2>'
- +'<p>한국은행 발표, 금융정책과 상장기업 공시를 출처·일시와 함께 표시합니다.</p></div>'
- +'<a href="/finance/markets/">주식·이슈 자세히 보기</a></div>'
- +'<div class="finance-issue-filters"><label>구분 <select id="finance-issues-type">'
- +'<option value="all">전체 주요 발표</option><option value="stock">주식·기업 공시</option>'
- +'<option value="policy">금융정책·경제</option></select></label>'
- +'<span id="finance-issues-status" role="status">공식 발표를 확인하고 있습니다.</span></div>'
- +'<div id="finance-issues"><p class="finance-empty">자료 수집 중…</p></div>'
- +'<p class="finance-data-disclaimer">이 목록은 공식 발표와 공시의 일부이며, 언론 기사 전체·실시간 주가·투자 추천이 아닙니다. '
- +'<a href="https://dart.fss.or.kr/" target="_blank" rel="noopener noreferrer">DART</a> · '
- +'<a href="https://data.krx.co.kr/" target="_blank" rel="noopener noreferrer">KRX 시장 데이터</a></p></section>';
+  return '<div class="finance-official-shortcut finance-official-shortcut--issues" id="finance-issues-official">'
+    +'<a href="https://dart.fss.or.kr/" target="_blank" rel="noopener noreferrer">기업 공시 <span aria-hidden="true">↗</span></a>'
+    +'<a href="https://www.bok.or.kr/" target="_blank" rel="noopener noreferrer">한국은행 발표 <span aria-hidden="true">↗</span></a></div>'
+    +'<section class="finance-data-section" id="finance-issues-panel" aria-labelledby="issues-heading" hidden>'
+    +'<div class="finance-section-title"><h2 id="issues-heading">최근 공식 발표</h2></div>'
+    +'<div class="finance-issue-filters"><label>구분 <select id="finance-issues-type">'
+    +'<option value="all">전체</option><option value="stock">기업 공시</option>'
+    +'<option value="policy">금융·경제</option></select></label></div>'
+    +'<div id="finance-issues"></div></section>';
 }
+
 const hub = breadcrumb()
   +'<h1>금융정보</h1>'
-  +'<p class="finance-page-intro">은행별 예·적금 공시 금리와 금융시장 이슈를 먼저 확인하고, 필요한 계산·세금정보로 이동할 수 있습니다.</p>'
+  +'<p class="finance-page-intro">금리 비교, 공시 조회, 대출 계산을 선택하세요.</p>'
   +'<div class="finance-hub-grid">'
   +pageLink('/finance/savings/','예금·적금 비교','은행별 기본·우대금리와 가입기간')
   +pageLink('/finance/markets/','주식·경제 이슈','기업 공시와 통화·금융정책 발표')
@@ -63,12 +64,10 @@ const hub = breadcrumb()
   +'</div>'
   +bankPanel(true)
   +issuePanel()
-  +'<section class="finance-plain-guide"><h2>금리·공시를 확인할 때</h2>'
-  +'<p>공시 금리에는 조회 시점과 실제 가입 시점 사이에 차이가 있을 수 있습니다. 특히 우대금리 조건은 급여이체·자동이체·카드 실적·가입방식 등을 확인해야 합니다. 기업 공시는 주가 변동을 보장하는 신호가 아니므로 공시 원문과 실적·재무 상태를 함께 확인해야 합니다.</p>'
-  +'</section>';
+;
 const savingsPage = breadcrumb('예금·적금 비교')
   +'<h1>은행별 정기예금·적금 금리 비교</h1>'
-  +'<p class="finance-page-intro">은행·저축은행, 6·12·24·36개월, 기본금리·최고금리로 공시 상품을 비교합니다. 상품별 우대조건을 열어 가입 기준을 확인할 수 있습니다.</p>'
+  +'<p class="finance-page-intro">금융감독원 공시에서 예금·적금 상품을 확인하세요.</p>'
   +bankPanel()
   +'<section class="finance-plain-guide"><h2>예금과 적금 중 무엇을 비교해야 하나요?</h2>'
   +'<p><strong>정기예금</strong>은 목돈을 한 번에 맡기는 방식이고, <strong>적금</strong>은 매월 납입해 모으는 방식입니다. 적금의 연이율을 목돈 예금의 연이율과 그대로 비교하면 실제 만기 이자를 과대평가할 수 있습니다. 정기예금은 원금 전체의 예치기간을, 적금은 각 회차 납입금의 예치기간을 따로 계산해야 합니다.</p>'
@@ -79,7 +78,7 @@ const savingsPage = breadcrumb('예금·적금 비교')
   +'<li>가입기간과 납입한도, 정액적립·자유적립 조건</li>'
   +'<li>우대금리 인정 기간, 중도해지 시 이율과 세금</li>'
   +'<li>예금자보호 여부와 보호 한도, 가입 채널</li></ul>'
-  +'<p>자료 출처는 '+official+'의 금융회사 공시입니다. 금융회사별 제출 시점이 다르므로 위 조회 시각이 금리 확정일을 의미하지 않습니다.</p></section>';
+  +'</section>';
 const marketsPage = breadcrumb('주식·주요 이슈')
   +'<h1>주식시장 주요 이슈·기업 공시</h1>'
   +'<p class="finance-page-intro">주식 투자에 영향을 줄 수 있는 기업의 실적·배당·증자·자사주 관련 공시와 기준금리·금융정책 발표를 공식 출처로 확인합니다.</p>'
@@ -91,8 +90,7 @@ const marketsPage = breadcrumb('주식·주요 이슈')
   +issuePanel()
   +'<section class="finance-plain-guide"><h2>기업 공시에서 먼저 볼 항목</h2>'
   +'<p><strong>실적 공시</strong>는 매출·영업이익·순이익과 전년 동기 대비 변화를 확인하고, <strong>유상증자</strong>는 자금조달 목적과 신주 발행 규모, 기존 주식의 희석 가능성을 확인합니다. <strong>자사주 매입·소각</strong>은 실제 취득·소각 규모와 집행 기간을 구별해야 합니다.</p>'
-  +'<h2>주가·거래량이 없는 이유</h2>'
-  +'<p>국내 주가지수와 개별 종목 시세는 원천 데이터의 재배포·상업 이용 조건을 확인해야 합니다. 현재 이 사이트에서는 라이선스가 검증되지 않은 시세를 실시간 값처럼 표시하지 않습니다. 지수·종가·거래대금은 한국거래소 공식 데이터에서 확인할 수 있습니다.</p>'
+
   +'<h2>공시와 뉴스는 다릅니다</h2>'
   +'<p>DART 공시는 기업이 제출한 원문이고 한국은행·금융위원회 발표는 정책·시장 자료입니다. 언론사의 별도 취재 기사와 혼동하지 않아야 하며, 표제만으로 주식 매매를 결정해서는 안 됩니다.</p></section>';
 
@@ -181,9 +179,9 @@ const template=read('finance/index.html');
 const oldCalc=read('finance/loan-payment/index.html');
 const configurations=[
   ['finance/index.html','/finance/','금융정보 | 은행별 예적금·주식·경제 이슈 | 생활비서',
-    '은행별 최신 공시 예금·적금 금리, 금융시장 주요 발표와 기업 공시를 조건별로 살펴봅니다. 대출 계산기·세금정보도 제공합니다.',hub,'live',template],
+    '예금·적금 공식 비교공시, 기업 공시 조회, 대출 계산과 세금 정보를 확인할 수 있습니다.',hub,'live',template],
   ['finance/savings/index.html','/finance/savings/','은행별 예금·적금 금리 비교 | 생활비서',
-    '은행·저축은행의 정기예금과 적금을 기본금리·최고 우대금리, 가입기간과 가입 조건으로 비교할 수 있습니다.',savingsPage,'live',template],
+    '금융감독원 예금·적금 공시 바로가기와 금융상품 기본금리·우대조건 안내.',savingsPage,'live',template],
   ['finance/markets/index.html','/finance/markets/','주식시장 주요 이슈·기업 공시 | 생활비서',
     '최근 기업 공시, 주식시장 주요 공시, 한국은행 금융시장 발표와 금융정책 이슈를 출처·발표일과 함께 확인합니다.',marketsPage,'live',template],
   ['finance/loan-payment/index.html','/finance/loan-payment/','대출이자 계산기 | 원리금균등·원금균등·만기일시 | 생활비서',
@@ -201,7 +199,7 @@ let home=read('index.html');
 home=home.replace(/<title>[^<]*<\/title>/i,
  '<title>생활비서 | 은행 예적금 금리·주식 이슈·생활정보</title>');
 home=home.replace(/<meta name="description"[^>]*>/i,
- '<meta name="description" content="은행별 예금·적금 금리비교와 주식시장 주요 공시·금융경제 이슈, 세금·복지·자동차 생활정보를 한곳에서 확인할 수 있습니다.">');
+ '<meta name="description" content="예금·적금 공식 비교공시 바로가기, 주식·경제 이슈, 세금·복지·자동차 생활정보를 확인하세요.">');
 home=home.replace(/<meta property="og:title"[^>]*>/i,
  '<meta property="og:title" content="생활비서 | 은행 예적금 금리·주식 이슈·생활정보">');
 home=home.replace(/<meta property="og:description"[^>]*>/i,
