@@ -46,6 +46,24 @@ for(const [name,html,canonical] of [
 }
 yes(today.includes('data-news-filter')&&today.includes('data-weather-city'),
   'full page must allow weather city and news category selection');
+
+yes(today.includes('class="site-shell today-shell"'),
+  'Today screen must use full available site width');
+yes(today.includes('class="today-vertical-list"')&&!today.includes('class="today-full-grid"'),
+  'Today screen must have one vertical column with no three-card grid');
+const order=['data-today-news','data-today-weather','data-today-stocks','data-today-crypto']
+  .map(key=>today.indexOf(key));
+yes(order.every((position,index)=>position>=0&&(index===0||position>order[index-1])),
+  'News, weather, stocks and crypto must be rendered in vertical priority order');
+const dashboardCss=read('today-dashboard.css');
+yes(dashboardCss.includes('.life-modern .portal-page.today-page{width:100%;max-width:none'),
+  'Today page remains constrained to narrow 890px container');
+yes(dashboardCss.includes('.today-vertical-list{display:flex;flex-direction:column'),
+  'Today page must stack full-width blocks on desktop and mobile');
+const dashboardJs=read('today-dashboard.js');
+yes(dashboardJs.includes('news more')===false&&dashboardJs.includes('today-expand-button'),
+  'Expandable concise data lists are missing');
+
 yes(today.includes('언론사 원문')&&today.includes('articles')===false,
   'full page should link to original stories without copied body');
 yes((today.match(/data-life-coupang-kind="body"/g)||[]).length===1,
