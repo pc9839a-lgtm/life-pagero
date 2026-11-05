@@ -31,3 +31,12 @@ test('Old and unrelated releases are filtered',()=>{
   assert.equal(scoreItem({title:'연예인 콘서트',publishedAt:'2026-11-05'},groups,[],now),null);
   assert.ok(tokenOverlap('대출 이자 비교','대출 이자')>0);
 });
+test('KOSIS generic statistical titles never become editorial article candidates',()=>{
+  const groups=[{id:'welfare',label:'정부지원·복지',risk:'high',keywords:['지원금','복지','기초생활']}];
+  const now=new Date('2026-11-05T12:00:00Z');
+  assert.equal(scoreItem({
+    title:'부산광역시금정구기본통계 ( 64 )',
+    description:'복지 지원금 지표를 포함한 2026 통계',
+    publishedAt:'2026-11-05',
+  },groups,[],now),null);
+});
