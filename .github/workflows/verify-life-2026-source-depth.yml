@@ -54,8 +54,8 @@ jobs:
             assert(d.body.includes(marker),slug+' official-source comparison');
             assert(d.body.includes('|') && html.includes('<table'),slug+' published decision table');
             assert(d.series.parts[0].body.includes(marker),slug+' indexable first-page inclusion');
-            const section=html.match(/<div class="article-content">([\\s\\S]*?)<div class="disclaimer">/)?.[1] || '';
-            const visible=section.replace(/<[^>]+>/g,' ').replace(/\\s+/g,' ').trim();
+            const section=html.match(/<div class="article-content">([\s\S]*?)<div class="disclaimer">/)?.[1] || '';
+            const visible=section.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
             assert(html.includes('<!-- life-body-part-1 -->') && visible.length>2500,
               slug+' practical guide body must remain visible without intermediate headings');
             const row=a.articles.find(x=>x.file.endsWith('/'+slug+'.json'));
