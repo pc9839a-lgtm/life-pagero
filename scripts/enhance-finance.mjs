@@ -196,6 +196,17 @@ for(const [filename,pathname,title,description,body,script,source] of configurat
  write(filename,html);
 }
 let home=read('index.html');
+// The portal title and search snippet must reflect the actual banking and
+// market functions; preserve a single self-canonical and existing site schema.
+home=home.replace(/<title>[^<]*<\/title>/i,
+ '<title>생활비서 | 은행 예적금 금리·주식 이슈·생활정보</title>');
+home=home.replace(/<meta name="description"[^>]*>/i,
+ '<meta name="description" content="은행별 예금·적금 금리비교와 주식시장 주요 공시·금융경제 이슈, 세금·복지·자동차 생활정보를 한곳에서 확인할 수 있습니다.">');
+home=home.replace(/<meta property="og:title"[^>]*>/i,
+ '<meta property="og:title" content="생활비서 | 은행 예적금 금리·주식 이슈·생활정보">');
+home=home.replace(/<meta property="og:description"[^>]*>/i,
+ '<meta property="og:description" content="은행별 예적금 금리, 주식·금융경제 이슈, 생활정보를 빠르게 확인할 수 있습니다.">');
+home=home.replace('예: 자동차 검사기간, 주거급여, 연말정산','예: 적금 금리, 주식 공시, 주거급여');
 home=home.replace('<a href="/finance/loan-payment/">대출 이자 계산</a>',
   '<a href="/finance/savings/">예·적금 금리</a><a href="/finance/markets/">주식·경제 이슈</a>'
   +'<a href="/finance/loan-payment/">대출 계산기</a>');
