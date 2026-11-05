@@ -70,4 +70,16 @@ for(const file of walk(DIST).filter(f=>f.endsWith('.html'))){
 }
 console.log('[copy] Remaining narrative endings in visible body:',residual.reduce((n,x)=>n+x.matches,0));
 console.log('[copy] First pages with narrative endings:',JSON.stringify(residual.slice(0,12)));
+const examples=[];
+for(const file of walk(DIST).filter(f=>f.endsWith('.html'))){
+ if(examples.length>=22)break;
+ const html=fs.readFileSync(file,'utf8');
+ const body=(html.split('<body>')[1] || '').replace(/<script\b[^>]*>[\s\S]*?<\/script>/g,'').replace(/<[^>]+>/g,' ');
+ for(const match of body.matchAll(/(?:정리합니다|안내합니다|확인하세요|참고하세요|살펴보세요)/g)){
+   examples.push({file:path.relative(DIST,file),text:body.slice(Math.max(0,match.index-95),match.index+35).replace(/\s+/g,' ').trim()});
+   if(examples.length>=22)break;
+ }
+}
+console.log('[copy] Narrative examples:',JSON.stringify(examples));
+
 
