@@ -9,8 +9,15 @@ const home=read("index.html"),page=read("deals/index.html");
 const origin=read("life-editorial-20261105.css");
 check(home.includes('class="adpick-home-entry"'),'homepage shortcut missing');
 check(home.includes('href="/deals/"'),'homepage route missing');
-check(home.includes('href="/adpick-deals.css?v=20261106c"'),'homepage shortcut style missing');
+check(home.includes('href="/adpick-deals.css?v=20261106d"'),'homepage shortcut style missing');
 check(page.includes('<h1>오늘의 핫딜</h1>'),'standalone deals H1 missing');
+check(page.includes('class="adpick-page-heading"'),'shopping heading layout missing');
+check(page.includes('class="adpick-search-field"'),'prominent shopping search missing');
+check(page.includes('class="adpick-products"'),'product list layout missing');
+const shoppingStyles=read("adpick-deals.css");
+check(shoppingStyles.includes('grid-template-columns:repeat(4,minmax(0,1fr))'),'desktop shopping grid missing');
+check(shoppingStyles.includes('grid-template-columns:repeat(2,minmax(0,1fr))'),'mobile two-column grid missing');
+check(shoppingStyles.includes('var(--brand,#e95731)'),'site accent color missing');
 check(home.includes('<h2>오늘의 핫딜</h2>'),'homepage deals title missing');
 for(const unwanted of ['수익 추천', '애드픽 비즈 API 제공', '상품 데이터를 별도로 저장하거나', '가격 인하 상품이라는 의미가 아닙니다']) {
  check(!page.includes(unwanted),'internal implementation copy leaked into deals page: '+unwanted);
@@ -21,8 +28,8 @@ check(!client.includes('["commission"'),"commission category displayed in tabs")
 check(page.includes("제휴 활동으로 수수료"),"affiliate disclosure lost");
 check(page.includes('name="robots" content="noindex,follow"'),'affiliate-only route must noindex');
 check(page.includes('data-deals-list')&&page.includes('data-deals-search'),'live deals and search controls missing');
-check(page.includes('href="/adpick-deals.css?v=20261106c"')&&page.includes('src="/adpick-deals.js?v=20261106c"'),'deals versioned assets missing');
-check(home.includes('href="/adpick-deals.css?v=20261106c"'),'homepage versioned CSS missing');
+check(page.includes('href="/adpick-deals.css?v=20261106d"')&&page.includes('src="/adpick-deals.js?v=20261106d"'),'deals versioned assets missing');
+check(home.includes('href="/adpick-deals.css?v=20261106d"'),'homepage versioned CSS missing');
 const headers=fs.readFileSync(path.resolve("dist/_headers"),"utf8");
 check(headers.includes('/deals/')&&headers.includes('/adpick-deals.js')&&headers.includes('no-store'),'hotdeal cache control missing');
 check(page.includes('href="https://pagero.kr/life/deals/"'),'wrong canonical');
