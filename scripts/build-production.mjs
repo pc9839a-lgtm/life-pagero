@@ -59,6 +59,7 @@ const steps = [
   ['node', ['scripts/verify-adpick-deals.mjs']],
   ['node', ['scripts/verify-food-hub.mjs']],
   ['node', ['scripts/build-events.mjs']],
+  ['node', ['scripts/verify-events.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);
