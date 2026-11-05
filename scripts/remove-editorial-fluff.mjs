@@ -110,7 +110,7 @@ for(const removed of [
 for(const file of walk(DIST).filter(f=>/\/(?:car|support)\/[^/]+\/index\.html$/.test(f))){
   const html=fs.readFileSync(file,'utf8');
   const article=html.match(/<div class="article-content">([\s\S]*?)<div class="disclaimer">/)?.[1] || '';
-  if(!/<h[234]\\b/.test(article)){
+  if(!/<h[234]\b/.test(article)){
     throw new Error('[copy] Article lost its semantic headings: '+path.relative(DIST,file));
   }
   if(article.includes('series-part-description') || article.includes('class="key-summary"')){
