@@ -214,8 +214,12 @@ const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>{
 });
 for(const file of walk(DIST).filter(f=>f.endsWith('.html'))){
  let html=fs.readFileSync(file,'utf8');
- html=html.replace('<a href="/finance/">금융·계산</a>',
-   '<a href="/finance/">금융정보</a><a href="/finance/savings/">예·적금</a>'
+ // Put the three most-used finance destinations before long article categories
+ // so mobile horizontal navigation does not hide them off the right edge.
+ html=html.replace('<a href="/finance/">금융·계산</a>','');
+ html=html.replace('<nav class="main-nav"><div class="nav-inner"><a href="/">홈</a>',
+   '<nav class="main-nav"><div class="nav-inner"><a href="/">홈</a>'
+   +'<a href="/finance/">금융정보</a><a href="/finance/savings/">예·적금</a>'
    +'<a href="/finance/markets/">주식·이슈</a>');
  if(!html.includes('href="/finance-experience.css"')){
    html=html.replace('</head>','<link rel="stylesheet" href="/finance-experience.css"></head>');
