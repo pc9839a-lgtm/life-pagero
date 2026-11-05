@@ -163,8 +163,9 @@ for (const post of posts) {
       throw new Error(`Base page missing article body section ${index + 1}: ${basePath}`);
     }
   }
-  if (baseHtml.includes('class="series-part-title"') || /<h[234](?:\s[^>]*)?>/.test(baseHtml.match(/<div class="article-content">([\s\S]*?)<div class="disclaimer">/)?.[1] || '')) {
-    throw new Error(`Visible article subheadings remain: ${basePath}`);
+  const articleSection = baseHtml.match(/<div class="article-content">([\s\S]*?)<div class="disclaimer">/)?.[1] || '';
+  if (baseHtml.includes('class="series-part-title"') || !/<h[234]\b/.test(articleSection)) {
+    throw new Error(`Semantic article subheadings missing or obsolete wrapper present: ${basePath}`);
   }
 
   const total = Array.isArray(post.series?.parts) ? post.series.parts.length : 1;
