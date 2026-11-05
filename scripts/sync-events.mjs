@@ -143,7 +143,7 @@ async function seoul() {
     }
     for(const r of result.row) {
       items.push({
-        sourceId:r.CULTCODE || r.EVENT_ID || r.SEQ || [r.TITLE,r.STRTDATE,r.PLACE].join(':'),
+        sourceId:r.EVENT_ID || r.SEQ || [r.TITLE,r.STRTDATE,r.PLACE].join(':'),
         title:r.TITLE,startDate:r.STRTDATE,endDate:r.END_DATE || r.ENDDATE,
         category:classifyCategory(r.CODENAME+' '+r.TITLE),
         region:'서울',venue:r.PLACE,address:r.ADDRESS,
