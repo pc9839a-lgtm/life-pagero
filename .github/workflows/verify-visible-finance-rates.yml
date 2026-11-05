@@ -1,0 +1,37 @@
+name: Verify visible finance rates in actual browser
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/enhance-finance.mjs'
+      - 'public/finance-live.js'
+      - 'public/finance-experience.css'
+      - 'scripts/verify-finance-visible-browser.mjs'
+      - '.github/workflows/verify-visible-finance-rates.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/enhance-finance.mjs'
+      - 'public/finance-live.js'
+      - 'public/finance-experience.css'
+      - '.github/workflows/verify-visible-finance-rates.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build complete LIFE site
+        run: npm run build
+      - name: Browser driver
+        run: |
+          npm install --no-save --no-package-lock playwright-core@1.56.1
+          which google-chrome || which google-chrome-stable || which chromium
+      - name: Check desktop and mobile rendered rates and no-data fallback
+        run: node scripts/verify-finance-visible-browser.mjs
