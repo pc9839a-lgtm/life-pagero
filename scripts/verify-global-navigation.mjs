@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const DIST=path.resolve('dist');
 const EXPECTED=[
-  ['/', '홈'], ['/today/','오늘'], ['/finance/','금융'],
+  ['/', '홈'], ['/today/','오늘'], ['/deals/','핫딜'], ['/finance/','금융'],
   ['/topics/','생활정보']
 ];
 const read=relative=>fs.readFileSync(path.join(DIST,relative),'utf8');
@@ -34,10 +34,11 @@ for(const absolute of walk(DIST).filter(p=>p.endsWith('.html'))){
   let want=-1;
   if(pathname==='/')want=0;
   else if(pathname.startsWith('/today/'))want=1;
-  else if(pathname.startsWith('/finance/'))want=2;
+  else if(pathname.startsWith('/deals/'))want=2;
+  else if(pathname.startsWith('/finance/'))want=3;
   else if(pathname.startsWith('/topics/')||pathname.startsWith('/car/')||
           pathname.startsWith('/tools/car-cost/')||
-          pathname.startsWith('/support/'))want=3;
+          pathname.startsWith('/support/'))want=4;
   const currentIndices=entries.flatMap((entry,i)=>entry[2]?[i]:[]);
   if(currentIndices.length!==(want<0?0:1) || (want>=0&&currentIndices[0]!==want))
     fail('active section selection',relative);
@@ -58,7 +59,7 @@ for(const marker of ['grid-template-columns:repeat(4,minmax(0,1fr))','@media(max
 }
 for(const p of ['index.html','today/index.html','finance/index.html','finance/savings/index.html',
   'finance/markets/index.html','finance/loan-payment/index.html',
-  'car/index.html','support/index.html','topics/index.html',
+  'car/index.html','support/index.html','topics/index.html','deals/index.html',
   'tools/car-cost/index.html','finance/mortgage-calculator/index.html',
   'finance/savings-calculator/index.html','about/index.html','search/index.html']){
   if(!read(p).includes('aria-label="전체 메뉴"'))fail('global header lost',p);
@@ -82,4 +83,4 @@ if(!read('sitemap.xml').includes('<loc>https://pagero.kr/life/topics/</loc>')) {
 if(!JSON.parse(read('search-index.json')).some(e=>e.url==='/topics/')) {
   fail('Topics missing from local search index','search-index.json');
 }
-console.log('[nav-qa] '+checked+' HTML documents share an identical four-link menu, correct active state, one stylesheet and working links.');
+console.log('[nav-qa] '+checked+' HTML documents share an identical five-link menu, correct active state, one stylesheet and working links.');
