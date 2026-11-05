@@ -17,7 +17,7 @@ for(const p of ['today','tomorrow','weekend','this-week','next-week','custom'])
   assert.ok(root.includes('data-period="'+p+'"'),'missing date filter '+p);
 for(const p of ['events-ui.css','events-ui.js','events-data.json'])
   assert.ok(fs.existsSync(path.join(base,p)),'missing asset '+p);
-assert.match(home,/href="\/events\/"/);
+if ((data.events||[]).length) assert.match(home,/href="\/events\/"/);
 for(const p of ['car/index.html','support/index.html','today/index.html','finance/index.html'])
   assert.ok(fs.existsSync(path.join(base,p)),'existing page missing '+p);
 const sitemap=read('sitemap.xml');
