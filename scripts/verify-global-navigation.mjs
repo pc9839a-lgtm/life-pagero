@@ -4,8 +4,7 @@ import path from 'node:path';
 const DIST=path.resolve('dist');
 const EXPECTED=[
   ['/', '홈'], ['/today/','오늘'], ['/finance/','금융'],
-  ['/finance/savings/','예·적금'], ['/finance/markets/','주식·코인'],
-  ['/car/','자동차'], ['/support/','지원금']
+  ['/topics/','생활정보']
 ];
 const read=relative=>fs.readFileSync(path.join(DIST,relative),'utf8');
 const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(ent=>{
@@ -35,11 +34,10 @@ for(const absolute of walk(DIST).filter(p=>p.endsWith('.html'))){
   let want=-1;
   if(pathname==='/')want=0;
   else if(pathname.startsWith('/today/'))want=1;
-  else if(pathname.startsWith('/finance/savings/'))want=3;
-  else if(pathname.startsWith('/finance/markets/'))want=4;
   else if(pathname.startsWith('/finance/'))want=2;
-  else if(pathname.startsWith('/car/'))want=5;
-  else if(pathname.startsWith('/support/'))want=6;
+  else if(pathname.startsWith('/topics/')||pathname.startsWith('/car/')||
+          pathname.startsWith('/tools/car-cost/')||
+          pathname.startsWith('/support/'))want=3;
   const currentIndices=entries.flatMap((entry,i)=>entry[2]?[i]:[]);
   if(currentIndices.length!==(want<0?0:1) || (want>=0&&currentIndices[0]!==want))
     fail('active section selection',relative);
@@ -60,7 +58,28 @@ for(const marker of ['grid-template-columns:repeat(4,minmax(0,1fr))','@media(max
 }
 for(const p of ['index.html','today/index.html','finance/index.html','finance/savings/index.html',
   'finance/markets/index.html','finance/loan-payment/index.html',
-  'car/index.html','support/index.html','about/index.html','search/index.html']){
+  'car/index.html','support/index.html','topics/index.html',
+  'tools/car-cost/index.html','finance/mortgage-calculator/index.html',
+  'finance/savings-calculator/index.html','about/index.html','search/index.html']){
   if(!read(p).includes('aria-label="전체 메뉴"'))fail('global header lost',p);
 }
-console.log('[nav-qa] '+checked+' HTML documents share an identical seven-link menu, correct active state, one stylesheet and working links.');
+
+const topics=read('topics/index.html');
+if(!topics.includes('<h1>생활정보</h1>') ||
+   !topics.includes('href="/car/"') ||
+   !topics.includes('href="/support/"') ||
+   !topics.includes('href="/support/housing-benefit-2026/"')) {
+  fail('Lifestyle landing page is missing the real categories','topics/index.html');
+}
+const finance=read('finance/index.html');
+for(const target of ['/finance/savings/','/finance/markets/','/finance/loan-payment/']) {
+  if(!finance.includes('href="'+target+'"'))
+    fail('Grouped financial destination missing '+target,'finance/index.html');
+}
+if(!read('sitemap.xml').includes('<loc>https://pagero.kr/life/topics/</loc>')) {
+  fail('Topics missing from sitemap','sitemap.xml');
+}
+if(!JSON.parse(read('search-index.json')).some(e=>e.url==='/topics/')) {
+  fail('Topics missing from local search index','search-index.json');
+}
+console.log('[nav-qa] '+checked+' HTML documents share an identical four-link menu, correct active state, one stylesheet and working links.');
