@@ -41,10 +41,15 @@ for(const file of files) {
         changed=true;inserted++;
       }
     }
-    // The source summary body is kept in sync with the complete canonical guide,
-    // rather than letting the initial build render an outdated abbreviated draft.
-    const fullBody=post.series.parts.map(x=>x.body.trim()).join('\n\n');
-    if(post.body!==fullBody) {post.body=fullBody;changed=true;}
+    // Preserve the independently reviewed source-body paragraphs, including
+    // deadline corrections that may not appear verbatim in the series parts.
+    for(const [heading,paragraph] of entries) {
+      const title=label(heading);
+      if(!post.body.includes(title)) {
+        post.body=post.body.trimEnd()+'\n\n'+title+'\n\n'+paragraph+'\n';
+        changed=true;
+      }
+    }
   } else {
     // Older single-page guides do not have the three-part series field.
     for(const [heading,paragraph] of entries) {
