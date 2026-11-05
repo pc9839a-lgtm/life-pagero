@@ -58,5 +58,9 @@ form.addEventListener("submit",event=>{
  if(value.length<2)return;
  active="";selectButtons();load({mode:"search",q:value});
 });
-selectButtons();load({mode:"best",area:"today"});
+const initialQuery=new URLSearchParams(location.search).get("q");
+ if(initialQuery&&initialQuery.trim().length>=2&&initialQuery.trim().length<=40){
+  form.elements.q.value=initialQuery.trim();
+  active="";selectButtons();load({mode:"search",q:initialQuery.trim()});
+ }else{selectButtons();load({mode:"best",area:"today"});}
 })();

@@ -1,0 +1,45 @@
+/* Seasonal food hub: part of the existing editorial design, no added theme. */
+.life-editorial .food-hub{width:100%;max-width:1120px;margin:0 auto;padding:20px 0 70px;color:#26313c}
+.life-editorial .food-hero{padding:12px 0 29px;border-bottom:2px solid #28313a}
+.life-editorial .food-eyebrow{margin:0 0 8px;font-size:12px;color:var(--brand);font-weight:750}
+.life-editorial .food-hero h1{margin:0 0 12px;font-size:clamp(31px,4vw,45px);line-height:1.25;letter-spacing:-.06em}
+.life-editorial .food-hero>p:last-child{margin:0;max-width:700px;color:#6d7783;font-size:15px;line-height:1.8}
+.life-editorial .food-section{padding:30px 0 34px;border-bottom:1px solid #e5e8eb}
+.life-editorial .food-section h2{font-size:clamp(21px,2.5vw,26px);margin:0 0 10px;font-weight:800}
+.life-editorial .food-section p{line-height:1.75}
+.life-editorial .food-section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:20px}
+.life-editorial .food-section-head p{font-size:13px;color:#78818d;margin:0}
+.life-editorial .food-month-label{display:flex;align-items:center;gap:10px;white-space:nowrap;font-size:13px;color:#65707c}
+.life-editorial #food-month{border:1px solid #d5dbe1;border-radius:5px;padding:9px 11px;background:#fff;color:#25303a;font-size:14px;min-width:90px}
+.life-editorial .food-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px;border-top:1px solid #e4e7eb}
+.life-editorial .food-card{padding:22px 0;border-bottom:1px solid #e7eaec;min-width:0}
+.life-editorial .food-card-top{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.life-editorial .food-card-top h3{font-size:19px;letter-spacing:-.04em;margin:0;font-weight:770}
+.life-editorial .food-kind{font-size:11px;color:var(--brand);font-weight:700;border:1px solid #e5e0dd;padding:3px 6px;border-radius:3px}
+.life-editorial .food-card p{font-size:14px;margin:8px 0;color:#5f6b75}
+.life-editorial .food-card p strong{color:#333e49;margin-right:5px}
+.life-editorial .food-card .food-keep{font-size:13px}
+.life-editorial .food-buy,.life-editorial .food-all-deals{display:inline-flex;align-items:center;gap:7px;margin-top:6px;font-size:13px;color:var(--brand);font-weight:750;text-decoration:none}
+.life-editorial .food-buy:hover,.life-editorial .food-all-deals:hover{text-decoration:underline;text-underline-offset:4px}
+.life-editorial .food-source{font-size:12px;color:#7c8590;margin:17px 0 0}
+.life-editorial .food-source a{color:#586777;text-decoration:underline}
+.life-editorial .food-choice{display:flex;justify-content:space-between;align-items:center;gap:20px}
+.life-editorial .food-choice>div>p{font-size:14px;margin:5px 0;color:#697480}
+.life-editorial .food-choice .food-choice-result{margin-top:13px;color:#25303a;font-size:18px;font-weight:800}
+.life-editorial #food-pick{appearance:none;border:1px solid #313e4b;color:#27313c;background:#fff;border-radius:5px;padding:12px 16px;font-size:14px;font-weight:750;cursor:pointer;white-space:nowrap}
+.life-editorial #food-pick:hover{background:#f7f8f9}
+.life-editorial .food-shopping>p{color:#6f7a84;font-size:14px}
+.life-editorial .food-shopping .food-disclosure{font-size:12px;color:#858e97;margin-top:17px}
+@media(max-width:700px){
+ .life-editorial .food-hub{padding:12px 0 45px}
+ .life-editorial .food-section{padding:24px 0}
+ .life-editorial .food-section-head{align-items:flex-start}
+ .life-editorial .food-grid{grid-template-columns:minmax(0,1fr)}
+ .life-editorial .food-choice{display:block}
+ .life-editorial #food-pick{margin-top:15px;min-height:42px}
+ .life-editorial .food-hero h1{font-size:32px}
+}
+@media(max-width:370px){
+ .life-editorial .food-section-head{display:block}
+ .life-editorial .food-month-label{margin-top:12px}
+}
