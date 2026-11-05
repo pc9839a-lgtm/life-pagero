@@ -22,7 +22,7 @@ check(shoppingStyles.includes('grid-template-columns:repeat(2,minmax(0,1fr))'),'
 check(shoppingStyles.includes('var(--brand,#e95731)'),'site accent color missing');
 check(shoppingStyles.includes('background:#202833'),'high-contrast hero background missing');
 check(shoppingStyles.includes('grid-column:span 2'),'featured product grid missing');
-check(client.includes('adpick-card--featured'),'first product visual priority missing');
+check(read("adpick-deals.js").includes('adpick-card--featured'),'first product visual priority missing');
 check(home.includes('<h2>오늘의 핫딜</h2>'),'homepage deals title missing');
 for(const unwanted of ['수익 추천', '애드픽 비즈 API 제공', '상품 데이터를 별도로 저장하거나', '가격 인하 상품이라는 의미가 아닙니다']) {
  check(!page.includes(unwanted),'internal implementation copy leaked into deals page: '+unwanted);
