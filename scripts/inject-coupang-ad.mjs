@@ -112,15 +112,23 @@ for (const file of walk(DIST).filter(file => file.endsWith('.html'))) {
     html = insertAfter(html, /<article class="post-card">[\s\S]*?<\/article>/g, 6);
     html = insertBefore(html, '</div></section></div><aside class="sidebar">');
   } else if (/^(car|support)\/[^/]+\/index\.html$/.test(relative)) {
-    const summaries = [...html.matchAll(/<section class="key-summary">[\s\S]*?<\/section>/g)];
-    if (summaries.length >= 3) {
-      const match = summaries[2];
-      const index = match.index + match[0].length;
-      html = html.slice(0, index) + block('middle') + html.slice(index);
-    } else {
-      html = insertBefore(html, '<div class="disclaimer">');
+    // Use factual article paragraphs for ad spacing; never reintroduce
+    // artificial headings, summaries or editor notes just to anchor ads.
+    function inPart(content, partNo, nth, fragment) {
+      const marker = '<!-- life-body-part-' + partNo + ' -->';
+      const start = content.indexOf(marker);
+      if (start < 0) throw new Error('[coupang] Missing real article part ' + partNo + ': ' + relative);
+      const next = content.indexOf('<!-- life-body-part-' + (partNo + 1) + ' -->', start);
+      const limit = next > 0 ? next : content.indexOf('<div class="disclaimer">', start);
+      const segment = content.slice(start, limit > start ? limit : undefined);
+      const paras = [...segment.matchAll(/<\/p>/g)];
+      const index = paras.length
+        ? start + paras[Math.min(nth - 1, paras.length - 1)].index + '</p>'.length
+        : start + marker.length;
+      return content.slice(0, index) + fragment + content.slice(index);
     }
-    html = insertBefore(html, '<section class="source-box">');
+    html = inPart(html, 1, 2, block('middle'));
+    html = inPart(html, 3, 2, block('body'));
   } else if (/^(car|support)\/[^/]+\/[23]\/index\.html$/.test(relative)) {
     html = insertBefore(html, '<section class="source-box">');
   } else {
