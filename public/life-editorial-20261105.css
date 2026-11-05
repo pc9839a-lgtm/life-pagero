@@ -256,9 +256,9 @@ body.life-editorial{
   .life-editorial .header-search{flex:1;max-width:210px;height:37px}
   .life-editorial .header-search input{padding:7px 9px;font-size:12px}
   .life-editorial .header-search button{padding:0 9px;font-size:12px}
-  .life-editorial .nav-inner{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;overflow:visible}
+  .life-editorial .nav-inner{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;overflow:visible}
   .life-editorial .nav-inner a{min-width:0;min-height:37px;padding:8px 2px 7px;font-size:11.5px;line-height:1.25;letter-spacing:-.035em}
-  .life-editorial .nav-inner a:nth-child(n+5){border-top:1px solid #f2f2f2}
+  .life-editorial .nav-inner a:nth-child(n+5){border-top:0}
   .life-editorial .site-shell{padding:17px 0 35px}
   .life-editorial.life-modern-home .hero.portal-home-hero{padding:22px 0 20px;margin:0 0 20px}
   .life-editorial.life-modern-home .portal-home-hero h1{font-size:31px;margin:0 0 20px}
