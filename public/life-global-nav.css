@@ -58,7 +58,7 @@
   .life-modern .nav-inner,
   .main-nav .nav-inner {
     display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-template-columns:repeat(3,minmax(0,1fr));
     grid-auto-flow:row;
     gap:0;
     overflow:visible;
@@ -73,7 +73,7 @@
     line-height:1.25;
     letter-spacing:-.035em;
   }
-  .life-modern .nav-inner a:nth-child(n+5),
+  .life-modern .nav-inner a:nth-child(n+4),
   .main-nav .nav-inner a:nth-child(n+5) {
     border-top:1px solid #f1f3f6;
   }
