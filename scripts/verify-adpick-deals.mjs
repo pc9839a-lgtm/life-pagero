@@ -10,7 +10,15 @@ const origin=read("life-editorial-20261105.css");
 check(home.includes('class="adpick-home-entry"'),'homepage shortcut missing');
 check(home.includes('href="/deals/"'),'homepage route missing');
 check(home.includes('href="/adpick-deals.css"'),'homepage shortcut style missing');
-check(page.includes('<h1>쇼핑 추천상품</h1>'),'standalone deals H1 missing');
+check(page.includes('<h1>오늘의 핫딜</h1>'),'standalone deals H1 missing');
+check(home.includes('<h2>오늘의 핫딜</h2>'),'homepage deals title missing');
+for(const unwanted of ['수익 추천', '애드픽 비즈 API 제공', '상품 데이터를 별도로 저장하거나', '가격 인하 상품이라는 의미가 아닙니다']) {
+ check(!page.includes(unwanted),'internal implementation copy leaked into deals page: '+unwanted);
+}
+const client=read("adpick-deals.js");
+check(!client.includes("수익 추천"),"publisher-only commission tab leaked");
+check(!client.includes('["commission"'),"commission category displayed in tabs");
+check(page.includes("제휴 활동으로 수수료"),"affiliate disclosure lost");
 check(page.includes('name="robots" content="noindex,follow"'),'affiliate-only route must noindex');
 check(page.includes('data-deals-list')&&page.includes('data-deals-search'),'live deals and search controls missing');
 check(page.includes('href="/adpick-deals.css"')&&page.includes('src="/adpick-deals.js"'),'deals assets missing');
