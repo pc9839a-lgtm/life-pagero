@@ -96,5 +96,25 @@ for(const file of walk(DIST).filter(f=>f.endsWith('.html'))){
  }
 }
 console.log('[copy] Narrative examples:',JSON.stringify(examples));
+if(residual.length)throw new Error('[copy] AI-style endings remain in visible HTML: '+JSON.stringify(residual.slice(0,10)));
+const homepage=fs.readFileSync(path.join(DIST,'index.html'),'utf8');
+for(const removed of [
+  '공식 출처와 확인일을 함께 표시합니다.',
+  '가이드를 직접 연결했습니다.',
+  'LIFE EDITORIAL ARCHIVE',
+  '공식자료 확인일과 출처를 공개합니다.',
+  '지금 필요한 정보부터 확인하세요',
+]){
+  if(homepage.includes(removed))throw new Error('[copy] Homepage boilerplate was not removed: '+removed);
+}
+for(const file of walk(DIST).filter(f=>/\/(?:car|support)\/[^/]+\/index\.html$/.test(f))){
+  const html=fs.readFileSync(file,'utf8');
+  const article=html.match(/<div class="article-content">([\s\S]*?)<div class="disclaimer">/)?.[1] || '';
+  if(/<h[234](?:\s[^>]*)?>/.test(article) || article.includes('series-part-description')
+     || article.includes('class="key-summary"')){
+    throw new Error('[copy] Filler headings/summary remain in '+path.relative(DIST,file));
+  }
+}
+
 
 
