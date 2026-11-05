@@ -5,7 +5,7 @@ const tabs=document.querySelector("[data-deals-filters]");
 const form=document.querySelector("[data-deals-search]");
 if(!target||!status||!tabs||!form)return;
 const prefix=location.pathname.startsWith("/life/")?"/life/":"/";
-const areas=[["today","실시간 베스트"],["popular","인기 판매"],["pick","인기 PICK"],["commission","수익 추천"]];
+const areas=[["today","오늘의 상품"],["popular","인기상품"],["pick","추천상품"]];
 const el=(tag,cls,content)=>{const item=document.createElement(tag);if(cls)item.className=cls;if(content!=null)item.textContent=String(content);return item;};
 const https=value=>{try{const u=new URL(String(value||""));return u.protocol==="https:"?u.href:null;}catch{return null;}};
 let active="today",requestId=0;
