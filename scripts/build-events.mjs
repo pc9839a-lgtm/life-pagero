@@ -142,9 +142,9 @@ if(events.length && !index.some(e=>e.url==='/events/'))index.push({
   keywords:['이번 주 축제','주말 공연','전국 행사','무료 전시','콘서트']
 });
 save('search-index.json',JSON.stringify(index));
-// Avoid changing the shared six-item global nav and associated regression tests.
+// The global navigation is applied after this step to all pages, including event details.
 let home=read('index.html');
-if(events.length>0 && !home.includes('href="/events/"')) {
+if(!home.includes('href="/events/"')) {
   const block='<section class="events-home-banner" aria-label="이번 주 축제·행사">'
     +'<div><strong>이번 주 축제·행사</strong><p>전국 공연·축제·전시를 날짜와 지역별로 찾아보세요.</p></div>'
     +'<a href="/events/">행사 찾아보기</a></section>';
