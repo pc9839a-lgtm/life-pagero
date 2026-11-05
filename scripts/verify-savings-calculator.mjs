@@ -25,9 +25,9 @@ assert(html.includes('https://finlife.fss.or.kr/'),
   'official financial product data link missing');
 assert(html.includes('data-life-coupang-kind="body"'),
   'original labelled advertiser placement missing');
-for(const path of ['savings-math.js','savings-calculator.js']){
-  assert(fs.statSync(path.join(root,path)).size>1500,
-    'browser-side module missing '+path);
+for(const asset of ['savings-math.js','savings-calculator.js']){
+  assert(fs.statSync(path.join(root,asset)).size>1500,
+    'browser-side module missing '+asset);
 }
 const hub=get('finance/index.html'),savings=get('finance/savings/index.html');
 assert(hub.includes('href="/finance/savings-calculator/"'),
