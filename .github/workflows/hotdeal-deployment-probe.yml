@@ -1,0 +1,23 @@
+name: Hot Deals live deployment probe
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/audit-live-life-css.mjs'
+      - '.github/workflows/hotdeal-deployment-probe.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Inspect deployed Hot Deals HTML CSS JS across origin and proxy
+        run: node scripts/audit-live-life-css.mjs
