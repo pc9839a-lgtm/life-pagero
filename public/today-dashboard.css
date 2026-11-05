@@ -56,6 +56,7 @@
 .today-vertical-list .today-coin-name small{font-size:11px}
 .today-vertical-list .today-widget-heading h3{font-size:18px}
 .today-vertical-list .today-widget-meta{font-size:11px}
+.today-coin[hidden]{display:none!important}
 .today-expand-button{display:block;width:100%;margin:8px 0 0;min-height:38px;padding:7px 12px;text-align:center;border:1px solid #e4eaf1;border-radius:5px;background:#fff;color:#1769e0;font-size:13px;font-weight:750;cursor:pointer}
 .today-expand-button:hover{background:#f5f8fc}
 @media(max-width:680px){
