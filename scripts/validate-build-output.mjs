@@ -190,6 +190,36 @@ for (const post of posts) {
 }
 
 const htmlFiles = walk(DIST).filter((file) => file.endsWith('.html'));
+
+// Coupang Partners: ensure every generated document has the intended number
+// of units and that the official library is not loaded once per placement.
+const coupangCss = fs.readFileSync(path.join(DIST, 'coupang-banner.css'), 'utf8');
+if (!coupangCss.includes('max-width:320px') || !coupangCss.includes('max-width:680px')) {
+  throw new Error('Coupang responsive PC/mobile dimensions are missing');
+}
+for (const file of htmlFiles) {
+  const relative = path.relative(DIST, file).replaceAll(path.sep, '/');
+  const html = fs.readFileSync(file, 'utf8');
+  if (!html.includes('</main>')) continue;
+  const expected = relative === 'index.html'
+    || /^(car|support)\/index\.html$/.test(relative)
+    || /^(car|support)\/[^/]+\/index\.html$/.test(relative)
+      ? 2 : 1;
+  const actual = count(html, /data-life-coupang-banner="sitewide-v3"/g);
+  if (actual !== expected) {
+    throw new Error('Coupang placement count mismatch in ' + relative + ': ' + actual + ' vs ' + expected);
+  }
+  if (count(html, /<script src="https:\/\/ads-partners\.coupang\.com\/g\.js"><\/script>/g) !== 1
+      || count(html, /new PartnersCoupang\.G\(options\)/g) !== expected) {
+    throw new Error('Coupang loader or initializer duplicated in ' + relative);
+  }
+  if (!html.includes('"id":1046806') || !html.includes('"trackingCode":"AF2358798"')
+      || !html.includes('options.height="250"') || !html.includes('"height":"180"')
+      || !html.includes('쿠팡 파트너스 활동의 일환')) {
+    throw new Error('Coupang desktop/mobile banner code or disclosure missing from ' + relative);
+  }
+}
+
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, 'utf8');
   const relative = `/${path.relative(DIST, file).replaceAll(path.sep, '/')}`;
