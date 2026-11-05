@@ -1,10 +1,10 @@
 // Nonblocking deployment smoke-audit. Used by CI to catch 200 HTML responses
 // for CSS/JS, stale Pages deployments, broken proxy routes and wrong mime types.
 const targets=[
- ['public home','https://pagero.kr/life/','text/html','life-editorial-20261105.css'],
- ['upstream home','https://life-pagero.pages.dev/','text/html','life-editorial-20261105.css'],
- ['public CSS','https://pagero.kr/life/life-editorial-20261105.css','text/css','body.life-editorial'],
- ['upstream CSS','https://life-pagero.pages.dev/life-editorial-20261105.css','text/css','body.life-editorial'],
+ ['public home','https://pagero.kr/life/','text/html','life-editorial-20261106.css'],
+ ['upstream home','https://life-pagero.pages.dev/','text/html','life-editorial-20261106.css'],
+ ['public CSS','https://pagero.kr/life/life-editorial-20261106.css','text/css','body.life-editorial'],
+ ['upstream CSS','https://life-pagero.pages.dev/life-editorial-20261106.css','text/css','body.life-editorial'],
  ['public savings','https://pagero.kr/life/finance/savings-calculator/','text/html','savings-calc-page'],
  ['upstream savings','https://life-pagero.pages.dev/finance/savings-calculator/','text/html','savings-calc-page'],
  ['public savings JS','https://pagero.kr/life/savings-calculator.js','javascript','savings-math.js'],
