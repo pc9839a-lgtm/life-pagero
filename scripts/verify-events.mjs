@@ -13,11 +13,12 @@ assert.match(root,/data-region/);
 assert.match(root,/data-category/);
 assert.match(root,/data-fee/);
 assert.match(root,/data-share-list/);
+assert.match(root,/href="\/events\/" aria-current="page"/);
 for(const p of ['today','tomorrow','weekend','this-week','next-week','custom'])
   assert.ok(root.includes('data-period="'+p+'"'),'missing date filter '+p);
 for(const p of ['events-ui.css','events-ui.js','events-data.json'])
   assert.ok(fs.existsSync(path.join(base,p)),'missing asset '+p);
-if ((data.events||[]).length) assert.match(home,/href="\/events\/"/);
+assert.match(home,/href="\/events\/"/);
 for(const p of ['car/index.html','support/index.html','today/index.html','finance/index.html'])
   assert.ok(fs.existsSync(path.join(base,p)),'existing page missing '+p);
 const sitemap=read('sitemap.xml');
