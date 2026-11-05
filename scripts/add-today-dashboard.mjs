@@ -15,7 +15,7 @@ const write=(p,content)=>{
 const block=(name,content,footer='',mode='compact') =>
   '<section class="today-widget" data-mode="'+mode+'" data-today-'+name
   +' aria-label="'+(name==='weather'?'지역 날씨':name==='news'?'뉴스 헤드라인':name==='crypto'?'코인 시세':'코스피·코스닥')+'">'
-  +content+'<p class="today-widget-meta" data-today-status role="status">자료를 확인하고 있습니다.</p>'
+  +content+'<p class="today-widget-meta" data-today-status role="status"></p>'
   +footer+'</section>';
 const weather=mode=>block('weather',
   '<div class="today-widget-heading"><h3>날씨</h3>'
@@ -25,21 +25,21 @@ const weather=mode=>block('weather',
     ['ulsan','울산'],['jeju','제주']]
     .map(([id,label])=>'<option value="'+id+'">'+label+'</option>').join('')
   +'</select></label></div><div class="today-weather-body" data-weather-items>'
-  +'<p class="today-empty">기상청 관측 조회 중</p></div>','',mode);
+  +'<a class="today-official-link" href="https://www.weather.go.kr/" target="_blank" rel="noopener noreferrer">기상청 날씨 보기</a></div>','',mode);
 const crypto=mode=>block('crypto',
   '<div class="today-widget-heading"><h3>코인</h3>'
   +'<a href="https://upbit.com/exchange?code=CRIX.UPBIT.KRW-BTC" target="_blank" rel="noopener noreferrer">업비트 원문</a></div>'
-  +'<div data-coin-items><p class="today-empty">KRW 시세 조회 중</p></div>', '',mode);
+  +'<div data-coin-items><a class="today-official-link" href="https://upbit.com/exchange?code=CRIX.UPBIT.KRW-BTC" target="_blank" rel="noopener noreferrer">업비트 시세 보기</a></div>', '',mode);
 const stocks=mode=>block('stocks',
   '<div class="today-widget-heading"><h3>증권</h3>'
   +'<a href="https://data.krx.co.kr/" target="_blank" rel="noopener noreferrer">KRX 공식 데이터</a></div>'
-  +'<div data-stock-items><p class="today-empty">증권 자료 확인 중</p></div>',
-  '<p class="today-stock-notice">종가 수치는 재게시 허가가 있을 때만 표시됩니다.</p>',mode);
+  +'<div data-stock-items><a class="today-official-link" href="https://data.krx.co.kr/" target="_blank" rel="noopener noreferrer">KRX 지수 보기</a></div>',
+  '',mode);
 const news=mode=>block('news',
   '<div class="today-widget-heading"><h3>주요뉴스</h3>'
   +(mode==='full'?'<label>분류 <select data-news-filter><option value="all">전체</option><option value="경제">경제</option></select></label>':'<a href="/today/">더 보기</a>')
   +'</div><p class="today-news-intro">기사 제목만 표시 · 클릭하면 언론사 원문 이동</p>'
-  +'<div data-news-items><p class="today-empty">언론사 RSS 확인 중</p></div>','',mode);
+  +'<div data-news-items><a class="today-official-link" href="https://www.yna.co.kr/" target="_blank" rel="noopener noreferrer">주요 뉴스 보기</a></div>','',mode);
 
 let home=read('index.html');
 const hero=home.match(/<section class="hero portal-home-hero">[\s\S]*?<\/section>/)?.[0];
