@@ -37,7 +37,7 @@ const probes=[
   ["legacy","https://life.pagero.kr/"]
 ];
 const checks=[
-  ["deals-html","deals/","<h1>오늘의 핫딜</h1>","?v=20261106d"],
+  ["deals-html","deals/","<h1>오늘의 핫딜</h1>","?v=20261106e"],
   ["deals-js","adpick-deals.js","const areas=","수익 추천"],
   ["deals-css","adpick-deals.css",".adpick-page-heading",".life-editorial .adpick-deals"]
 ];
@@ -49,9 +49,11 @@ const snapshots=await Promise.all(probes.flatMap(([origin,base])=>checks.map(asy
   const response=await fetch(url,{signal:controller.signal,redirect:"follow",headers:{"User-Agent":"LifePagero-Hotdeal-Deployment-Audit/1.0","Cache-Control":"no-cache"}});
   const body=await response.text();
   return {origin,asset,status:response.status,url:response.url,mime:response.headers.get("content-type"),
-    bytes:body.length,expected:body.includes(expected),newAssetVersion:body.includes("20261106d"),
+    bytes:body.length,expected:body.includes(expected),newAssetVersion:body.includes("20261106e"),
     oldDeveloperCopy:body.includes("상품 데이터를 별도로 저장하거나"),
     oldCommissionTab:body.includes("수익 추천"),
+    hasNewDarkHero:asset==="deals-css"?body.includes("background:#202833"):undefined,
+    hasFeaturedCard:asset==="deals-js"?body.includes("adpick-card--featured"):undefined,
     cache:response.headers.get("cf-cache-status"),proxy:response.headers.get("x-pagero-life-proxy"),
     etag:response.headers.get("etag"),
     adpickResources:asset==="deals-html"?[...body.matchAll(/(?:href|src)="([^"]*adpick-deals[^"]*)"/g)].map(m=>m[1]):undefined,
