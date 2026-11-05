@@ -30,7 +30,7 @@ export function isoDate(value) {
   const raw = String(value || '').trim();
   const candidate = /^\d{8}$/.test(raw)
     ? raw.slice(0,4)+'-'+raw.slice(4,6)+'-'+raw.slice(6,8)
-    : raw.match(/^\d{4}-\d{2}-\d{2}/)?.[0];
+    : raw.match(/^\d{4}[-.]\d{2}[-.]\d{2}/)?.[0]?.replaceAll('.','-');
   if (!candidate) return null;
   const d = new Date(candidate+'T12:00:00Z');
   return Number.isNaN(d.getTime()) || d.toISOString().slice(0,10)!==candidate ? null : candidate;
@@ -41,9 +41,11 @@ export function dayShift(iso, days) {
   return d.toISOString().slice(0,10);
 }
 export function kstToday(now=new Date()) {
-  return new Intl.DateTimeFormat('en-CA',{
+  const parts = new Intl.DateTimeFormat('en-US',{
     timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'
-  }).format(now);
+  }).formatToParts(now);
+  const find=key=>parts.find(p=>p.type===key)?.value||'';
+  return find('year')+'-'+find('month')+'-'+find('day');
 }
 export function periodDates(period='this-week', now=kstToday(), from=null, to=null) {
   const today=isoDate(now);
