@@ -24,6 +24,7 @@ const section=pathname=>{
   if(pathname.startsWith('/finance/'))return 'finance';
   if(pathname.startsWith('/topics/') ||
      pathname.startsWith('/car/') ||
+     pathname.startsWith('/tools/car-cost/') ||
      pathname.startsWith('/support/'))return 'topics';
   return '';
 };
