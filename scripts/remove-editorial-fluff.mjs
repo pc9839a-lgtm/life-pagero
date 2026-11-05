@@ -63,8 +63,8 @@ console.log('[copy] Removed repetitive editorial narration from '+changed+' HTML
 const residual=[];
 for(const file of walk(DIST).filter(f=>f.endsWith('.html'))){
   const html=fs.readFileSync(file,'utf8');
-  const body=(html.split('<body>')[1] || '').replace(/<script\\b[^>]*>[\\s\\S]*?<\\/script>/g,'')
-    .replace(/<style\\b[^>]*>[\\s\\S]*?<\\/style>/g,'').replace(/<[^>]+>/g,' ');
+  const body=(html.split('<body>')[1] || '').replace(/<script\b[^>]*>[\s\S]*?<\/script>/g,'')
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/g,'').replace(/<[^>]+>/g,' ');
   const matches=[...body.matchAll(/(?:정리합니다|안내합니다|확인하세요|참고하세요|살펴보세요)/g)].length;
   if(matches)residual.push({path:path.relative(DIST,file),matches});
 }
