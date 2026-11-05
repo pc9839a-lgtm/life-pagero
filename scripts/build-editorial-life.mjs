@@ -5,7 +5,7 @@ import path from 'node:path';
 // disconnected from generated HTML; this stylesheet owns the whole visual
 // system. Keep original posts, prices, routes, links, sponsor markup and SEO.
 const DIST=path.resolve('dist');
-const CSS='/life-editorial-20261105.css';
+const CSS='/life-editorial-20261106.css';
 const oldStyles=[
   '/life-modern.css','/life-compact.css','/life-global-nav.css',
   '/today-dashboard.css','/today-wide.css'
