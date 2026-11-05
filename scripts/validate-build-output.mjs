@@ -77,6 +77,38 @@ const posts = walk(CONTENT_ROOT)
   .map((file) => JSON.parse(fs.readFileSync(file, 'utf8')))
   .filter((post) => !post.noindex);
 
+// All article images must be unique across the published archive; generated
+// editorial diagrams must exist in the deployed asset directory.
+const imageOwners = new Map();
+let generatedImageCount = 0;
+for (const post of posts) {
+  for (const [index, part] of (post.series?.parts || []).entries()) {
+    const url = part.image;
+    if (!url) continue;
+    if (imageOwners.has(url)) {
+      throw new Error('Duplicate published article image: ' + url + ' (' + imageOwners.get(url) + ', ' + post.slug + ')');
+    }
+    imageOwners.set(url, post.slug + ' part ' + (index + 1));
+    const generatedPrefix = SITE_URL + '/images/editorial/';
+    if (!url.startsWith(generatedPrefix)) continue;
+    const filename = url.slice(generatedPrefix.length);
+    if (!/^[a-z0-9-]+\.svg$/.test(filename)) {
+      throw new Error('Unsafe generated editorial image path: ' + url);
+    }
+    const asset = path.join(DIST, 'images', 'editorial', filename);
+    if (!fs.existsSync(asset)) throw new Error('Missing generated illustration: ' + asset);
+    const svg = fs.readFileSync(asset, 'utf8');
+    if (!svg.startsWith('<svg ') || !svg.includes('<text ') || !svg.includes('aria-label=')) {
+      throw new Error('Generated illustration is missing its semantic content: ' + asset);
+    }
+    if (!part.imageAlt || !part.imageAlt.includes(post.title)) {
+      throw new Error('Missing accessible image description: ' + url);
+    }
+    generatedImageCount += 1;
+  }
+}
+console.log('[images] Verified ' + imageOwners.size + ' unique article image URLs, including ' + generatedImageCount + ' local editorial illustrations.');
+
 for (const post of posts) {
   const basePath = pagePath(post, 1);
   const baseUrl = `${SITE_URL}${basePath}`;
