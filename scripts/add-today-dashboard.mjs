@@ -116,7 +116,7 @@ const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>{
 });
 for(const file of walk(DIST).filter(f=>f.endsWith('.html'))){
   let html=fs.readFileSync(file,'utf8');
-  const anchor='<nav class="main-nav"><div class="nav-inner"><a href="/">홈</a>';
+  const anchor='<nav class="main-nav"><div class="nav-inner">';
   if(html.includes(anchor)&&!html.includes('<a href="/today/">오늘의 정보</a>')){
     html=html.replace(anchor,anchor+'<a href="/today/">오늘의 정보</a>');
     fs.writeFileSync(file,html);
