@@ -56,7 +56,7 @@ AdSense 소유권 확인과 실제 광고 노출을 분리합니다.
 
 20개 생활경제·행정 주제군을 automation/growth-taxonomy.json에서 관리합니다.
 
-- 자동 발견: npm run radar (금융위원회·KOSIS 공식 RSS 확인)
+- 자동 발견: npm run radar (금융위원회·행정안전부·고용노동부·서울시 공식 RSS 수집 및 KOSIS 통계 참고)
 - 검사: npm run radar:test
 - 예약: GitHub Actions의 LIFE Daily Topic Radar (한국시간 매일 07:15)
 - 결과: GitHub Issues의 단일 주제 레이더 이슈 및 Actions artifact
