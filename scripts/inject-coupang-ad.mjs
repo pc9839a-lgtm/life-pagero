@@ -2,18 +2,19 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const DIST = path.resolve('dist');
-const MARKER = 'data-life-coupang-banner="sitewide-v3"';
+const MARKER = 'data-life-coupang-banner="sitewide-v4"';
 const SCRIPT_URL = 'https://ads-partners.coupang.com/g.js';
 
-// Exact publisher credentials and banner formats supplied by the site owner.
-// Only the size changes at the breakpoint; all other Coupang fields are kept.
+// Keep the publisher-provided ID, carousel template and tracking code.
+// The official responsive widget supports dynamic dimensions.
 const BANNER = {
   id: 1046806,
   template: 'carousel',
   trackingCode: 'AF2358798',
   tsource: '',
-  desktop: { width: '680', height: '180' },
-  mobile: { width: '320', height: '250' },
+  desktop: { width: '100%', height: '300' },
+  sidebar: { width: '300', height: '500' },
+  mobile: { width: '100%', height: '250' },
 };
 
 function walk(dir) {
@@ -23,44 +24,54 @@ function walk(dir) {
   });
 }
 
+// This file is loaded after styles.css, so it owns Coupang layout overrides.
+// Expand the desktop content area without touching article typography or data.
 const css = [
-  '.life-coupang-placement{box-sizing:border-box;max-width:680px;width:100%;min-width:0;margin:30px auto 36px;clear:both;text-align:center}',
+  '@media(min-width:1100px){.top-strip-inner,.header-inner,.nav-inner,.site-shell,.footer-inner{width:min(calc(100% - 40px),1320px)}.content-grid{grid-template-columns:minmax(0,1fr) 300px;gap:24px}}',
+  '.life-coupang-placement{box-sizing:border-box;min-width:0;width:100%;max-width:none;margin:32px 0 38px;padding:16px;background:#f7f9fc;border:1px solid #e0e5ec;clear:both;text-align:center}',
   '.life-coupang-placement--middle{grid-column:1/-1}',
-  '.life-coupang-label{font-size:12px;font-weight:700;color:#586474;margin:0 0 10px}',
-  '.life-coupang-widget{max-width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain}',
-  '.life-coupang-widget iframe{max-width:100%;border:0}',
-  '.life-coupang-disclosure{font-size:12px;line-height:1.6;color:#68717e;text-align:left;margin:10px 0 0;word-break:keep-all}',
-  '@media(max-width:700px){.life-coupang-placement{margin:25px auto 30px}.life-coupang-widget{max-width:320px;margin-inline:auto}}',
+  '.life-coupang-label{font-size:12px;font-weight:750;line-height:1.5;color:#586474;margin:0 0 12px;text-align:left}',
+  '.life-coupang-widget{width:100%;max-width:100%;min-width:0;min-height:0;overflow-x:hidden;overflow-y:hidden}',
+  '.life-coupang-widget iframe{display:block;max-width:100%;border:0;margin-inline:auto}',
+  '.life-coupang-disclosure{font-size:12px;line-height:1.55;color:#68717e;text-align:left;margin:12px 0 0;word-break:keep-all}',
+  '.sidebar .life-coupang-placement--rail{width:100%;max-width:300px;min-width:0;padding:0;margin:0 0 20px;border:0;background:transparent}',
+  '.sidebar .life-coupang-placement--rail .life-coupang-label{margin:0 0 8px}',
+  '.sidebar .life-coupang-placement--rail .life-coupang-disclosure{font-size:11px;margin-top:8px}',
+  '@media(max-width:900px){.life-coupang-placement--rail{display:none}}',
+  '@media(max-width:700px){.life-coupang-placement{margin:22px 0 28px;padding:10px 0 12px;border-left:0;border-right:0}.life-coupang-label,.life-coupang-disclosure{padding-inline:8px}.life-coupang-widget{max-width:320px;margin-inline:auto}}',
 ].join('\n');
 fs.writeFileSync(path.join(DIST, 'coupang-banner.css'), css + '\n');
 
-// The Coupang constructor runs synchronously while its script element is being
-// parsed, so the third-party banner is inserted at the correct DOM location.
-// The external library is included only once per page; each slot runs G once.
-const options = JSON.stringify({
-  id: BANNER.id,
-  template: BANNER.template,
-  trackingCode: BANNER.trackingCode,
-  width: '100%',
-  height: BANNER.desktop.height,
-  tsource: BANNER.tsource,
-});
-const inline = [
-  '(function(){',
-  'var options=' + options + ';',
-  'if(window.matchMedia("(max-width:700px)").matches){',
-  'options.width="100%";',
-  'options.height="' + BANNER.mobile.height + '";',
-  '}',
-  'new PartnersCoupang.G(options);',
-  '})();',
-].join('');
+// Coupang inserts the iframe next to the executing script. Avoid async
+// reconstruction and load its library once in the document head.
+function inlineFor(kind) {
+  const size = kind === 'rail' ? BANNER.sidebar : BANNER.desktop;
+  const config = JSON.stringify({
+    id: BANNER.id,
+    template: BANNER.template,
+    trackingCode: BANNER.trackingCode,
+    width: size.width,
+    height: size.height,
+    tsource: BANNER.tsource,
+  });
+  return [
+    '(function(){',
+    'if(' + JSON.stringify(kind) + '==="rail" && window.matchMedia("(max-width:900px)").matches)return;',
+    'var options=' + config + ';',
+    'if(window.matchMedia("(max-width:700px)").matches){',
+    'options.width=' + JSON.stringify(BANNER.mobile.width) + ';',
+    'options.height=' + JSON.stringify(BANNER.mobile.height) + ';',
+    '}',
+    'new PartnersCoupang.G(options);',
+    '})();',
+  ].join('');
+}
 
 function block(kind = 'body') {
   return [
-    '<aside class="life-coupang-placement life-coupang-placement--' + kind + '" ' + MARKER + ' aria-label="쿠팡 파트너스 광고">',
+    '<aside class="life-coupang-placement life-coupang-placement--' + kind + '" ' + MARKER + ' data-life-coupang-kind="' + kind + '" aria-label="쿠팡 파트너스 광고">',
     '<p class="life-coupang-label">광고 · 쿠팡 파트너스</p>',
-    '<div class="life-coupang-widget"><script>' + inline + '</script></div>',
+    '<div class="life-coupang-widget"><script>' + inlineFor(kind) + '</script></div>',
     '<p class="life-coupang-disclosure">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>',
     '</aside>',
   ].join('');
@@ -78,58 +89,65 @@ function insertBefore(html, anchor) {
   return html.includes(anchor) ? html.replace(anchor, block('body') + anchor) : html;
 }
 
+function insertSidebar(html) {
+  const anchor = '<aside class="sidebar">';
+  // A right rail exists on home, category and all article pages.
+  const pos = html.indexOf(anchor);
+  if (pos < 0) return html;
+  return html.slice(0, pos + anchor.length) + block('rail') + html.slice(pos + anchor.length);
+}
+
 let filesChanged = 0;
 let adsPlaced = 0;
-
 for (const file of walk(DIST).filter(file => file.endsWith('.html'))) {
   const relative = path.relative(DIST, file).replaceAll(path.sep, '/');
   let html = fs.readFileSync(file, 'utf8');
   if (html.includes(MARKER) || !html.includes('</head>') || !html.includes('</main>')) continue;
-
   const previous = html;
+
   if (relative === 'index.html') {
-    // Home: after the category cards, then before the sidebar.
     html = insertAfter(html, /<section class="section"><div class="category-grid">[\s\S]*?<\/section>/g);
     html = insertBefore(html, '</div><aside class="sidebar">');
   } else if (/^(car|support)\/index\.html$/.test(relative)) {
-    // Category: between list cards and at the end of the list.
     html = insertAfter(html, /<article class="post-card">[\s\S]*?<\/article>/g, 6);
     html = insertBefore(html, '</div></section></div><aside class="sidebar">');
   } else if (/^(car|support)\/[^/]+\/index\.html$/.test(relative)) {
-    // Primary guides: after the second content segment, then before sources.
     const summaries = [...html.matchAll(/<section class="key-summary">[\s\S]*?<\/section>/g)];
     if (summaries.length >= 3) {
       const match = summaries[2];
-      const i = match.index + match[0].length;
-      html = html.slice(0, i) + block('middle') + html.slice(i);
+      const index = match.index + match[0].length;
+      html = html.slice(0, index) + block('middle') + html.slice(index);
     } else {
       html = insertBefore(html, '<div class="disclaimer">');
     }
     html = insertBefore(html, '<section class="source-box">');
   } else if (/^(car|support)\/[^/]+\/[23]\/index\.html$/.test(relative)) {
-    // Continuation pages have less content; one unit is sufficient.
     html = insertBefore(html, '<section class="source-box">');
   } else {
-    // Static information, contact and policy pages: one unit.
     html = insertBefore(html, '</main>');
   }
 
   if (html === previous) html = insertBefore(html, '</main>');
-  if (html === previous) throw new Error('[coupang] Placement missing in ' + relative);
+  if (html === previous) throw new Error('[coupang] No main placement in ' + relative);
+  // Insert a tall desktop widget at the top of the existing right column.
+  html = insertSidebar(html);
 
-  const count = (html.match(/data-life-coupang-banner="sitewide-v3"/g) || []).length;
-  const expected = relative === 'index.html'
+  const bodyUnits = (html.match(/data-life-coupang-kind="(?:body|middle)"/g) || []).length;
+  const railUnits = (html.match(/data-life-coupang-kind="rail"/g) || []).length;
+  const expectedBody = relative === 'index.html'
     || /^(car|support)\/index\.html$/.test(relative)
-    || /^(car|support)\/[^/]+\/index\.html$/.test(relative)
-      ? 2 : 1;
-  if (count !== expected) throw new Error('[coupang] Expected ' + expected + ' slots in ' + relative + ', found ' + count);
+    || /^(car|support)\/[^/]+\/index\.html$/.test(relative) ? 2 : 1;
+  const expectedRail = previous.includes('<aside class="sidebar">') ? 1 : 0;
+  if (bodyUnits !== expectedBody || railUnits !== expectedRail) {
+    throw new Error('[coupang] Unexpected positions in ' + relative + ': body=' + bodyUnits + ' rail=' + railUnits);
+  }
 
   html = html.replace('</head>',
     '<link rel="stylesheet" href="/coupang-banner.css"><script src="' + SCRIPT_URL + '"></script></head>');
   fs.writeFileSync(file, html);
   filesChanged++;
-  adsPlaced += count;
+  adsPlaced += bodyUnits + railUnits;
 }
 
 if (!filesChanged) throw new Error('[coupang] No HTML pages updated.');
-console.log('[coupang] ' + adsPlaced + ' responsive slots in ' + filesChanged + ' HTML pages.');
+console.log('[coupang] ' + adsPlaced + ' larger body/rail slots in ' + filesChanged + ' HTML pages.');
