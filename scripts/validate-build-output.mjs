@@ -364,7 +364,7 @@ if (!sitemap.includes('<loc>'+SITE_URL+'/editorial-standards/</loc><lastmod>2026
 // Editorial freshness gate: both updated, indexable car-tax documents must
 // actually contain the corrected October 2026 guidance in the HTML users read.
 for (const [slug, phrases] of [
-  ['car-tax-annual-payment-2026', ['2026년 10월 26일 현재 연납 신청은', '2027년 공식', '마감 후 확인할 체크리스트']],
+  ['car-tax-annual-payment-2026', ['2026년 10월 26일 현재 연납 신청은', '2027년 공식']],
   ['car-tax-second-half-2026', ['2026년 10월 26일 현재', '12월 16~31일']],
 ]) {
   const permalink = '/car/' + slug + '/';
