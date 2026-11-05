@@ -87,18 +87,34 @@
     const render=()=>{
       const category=picker?.value||'all';
       const selected=all.filter(row=>category==='all'||row.category===category);
-      const max=node.dataset.mode==='compact'?5:18;
-      const ul=create('ul','today-news-list');
-      for(const row of selected.slice(0,max)){
-        const li=create('li');
-        const anchor=external(row.url,row.title,'today-news-title');
-        li.append(anchor,create('span','today-news-meta',
-          row.source+' · '+localTime(row.publishedAt)));
-        ul.append(li);
-      }
-      if(!ul.childElementCount){
+      const limit=node.dataset.mode==='compact'?5:8;
+      if(!selected.length){
         fallback(box,'주요 뉴스 보기','https://www.yna.co.kr/');
-      }else box.hidden=false;box.replaceChildren(ul);
+        return;
+      }
+      const ul=create('ul','today-news-list');
+      const fill=(count)=>{
+        ul.replaceChildren();
+        for(const row of selected.slice(0,count)){
+          const li=create('li');
+          const anchor=external(row.url,row.title,'today-news-title');
+          li.append(anchor,create('span','today-news-meta',
+            row.source+' · '+localTime(row.publishedAt)));
+          ul.append(li);
+        }
+      };
+      fill(limit);
+      box.hidden=false;
+      box.replaceChildren(ul);
+      if(selected.length>limit){
+        const more=create('button','today-expand-button','뉴스 더 보기 ('+(selected.length-limit)+'건)');
+        more.type='button';
+        more.addEventListener('click',()=>{
+          fill(selected.length);
+          more.remove();
+        });
+        box.append(more);
+      }
     };
     const load=async()=>{
       status(node,'');
@@ -141,6 +157,17 @@
         }
         if(!list.childElementCount)throw Error('EMPTY_COINS');
         box.hidden=false;box.replaceChildren(list);
+        if(items.length>6 && node.dataset.mode==='full'){
+          const rows=[...list.children];
+          rows.slice(6).forEach(row=>{row.hidden=true;});
+          const more=create('button','today-expand-button','코인 더 보기 ('+(rows.length-6)+'종목)');
+          more.type='button';
+          more.addEventListener('click',()=>{
+            rows.forEach(row=>{row.hidden=false;});
+            more.remove();
+          });
+          box.append(more);
+        }
         status(node,'업비트 KRW · 조회 '+localTime(data.retrievedAt)+' · 전일 종가 대비');
       }catch(_){
         fallback(box,'업비트 시세 보기','https://upbit.com/exchange?code=CRIX.UPBIT.KRW-BTC');
