@@ -53,7 +53,11 @@ function publishedTopics(){
 }
 const ACTION=/(환급|금리|대출|상환|연말정산|세금|수수료|한도|신용|주택|전세|월세|보증|가계|소득|퇴직|장학|공과금|관리비|자동차|연금|취업|근로|복지|보험료|사업자|지원금|정산|급여|보조금)/;
 export function scoreItem(item,groups,existing,now=new Date()){
-  const text=(item.title||'')+' '+(item.description||'');
+  // A long statistics-feed description can contain hundreds of unrelated terms.
+  // Require the useful intent to appear in the actual headline.
+  const text=(item.title||'').trim();
+  if(/기본통계|기업생멸행정통계|수록자료|입찰|용역|채용|장관동정|행사 개최|보도설명/.test(text)
+    || /\(\s*\d+\s*\)$/.test(text)) return null;
   const matches=groups.map(g=>({...g,hits:g.keywords.filter(k=>text.includes(k))}))
     .filter(g=>g.hits.length).sort((a,b)=>b.hits.length-a.hits.length);
   // Preserve existing editorial exclusion of insurance-related content.
@@ -94,7 +98,7 @@ export async function run({now=new Date(),fetcher=loadFeed}={}){
     try{
       const items=await fetcher(feed);
       status.push({name:feed.name,ok:true,count:items.length});
-      found.push(...items.map(x=>({...x,source:feed.name})));
+      if(feed.candidateEligible!==false)found.push(...items.map(x=>({...x,source:feed.name})));
     }catch(e){status.push({name:feed.name,ok:false,count:0,error:String(e.message||e)});}
   }
   const seen=new Set();
