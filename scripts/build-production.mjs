@@ -15,6 +15,7 @@ const steps = [
   ['node', ['scripts/apply-content-updates.mjs']],
   ['node', ['scripts/curate-redundant-homepage-citations.mjs']],
   ['node', ['scripts/curate-published-primary-sources.mjs']],
+  ['node', ['scripts/expand-editorial-depth.mjs']],
   ['node', ['scripts/replace-duplicate-editorial-images.mjs']],
   [npm, ['run', 'validate:content']],
   ['node', ['scripts/build.mjs']],
@@ -26,6 +27,7 @@ const steps = [
   ['node', ['scripts/add-reader-decision-guides.mjs']],
   ['node', ['scripts/inject-tenping-ad.mjs']],
   ['node', ['scripts/inject-coupang-ad.mjs']],
+  ['node', ['scripts/verify-editorial-depth.mjs']],
   ['node', ['scripts/validate-build-output.mjs']],
 ];
 
