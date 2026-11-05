@@ -26,20 +26,24 @@ const items=[
 const cards=items.map(item=>'<article class="food-card"><div class="food-card-top"><span class="food-kind">'+esc(item.kind)+'</span><h3>'+esc(item.name)+'</h3></div>'
  +'<p class="food-recipe"><strong>추천 메뉴</strong> '+esc(item.recipe)+'</p>'
  +'<p>'+esc(item.method)+'</p><p class="food-keep"><strong>보관 팁</strong> '+esc(item.keep)+'</p>'
- +'<a class="food-buy" href="/deals/?q='+encodeURIComponent(item.query)+'">관련 상품 검색 <span aria-hidden="true">↗</span></a></article>').join('');
+ +'<a class="food-buy" href="/deals/?q='+encodeURIComponent(item.query)+'&amp;src=food">관련 상품 검색 <span aria-hidden="true">↗</span></a></article>').join('');
 const months=Array.from({length:12},(_,i)=>'<option value="'+(i+1)+'"'+(i===10?' selected':'')+'>'+(i+1)+'월</option>').join('');
 const main='<div class="site-shell"><article class="food-hub">'
  +'<nav class="portal-breadcrumbs" aria-label="현재 위치"><a href="/">홈</a> / 제철음식</nav>'
  +'<header class="food-hero">'
  +'<h1>제철음식</h1></header>'
  +'<section class="food-section" aria-labelledby="food-month-heading"><div class="food-section-head"><h2 id="food-month-heading">11월 제철 식재료</h2>'
- +'<label class="food-month-label" for="food-month">월 선택 <select id="food-month">'+months+'</select></label></div>'
+ +'<div class="food-controls"><label class="food-month-label" for="food-month">월 <select id="food-month">'+months+'</select></label>'
+ +'<label class="food-month-label" for="food-servings">인원 <select id="food-servings"><option value="1">1인</option><option value="2" selected>2인</option><option value="4">4인</option></select></label></div></div>'
  +'<div class="food-grid" id="food-list" aria-live="polite">'+cards+'</div>'
- +'<p class="food-source">지역과 시기에 따라 제철이 달라질 수 있습니다. 11월 수산물: <a href="https://www.mof.go.kr/doc/ko/selectDoc.do?bbsSeq=10&amp;docSeq=69193&amp;menuSeq=971" target="_blank" rel="noopener noreferrer">해양수산부 발표 확인</a></p></section>'
+ +'<p class="food-source">지역과 시기에 따라 제철이 달라질 수 있습니다. <span id="food-november-source">11월 수산물: <a href="https://www.mof.go.kr/doc/ko/selectDoc.do?bbsSeq=10&amp;docSeq=69193&amp;menuSeq=971" target="_blank" rel="noopener noreferrer">해양수산부 발표 확인</a></span></p></section>'
  +'<section class="food-section food-choice" aria-labelledby="food-choice-heading"><div><h2 id="food-choice-heading">오늘 뭐 먹지?</h2><p id="food-result" class="food-choice-result" role="status">오늘의 추천: 삼치 소금구이</p></div>'
- +'<button id="food-pick" type="button">다른 메뉴 추천</button></section>'
+ +'<div class="food-choice-actions"><button id="food-pick" type="button">다른 메뉴 추천</button><button id="food-show-recipe" type="button">레시피 보기</button></div></section>'
  +'<section class="food-section food-shopping" aria-labelledby="food-shopping-heading"><h2 id="food-shopping-heading">장보기</h2>'
 
+ +'<p id="food-shopping-count" class="food-shopping-count" role="status">장보기 목록이 비어 있습니다.</p>'
+ +'<div id="food-shopping-list" class="food-shopping-list"></div>'
+ +'<div class="food-shopping-actions"><button type="button" id="food-copy">목록 복사</button><button type="button" id="food-clear-done">체크한 항목 삭제</button><button type="button" id="food-clear-all">전체 삭제</button></div>'
  +'<a href="/deals/" class="food-all-deals">제휴 추천상품 전체 보기 <span aria-hidden="true">↗</span></a>'
  +'<p class="food-disclosure">제휴 상품 링크를 통해 구매하면 운영자가 수수료를 제공받을 수 있습니다. 실제 가격과 판매조건은 판매처에서 확인하세요.</p></section>'
  +'</article></div>';
