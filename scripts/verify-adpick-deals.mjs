@@ -25,7 +25,7 @@ for(const unwanted of ['수익 추천', '애드픽 비즈 API 제공', '상품 �
 const client=read("adpick-deals.js");
 check(!client.includes("수익 추천"),"publisher-only commission tab leaked");
 check(!client.includes('["commission"'),"commission category displayed in tabs");
-check(page.includes("제휴 활동으로 수수료"),"affiliate disclosure lost");
+check(page.includes("제휴 링크가 포함되어 있으며")&&page.includes("수수료가 지급될 수 있습니다"),"affiliate disclosure lost");
 check(page.includes('name="robots" content="noindex,follow"'),'affiliate-only route must noindex');
 check(page.includes('data-deals-list')&&page.includes('data-deals-search'),'live deals and search controls missing');
 check(page.includes('href="/adpick-deals.css?v=20261106d"')&&page.includes('src="/adpick-deals.js?v=20261106d"'),'deals versioned assets missing');
