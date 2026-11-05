@@ -1,0 +1,633 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css");
+
+/* One editorial design system. No shadows, gradient cards or boxed page canvas.
+   Single orange accent, original articles and sponsored disclosure untouched. */
+body.life-editorial{
+  --brand:#e95731;--brand-dark:#b93e20;--brand-soft:#fff3ed;
+  --ink:#1c232b;--muted:#707983;--line:#e6e7e8;
+  --surface:#fff;--bg:#fff;--radius:6px;--shadow:none;--content:1560px;
+  background:#fff;color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;
+  font-size:15px;line-height:1.6;letter-spacing:-.012em;word-break:keep-all;
+  overflow-wrap:break-word;-webkit-font-smoothing:antialiased;
+}
+.life-editorial a{color:inherit;text-decoration:none}
+.life-editorial a:hover{color:var(--brand)}
+.life-editorial button,.life-editorial input,.life-editorial select,.life-editorial textarea{font:inherit}
+.life-editorial :focus-visible{outline:2px solid var(--brand);outline-offset:3px}
+.life-editorial .top-strip{display:none}
+.life-editorial .site-header{position:relative;top:auto;z-index:10;background:#fff;box-shadow:none;border-bottom:1px solid var(--line);backdrop-filter:none}
+.life-editorial .header-inner,.life-editorial .nav-inner,.life-editorial .site-shell,.life-editorial .footer-inner,
+.life-editorial .top-strip-inner{width:calc(100% - 72px);max-width:1560px;margin-left:auto;margin-right:auto}
+.life-editorial .header-inner{display:flex;min-height:76px;align-items:center;justify-content:space-between;gap:28px;padding:10px 0}
+.life-editorial .brand{display:inline-flex;align-items:center;gap:12px;flex-shrink:0}
+.life-editorial .brand-mark{width:35px;height:35px;display:grid;place-items:center;color:#fff;background:var(--brand);border-radius:7px;font-size:16px;font-weight:850}
+.life-editorial .brand-copy strong{display:block;color:#18202a;font-size:23px;line-height:1.15;font-weight:850;letter-spacing:-.07em}
+.life-editorial .header-search{display:flex;max-width:350px;width:min(38vw,350px);height:39px;margin-left:auto}
+.life-editorial .header-search input{min-width:0;width:100%;padding:9px 13px;border:1px solid #e4e6e8;border-right:0;border-radius:5px 0 0 5px;background:#fafafa;font-size:13px}
+.life-editorial .header-search button{padding:0 15px;border:1px solid #e4e6e8;border-left:0;border-radius:0 5px 5px 0;background:#fafafa;color:var(--brand-dark);font-size:12px;font-weight:780}
+.life-editorial .main-nav{background:#fff;border:0;border-top:1px solid #f1f1f1;border-bottom:1px solid #e9eaec}
+.life-editorial .nav-inner{display:flex;align-items:center;gap:26px;overflow-x:auto;scrollbar-width:none;justify-content:flex-start;padding:0}
+.life-editorial .nav-inner::-webkit-scrollbar{display:none}
+.life-editorial .nav-inner a{display:inline-flex;flex:none;align-items:center;justify-content:center;min-height:45px;padding:10px 2px 9px;color:#65707c;font-size:13px;font-weight:660;border:0;border-bottom:2px solid transparent;white-space:nowrap;line-height:1.2}
+.life-editorial .nav-inner a:hover,.life-editorial .nav-inner a[aria-current="page"]{color:var(--brand);border-bottom-color:var(--brand)}
+.life-editorial #main-content{min-width:0}
+.life-editorial .site-shell{padding:28px 0 56px}
+.life-editorial .content-grid{display:block}
+.life-editorial .main-column,.life-editorial .page-box,.life-editorial .article-shell,.life-editorial .portal-page{width:100%;max-width:none;min-width:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.life-editorial .main-column{padding:0}
+.life-editorial .sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:34px 0 0;padding-top:22px;border-top:1px solid var(--line)}
+.life-editorial .sidebar-card{min-width:0;padding:18px;border:1px solid var(--line);border-radius:7px;background:#fff;box-shadow:none}
+.life-editorial .sidebar-card h2{margin:0 0 10px;padding:0 0 10px;font-size:16px;font-weight:750;border-bottom:1px solid var(--line)}
+.life-editorial .sidebar-list a{padding:9px 0;color:#37414d;font-size:13px}
+.life-editorial .sidebar-list li+li{border-top:1px solid var(--line)}
+.life-editorial .sidebar-note{font-size:12px;color:#747d88}
+.life-editorial .life-coupang-placement,.life-editorial .life-affiliate-placement{max-width:100%}
+.life-editorial .modern-sponsored-area{margin-top:32px;padding-top:18px;border-top:1px solid var(--line)}
+.life-editorial .modern-sponsored-area .modern-section-heading h2{font-size:14px;font-weight:700;color:#777}
+.life-editorial .site-footer{border-top:1px solid var(--line);background:#fafafa;color:#5e6874}
+.life-editorial .footer-inner{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:30px;padding:34px 0}
+.life-editorial .footer-inner h2,.life-editorial .footer-inner h3{font-size:13px;letter-spacing:-.02em;margin:0 0 10px}
+.life-editorial .footer-inner p,.life-editorial .footer-inner li,.life-editorial .footer-inner a{font-size:12px;line-height:1.8;color:#717985}
+.life-editorial .footer-bottom{border-top:1px solid #ededed;background:#fafafa}
+.life-editorial .footer-bottom .top-strip-inner{padding:10px 0;font-size:11px;color:#888}
+
+/* Homepage: editorial heading and search, six topic links, latest real posts. */
+.life-editorial.life-modern-home .home-shell{width:calc(100% - 72px);max-width:1560px}
+.life-editorial.life-modern-home .home-grid{display:block}
+.life-editorial.life-modern-home .home-grid>.main-column{padding:0;border:0;background:transparent}
+.life-editorial.life-modern-home .hero.portal-home-hero{max-width:none;margin:2px 0 26px;padding:33px 0 27px;border:0;border-bottom:2px solid #232b32;border-radius:0;background:#fff;color:var(--ink);text-align:left;box-shadow:none}
+.life-editorial.life-modern-home .portal-home-hero h1{max-width:none;margin:0 0 22px;font-size:clamp(30px,3.4vw,48px);font-weight:860;line-height:1.2;letter-spacing:-.072em;color:#171e26}
+.life-editorial.life-modern-home .portal-home-search{display:flex;align-items:center;gap:0;max-width:740px;width:100%;margin:0}
+.life-editorial.life-modern-home .portal-home-search input{min-height:51px;padding:12px 15px;border:1px solid #d9dcdf;border-right:0;border-radius:6px 0 0 6px;background:#fafafa;font-size:15px;box-shadow:none}
+.life-editorial.life-modern-home .portal-home-search button{min-width:90px;min-height:51px;padding:11px 20px;border:1px solid var(--brand);border-radius:0 6px 6px 0;background:var(--brand);color:#fff;font-size:14px;font-weight:800;box-shadow:none}
+.life-editorial.life-modern-home .portal-home-section{margin:20px 0 0;padding:0;border:0;background:transparent}
+.life-editorial.life-modern-home .portal-section-heading{display:flex;align-items:baseline;gap:12px;margin:0 0 15px}
+.life-editorial.life-modern-home .portal-section-heading h2{font-size:19px;font-weight:820;color:#202832;line-height:1.3;margin:0}
+.life-editorial.life-modern-home .portal-topic-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;margin:0 0 24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.life-editorial.life-modern-home .portal-topic-card.compact-topic{padding:0;margin:0;border:0;border-right:1px solid var(--line);border-radius:0;min-width:0;background:transparent;box-shadow:none;transform:none}
+.life-editorial.life-modern-home .portal-topic-card.compact-topic:last-child{border-right:0}
+.life-editorial.life-modern-home .compact-topic-link{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px;min-height:91px;padding:14px 5px;color:#29323c;text-align:center}
+.life-editorial.life-modern-home .compact-topic-link .modern-topic-icon{display:grid;place-items:center;width:30px;height:30px;background:transparent;border:0;border-radius:0;color:#373f48;margin:0}
+.life-editorial.life-modern-home .compact-topic-link .modern-topic-icon svg{width:23px;height:23px;stroke:currentColor;stroke-width:1.7}
+.life-editorial.life-modern-home .compact-topic-link strong{font-size:13px;font-weight:720;letter-spacing:-.035em}
+.life-editorial.life-modern-home .compact-topic-link:hover,.life-editorial.life-modern-home .compact-topic-link:hover strong{color:var(--brand);background:#fff9f6}
+.life-editorial.life-modern-home .compact-popular{padding:0;margin:24px 0;border:0;border-radius:0;background:transparent}
+.life-editorial.life-modern-home .compact-popular-top{display:flex;justify-content:space-between;align-items:center;padding:0 0 9px;border-bottom:2px solid #232b32}
+.life-editorial.life-modern-home .compact-popular-top h2{margin:0;font-size:20px;font-weight:820;color:#242a32}
+.life-editorial.life-modern-home .compact-popular-top>a{font-size:12px;color:#68717a}
+.life-editorial.life-modern-home .compact-popular ul{list-style:none;padding:0;margin:0}
+.life-editorial.life-modern-home .compact-popular li{border-bottom:1px solid var(--line)}
+.life-editorial.life-modern-home .compact-popular li a{display:flex;align-items:center;justify-content:space-between;min-height:56px;padding:12px 5px;color:#26313b;font-size:15px;font-weight:630}
+.life-editorial.life-modern-home .compact-popular li a span{font-size:18px;color:var(--brand)}
+.life-editorial.life-modern-home .compact-popular li a:hover{color:var(--brand)}
+.life-editorial.life-modern-home .compact-explore,.life-editorial.life-modern-home .modern-all-articles{display:block;margin:0 0 12px;padding:0;border:0;border-radius:0;background:#fff;overflow:visible}
+.life-editorial.life-modern-home .compact-explore>summary,.life-editorial.life-modern-home .modern-all-articles>summary{display:flex;align-items:center;justify-content:space-between;min-height:45px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px;font-weight:720;color:#303b46;cursor:pointer;list-style:none}
+.life-editorial.life-modern-home .compact-explore>summary::after,.life-editorial.life-modern-home .modern-all-articles>summary::after{content:"+";font-size:20px;color:#8b949d}
+.life-editorial.life-modern-home .compact-explore[open]>summary::after,.life-editorial.life-modern-home .modern-all-articles[open]>summary::after{content:"−"}
+.life-editorial.life-modern-home .compact-latest{margin:28px 0}
+.life-editorial.life-modern-home .compact-latest>summary{border-bottom:2px solid #232b32;font-size:20px;font-weight:820;color:#202832;padding:8px 0 12px}
+.life-editorial.life-modern-home .compact-latest>.section{margin:0;padding:10px 0 0;border:0}
+.life-editorial.life-modern-home .compact-latest .section-header{display:none}
+.life-editorial.life-modern-home .compact-latest .post-list{display:grid;grid-template-columns:1fr;gap:0}
+.life-editorial.life-modern-home .compact-latest .post-card{border:0;border-bottom:1px solid var(--line);border-radius:0;margin:0;padding:14px 0;box-shadow:none;min-width:0}
+.life-editorial.life-modern-home .compact-latest .post-card h3{font-size:18px;line-height:1.45}
+.life-editorial.life-modern-home .compact-tools .compact-tool-links{display:flex;flex-wrap:wrap;gap:10px;padding:16px 0}
+.life-editorial.life-modern-home .compact-tool-links a{display:inline-flex;padding:8px 12px;border:1px solid #e4e6e8;border-radius:4px;background:#fff;font-size:13px}
+.life-editorial.life-modern-home .compact-tools .compact-tool-links a:hover{border-color:var(--brand);color:var(--brand)}
+.life-editorial.life-modern-home .compact-explore>.life-pathways,.life-editorial.life-modern-home .compact-explore>.section{margin:0;padding:14px 0;border:0}
+.life-editorial.life-modern-home .life-path-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.life-editorial.life-modern-home .modern-all-articles{margin:18px 0 28px}
+.life-editorial.life-modern-home .modern-all-articles>.life-archive{padding:18px 0}
+
+/* Category: compact magazine rows, never large two-column cards. */
+.life-editorial.life-modern-category .content-grid{display:block}
+.life-editorial.life-modern-category .main-column.section{width:100%;margin:0;padding:0;border:0;border-radius:0;background:transparent}
+.life-editorial.life-modern-category .category-hero{padding:10px 0 20px;border:0;border-bottom:2px solid #28313a;background:transparent;border-radius:0}
+.life-editorial.life-modern-category .category-hero h1{font-size:clamp(30px,3.1vw,43px);font-weight:850;letter-spacing:-.06em}
+.life-editorial.life-modern-category .category-hero p{color:#6e7782;font-size:14px}
+.life-editorial.life-modern-category .modern-list-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 0;border-bottom:1px solid var(--line)}
+.life-editorial.life-modern-category .modern-count{font-size:13px;font-weight:700;color:#66717e}
+.life-editorial.life-modern-category .modern-list-filter{width:min(100%,330px);height:39px;padding:7px 13px;background:#fafafa;border:1px solid #e1e4e7;border-radius:5px;font-size:13px}
+.life-editorial.life-modern-category .post-list{display:grid;grid-template-columns:1fr;gap:0}
+.life-editorial.life-modern-category .post-card{display:grid;grid-template-columns:150px minmax(0,1fr);align-items:start;gap:21px;padding:20px 0;margin:0;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;background:#fff}
+.life-editorial.life-modern-category .post-thumb{width:150px;min-height:110px;max-height:125px;overflow:hidden;border-radius:5px;object-fit:cover}
+.life-editorial.life-modern-category .post-body{padding:0}
+.life-editorial.life-modern-category .post-card h3{margin:4px 0 8px;font-size:19px;line-height:1.45;font-weight:780}
+.life-editorial.life-modern-category .post-card p{color:#68737f;font-size:13px;line-height:1.7;margin:4px 0}
+.life-editorial.life-modern-category .post-card .post-meta{font-size:12px;color:#8a929c}
+.life-editorial.life-modern-category .compact-explore{margin:12px 0;border:0;border-bottom:1px solid var(--line);background:#fff}
+.life-editorial.life-modern-category .compact-explore>summary{padding:10px 0;font-size:13px;font-weight:670}
+.life-editorial.life-modern-category .modern-sponsored-area{padding-top:18px;margin-top:35px}
+.life-editorial.life-modern-category .sidebar{margin-top:28px}
+
+
+/* Four top-level destinations; secondary categories stay inside their hubs. */
+.life-editorial .main-nav .nav-inner{justify-content:flex-start}
+.life-editorial .topics-page{width:100%;max-width:none;margin:0;padding:12px 0 40px;border:0;border-radius:0;background:#fff}
+.life-editorial .topics-page h1{margin:0 0 25px;font-size:clamp(30px,3.2vw,43px);font-weight:830;color:#202832;letter-spacing:-.065em}
+.life-editorial .topics-hub-list{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:none;margin:0;padding:0;border-top:2px solid #252c34}
+.life-editorial .topics-hub-link{display:grid;grid-template-columns:minmax(145px,220px) minmax(0,1fr) 22px;gap:15px;align-items:center;min-height:68px;padding:15px 5px;border-bottom:1px solid #e6e7e8;color:#27313c}
+.life-editorial .topics-hub-link:hover{background:#fffaf8;color:var(--brand)}
+.life-editorial .topics-hub-link strong{font-size:17px;font-weight:750}
+.life-editorial .topics-hub-link span:not(.topics-chevron){color:#7b848d;font-size:13px}
+.life-editorial .topics-chevron{text-align:right;color:var(--brand);font-size:21px}
+@media(max-width:700px){
+  .life-editorial .nav-inner a{min-height:43px;font-size:13px}
+  .life-editorial .topics-page{padding-top:6px}
+  .life-editorial .topics-page h1{font-size:30px;margin-bottom:18px}
+  .life-editorial .topics-hub-link{grid-template-columns:minmax(0,1fr) 14px;gap:5px 12px;padding:14px 3px;min-height:60px}
+  .life-editorial .topics-hub-link strong{font-size:15px}
+  .life-editorial .topics-hub-link span:not(.topics-chevron){grid-column:1;grid-row:2;font-size:12px}
+  .life-editorial .topics-chevron{grid-column:2;grid-row:1/3}
+}
+
+/* Articles: full content visible, strong headline and readable measure. */
+.life-editorial.life-modern-article .site-shell{max-width:1460px}
+.life-editorial.life-modern-article .content-grid{display:block}
+.life-editorial.life-modern-article .article-shell{display:block;width:100%;max-width:none;padding:0;border:0}
+.life-editorial.life-modern-article .article-header{max-width:1060px;margin:0 auto;padding:12px 0 22px;border-bottom:2px solid #303841;background:#fff}
+.life-editorial.life-modern-article .article-header h1{font-size:clamp(31px,3.8vw,48px);font-weight:850;line-height:1.27;letter-spacing:-.062em;color:#1e2730}
+.life-editorial.life-modern-article .article-header p,.life-editorial.life-modern-article .article-header .article-meta{color:#78818b;font-size:13px}
+.life-editorial.life-modern-article .compact-answer{max-width:1060px;margin:24px auto 0;padding:19px 0 17px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:#fff}
+.life-editorial.life-modern-article .compact-answer-primary{margin:0;font-size:19px;line-height:1.7;font-weight:700;color:#26313c}
+.life-editorial.life-modern-article .compact-answer-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
+.life-editorial.life-modern-article .compact-answer-actions a{font-size:13px;color:var(--brand);font-weight:720}
+.life-editorial.life-modern-article .compact-more-answers>summary{font-size:13px;color:#686e77}
+.life-editorial.life-modern-article .compact-full-guide{display:block;max-width:1060px;margin:0 auto;padding:0;border:0;border-radius:0;background:#fff}
+.life-editorial.life-modern-article .compact-full-guide>summary{display:block;margin:0;padding:13px 0;border:0;font-size:12px;font-weight:630;color:#7c858f;cursor:pointer}
+.life-editorial.life-modern-article .article-content{padding:8px 0 28px;font-size:17px;line-height:1.93;color:#2d3540}
+.life-editorial.life-modern-article .article-content p{margin:0 0 20px}
+.life-editorial.life-modern-article .article-content ul,.life-editorial.life-modern-article .article-content ol{padding-left:22px;margin:12px 0 24px}
+.life-editorial.life-modern-article .article-content li{padding:3px 0}
+.life-editorial.life-modern-article .article-content table{font-size:14px}
+.life-editorial.life-modern-article .article-content a{text-decoration:underline;text-decoration-color:#d9b1a3;text-underline-offset:3px}
+.life-editorial.life-modern-article .sidebar{max-width:1060px;margin-left:auto;margin-right:auto}
+.life-editorial.life-modern-article .disclaimer{font-size:12px;line-height:1.7;color:#7b848f}
+
+/* Finance pages: one reading plane with clear action rows. */
+.life-editorial .portal-page.finance-page{max-width:none;width:100%;padding:10px 0 35px;margin:0;border:0;border-radius:0;background:#fff}
+.life-editorial .portal-page.finance-page h1,.life-editorial .portal-page h1{font-size:clamp(29px,3.2vw,43px);font-weight:830;line-height:1.3;letter-spacing:-.065em;color:#202832}
+.life-editorial .portal-breadcrumbs{font-size:12px;color:#86909c;margin:0 0 15px}
+.life-editorial .finance-hub-grid,.life-editorial .finance-market-links{display:grid;grid-template-columns:1fr;gap:0;margin:16px 0 28px;border-top:2px solid #252c34}
+.life-editorial .finance-hub-card{display:flex;align-items:center;justify-content:space-between;min-height:59px;padding:16px 4px;background:#fff;border:0;border-bottom:1px solid var(--line);border-radius:0;color:#26303b}
+.life-editorial .finance-hub-card::after{content:"↗";font-size:16px;color:var(--brand);font-weight:750}
+.life-editorial .finance-hub-card:hover{color:var(--brand);background:#fffaf8;border-color:var(--line)}
+.life-editorial .finance-hub-card strong{font-size:17px;font-weight:750}
+.life-editorial .finance-hub-card span{display:none}
+.life-editorial .finance-official-shortcut{display:flex;flex-wrap:wrap;gap:10px;margin:17px 0}
+.life-editorial .finance-official-shortcut a{display:inline-flex;align-items:center;padding:10px 13px;border:1px solid #e3e5e8;border-radius:5px;font-size:13px;font-weight:700;background:#fff}
+.life-editorial .finance-official-shortcut a:hover{border-color:var(--brand);color:var(--brand)}
+.life-editorial .finance-data-section{padding:18px 0;margin:18px 0 0;border-top:1px solid var(--line)}
+.life-editorial .finance-section-title h2{font-size:20px;font-weight:800}
+.life-editorial .finance-filter-bar{background:#fafafa;border:1px solid var(--line);border-radius:5px;padding:14px}
+.life-editorial .finance-rate-table th{background:#fafafa;color:#5c6570}
+.life-editorial .finance-rate-table td{background:#fff}
+.life-editorial .loan-tool{padding:18px 0;margin:0;background:#fff;border:0;border-top:2px solid #28313a;border-radius:0}
+.life-editorial .loan-method-option{box-shadow:none}
+.life-editorial .loan-calc-button{background:var(--brand);color:#fff;border-color:var(--brand)}
+.life-editorial .loan-result-details,.life-editorial .loan-result-area{margin-top:24px;border-top:1px solid var(--line)}
+.life-editorial .finance-sponsored{margin-top:30px;border-top:1px solid var(--line);padding-top:15px}
+
+/* Today: full-viewport newsroom, one vertical section per data source.
+   Headers, lists, weather values and fallback links stay actual live content. */
+.life-editorial #main-content>.today-viewport{display:block;width:100%;max-width:none;margin:0;padding:24px clamp(16px,3vw,56px) 50px}
+.life-editorial .today-wide-content{display:block;width:100%;max-width:none;margin:0;padding:0;border:0;background:#fff}
+.life-editorial .today-wide-content h1{font-size:clamp(31px,3.4vw,48px);line-height:1.25;font-weight:850;letter-spacing:-.066em;color:#1e2730;margin:8px 0 23px}
+.life-editorial .today-vertical-list{display:block;width:100%;max-width:none;margin:0;border-top:2px solid #252c35}
+.life-editorial .today-vertical-list>.today-widget{display:block;width:100%;max-width:none;height:auto;min-height:0;margin:0;padding:22px 0 23px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;box-shadow:none}
+.life-editorial .today-widget-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;min-height:30px;margin:0 0 12px}
+.life-editorial .today-widget-heading h3{font-size:21px;font-weight:830;line-height:1.35;color:#1e2630;letter-spacing:-.05em;margin:0}
+.life-editorial .today-widget-heading a{font-size:12px;font-weight:720;color:var(--brand)}
+.life-editorial .today-widget-heading label{font-size:12px;color:#74808c}
+.life-editorial .today-widget-heading select{border:1px solid #dcdfe2;border-radius:4px;padding:6px 9px;background:#fff;font-size:13px;color:#313b45}
+.life-editorial .today-news-list{list-style:none;margin:0;padding:0}
+.life-editorial .today-news-list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 20px;align-items:center;margin:0;padding:13px 0;border:0;border-bottom:1px solid #eceeef}
+.life-editorial .today-news-list li:last-child{border-bottom:0}
+.life-editorial .today-news-title{grid-column:1;font-size:17px;line-height:1.5;font-weight:720;color:#242e37;letter-spacing:-.028em}
+.life-editorial .today-news-title:hover{color:var(--brand)}
+.life-editorial .today-news-meta{grid-column:2;font-size:12px;line-height:1.3;color:#87919c;text-align:right;white-space:nowrap}
+.life-editorial .today-widget-meta{display:block;margin:10px 0 0;font-size:11px;color:#8a949e;line-height:1.45}
+.life-editorial .today-widget-meta:empty{display:none}
+.life-editorial .today-empty{margin:0;padding:10px 0;color:#8a949e;font-size:13px}
+.life-editorial .today-official-link{display:inline-flex;align-items:center;padding:10px 0;font-weight:750;font-size:13px;color:var(--brand)}
+.life-editorial .today-weather-body{min-height:0}
+.life-editorial .today-weather-temp{font-size:38px;font-weight:800;line-height:1.2;color:#27323c}
+.life-editorial .today-weather-condition{font-size:15px;color:#54616e;margin-left:15px}
+.life-editorial .today-weather-details{font-size:13px;color:#6d7782;margin:5px 0 0}
+.life-editorial .today-coin-list,.life-editorial .today-stock-list{display:block;width:100%;margin:0}
+.life-editorial .today-coin,.life-editorial .today-stock{display:grid;grid-template-columns:minmax(0,1fr) 185px 100px;align-items:center;gap:15px;min-height:53px;padding:10px 2px;border:0;border-bottom:1px solid #eceeef;background:#fff;color:#26323d}
+.life-editorial .today-coin:last-child,.life-editorial .today-stock:last-child{border-bottom:0}
+.life-editorial .today-coin[hidden],.life-editorial .today-stock[hidden]{display:none!important}
+.life-editorial .today-coin-name,.life-editorial .today-stock-name{font-size:15px;font-weight:740;line-height:1.25}
+.life-editorial .today-coin-name small{display:block;font-size:11px;font-weight:500;color:#8b949d;margin-top:3px}
+.life-editorial .today-coin-price,.life-editorial .today-stock-value{text-align:right;font-size:15px;font-weight:760;font-variant-numeric:tabular-nums;white-space:nowrap}
+.life-editorial .today-coin-change,.life-editorial .today-stock-change{min-width:0;text-align:right;font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.life-editorial .today-coin-change.positive{color:#c24335}
+.life-editorial .today-coin-change.negative{color:#2765b9}
+.life-editorial .today-coin-change.neutral{color:#6f7984}
+.life-editorial .today-expand-button{display:block;width:100%;margin:10px 0 0;min-height:43px;padding:8px;border:1px solid var(--line);border-radius:4px;background:#fafafa;color:#333d47;font-weight:700;font-size:13px;cursor:pointer}
+.life-editorial .today-expand-button:hover{border-color:var(--brand);color:var(--brand)}
+.life-editorial .today-source-links{display:flex;flex-wrap:wrap;gap:10px 16px;margin:20px 0 0}
+.life-editorial .today-source-links a{font-size:12px;font-weight:690;color:#6b7681}
+.life-editorial .today-market-inserts{margin:20px 0}
+.life-editorial .today-two-grid{display:block}
+.life-editorial .today-market-inserts .today-widget{padding:15px 0;border:0;border-bottom:1px solid var(--line);border-radius:0}
+.life-editorial .today-market-inserts .today-widget+.today-widget{margin-top:16px}
+.life-editorial .today-market-inserts .today-widget-heading h3{font-size:19px}
+
+/* Responsive editorial surfaces. */
+@media(max-width:1024px){
+  .life-editorial .header-inner,.life-editorial .nav-inner,.life-editorial .site-shell,.life-editorial .footer-inner{width:calc(100% - 36px)}
+  .life-editorial.life-modern-home .home-shell{width:calc(100% - 36px)}
+  .life-editorial.life-modern-home .portal-topic-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .life-editorial.life-modern-home .portal-topic-card.compact-topic:nth-child(3){border-right:0}
+  .life-editorial.life-modern-home .portal-topic-card.compact-topic:nth-child(-n+3){border-bottom:1px solid var(--line)}
+  .life-editorial .today-news-list li{grid-template-columns:minmax(0,1fr);gap:5px}
+  .life-editorial .today-news-meta{grid-column:1;text-align:left}
+}
+@media(max-width:700px){
+  body.life-editorial{font-size:14px}
+  .life-editorial .header-inner,.life-editorial .nav-inner,.life-editorial .site-shell,.life-editorial .footer-inner{width:calc(100% - 24px)}
+  .life-editorial.life-modern-home .home-shell{width:calc(100% - 24px)}
+  .life-editorial .header-inner{min-height:62px;gap:10px;padding:8px 0}
+  .life-editorial .brand{gap:7px}
+  .life-editorial .brand-mark{width:31px;height:31px;font-size:14px;border-radius:6px}
+  .life-editorial .brand-copy strong{font-size:19px}
+  .life-editorial .header-search{flex:1;max-width:210px;height:37px}
+  .life-editorial .header-search input{padding:7px 9px;font-size:12px}
+  .life-editorial .header-search button{padding:0 9px;font-size:12px}
+  .life-editorial .nav-inner{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;overflow:visible}
+  .life-editorial .nav-inner a{min-width:0;min-height:37px;padding:8px 2px 7px;font-size:11.5px;line-height:1.25;letter-spacing:-.035em}
+  .life-editorial .nav-inner a:nth-child(n+5){border-top:1px solid #f2f2f2}
+  .life-editorial .site-shell{padding:17px 0 35px}
+  .life-editorial.life-modern-home .hero.portal-home-hero{padding:22px 0 20px;margin:0 0 20px}
+  .life-editorial.life-modern-home .portal-home-hero h1{font-size:31px;margin:0 0 20px}
+  .life-editorial.life-modern-home .portal-home-search input,.life-editorial.life-modern-home .portal-home-search button{min-height:45px}
+  .life-editorial.life-modern-home .portal-topic-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .life-editorial.life-modern-home .compact-topic-link{min-height:80px;padding:11px 3px}
+  .life-editorial.life-modern-home .compact-topic-link strong{font-size:12px}
+  .life-editorial.life-modern-home .compact-topic-link .modern-topic-icon{width:27px;height:27px}
+  .life-editorial.life-modern-home .compact-popular-top h2,.life-editorial.life-modern-home .compact-latest>summary{font-size:18px}
+  .life-editorial.life-modern-home .compact-popular li a{font-size:14px;min-height:50px}
+  .life-editorial.life-modern-home .life-path-grid{grid-template-columns:1fr}
+  .life-editorial.life-modern-category .category-hero h1{font-size:30px}
+  .life-editorial.life-modern-category .post-card{grid-template-columns:94px minmax(0,1fr);gap:11px;padding:16px 0}
+  .life-editorial.life-modern-category .post-thumb{width:94px;min-height:88px;max-height:94px}
+  .life-editorial.life-modern-category .post-card h3{font-size:15px;line-height:1.45}
+  .life-editorial.life-modern-category .post-card p{font-size:12px}
+  .life-editorial.life-modern-category .modern-list-toolbar{align-items:stretch;flex-wrap:wrap}
+  .life-editorial.life-modern-category .modern-list-filter{width:100%;max-width:none}
+  .life-editorial.life-modern-article .article-header h1{font-size:30px}
+  .life-editorial.life-modern-article .compact-answer-primary{font-size:16px}
+  .life-editorial.life-modern-article .article-content{font-size:16px;line-height:1.85}
+  .life-editorial .portal-page.finance-page{padding-top:4px}
+  .life-editorial .portal-page.finance-page h1{font-size:30px}
+  .life-editorial #main-content>.today-viewport{padding:16px 12px 35px}
+  .life-editorial .today-wide-content h1{font-size:31px;margin:5px 0 16px}
+  .life-editorial .today-vertical-list>.today-widget{padding:17px 0}
+  .life-editorial .today-widget-heading h3{font-size:19px}
+  .life-editorial .today-news-title{font-size:14px}
+  .life-editorial .today-news-meta{font-size:11px}
+  .life-editorial .today-news-list li{padding:11px 0}
+  .life-editorial .today-coin,.life-editorial .today-stock{grid-template-columns:minmax(0,1fr) auto 58px;gap:7px}
+  .life-editorial .today-coin-name,.life-editorial .today-stock-name{font-size:12px}
+  .life-editorial .today-coin-price,.life-editorial .today-stock-value{font-size:12px}
+  .life-editorial .today-coin-change,.life-editorial .today-stock-change{font-size:11px}
+  .life-editorial .sidebar{grid-template-columns:1fr}
+  .life-editorial .footer-inner{grid-template-columns:1fr 1fr;gap:16px;padding:26px 0}
+  .life-editorial .footer-inner>div:first-child{grid-column:1/-1}
+}
+@media(max-width:370px){
+  .life-editorial .header-search{max-width:150px}
+  .life-editorial .nav-inner a{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){
+  .life-editorial *, .life-editorial *::before,.life-editorial *::after{scroll-behavior:auto;transition:none!important}
+}
+
+
+
+
+/* Calculator edition, 2026-11-06. This is the single authoritative
+   calculator stylesheet inside LIFE's single shared editorial CSS. */
+.life-editorial .savings-calc-page,
+.life-editorial .lifestyle-calc-page{
+  width:100%;max-width:none;margin:0;padding:18px 0 54px;
+  border:0;border-radius:0;background:#fff;box-shadow:none;
+}
+.life-editorial .savings-page-head,
+.life-editorial .lifestyle-calc-page>h1{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:14px;margin:0 0 25px;padding:0 0 15px;
+  border:0;border-bottom:1px solid #dce0e4;color:#1c252d;
+}
+.life-editorial .savings-page-head h1,
+.life-editorial .lifestyle-calc-page>h1{
+  font-size:clamp(28px,2.7vw,38px);line-height:1.3;
+  letter-spacing:-.06em;font-weight:840;margin:0;
+}
+.life-editorial .savings-page-head>a{
+  color:var(--brand);font-weight:750;font-size:13px;white-space:nowrap;
+}
+.life-editorial .calculator-workspace{
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);
+  gap:clamp(18px,2.4vw,35px);align-items:start;
+  width:100%;max-width:none;margin:0 0 30px;
+}
+.life-editorial .calculator-workspace>form{
+  width:100%;min-width:0;margin:0;
+  padding:clamp(19px,2.3vw,30px);
+  background:#f8f9fa;border:1px solid #e6e9ed;
+  border-radius:12px;box-shadow:none;
+}
+.life-editorial .calculator-form-header{
+  display:flex;align-items:baseline;justify-content:space-between;
+  flex-wrap:wrap;gap:6px 10px;
+  padding:0 0 18px;margin:0 0 19px;
+  border-bottom:1px solid #e1e4e8;
+}
+.life-editorial .calculator-form-header strong{
+  color:#1c2730;font-size:18px;font-weight:820;letter-spacing:-.045em;
+}
+.life-editorial .calculator-form-header>span{
+  color:#79848f;font-size:12px;
+}
+.life-editorial .savings-calc-fields,
+.life-editorial .cost-field-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:17px 14px;margin:0;padding:0;
+}
+.life-editorial .savings-field,
+.life-editorial .calc-field{
+  display:flex;flex-direction:column;gap:8px;min-width:0;
+}
+.life-editorial .savings-field>span:first-child,
+.life-editorial .calc-field>span:first-child{
+  color:#3b4855;font-size:13px;line-height:1.35;font-weight:740;
+}
+.life-editorial .savings-input-unit{
+  display:flex;align-items:center;gap:0;
+  height:52px;width:100%;min-width:0;
+  background:#fff;border:1px solid #d8dfe6;border-radius:7px;
+}
+.life-editorial .savings-input-unit>input{
+  min-width:0;flex:1;width:100%;height:100%;
+  padding:9px 12px 9px 14px;background:transparent;
+  border:0;border-radius:7px;outline:0;color:#1c2936;
+  font-size:17px;font-weight:760;font-variant-numeric:tabular-nums;
+}
+.life-editorial .savings-input-unit>span{
+  flex-shrink:0;padding:0 14px 0 4px;
+  color:#8a949e;font-size:13px;
+}
+.life-editorial .savings-field>select,
+.life-editorial .calc-field input[type=number],
+.life-editorial .calc-field select{
+  display:block;min-height:52px;height:52px;width:100%;min-width:0;
+  padding:10px 13px;border:1px solid #d8dfe6;border-radius:7px;
+  background:#fff;color:#27313b;box-shadow:none;
+  font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;
+}
+.life-editorial .savings-input-unit:focus-within,
+.life-editorial .savings-field>select:focus,
+.life-editorial .calc-field input[type=number]:focus,
+.life-editorial .calc-field select:focus{
+  border-color:var(--brand);
+  outline:2px solid #f9d9cf;outline-offset:1px;
+}
+.life-editorial .savings-calc-shortcuts{
+  display:flex;flex-direction:column;gap:9px;
+  padding:15px 0 0;margin:0;
+}
+.life-editorial .savings-preset-row{
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+}
+.life-editorial .savings-preset-row>span{
+  min-width:54px;color:#6f7c87;font-size:12px;
+}
+.life-editorial .savings-preset-row button{
+  min-height:33px;padding:7px 12px;
+  border:1px solid #dce2e7;border-radius:100px;
+  background:#fff;color:#52606c;font-size:12px;font-weight:650;
+  cursor:pointer;
+}
+.life-editorial .savings-preset-row button[aria-pressed=true]{
+  border-color:var(--brand);background:#fff2ec;color:var(--brand-dark);
+  font-weight:800;
+}
+.life-editorial .savings-calc-submit,
+.life-editorial .cost-submit{
+  display:flex;justify-content:center;align-items:center;
+  width:100%;min-height:47px;margin:19px 0 0;padding:11px 20px;
+  border:1px solid #252f38;border-radius:7px;
+  background:#252f38;color:#fff;font-size:14px;font-weight:790;
+  cursor:pointer;box-shadow:none;
+}
+.life-editorial .savings-calc-submit:hover,
+.life-editorial .cost-submit:hover{
+  background:var(--brand);border-color:var(--brand);color:#fff;
+}
+.life-editorial #savings-error,.life-editorial .cost-error{
+  color:#b33929;font-size:13px;line-height:1.5;margin:12px 0 0;
+}
+.life-editorial .calculator-workspace>.savings-calc-results,
+.life-editorial .calculator-workspace>.cost-result{
+  position:sticky;top:20px;min-width:0;width:100%;
+  margin:0;padding:clamp(22px,2.5vw,34px);
+  background:#fff8f4;border:1px solid #f0ded5;
+  border-radius:12px;box-shadow:none;
+}
+.life-editorial .savings-calc-result-top,
+.life-editorial .cost-result{
+  text-align:left;
+}
+.life-editorial .savings-calc-result-top>span:first-child,
+.life-editorial .cost-result-kicker{
+  display:block;font-size:13px;font-weight:800;color:#64564e;
+}
+.life-editorial #savings-maturity,
+.life-editorial .cost-result-primary{
+  display:block;margin:8px 0 5px;padding:0;
+  font-size:clamp(29px,3.1vw,43px);line-height:1.2;
+  letter-spacing:-.055em;color:#d94f30;font-weight:860;
+  font-variant-numeric:tabular-nums;overflow-wrap:anywhere;
+}
+.life-editorial #savings-summary-terms,
+.life-editorial .cost-result-reason{
+  display:block;margin:4px 0 0;color:#938078;font-size:12px;
+}
+.life-editorial .savings-calc-metrics,
+.life-editorial .cost-result-metrics{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:0;margin:24px 0 0;padding:9px 0 0;border-top:1px solid #ecdcd4;
+}
+.life-editorial .savings-calc-metrics>div,
+.life-editorial .cost-result-metrics>div{
+  min-width:0;margin:0;padding:16px 10px 15px 0;
+  border-right:0;border-bottom:1px solid #eedfd7;
+}
+.life-editorial .savings-calc-metrics>div:nth-child(even),
+.life-editorial .cost-result-metrics>div:nth-child(even){padding-left:11px}
+.life-editorial .savings-calc-metrics>div:nth-last-child(-n+2),
+.life-editorial .cost-result-metrics>div:nth-last-child(-n+2){border-bottom:0}
+.life-editorial .savings-calc-metrics dt,
+.life-editorial .cost-result-metrics>div span{
+  display:block;margin:0 0 7px;color:#82746c;
+  font-size:12px;font-weight:610;line-height:1.45;
+}
+.life-editorial .savings-calc-metrics dd,
+.life-editorial .cost-result-metrics>div strong{
+  display:block;margin:0;color:#27323d;line-height:1.35;
+  font-size:16px;font-weight:790;font-variant-numeric:tabular-nums;
+  overflow-wrap:anywhere;
+}
+.life-editorial .savings-copy{
+  padding:12px 0 0;margin:0;border:0;background:transparent;
+  color:var(--brand);font-size:12px;font-weight:750;cursor:pointer;
+}
+.life-editorial .savings-calc-note,.life-editorial .cost-note,
+.life-editorial .cost-examples{
+  margin:12px 0 0;max-width:1000px;
+  color:#74808a;font-size:12px;line-height:1.8;
+}
+.life-editorial .savings-calc-note a,.life-editorial .cost-note a{
+  color:var(--brand);text-decoration:underline;text-underline-offset:3px;
+}
+.life-editorial .cost-advanced{
+  margin:18px 0 0;border-top:1px solid #e0e5e9;
+  border-bottom:1px solid #e0e5e9;
+}
+.life-editorial .cost-advanced>summary{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;min-height:49px;padding:11px 2px;
+  list-style:none;cursor:pointer;color:#34404b;font-size:13px;font-weight:770;
+}
+.life-editorial .cost-advanced>summary::-webkit-details-marker,
+.life-editorial .cost-breakdown>summary::-webkit-details-marker,
+.life-editorial .savings-calc-details>summary::-webkit-details-marker{display:none}
+.life-editorial .cost-advanced>summary::after,
+.life-editorial .cost-breakdown>summary::after,
+.life-editorial .savings-calc-details>summary::after{
+  content:"+";color:var(--brand);font-size:22px;font-weight:550;
+}
+.life-editorial .cost-advanced[open]>summary::after,
+.life-editorial .cost-breakdown[open]>summary::after,
+.life-editorial .savings-calc-details[open]>summary::after{content:"−"}
+.life-editorial .cost-advanced .cost-extra-fields{
+  margin:0;padding:14px 0 19px;border-top:1px solid #e5e8eb;
+}
+.life-editorial .calc-field .cost-checkbox{
+  display:flex;align-items:center;gap:8px;
+  min-height:52px;padding:12px 13px;
+  background:#fff;border:1px solid #d8dfe6;border-radius:7px;
+  font-weight:700;font-size:14px;color:#34404b;
+}
+.life-editorial .calc-field input[type=checkbox]{
+  width:18px;height:18px;accent-color:var(--brand);
+}
+.life-editorial .cost-breakdown,
+.life-editorial .savings-calc-details{
+  display:block;margin:26px 0 24px;padding:0;
+  border:0;border-top:1px solid #dfe4e8;
+  border-bottom:1px solid #dfe4e8;background:#fff;
+}
+.life-editorial .cost-breakdown>summary,
+.life-editorial .savings-calc-details>summary{
+  display:flex;align-items:center;justify-content:space-between;
+  min-height:53px;padding:12px 2px;
+  color:#273440;font-size:15px;font-weight:780;cursor:pointer;list-style:none;
+}
+.life-editorial .cost-table-scroll,.life-editorial .savings-table-wrap{
+  width:100%;max-width:100%;overflow-x:auto;
+  margin:4px 0 19px;
+}
+.life-editorial .cost-table-scroll table,
+.life-editorial .savings-table-wrap table{
+  border-collapse:collapse;width:100%;min-width:440px;font-size:13px;
+}
+.life-editorial .cost-table-scroll th,
+.life-editorial .cost-table-scroll td,
+.life-editorial .savings-table-wrap th,
+.life-editorial .savings-table-wrap td{
+  padding:12px;border-bottom:1px solid #ebeff2;
+  font-variant-numeric:tabular-nums;
+}
+.life-editorial .cost-table-scroll thead th,
+.life-editorial .savings-table-wrap thead th{
+  color:#64717c;font-size:12px;font-weight:750;background:#f7f8fa;
+}
+.life-editorial .cost-table-scroll th:first-child,
+.life-editorial .savings-table-wrap th:first-child,
+.life-editorial .cost-table-scroll td:first-child,
+.life-editorial .savings-table-wrap td:first-child{text-align:left}
+.life-editorial .cost-table-scroll td,
+.life-editorial .savings-table-wrap td,
+.life-editorial .cost-table-scroll th:not(:first-child),
+.life-editorial .savings-table-wrap th:not(:first-child){text-align:right}
+.life-editorial .mortgage-limit-rows{display:block;padding:0 0 15px}
+.life-editorial .mortgage-limit-rows>div{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:15px;min-height:46px;padding:8px 3px;border-bottom:1px solid #edf0f2;
+}
+.life-editorial .mortgage-limit-rows>div span{
+  color:#6f7c88;font-size:13px;
+}
+.life-editorial .mortgage-limit-rows>div strong{
+  color:#263340;font-size:14px;font-weight:760;
+  white-space:nowrap;font-variant-numeric:tabular-nums;
+}
+.life-editorial .car-cost-category-link,
+.life-editorial .savings-calc-shortcut{
+  display:inline-flex;align-items:center;min-height:35px;
+  margin:12px 0;padding:5px 0;color:var(--brand);
+  font-weight:760;font-size:13px;
+}
+@media(max-width:980px){
+  .life-editorial .calculator-workspace{grid-template-columns:1fr;gap:16px}
+  .life-editorial .calculator-workspace>.savings-calc-results,
+  .life-editorial .calculator-workspace>.cost-result{position:static}
+}
+@media(max-width:700px){
+  .life-editorial .savings-calc-page,
+  .life-editorial .lifestyle-calc-page{padding:7px 0 36px}
+  .life-editorial .savings-page-head,.life-editorial .lifestyle-calc-page>h1{
+    padding:0 0 13px;margin:0 0 15px;
+  }
+  .life-editorial .savings-page-head h1,
+  .life-editorial .lifestyle-calc-page>h1{font-size:28px}
+  .life-editorial .savings-page-head>a{font-size:11px}
+  .life-editorial .calculator-workspace{gap:12px;margin-bottom:18px}
+  .life-editorial .calculator-workspace>form{padding:18px 15px;border-radius:10px}
+  .life-editorial .calculator-form-header{margin-bottom:15px;padding-bottom:13px}
+  .life-editorial .calculator-form-header strong{font-size:17px}
+  .life-editorial .calculator-form-header>span{font-size:11px}
+  .life-editorial .savings-calc-fields,
+  .life-editorial .cost-field-grid{gap:12px 10px}
+  .life-editorial .savings-field>span:first-child,
+  .life-editorial .calc-field>span:first-child{font-size:12px}
+  .life-editorial .savings-field>select,
+  .life-editorial .calc-field input[type=number],
+  .life-editorial .calc-field select,
+  .life-editorial .savings-input-unit{height:47px;min-height:47px}
+  .life-editorial .savings-input-unit>input{font-size:16px;padding-left:10px}
+  .life-editorial .calc-field input[type=number],
+  .life-editorial .calc-field select{font-size:14px;padding:8px}
+  .life-editorial .savings-preset-row>span{min-width:54px}
+  .life-editorial .savings-preset-row button{padding:6px 9px;font-size:11px;min-height:32px}
+  .life-editorial .savings-calc-shortcuts{gap:7px}
+  .life-editorial .savings-calc-submit,
+  .life-editorial .cost-submit{margin-top:14px}
+  .life-editorial .calculator-workspace>.savings-calc-results,
+  .life-editorial .calculator-workspace>.cost-result{padding:23px 20px}
+  .life-editorial #savings-maturity,
+  .life-editorial .cost-result-primary{font-size:34px}
+  .life-editorial .savings-calc-metrics dd,
+  .life-editorial .cost-result-metrics>div strong{font-size:15px}
+}
+@media(max-width:355px){
+  .life-editorial .savings-calc-fields,
+  .life-editorial .cost-field-grid{grid-template-columns:1fr}
+  .life-editorial .savings-page-head{align-items:flex-start}
+}
+
