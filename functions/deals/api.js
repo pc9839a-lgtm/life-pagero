@@ -1,50 +1,58 @@
-// Adpick Shopping Mate hotdeal proxy. Official source: sdk_shopping_hotdeal.php
-// Never expose ADPICK_AFFID to browsers and never request upstream per visitor.
-const SOURCE="https://adpick.co.kr/apis/sdk_shopping_hotdeal.php";
-const KEY="https://life-pagero.pages.dev/_cache/adpick-hotdeal-v1";
-const TTL=7200;
-const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{
+// ADPICK for BIZ API. Product data is used only to render the current request.
+// Do not store/cache/rewrite returned product data without the provider's permission.
+const PROVIDER="https://biz.adpick.co.kr/api";
+const BEST_AREAS=new Set(["today","popular","pick","commission"]);
+const reply=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{
   "Content-Type":"application/json; charset=utf-8",
-  "Cache-Control":status===200?"public, max-age=120, s-maxage="+TTL:"no-store",
-  "X-Content-Type-Options":"nosniff"
+  "Cache-Control":"private, no-store, max-age=0",
+  "X-Content-Type-Options":"nosniff",
+  "X-Robots-Tag":"noindex"
 }});
-const str=(v,n=180)=>String(v??"").replace(/\s+/g," ").trim().slice(0,n);
-const money=v=>{
-  const s=String(v??"").replace(/[,\s원₩]/g,"");
-  return /^\d+(?:\.\d+)?$/.test(s)&&Number.isFinite(Number(s))?Math.round(Number(s)):null;
+const safeLink=value=>{
+  try{const url=new URL(String(value||""));return url.protocol==="https:"?url.href:null;}
+  catch{return null;}
 };
-const https=v=>{try{const u=new URL(String(v||""));return u.protocol==="https:"?u.href:null;}catch{return null;}};
-function products(data){
-  const entries=Array.isArray(data?.list)?data.list:Array.isArray(data?.data?.list)?data.data.list:[];
-  const seen=new Set();
-  return entries.map((item,index)=>{
-    const name=str(item?.product_name),buyurl=https(item?.buyurl),price=money(item?.price_sale);
-    if(!name||!buyurl||price==null||price<=0)return null;
-    const mall=str(item?.mall,80),signature=(mall+"|"+name+"|"+price).toLowerCase();
-    if(seen.has(signature))return null;seen.add(signature);
-    const previous=money(item?.price_org);
-    return {id:"deal-"+index,name,mall,photo:https(item?.photo),buyurl,price,
-      originalPrice:previous>price?previous:null,
-      discountPercent:previous>price?Math.round((previous-price)/previous*100):null};
-  }).filter(Boolean).slice(0,120);
-}
-export async function onRequestGet(context){
-  const id=str(context.env.ADPICK_AFFID,100);
-  if(!id)return json({status:"unconfigured",items:[]},503);
-  const cache=typeof caches!=="undefined"?caches.default:null;
-  const request=new Request(KEY);
-  if(cache){const saved=await cache.match(request);if(saved)return saved;}
+export async function onRequestGet({request,env}){
+  const key=String(env?.ADPICK_BIZ_API_KEY||"").trim();
+  if(!key)return reply({status:"unconfigured",items:[]},503);
+  const params=new URL(request.url).searchParams;
+  const mode=params.get("mode")==="search"?"search":"best";
+  const endpoint=new URL(PROVIDER+"/"+encodeURIComponent(key)+"/"+mode);
+  endpoint.searchParams.set("limit","10");
+  if(mode==="best"){
+    const area=params.get("area")||"today";
+    if(!BEST_AREAS.has(area))return reply({status:"invalid_request",items:[]},400);
+    endpoint.searchParams.set("area",area);
+    endpoint.searchParams.set("p_data","life_deals_"+area);
+  } else {
+    const q=String(params.get("q")||"").trim();
+    if(q.length<2||q.length>40)return reply({status:"invalid_query",items:[]},400);
+    endpoint.searchParams.set("q",q);
+    endpoint.searchParams.set("p_data","life_deals_search");
+  }
   try{
-    const url=new URL(SOURCE);url.searchParams.set("affid",id);
-    const response=await fetch(url.toString(),{headers:{Accept:"application/json"},signal:AbortSignal.timeout(10000)});
-    if(!response.ok)throw Error("UPSTREAM_"+response.status);
-    const items=products(await response.json());
-    if(!items.length)throw Error("NO_VALID_PRODUCTS");
-    const out=json({status:"ok",source:"ADPICK 쇼핑메이트",retrievedAt:new Date().toISOString(),items});
-    if(cache)context.waitUntil?.(cache.put(request,out.clone()));
-    return out;
-  }catch(e){
-    console.error("Adpick API:",String(e?.message||e));
-    return json({status:"unavailable",items:[]},502);
+    const response=await fetch(endpoint.href,{
+      headers:{Accept:"application/json"},
+      signal:AbortSignal.timeout(10000)
+    });
+    if(!response.ok)throw new Error("UPSTREAM_"+response.status);
+    const data=await response.json();
+    if(data?.success!==true)throw new Error("API_REJECTED");
+    const source=mode==="best"?data.data?.list:data.data;
+    if(!Array.isArray(source))throw new Error("MALFORMED_RESPONSE");
+    // Keep product name, price, image, shop and affiliate URL unmodified.
+    // Drop entries without a safe commission link rather than fabricate URLs.
+    const items=source.slice(0,10).filter(row=>row&&typeof row==="object")
+      .filter(row=>safeLink(row.commissionlink)&&typeof row.title==="string")
+      .map(row=>({
+        title:row.title,price:row.price??null,
+        photo:safeLink(row.photo),cp_name:row.cp_name??"",
+        commissionlink:safeLink(row.commissionlink)
+      }));
+    return reply({status:"ok",mode,area:mode==="best"?params.get("area")||"today":null,items});
+  }catch(error){
+    // Do not log URL or credentials.
+    console.error("[adpick-biz] request failed",error instanceof Error?error.message:"unknown");
+    return reply({status:"unavailable",items:[]},502);
   }
 }
