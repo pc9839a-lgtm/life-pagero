@@ -29,5 +29,7 @@ test('stable source identities and deterministic order',()=>{
   assert.equal(normalizeEvent(source).id,normalizeEvent({...source,title:'명칭 수정'}).id);
   assert.equal(normalizeEvent({...source,startDate:'2026-11-09',endDate:'2026-11-08'}),null);
   assert.equal(regionOf('서울특별시 종로구'),'seoul');
+  assert.equal(regionOf('경기도 광주시'),'gyeonggi');
+  assert.equal(regionOf('광주광역시 동구'),'gwangju');
   assert.equal(sortEvents([{id:'b',title:'B',startDate:'2026-11-09',endDate:'2026-11-10'},{id:'a',title:'A',startDate:'2026-11-01',endDate:'2026-11-08'}],'2026-11-06')[0].id,'a');
 });
