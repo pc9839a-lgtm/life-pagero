@@ -51,3 +51,17 @@ AdSense 소유권 확인과 실제 광고 노출을 분리합니다.
 ## 자동 발행
 
 `automation/topic-queue.json`의 다음 주제를 최신 공식 출처로 검증해 새 JSON 글과 발행 로그를 같은 커밋에 반영합니다. GitHub 커밋 후 Cloudflare Pages가 자동 재배포합니다.
+
+## 자연유입 확장 및 매일 주제 발굴
+
+20개 생활경제·행정 주제군을 automation/growth-taxonomy.json에서 관리합니다.
+
+- 자동 발견: npm run radar (금융위원회·KOSIS 공식 RSS 확인)
+- 검사: npm run radar:test
+- 예약: GitHub Actions의 LIFE Daily Topic Radar (한국시간 매일 07:15)
+- 결과: GitHub Issues의 단일 주제 레이더 이슈 및 Actions artifact
+- 기존 글과 주제가 겹치면 신규 URL이 아닌 보강 대상으로 표시
+- source fail·재확인 지연 등은 경고. 자동 발행하지 않음
+
+개발 순서와 SEO 품질 통제는 automation/GROWTH_SYSTEM_2026_KO.md를 참고하세요.
+현재 운영 코드상 공개 카테고리는 여전히 car·support 2개이며 나머지 18개 분야는 확장 후보 분류입니다.

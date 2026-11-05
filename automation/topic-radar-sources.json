@@ -1,0 +1,29 @@
+[
+  {
+    "id": "fsc_press",
+    "name": "금융위원회 보도자료",
+    "url": "https://www.fsc.go.kr/about/fsc_bbs_rss/?fid=0111",
+    "allowHosts": [
+      "fsc.go.kr"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "kosis_new",
+    "name": "KOSIS 최근수록자료",
+    "url": "https://kosis.kr/rss/themesRss.do",
+    "allowHosts": [
+      "kosis.kr"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "kosis_trend",
+    "name": "KOSIS 주요 월간동향",
+    "url": "https://kosis.kr/rss/trendRss.do",
+    "allowHosts": [
+      "kosis.kr"
+    ],
+    "enabled": true
+  }
+]
