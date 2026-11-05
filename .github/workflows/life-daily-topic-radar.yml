@@ -4,6 +4,13 @@ on:
     # Every day at 07:15 Asia/Seoul (22:15 UTC on the previous day).
     - cron: "15 22 * * *"
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/topic-radar*"
+      - "automation/growth-taxonomy.json"
+      - "automation/topic-radar-sources.json"
+      - ".github/workflows/life-daily-topic-radar.yml"
   pull_request:
     paths:
       - "scripts/topic-radar*"
