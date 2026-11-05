@@ -1,0 +1,54 @@
+name: Verify LIFE FSS savings rates live
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-life-fss-live.yml'
+      - 'functions/finance/api/products.js'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  live-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check live Cloudflare and pagero bank rate data without credentials
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,time,urllib.request,urllib.error
+          targets = [
+             ('upstream-bank','https://life-pagero.pages.dev/finance/api/products?kind=deposit&group=bank'),
+             ('public-bank','https://pagero.kr/life/finance/api/products?kind=deposit&group=bank'),
+             ('public-saving','https://pagero.kr/life/finance/api/products?kind=saving&group=bank')
+          ]
+          for attempt in range(1,4):
+            passed=0
+            for label,url in targets:
+              try:
+                req=urllib.request.Request(url,headers={'User-Agent':'LIFE-FSS-Public-QA/1.0','Cache-Control':'no-cache'})
+                try:
+                  with urllib.request.urlopen(req,timeout=20) as resp:
+                    status=resp.status
+                    raw=resp.read(3000000)
+                except urllib.error.HTTPError as exc:
+                  status=exc.code
+                  raw=exc.read(300000)
+                data=json.loads(raw)
+                state=data.get('status')
+                count=data.get('count')
+                products=data.get('products',[])
+                good=(status==200 and state=='ok' and isinstance(count,int) and count>0 and len(products)>0)
+                print('FSS_CHECK',label,'HTTP',status,'status',state,'count',count,'items_returned',len(products),flush=True)
+                if good:passed+=1
+              except Exception as exc:
+                print('FSS_CHECK',label,'ERROR',type(exc).__name__,str(exc)[:80],flush=True)
+            if passed==len(targets):
+              print('FSS_LIVE_VERIFIED public-bank public-saving upstream-bank',flush=True)
+              break
+            if attempt==3:
+              print('FSS_LIVE_INCOMPLETE',passed,'of',len(targets),'checks pass',flush=True)
+              raise SystemExit(1)
+            time.sleep(12)
+          PY
