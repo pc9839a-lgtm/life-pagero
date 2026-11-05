@@ -90,7 +90,7 @@ const schema={'@context':'https://schema.org','@type':'WebApplication',
 html=html.replace('</head>','<script type="application/ld+json">'
   +JSON.stringify(schema)+'</script>'
   +'<script type="module" src="/savings-calculator.js"></script></head>');
-html=html.replace('<script defer src="/finance-live.js"></script>','');
+html=html.replace(/<script defer src="\/finance-live\.js(?:\?v=[a-f0-9]{12})?"><\/script>/gi,'');
 check((html.match(/<h1(?:\s[^>]*)?>/g)||[]).length===1,
   'must keep one page heading');
 check((html.match(/<link rel="canonical"/g)||[]).length===1,

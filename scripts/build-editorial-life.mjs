@@ -1,11 +1,16 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 
 // The sole final presentation pass. Older incremental theme stylesheets are
 // disconnected from generated HTML; this stylesheet owns the whole visual
 // system. Keep original posts, prices, routes, links, sponsor markup and SEO.
 const DIST=path.resolve('dist');
 const CSS='/life-editorial-20261106.css';
+// The actual CSS content hash changes when any style changes, preventing stale
+// Cloudflare/browser caching without creating another cascading stylesheet.
+const CSS_HASH=createHash('sha256').update(fs.readFileSync(path.join(DIST,CSS.slice(1)))).digest('hex').slice(0,12);
+const CSS_HREF=CSS+'?v='+CSS_HASH;
 const oldStyles=[
   '/life-modern.css','/life-compact.css','/life-global-nav.css',
   '/today-dashboard.css','/today-wide.css'
@@ -85,12 +90,12 @@ for(const absolute of walk(DIST).filter(file=>file.endsWith('.html'))){
   }
   html=removeOldStyles(html);
   html=html.replace('class="life-modern ','class="life-modern life-editorial ');
-  html=html.replace('</head>','<link rel="stylesheet" href="'+CSS+'"></head>');
+  html=html.replace('</head>','<link rel="stylesheet" href="'+CSS_HREF+'"></head>');
   check((html.match(/<link rel="canonical"/g)||[]).length===1,
     'canonical lost: '+relative);
   check((html.match(/<h1(?:\s[^>]*)?>/g)||[]).length===1,
     'H1 count changed: '+relative);
-  check(html.includes('href="'+CSS+'"'),'new stylesheet missing: '+relative);
+  check(html.includes('href="'+CSS_HREF+'"'),'new versioned stylesheet missing: '+relative);
   check(!oldStyles.some(href=>html.includes('href="'+href+'"')),
     'conflicting old theme remains: '+relative);
   if(html!==original)fs.writeFileSync(absolute,html);

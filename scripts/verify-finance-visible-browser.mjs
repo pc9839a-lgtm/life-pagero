@@ -43,15 +43,26 @@ try{
     await routeFixture(page,true);
     await page.goto(root+'/finance/savings/',{waitUntil:'domcontentloaded'});
     await page.locator('#finance-rate-panel').waitFor({state:'visible',timeout:12000});
-    let rows=await page.locator('#finance-products tbody tr').count();
-    if(rows!==3)fail('Real table has '+rows+' visible rows (viewport '+viewport.width+')');
-    const visible=await page.locator('#finance-products').isVisible();
-    if(!visible)fail('Interest rate table hidden on viewport '+viewport.width);
-    const amount=await page.locator('.finance-rate-table').first().innerText();
-    if(!amount.includes('3.35%')||!amount.includes('테스트은행A'))fail('Published numeric rate missing');
+    const mobile=viewport.width<=820;
+    const rowSelector=mobile?'.finance-mobile-rate-card':'#finance-products tbody tr';
+    await page.locator(rowSelector).first().waitFor({state:'visible'});
+    const rows=await page.locator(rowSelector).count();
+    if(rows!==3)fail('Visible rate items: '+rows+' on '+viewport.width+'px');
+    const viewSelector=mobile?'.finance-mobile-rates':'.finance-desktop-rates';
+    const visible=await page.locator(viewSelector).isVisible();
+    if(!visible)fail('Rate results hidden on viewport '+viewport.width);
+    const amount=await page.locator(viewSelector).first().innerText();
+    if(!amount.includes('3.35%')||!amount.includes('테스트은행A'))
+      fail('Verified numeric rate missing from visible '+(mobile?'mobile cards':'desktop table'));
+    if(mobile){
+      if(await page.locator('.finance-desktop-rates').isVisible())
+        fail('Desktop-width table is still visible on mobile');
+      const overflow=await page.locator('#finance-rate-panel').evaluate(node=>node.scrollWidth>node.clientWidth+2);
+      if(overflow)fail('Rate panel overflows mobile viewport');
+    }
     await page.locator('#finance-kind').selectOption('saving');
     await page.locator('#finance-term').selectOption('all');
-    await page.locator('#finance-products tbody tr').first().waitFor({state:'visible'});
+    await page.locator(rowSelector).first().waitFor({state:'visible'});
     await page.goto(root+'/finance/',{waitUntil:'domcontentloaded'});
     await page.locator('#finance-rate-preview').waitFor({state:'visible',timeout:12000});
     const cards=await page.locator('.finance-preview-card').count();
@@ -68,5 +79,5 @@ try{
     fail('Unverified data table must stay hidden');
   await page.close();passed++;
   if(errors.length)fail('JS errors: '+errors.join(' | '));
-  console.log('[visible-rates-browser] PASS '+passed+' paths: desktop/mobile actual numeric rates in table AND finance home; fallback correctly hides unavailable table; no browser exceptions.');
+  console.log('[visible-rates-browser] PASS '+passed+' paths: desktop table, mobile visible card list without horizontal overflow, real finance homepage rates, and no-data fallback.');
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve));}

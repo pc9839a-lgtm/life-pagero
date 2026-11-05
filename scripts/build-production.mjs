@@ -59,6 +59,7 @@ const steps = [
   ['node', ['scripts/verify-sitewide-clean-ui.mjs']],
   ['node', ['scripts/build-editorial-life.mjs']],
   ['node', ['scripts/verify-editorial-life.mjs']],
+  ['node', ['scripts/verify-mobile-finance-rates.mjs']],
   ['node', ['scripts/verify-savings-calculator.mjs']],
   ['node', ['scripts/verify-car-mortgage-calculators.mjs']],
   ['node', ['scripts/verify-adpick-deals.mjs']],

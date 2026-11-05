@@ -21,8 +21,8 @@ for(const [relative,url,heading,script] of [
     'working JavaScript module not attached: '+relative);
   check(html.includes('class="life-modern life-editorial '),
     'sitewide magazine theme missing: '+relative);
-  check(html.includes('href="/life-editorial-20261106.css"'),
-    'single editorial stylesheet missing: '+relative);
+  check(/href="\/life-editorial-20261106\.css\?v=[a-f0-9]{12}"/.test(html),
+    'versioned editorial stylesheet missing: '+relative);
   check(!html.includes('href="/life-global-nav.css"'),
     'legacy nav theme leaked to '+relative);
   check(html.includes('data-life-coupang-kind="body"'),

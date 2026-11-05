@@ -49,7 +49,7 @@ const makePage=({url,title,description,body,module,schemaType='WebApplication'})
   html=html.replace('</head>',
     '<script type="application/ld+json">'+JSON.stringify(json)+'</script>'
     +'<script type="module" src="'+module+'"></script></head>');
-  html=html.replace('<script defer src="/finance-live.js"></script>','');
+  html=html.replace(/<script defer src="\/finance-live\.js(?:\?v=[a-f0-9]{12})?"><\/script>/gi,'');
   ok((html.match(/<h1(?:\s[^>]*)?>/g)||[]).length===1,'H1 count '+url);
   ok((html.match(/<link rel="canonical"/g)||[]).length===1,'canonical count '+url);
   ok(html.includes('data-life-coupang-kind="body"'),'sponsor slot lost '+url);

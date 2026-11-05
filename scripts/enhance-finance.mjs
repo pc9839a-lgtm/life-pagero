@@ -1,7 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 
 const DIST=path.resolve('dist');
+const FINANCE_JS='/finance-live.js';
+const FINANCE_JS_HASH=createHash('sha256').update(fs.readFileSync(path.join(DIST,FINANCE_JS.slice(1)))).digest('hex').slice(0,12);
+const FINANCE_JS_HREF=FINANCE_JS+'?v='+FINANCE_JS_HASH;
 const SITE='https://pagero.kr/life';
 const LAST_REVIEW='2026-11-05'; // creation date, not an automatic freshness claim
 const esc = value => String(value||'').replace(/[&<>"']/g,c=>({
@@ -173,7 +177,7 @@ function page(html,pathname,title,description,body,script=false){
   if(script==='calculator')html=html.replace('</head>',
     '<script type="module" src="/portal-finance-calculator.js"></script></head>');
   if(script==='live')html=html.replace('</head>',
-    '<script defer src="/finance-live.js"></script></head>');
+    '<script defer src="'+FINANCE_JS_HREF+'"></script></head>');
   if(!html.includes('href="/finance-experience.css"'))
     html=html.replace('</head>',
       '<link rel="stylesheet" href="/finance-experience.css"></head>');
