@@ -27,7 +27,7 @@ function walk(dir) {
 // This file is loaded after styles.css, so it owns Coupang layout overrides.
 // Expand the desktop content area without touching article typography or data.
 const css = [
-  '@media(min-width:1100px){.site-shell{width:min(calc(100% - 40px),1320px)}.content-grid{grid-template-columns:minmax(0,1fr) 300px;gap:24px}}',
+  '@media(min-width:1100px){.top-strip-inner,.header-inner,.nav-inner,.site-shell,.footer-inner{width:min(calc(100% - 40px),1320px)}.content-grid{grid-template-columns:minmax(0,1fr) 300px;gap:24px}}',
   '.life-coupang-placement{box-sizing:border-box;min-width:0;width:100%;max-width:none;margin:32px 0 38px;padding:16px;background:#f7f9fc;border:1px solid #e0e5ec;clear:both;text-align:center}',
   '.life-coupang-placement--middle{grid-column:1/-1}',
   '.life-coupang-label{font-size:12px;font-weight:750;line-height:1.5;color:#586474;margin:0 0 12px;text-align:left}',
