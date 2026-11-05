@@ -147,8 +147,8 @@ for (const post of posts) {
   if (!firstPart) {
     throw new Error(`First series part missing: ${basePath}`);
   }
-  if (!baseHtml.includes(`<h2 class="series-part-title">${escapeHtml(firstPart.title)}</h2>`)) {
-    throw new Error(`Base page missing first part title "${firstPart.title}": ${basePath}`);
+  if (!baseHtml.includes('<!-- life-body-part-1 -->')) {
+    throw new Error(`Base page missing first article body section: ${basePath}`);
   }
   if (firstImage && !baseHtml.includes(`<img src="${escapedFirstImage}"`)) {
     throw new Error(`Base page missing first part image: ${basePath}`);
@@ -158,10 +158,13 @@ for (const post of posts) {
   }
 
   // Every substantive section must be visible on the indexable first URL.
-  for (const laterPart of post.series.parts.slice(1)) {
-    if (!baseHtml.includes(`<h2 class="series-part-title">${escapeHtml(laterPart.title)}</h2>`)) {
-      throw new Error(`Base page is missing full-guide section "${laterPart.title}": ${basePath}`);
+  for (const [index] of post.series.parts.entries()) {
+    if (!baseHtml.includes(`<!-- life-body-part-${index + 1} -->`)) {
+      throw new Error(`Base page missing article body section ${index + 1}: ${basePath}`);
     }
+  }
+  if (baseHtml.includes('class="series-part-title"') || /<h[234](?:\s[^>]*)?>/.test(baseHtml.match(/<div class="article-content">([\s\S]*?)<div class="disclaimer">/)?.[1] || '')) {
+    throw new Error(`Visible article subheadings remain: ${basePath}`);
   }
 
   const total = Array.isArray(post.series?.parts) ? post.series.parts.length : 1;
@@ -209,13 +212,13 @@ for (const post of posts) {
     if (part?.image && !html.includes(`<img src="${escapeHtml(part.image)}"`)) {
       throw new Error(`Continuation image missing: ${continuationPath}`);
     }
-    if (part && !html.includes(`<h2 class="series-part-title">${escapeHtml(part.title)}</h2>`)) {
-      throw new Error(`Continuation page missing its own part title "${part.title}": ${continuationPath}`);
+    if (part && !html.includes(`<!-- life-body-part-${pageNumber} -->`)) {
+      throw new Error(`Continuation page missing body section ${pageNumber}: ${continuationPath}`);
     }
-    for (const [index, otherPart] of post.series.parts.entries()) {
+    for (const [index] of post.series.parts.entries()) {
       if (index === pageNumber - 1) continue;
-      if (html.includes(`<h2 class="series-part-title">${escapeHtml(otherPart.title)}</h2>`)) {
-        throw new Error(`Continuation page contains another part "${otherPart.title}": ${continuationPath}`);
+      if (html.includes(`<!-- life-body-part-${index + 1} -->`)) {
+        throw new Error(`Continuation page contains another body section: ${continuationPath}`);
       }
     }
   }
