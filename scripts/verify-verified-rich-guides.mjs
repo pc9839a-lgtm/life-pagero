@@ -6,6 +6,7 @@ const modules={
   ...JSON.parse(fs.readFileSync(path.join(ROOT,'editorial-verified-calculations-b.json'),'utf8'))
 };
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const publishWording=s=>String(s).replace(/정리합니다/g,'수록했습니다').replace(/안내합니다/g,'명시합니다').replace(/확인하세요/g,'확인해야 합니다').replace(/참고하세요/g,'참고할 수 있습니다').replace(/살펴보세요/g,'살펴볼 수 있습니다').replace(/읽어보세요/g,'읽을 수 있습니다');
 let checked=0,tableCount=0;
 for(const [slug,parts] of Object.entries(modules)){
   const dir=slug.startsWith('car-')?'car':'support';
@@ -17,7 +18,7 @@ for(const [slug,parts] of Object.entries(modules)){
     if(headings.has(m.title))throw Error('Repeated module heading '+slug);
     headings.add(m.title);
     const heading='<h2 class="article-subheading">'+esc(m.title)+'</h2>';
-    if(!main.includes(heading)||!main.includes(esc(m.note))||!main.includes(esc(m.lead)))throw Error('Main page missing rich copy: '+slug+' part '+(idx+1));
+    if(!main.includes(heading)||!main.includes(esc(publishWording(m.note)))||!main.includes(esc(publishWording(m.lead))))throw Error('Main page missing rich copy: '+slug+' part '+(idx+1));
     for(const row of m.rows){
       if(!row.every(c=>main.includes(esc(c))))throw Error('Missing verified table row: '+slug+' part '+(idx+1));
     }
