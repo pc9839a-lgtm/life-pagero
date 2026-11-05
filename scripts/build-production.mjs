@@ -37,6 +37,7 @@ const steps = [
   ['node', ['scripts/validate-build-output.mjs']],
   ['node', ['scripts/verify-finance-experience.mjs']],
   ['node', ['scripts/validate-modern-ui.mjs']],
+  ['node', ['scripts/validate-compact-ui.mjs']],
   ['node', ['scripts/verify-verified-rich-guides.mjs']],
 ];
 
