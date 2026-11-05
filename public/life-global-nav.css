@@ -1,0 +1,89 @@
+/* One global navigation design on every LIFE page, desktop and mobile. */
+.life-modern .main-nav,
+.main-nav {
+  background:#fff;
+  border-top:1px solid #edf0f4;
+  border-bottom:1px solid #e4e9ef;
+}
+.life-modern .nav-inner,
+.main-nav .nav-inner {
+  display:flex;
+  align-items:stretch;
+  gap:6px;
+  flex-wrap:nowrap;
+  justify-content:flex-start;
+  width:min(calc(100% - 32px),1200px);
+  margin-inline:auto;
+  padding:0;
+  overflow-x:auto;
+  scrollbar-width:thin;
+  scrollbar-color:#d0d9e5 transparent;
+}
+.life-modern .nav-inner a,
+.main-nav .nav-inner a {
+  flex:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+  padding:11px 15px 10px;
+  border:0;
+  border-bottom:2px solid transparent;
+  border-radius:0;
+  color:#526377;
+  background:transparent;
+  font-size:14px;
+  font-weight:650;
+  line-height:1.35;
+  white-space:nowrap;
+  text-decoration:none;
+  transition:color .12s, border-color .12s;
+}
+.life-modern .nav-inner a:hover,
+.main-nav .nav-inner a:hover {
+  color:#135ec8;
+}
+.life-modern .nav-inner a[aria-current="page"],
+.main-nav .nav-inner a[aria-current="page"] {
+  color:#135ec8;
+  border-bottom-color:#1769e0;
+  font-weight:780;
+}
+.life-modern .nav-inner a:focus-visible,
+.main-nav .nav-inner a:focus-visible {
+  outline:2px solid #1769e0;
+  outline-offset:-3px;
+}
+@media(max-width:760px){
+  .life-modern .nav-inner,
+  .main-nav .nav-inner {
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-auto-flow:row;
+    gap:0;
+    overflow:visible;
+    width:min(calc(100% - 20px),1200px);
+  }
+  .life-modern .nav-inner a,
+  .main-nav .nav-inner a {
+    min-width:0;
+    min-height:37px;
+    padding:8px 2px 7px;
+    font-size:12px;
+    line-height:1.25;
+    letter-spacing:-.035em;
+  }
+  .life-modern .nav-inner a:nth-child(n+5),
+  .main-nav .nav-inner a:nth-child(n+5) {
+    border-top:1px solid #f1f3f6;
+  }
+}
+@media(max-width:350px){
+  .life-modern .nav-inner a,
+  .main-nav .nav-inner a {
+    font-size:11px;
+    letter-spacing:-.055em;
+    padding-left:0;
+    padding-right:0;
+  }
+}
