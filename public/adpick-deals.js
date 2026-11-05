@@ -18,7 +18,17 @@ function selectButtons(){
     tabs.append(button);
   }
 }
-function render(items){
+function showEmpty(message,params){
+ target.replaceChildren();
+ const panel=el("div","adpick-empty");
+ panel.append(el("p","",message));
+ const retry=el("button","","다시 조회");
+ retry.type="button";
+ retry.addEventListener("click",()=>load(params));
+ panel.append(retry);
+ target.append(panel);
+}
+function render(items,params){
  target.replaceChildren();
  for(const p of items){
   if(!p||!https(p.commissionlink))continue;
@@ -33,7 +43,12 @@ function render(items){
   const price=el("div","adpick-price");price.append(el("strong","",p.price==null?"판매처에서 가격 확인":(typeof p.price==="number"?p.price.toLocaleString("ko-KR")+"원":p.price)));
   detail.append(price,el("span","adpick-cta","상품 보기"));a.append(image,detail);target.append(a);
  }
- status.textContent=target.childElementCount?target.childElementCount+"개 상품":"현재 표시할 수 있는 상품이 없습니다.";
+ if(!target.childElementCount){
+   status.textContent="검색 결과 0개";
+   showEmpty("표시할 상품이 없습니다.",params);
+   return;
+ }
+ status.textContent=target.childElementCount+"개 상품";
 }
 async function load(params){
  const id=++requestId;
@@ -46,11 +61,11 @@ async function load(params){
   const data=await response.json();
   if(id!==requestId)return;
   if(data.status!=="ok"||!Array.isArray(data.items))throw Error("INVALID_RESPONSE");
-  render(data.items);
+  render(data.items,params);
  }catch{
   if(id!==requestId)return;
-  status.textContent="지금은 상품 정보를 표시할 수 없습니다. 잠시 후 다시 확인하세요.";
-  target.replaceChildren();
+  status.textContent="조회 실패";
+  showEmpty("상품 정보를 불러오지 못했습니다.",params);
  }
 }
 form.addEventListener("submit",event=>{
