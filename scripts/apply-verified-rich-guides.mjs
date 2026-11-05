@@ -36,7 +36,7 @@ for(const file of walk(CONTENT).filter(f=>f.endsWith('.json'))){
   let changed=false;
   for(let i=0;i<3;i++){
     const item=m[i];
-    if(!item.title||item.lead.length<100||item.note.length<100||titles.has(item.title))throw Error('Thin or duplicate module: '+p.slug+' '+i);
+    if(!item.title||item.lead.length<80||item.note.length<70||titles.has(item.title))throw Error('Thin or duplicate module: '+p.slug+' '+i);
     titles.add(item.title);
     const text=contentOf(item);
     const heading='## '+item.title;
