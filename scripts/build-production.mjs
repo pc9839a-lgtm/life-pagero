@@ -37,6 +37,7 @@ const steps = [
   ['node', ['scripts/add-today-dashboard.mjs']],
   ['node', ['scripts/build-life-topics.mjs']],
   ['node', ['scripts/add-savings-calculator.mjs']],
+  ['node', ['scripts/add-car-mortgage-calculators.mjs']],
   ['node', ['scripts/validate-build-output.mjs']],
   ['node', ['scripts/verify-finance-experience.mjs']],
   ['node', ['scripts/validate-modern-ui.mjs']],
@@ -51,6 +52,7 @@ const steps = [
   ['node', ['scripts/build-editorial-life.mjs']],
   ['node', ['scripts/verify-editorial-life.mjs']],
   ['node', ['scripts/verify-savings-calculator.mjs']],
+  ['node', ['scripts/verify-car-mortgage-calculators.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);
