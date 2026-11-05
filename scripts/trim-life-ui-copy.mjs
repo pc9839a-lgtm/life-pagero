@@ -31,17 +31,14 @@ for(const filename of [...finance,'today/index.html']){
 
   // A tool card needs only a name and working destination, not a second
   // templated sentence beneath every title.
-  remove(/(<a class="finance-hub-card"[\s\S]*?<strong>[\s\S]*?<\/strong>)<span>[\s\S]*?<\/span>(<\/a>)/g);
-  // Above removes the full card, including its link, due to how a multi-group
-  // replacement works: restore each functional title-only card from original.
-  if (before.includes('class="finance-hub-card"')) {
-    html=html.replace(/<a class="finance-hub-card"([^>]*)><strong>([\s\S]*?)<\/strong><span>[\s\S]*?<\/span><\/a>/g,
-      '<a class="finance-hub-card"$1><strong>$2</strong></a>');
-  }
+  html=html.replace(/(<a class="finance-hub-card"[^>]*><strong>[\s\S]*?<\/strong>)<span>[\s\S]*?<\/span>(<\/a>)/g,
+    (_all,head,tail)=>{deleted++;return head+tail;});
 
-  // Keep functional field names and table headings; remove their pseudo-intros.
-  remove(/(<section class="loan-result-details"><h2>상환방식별 비교<\/h2>)<p>[\s\S]*?<\/p>/g);
-  remove(/(<div class="finance-section-title"><div><h2[^>]*>[\s\S]*?<\/h2>)<p>[\s\S]*?<\/p>/g);
+  // Keep functional field names and table headings; remove only pseudo-intros.
+  html=html.replace(/(<section class="loan-result-details"><h2>상환방식별 비교<\/h2>)<p>[\s\S]*?<\/p>/g,
+    (_all,head)=>{deleted++;return head;});
+  html=html.replace(/(<div class="finance-section-title"><div><h2[^>]*>[\s\S]*?<\/h2>)<p>[\s\S]*?<\/p>/g,
+    (_all,head)=>{deleted++;return head;});
 
   // Keep only source navigation, not the verbose "how data is updated" essay.
   html=html.replace(/<section class="today-source-guidance">[\s\S]*?<div class="today-source-links">([\s\S]*?)<\/div><\/section>/g,
