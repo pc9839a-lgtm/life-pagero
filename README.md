@@ -65,3 +65,17 @@ AdSense 소유권 확인과 실제 광고 노출을 분리합니다.
 
 개발 순서와 SEO 품질 통제는 automation/GROWTH_SYSTEM_2026_KO.md를 참고하세요.
 현재 운영 코드상 공개 카테고리는 여전히 car·support 2개이며 나머지 18개 분야는 확장 후보 분류입니다.
+
+## ADPICK for BIZ 제휴 추천상품
+
+- 공개 기능: `/deals/` 방문 시 ADPICK for BIZ 추천상품 `/best` 조회, 검색 시 `/search` 요청.
+- 비공개 서버 기능: Cloudflare Pages Function `/deals/api`에서만 API 키를 사용합니다.
+- 설정: Cloudflare Pages 런타임 Secret `ADPICK_BIZ_API_KEY`에 API KEY 관리 페이지에서 발급받은 키를 등록합니다. 프런트엔드에 키를 쓰지 않습니다.
+- API: `https://biz.adpick.co.kr/api/{apikey}/best?area=today&limit=10`, `/search?q=...&limit=10`.
+- 한도: best/search 각각 API 키 기준 분당 10회. 키 미설정·한도초과·응답 실패 시 상품을 숨깁니다.
+- 사업자 공지에 따라 **상품 이미지·정보 DB 저장, 별도 캐시, 할인율 계산, 가격 이력 구축을 하지 않습니다.** 응답은 `Cache-Control: no-store`이며, 판매처 제공 가격·이미지·원래 커미션 링크만 일시 표시합니다.
+- **핫딜이 아님:** API는 할인 전 가격을 보장하지 않아 일반 추천상품으로 표시합니다. 실제 핫딜/가격 알림 기능을 운영하려면 공급자와 별도 데이터 이용 권한을 협의해야 합니다.
+- 제휴 관계 표시 및 `rel=sponsored` 적용. 제휴 전용 페이지는 SEO 위험을 줄이기 위해 `noindex,follow`; sitemap에는 넣지 않습니다.
+- 기존 텐핑, 쿠팡, AdSense, 뉴스, 기존 콘텐츠는 수정하지 않습니다.
+- 실제 운영은 키 발급, 실제 API 테스트 및 부하/노출 검증 후 별도로 배포합니다.
+- 공식 문서: https://biz.adpick.co.kr/?ac=api&sub=guide
