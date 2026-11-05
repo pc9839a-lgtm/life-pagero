@@ -13,41 +13,24 @@ const visibleText = html => html.replace(/<[^>]*>/g,'').replace(/&(?:nbsp|amp);/
 // Mark characters belonging to generic sentences, while leaving HTML tags
 // and factual neighboring sentences intact. Never reparse links or attributes.
 function removeGenericSentences(inner){
-  const parts = inner.split(/(<[^>]+>)/g);
-  const ranges=[];
-  let text='';
-  for(let i=0;i<parts.length;i++){
-    if(parts[i].startsWith('<'))continue;
-    ranges.push({i,start:text.length,end:text.length+parts[i].length});
-    text+=parts[i];
-  }
-  if(!NOT_USED.test(text) && !META.test(text))return inner;
+  const plain=visibleText(inner);
+  if(!NOT_USED.test(plain) && !META.test(plain))return inner;
 
-  const bad=[];
-  const terminal=/[.!?。](?=\s|$)/g;
-  let start=0, match;
-  while((match=terminal.exec(text))){
-    const end=match.index+1;
-    const sentence=text.slice(start,end).trim();
-    if(NOT_USED.test(sentence) || (META.test(sentence) && sentence.length<250))
-      bad.push([start,end]);
-    start=end;
+  // Date, amount, table-reference and multi-sentence paragraphs carry the
+  // actual article facts. Do not remove those sentences wholesale.
+  if(plain.length >= 140 || /[0-9][0-9.,~%\/\-]*/.test(plain) || /<a\b|<strong\b|<code\b/i.test(inner)){
+    return inner
+      .replace(/확인하세요/g,'확인해야 합니다')
+      .replace(/참고하세요/g,'참고할 수 있습니다')
+      .replace(/살펴보세요/g,'살펴볼 수 있습니다');
   }
-  const tail=text.slice(start).trim();
-  if(tail && (NOT_USED.test(tail) || META.test(tail)))bad.push([start,text.length]);
-  if(!bad.length)return inner;
 
-  const output=[...parts];
-  for(const r of ranges){
-    const chars=[...parts[r.i]];
-    for(const [a,b] of bad){
-      const localA=Math.max(0,a-r.start);
-      const localB=Math.min(chars.length,b-r.start);
-      for(let j=localA;j<localB;j++)chars[j]='';
-    }
-    output[r.i]=chars.join('');
-  }
-  return output.join('').replace(/<(strong|em|a)(?:\s[^>]*)?>\s*<\/\1>/gi,'').trim();
+  // Only standalone boilerplate paragraphs, never a factual paragraph.
+  if(META.test(plain) || (NOT_USED.test(plain) && plain.length<75))return '';
+  return inner
+    .replace(/확인하세요/g,'확인해야 합니다')
+    .replace(/참고하세요/g,'참고할 수 있습니다')
+    .replace(/살펴보세요/g,'살펴볼 수 있습니다');
 }
 
 let changed=0;
