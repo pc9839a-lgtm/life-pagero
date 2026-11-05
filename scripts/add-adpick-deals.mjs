@@ -28,7 +28,7 @@ for(const [re,value,label] of [
 [/<meta property="og:description"[^>]*>/,'<meta property="og:description" content="인기 쇼핑 상품을 한곳에서 확인하세요.">',"ogdescription"],
 [/<meta property="og:url"[^>]*>/,'<meta property="og:url" content="'+SITE+'/deals/">',"ogurl"],
 [/<main id="main-content">[\s\S]*?<\/main>/,'<main id="main-content">'+content+'</main>',"main"],
-[/<\/head>/,'<link rel="stylesheet" href="/adpick-deals.css"><script defer src="/adpick-deals.js"></script></head>',"head"]
+[/<\/head>/,'<link rel="stylesheet" href="/adpick-deals.css?v=20261106c"><script defer src="/adpick-deals.js?v=20261106c"></script></head>',"head"]
 ])html=replace(html,re,value,label);
 write("deals/index.html",html);
 
@@ -45,6 +45,6 @@ const entry='<section class="adpick-home-entry" aria-label="핫딜 바로가기"
 +'<a href="/deals/" class="adpick-home-link">핫딜 보러가기</a></section>';
 home=home.slice(0,insertAt)+entry+home.slice(insertAt);
 if(!home.includes('href="/adpick-deals.css"'))
-  home=home.replace('</head>','<link rel="stylesheet" href="/adpick-deals.css"></head>');
+  home=home.replace('</head>','<link rel="stylesheet" href="/adpick-deals.css?v=20261106c"></head>');
 write("index.html",home);
 console.log("[adpick-biz] /deals/ live affiliate widget added, no product data stored.");
