@@ -29,11 +29,11 @@ const weather=mode=>block('weather',
 const crypto=mode=>block('crypto',
   '<div class="today-widget-heading"><h3>코인</h3>'
   +'<a href="https://upbit.com/exchange?code=CRIX.UPBIT.KRW-BTC" target="_blank" rel="noopener noreferrer">업비트 원문</a></div>'
-  +'<div data-coin-items><a class="today-official-link" href="https://upbit.com/exchange?code=CRIX.UPBIT.KRW-BTC" target="_blank" rel="noopener noreferrer">업비트 시세 보기</a></div>', '',mode);
+  +'<div data-coin-items></div>', '',mode);
 const stocks=mode=>block('stocks',
   '<div class="today-widget-heading"><h3>증권</h3>'
   +'<a href="https://data.krx.co.kr/" target="_blank" rel="noopener noreferrer">KRX 공식 데이터</a></div>'
-  +'<div data-stock-items><a class="today-official-link" href="https://data.krx.co.kr/" target="_blank" rel="noopener noreferrer">KRX 지수 보기</a></div>',
+  +'<div data-stock-items></div>',
   '',mode);
 const news=mode=>block('news',
   '<div class="today-widget-heading"><h3>주요뉴스</h3>'
