@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 
 const DIST=path.resolve('dist');
 const css='/life-editorial-20261106.css';
@@ -7,6 +8,8 @@ const old=['/life-modern.css','/life-compact.css','/life-global-nav.css',
   '/today-dashboard.css','/today-wide.css'];
 const check=(condition,message)=>{if(!condition)throw Error('[editorial-qa] '+message);};
 const read=p=>fs.readFileSync(path.join(DIST,p),'utf8');
+const themeHash=createHash('sha256').update(read(css.slice(1))).digest('hex').slice(0,12);
+const themeHref=css+'?v='+themeHash;
 const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(ent=>{
   const full=path.join(dir,ent.name);
   return ent.isDirectory()?walk(full):[full];
@@ -19,8 +22,8 @@ for(const absolute of pages){
   if(!html.includes('<header class="site-header">'))continue;
   check(html.includes('class="life-modern life-editorial '),
     'editorial body class missing '+relative);
-  check((html.match(/href="\/life-editorial-20261106\.css"/g)||[]).length===1,
-    'editorial theme not loaded exactly once '+relative);
+  check(html.split('href="'+themeHref+'"').length===2,
+    'exact content-hashed editorial theme not loaded once '+relative);
   check(!old.some(s=>html.includes('href="'+s+'"')),
     'conflicting old stylesheet still loaded '+relative);
   check((html.match(/<link rel="canonical"/g)||[]).length===1,
