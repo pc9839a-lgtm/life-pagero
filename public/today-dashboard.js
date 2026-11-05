@@ -10,7 +10,7 @@
     return Number.isFinite(date.getTime())
       ?new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',
         month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).format(date)
-      :'시각 미확인';
+      :'';
   };
   const status=(node,message)=>{
     const label=node.querySelector('[data-today-status]');
@@ -28,8 +28,8 @@
     a.target='_blank';a.rel='noopener noreferrer';
     return a;
   };
-  const fallback=(box,message,link,url)=>{
-    box.replaceChildren(create('p','today-empty',message),external(url,link,'today-official-link'));
+  const fallback=(box,link,url)=>{
+    box.replaceChildren(external(url,link,'today-official-link'));
   };
   async function get(url){
     const controller=new AbortController();
@@ -48,7 +48,7 @@
     let requestId=0;
     const load=async()=>{
       const id=++requestId;
-      status(node,'기상청 관측 조회 중');
+      status(node,'');
       try{
         const data=await get('today/api/weather?city='+encodeURIComponent(selector?.value||'seoul'));
         if(id!==requestId)return;
@@ -62,9 +62,8 @@
           +' · 조회 '+localTime(data.retrievedAt));
       }catch(_){
         if(id!==requestId)return;
-        fallback(box,'기상청 관측을 불러올 수 없습니다.','기상청 예보 보기',
-          'https://www.weather.go.kr/');
-        status(node,'기상청 자료 확인 불가 · 자동 갱신 대기');
+        fallback(box,'기상청 날씨 보기','https://www.weather.go.kr/');
+        status(node,'');
       }
     };
     selector?.addEventListener('change',load);
@@ -89,21 +88,19 @@
         ul.append(li);
       }
       if(!ul.childElementCount){
-        box.replaceChildren(create('p','today-empty','해당 분야의 최신 헤드라인이 없습니다.'));
+        fallback(box,'주요 뉴스 보기','https://www.yna.co.kr/');
       }else box.replaceChildren(ul);
     };
     const load=async()=>{
-      status(node,'뉴스 헤드라인 조회 중');
+      status(node,'');
       try{
         const data=await get('today/api/news');
         all=Array.isArray(data.items)?data.items:[];
         render();
-        status(node,'언론사 RSS · '+localTime(data.retrievedAt)
-          +(data.partial?' · 일부 소스 지연':''));
+        status(node,'언론사 · '+localTime(data.retrievedAt));
       }catch(_){
-        fallback(box,'최신 헤드라인을 확인할 수 없습니다.','연합뉴스 원문 보기',
-          'https://www.yna.co.kr/');
-        status(node,'RSS 수집 불가 · 재시도 예정');
+        fallback(box,'주요 뉴스 보기','https://www.yna.co.kr/');
+        status(node,'');
       }
     };
     picker?.addEventListener('change',render);
@@ -114,7 +111,7 @@
     const box=node.querySelector('[data-coin-items]');
     if(!box)return;
     const load=async()=>{
-      status(node,'원화마켓 시세 조회 중');
+      status(node,'');
       try{
         const data=await get('today/api/crypto');
         const items=(data.items||[]).slice(0,node.dataset.mode==='compact'?4:12);
@@ -127,7 +124,7 @@
           a.append(name,create('strong','today-coin-price',
             pFmt.format(row.price)+'원'));
           const change=create('span','today-coin-change',row.changeRate==null
-            ?'변동률 미확인'
+            ?'—'
             :(row.changeRate>=0?'+':'')+(row.changeRate*100).toFixed(2)+'%');
           change.classList.add(row.changeRate>0?'positive':row.changeRate<0?'negative':'neutral');
           a.append(change);
@@ -137,9 +134,8 @@
         box.replaceChildren(list);
         status(node,'업비트 KRW · 조회 '+localTime(data.retrievedAt)+' · 전일 종가 대비');
       }catch(_){
-        fallback(box,'코인 시세를 확인할 수 없습니다.','업비트 원화마켓 보기',
-          'https://upbit.com/exchange?code=CRIX.UPBIT.KRW-BTC');
-        status(node,'시세 조회 불가 · 재시도 예정');
+        fallback(box,'업비트 시세 보기','https://upbit.com/exchange?code=CRIX.UPBIT.KRW-BTC');
+        status(node,'');
       }
     };
     load();
@@ -150,7 +146,7 @@
     if(!box)return;
     const official='https://data.krx.co.kr/';
     const load=async()=>{
-      status(node,'거래소 종가 확인 중');
+      status(node,'');
       try{
         const data=await get('today/api/stocks');
         const result=create('div','today-stock-list');
@@ -159,7 +155,7 @@
           a.append(create('span','today-stock-name',row.name),
             create('strong','today-stock-value',pFmt.format(row.close)),
             create('span','today-stock-change',
-            row.changePercent==null?'전일대비 미확인'
+            row.changePercent==null?'—'
               :(row.changePercent>=0?'+':'')+pFmt.format(row.changePercent)+'%'));
           result.append(a);
         }
@@ -167,9 +163,8 @@
         box.replaceChildren(result);
         status(node,'KRX 영업일 종가 '+data.sourceDate+' · 조회 '+localTime(data.retrievedAt));
       }catch(_){
-        fallback(box,'코스피·코스닥 종가는 KRX 원문에서 확인할 수 있습니다.',
-          'KRX 공식 지수 보기',official);
-        status(node,'시세 재게시 이용권한 또는 최신 자료 확인 전');
+        fallback(box,'KRX 지수 보기',official);
+        status(node,'');
       }
     };
     load();
