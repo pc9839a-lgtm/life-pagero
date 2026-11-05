@@ -51,7 +51,8 @@ function publishedTopics(){
   }
   return items;
 }
-const ACTION=/(환급|금리|대출|상환|연말정산|세금|수수료|한도|신용|주택|전세|월세|보증|가계|소득|퇴직|장학|공과금|관리비|자동차|연금|취업|근로|복지|보험료|사업자|지원금|정산|급여|보조금)/;
+const ACTION=/(환급|신청|납부|지급|적립|공제|발급|면제|감면|등록|대출|금리|상환|연말정산|소득세|자동차세|부가세|수수료|지원금|장려금|바우처|보조금|퇴직금|실업급여|연금|과태료|입주자 모집|월세|전세|보증금|환불|요금|대상|조건|기준 변경|기간|금액|자격)/;
+const NON_EDITORIAL=/(축제|행사|공모|기념식|공청회|토론회|연구과제|연구용역|실태조사|업무협약|업무보고|입찰|장관동정|간담회|현장방문|전시회|체육대회|주민설명회|참가자 모집|입주 시작)/;
 export function scoreItem(item,groups,existing,now=new Date()){
   // A long statistics-feed description can contain hundreds of unrelated terms.
   // Require the useful intent to appear in the actual headline.
@@ -62,6 +63,7 @@ export function scoreItem(item,groups,existing,now=new Date()){
     .filter(g=>g.hits.length).sort((a,b)=>b.hits.length-a.hits.length);
   // Preserve existing editorial exclusion of insurance-related content.
   if(/보험|보험금|보험료/.test(text))return null;
+  if(NON_EDITORIAL.test(text))return null;
   if(!matches.length||!ACTION.test(text))return null;
   const published=Date.parse(item.publishedAt||'');
   const age=Number.isFinite(published)?Math.floor((now.getTime()-published)/86400000):null;

@@ -40,3 +40,21 @@ test('KOSIS generic statistical titles never become editorial article candidates
     publishedAt:'2026-11-05',
   },groups,[],now),null);
 });
+
+test('Event promotion and government research procurement are not SEO topic candidates',()=>{
+  const now=new Date('2026-11-05T12:00:00Z');
+  const welfare=[{id:'welfare',label:'정부지원·복지',risk:'high',keywords:['복지','지원금']}];
+  assert.equal(scoreItem({title:'복지관 야간 운영과 지역 축제',description:'지원금 안내',publishedAt:'2026-11-05'},welfare,[],now),null);
+  const employment=[{id:'employment',label:'근로·퇴직',risk:'high',keywords:['근로','퇴직']}];
+  assert.equal(scoreItem({title:'공무직 근로자 정책연구과제 실태조사',description:'지원금',publishedAt:'2026-11-05'},employment,[],now),null);
+});
+test('Local tax refunds and voucher reimbursements remain eligible',()=>{
+  const groups=[
+    {id:'tax',label:'세금·환급금',risk:'high',keywords:['지방세','환급금','세금']},
+    {id:'shopping',label:'쇼핑·소비혜택',risk:'low',keywords:['상품권','지역화폐']},
+  ];
+  const now=new Date('2026-11-05T12:00:00Z');
+  const a=scoreItem({title:'11월 지방세 환급금 신청',publishedAt:'2026-11-05'},groups,[],now);
+  const b=scoreItem({title:'서울사랑상품권 5% 환급',publishedAt:'2026-11-05'},groups,[],now);
+  assert.equal(a.categoryId,'tax');assert.equal(b.categoryId,'shopping');
+});
