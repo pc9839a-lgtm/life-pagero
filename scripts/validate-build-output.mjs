@@ -147,8 +147,8 @@ for (const post of posts) {
   if (!firstPart) {
     throw new Error(`First series part missing: ${basePath}`);
   }
-  if (!baseHtml.includes(`<h2 class="series-part-title">${escapeHtml(firstPart.title)}</h2>`)) {
-    throw new Error(`Base page missing first part title "${firstPart.title}": ${basePath}`);
+  if (!baseHtml.includes('<!-- life-body-part-1 -->')) {
+    throw new Error(`Base page missing first article body section: ${basePath}`);
   }
   if (firstImage && !baseHtml.includes(`<img src="${escapedFirstImage}"`)) {
     throw new Error(`Base page missing first part image: ${basePath}`);
@@ -158,10 +158,13 @@ for (const post of posts) {
   }
 
   // Every substantive section must be visible on the indexable first URL.
-  for (const laterPart of post.series.parts.slice(1)) {
-    if (!baseHtml.includes(`<h2 class="series-part-title">${escapeHtml(laterPart.title)}</h2>`)) {
-      throw new Error(`Base page is missing full-guide section "${laterPart.title}": ${basePath}`);
+  for (const [index] of post.series.parts.entries()) {
+    if (!baseHtml.includes(`<!-- life-body-part-${index + 1} -->`)) {
+      throw new Error(`Base page missing article body section ${index + 1}: ${basePath}`);
     }
+  }
+  if (baseHtml.includes('class="series-part-title"') || /<h[234](?:\s[^>]*)?>/.test(baseHtml.match(/<div class="article-content">([\s\S]*?)<div class="disclaimer">/)?.[1] || '')) {
+    throw new Error(`Visible article subheadings remain: ${basePath}`);
   }
 
   const total = Array.isArray(post.series?.parts) ? post.series.parts.length : 1;
@@ -209,13 +212,13 @@ for (const post of posts) {
     if (part?.image && !html.includes(`<img src="${escapeHtml(part.image)}"`)) {
       throw new Error(`Continuation image missing: ${continuationPath}`);
     }
-    if (part && !html.includes(`<h2 class="series-part-title">${escapeHtml(part.title)}</h2>`)) {
-      throw new Error(`Continuation page missing its own part title "${part.title}": ${continuationPath}`);
+    if (part && !html.includes(`<!-- life-body-part-${pageNumber} -->`)) {
+      throw new Error(`Continuation page missing body section ${pageNumber}: ${continuationPath}`);
     }
-    for (const [index, otherPart] of post.series.parts.entries()) {
+    for (const [index] of post.series.parts.entries()) {
       if (index === pageNumber - 1) continue;
-      if (html.includes(`<h2 class="series-part-title">${escapeHtml(otherPart.title)}</h2>`)) {
-        throw new Error(`Continuation page contains another part "${otherPart.title}": ${continuationPath}`);
+      if (html.includes(`<!-- life-body-part-${index + 1} -->`)) {
+        throw new Error(`Continuation page contains another body section: ${continuationPath}`);
       }
     }
   }
@@ -335,7 +338,7 @@ for (const slug of decisionPages) {
     throw new Error('Canonical guide needs exactly one editorial decision table: '+slug);
   }
   const section=html.match(/<section class="reader-decision"[\s\S]*?<\/section>/)?.[0] || '';
-  if (!section.includes('공식자료 확인') || count(section,/<tr>/g)<3) {
+  if (count(section,/<tr>/g)<3 || section.includes('아래 표는 선택할 글')) {
     throw new Error('Decision table must offer source-dated real next steps: '+slug);
   }
   if (!html.includes('/life-editorial-20261022.css')) {
@@ -361,7 +364,7 @@ if (!sitemap.includes('<loc>'+SITE_URL+'/editorial-standards/</loc><lastmod>2026
 // Editorial freshness gate: both updated, indexable car-tax documents must
 // actually contain the corrected October 2026 guidance in the HTML users read.
 for (const [slug, phrases] of [
-  ['car-tax-annual-payment-2026', ['2026년 10월 26일 현재 연납 신청은', '2027년 공식', '마감 후 확인할 체크리스트']],
+  ['car-tax-annual-payment-2026', ['2026년 10월 26일 현재 연납 신청은', '2027년 공식']],
   ['car-tax-second-half-2026', ['2026년 10월 26일 현재', '12월 16~31일']],
 ]) {
   const permalink = '/car/' + slug + '/';

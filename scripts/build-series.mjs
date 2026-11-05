@@ -95,8 +95,7 @@ function markdownToHtml(markdown) {
     }
     if (heading) {
       flushParagraph(); closeList();
-      const level=heading[1].length;
-      output.push('<h' + level + '>' + inlineMarkdown(heading[2]) + '</h' + level + '>');
+      // In-article subheadings are omitted; actual explanatory paragraphs/tables remain.
       continue;
     }
     if (unordered || ordered) {
@@ -133,11 +132,11 @@ function breadcrumbs(post, pageNumber, part) {
 }
 
 function sources(post, clickable) {
-  return `<section class="source-box"><h2>자료 기준</h2><ul class="source-list">${post.sources.map((source) => `<li>${clickable ? `<a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.name)}</a>` : `<span>${escapeHtml(source.name)}</span>`} · 확인 ${fmtDate(source.checkedAt)}</li>`).join('')}</ul></section>`;
+  return `<section class="source-box"><h2>출처</h2><ul class="source-list">${post.sources.map((source) => `<li>${clickable ? `<a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.name)}</a>` : `<span>${escapeHtml(source.name)}</span>`} · 확인 ${fmtDate(source.checkedAt)}</li>`).join('')}</ul></section>`;
 }
 
 function faqs(post) {
-  return `<section class="faq-box"><h2>자주 묻는 질문</h2>${post.faqs.map((faq) => `<details class="faq-item"><summary>${escapeHtml(faq.question)}</summary><div><p>${escapeHtml(faq.answer)}</p></div></details>`).join('')}</section>`;
+  return `<section class="faq-box"><h2>질문</h2>${post.faqs.map((faq) => `<details class="faq-item"><summary>${escapeHtml(faq.question)}</summary><div><p>${escapeHtml(faq.answer)}</p></div></details>`).join('')}</section>`;
 }
 
 function photo(part, eager = false) {
@@ -146,7 +145,7 @@ function photo(part, eager = false) {
 }
 
 function summary(part) {
-  return `<section class="key-summary"><h2>핵심 내용</h2><ul>${part.keyPoints.map((point) => `<li>${escapeHtml(point)}</li>`).join('')}</ul></section>`;
+  return `<section class="key-summary"><ul>${part.keyPoints.map((point) => `<li>${escapeHtml(point)}</li>`).join('')}</ul></section>`;
 }
 
 function actions(post, part, pageNumber, total) {
@@ -169,12 +168,12 @@ function articleShell(post, part, pageNumber, total) {
   // continuation URLs remain available for focused reading, but are noindex.
   const partsToRender = isBase ? post.series.parts : [part];
   const partContent = partsToRender.map((section, sectionIndex) =>
-    `${photo(section, isBase && sectionIndex === 0)}<h2 class="series-part-title">${escapeHtml(section.title)}</h2><p class="series-part-description">${escapeHtml(section.description)}</p>${summary(section)}${sectionIndex === 0 ? ad('top') : ''}${markdownToHtml(section.body)}${((isBase && sectionIndex === 1) || pageNumber === 2) ? ad('mid') : ''}`
+    `${`<!-- life-body-part-${isBase ? sectionIndex + 1 : pageNumber} -->`}${photo(section, isBase && sectionIndex === 0)}${sectionIndex === 0 ? ad('top') : ''}${markdownToHtml(section.body)}${((isBase && sectionIndex === 1) || pageNumber === 2) ? ad('mid') : ''}`
   ).join('\n');
   const sourceBlock = sources(post, isBase || isLast);
   const faqBlock = isBase || isLast ? faqs(post) : '';
 
-  return `<article class="article-shell">${breadcrumbs(post, pageNumber, part)}<header class="article-header"><span class="badge ${post.category}">${CATEGORY[post.category].short}</span><h1>${escapeHtml(post.title)}</h1><p class="article-dek">${escapeHtml(headerDescription)}</p><div class="article-meta"><span>작성 ${fmtDate(post.publishedAt)}</span><span>수정 ${fmtDate(post.updatedAt)}</span><span>공식자료 확인 ${fmtDate(post.reviewedAt)}</span><span>${escapeHtml(post.author)}</span></div></header><div class="article-content">${partContent}<div class="disclaimer">생활비서는 정부기관이 아니며 신청 결과를 보장하지 않습니다. 공식 공고와 담당기관 안내를 최종 기준으로 확인하세요.</div>${actions(post, part, pageNumber, total)}${sourceBlock}${faqBlock}</div></article>`;
+  return `<article class="article-shell">${breadcrumbs(post, pageNumber, part)}<header class="article-header"><span class="badge ${post.category}">${CATEGORY[post.category].short}</span><h1>${escapeHtml(post.title)}</h1><div class="article-meta"><span>작성 ${fmtDate(post.publishedAt)}</span><span>수정 ${fmtDate(post.updatedAt)}</span></div></header><div class="article-content">${partContent}<div class="disclaimer">정부기관이 아니며 신청 결과를 보장하지 않습니다.</div>${actions(post, part, pageNumber, total)}${sourceBlock}${faqBlock}</div></article>`;
 }
 
 function replaceSingleTag(html, pattern, tag) {

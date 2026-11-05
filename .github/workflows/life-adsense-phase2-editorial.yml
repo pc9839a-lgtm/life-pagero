@@ -47,13 +47,13 @@ jobs:
             const html=fs.readFileSync('dist/'+doc.category+'/'+doc.slug+'/index.html','utf8');
             assert(doc.officialCta?.href,'Original official action missing '+slug);
             const novemberComparisons = {
-              'car-inspection-period': '검사 유효기간과 실제 검사 가능기간은 다릅니다',
-              'energy-voucher-2026': '11월 에너지바우처: 신청·사용·재신청 구분',
-              'earned-income-tax-credit-late-2026': '2026년 11월 근로장려금 기한 후 신청',
-              'culture-card-2026': '2026 문화누리카드: 발급은 11월 30일까지',
+              'car-inspection-period': '만료일 전 90일',
+              'energy-voucher-2026': '월 지급금이 아니라',
+              'earned-income-tax-credit-late-2026': '2025년 연간 소득',
+              'culture-card-2026': '11월 30일',
             };
-            const reviewedMarker = novemberComparisons[slug] || '2026년 10월 23일 확인';
-            assert(html.includes(reviewedMarker),'First-page comparison missing '+slug);
+            const reviewedMarker = novemberComparisons[slug] || '취득세';
+            assert(html.includes(reviewedMarker),'Verified factual comparison missing '+slug);
             if (Object.hasOwn(novemberComparisons,slug)) {
               assert.equal(doc.reviewedAt,'2026-11-03','November official fact-check not preserved: '+slug);
             }

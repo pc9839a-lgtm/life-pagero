@@ -23,13 +23,13 @@ for(const file of files) {
  for(const [index,[heading,paragraph]] of entries.entries()) {
    if(used.has(paragraph))throw Error('Same practical content repeated in distinct articles: '+p.slug);
    used.add(paragraph);
-   if(!html.includes(esc(heading))||!html.includes(esc(paragraph))) {
+   if(!html.includes(esc(paragraph))) {
      throw Error('Expanded guidance absent from public primary HTML: '+p.slug+' case '+(index+1));
    }
    const continuation=path.join(dist,p.category,p.slug,String(index+1),'index.html');
    if(index>0 && fs.existsSync(continuation)) {
      const extraHtml=fs.readFileSync(continuation,'utf8');
-     if(!extraHtml.includes(esc(heading))||!extraHtml.includes(esc(paragraph))) {
+     if(!extraHtml.includes(esc(paragraph))) {
        throw Error('Continued reading page lacks added guidance: '+p.slug+' part '+(index+1));
      }
      continuations++;

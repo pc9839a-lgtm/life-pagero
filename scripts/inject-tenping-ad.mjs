@@ -55,8 +55,7 @@ function card(campaign) {
 function bannerSection(offers, title = '생활 제휴 정보', extraClass = '') {
   return [
     '<section class="section life-sponsor-collection ' + esc(extraClass) + '" data-offer-group="three-life-offers-2026" aria-label="' + esc(title) + '">',
-    '<div class="section-header"><div><h2 id="life-sponsor-title">' + esc(title) + '</h2>',
-    '<p>아래는 광고·제휴 콘텐츠입니다. 상품·서비스 조건은 각 광고주 페이지에서 확인하세요.</p></div></div>',
+    '<p class="life-affiliate-label">광고 · 제휴</p>',
     '<div class="life-sponsor-grid">',
     ...offers.map(card),
     '</div></section>',
@@ -122,25 +121,29 @@ for (const filename of walk(CONTENT).filter(name => name.endsWith('.json'))) {
   const relative = post.category + '/' + post.slug + '/index.html';
   const [primary, secondary] = chooseOffers(post);
   update(relative, html => {
-    const summary = /<section class="key-summary">[\s\S]*?<\/section>/g;
-    const matches = [...html.matchAll(summary)];
-    if (!matches.length) throw new Error('Missing article summary: ' + relative);
-
     const blocks = [
       '<div class="life-article-sponsor life-article-sponsor--early">' + card(primary) + '</div>',
       '<div class="life-article-sponsor life-article-sponsor--mid">' + card(secondary) + '</div>',
     ];
-    // Display a large, visibly labelled offer soon after the first summary,
-    // and a second distinct offer after the next section. Never cover the article.
-    if (matches.length >= 2) {
-      const second = matches[1];
-      html = html.slice(0, second.index + second[0].length) + blocks[1] + html.slice(second.index + second[0].length);
-    } else {
-      html = placeBefore(html, '<div class="disclaimer">', blocks[1], relative);
+    // Anchor ads to actual article paragraphs rather than filler summaries.
+    function insertAfterBodyParagraph(input, partNo, fragment) {
+      const anchor = '<!-- life-body-part-' + partNo + ' -->';
+      const next = '<!-- life-body-part-' + (partNo + 1) + ' -->';
+      const start = input.indexOf(anchor);
+      if (start < 0) throw new Error('Missing content section: ' + relative + ' part ' + partNo);
+      const limit = input.indexOf(next, start + anchor.length);
+      const end = limit > 0 ? limit : input.indexOf('<div class="disclaimer">', start);
+      const p = input.indexOf('<p>', start + anchor.length);
+      const pEnd = p < 0 ? -1 : input.indexOf('</p>', p);
+      if (pEnd > 0 && (end < 0 || pEnd < end)) {
+        const pos = pEnd + '</p>'.length;
+        return input.slice(0, pos) + fragment + input.slice(pos);
+      }
+      return input.replace(anchor, anchor + fragment);
     }
-    const first = html.match(summary);
-    if (!first) throw new Error('First summary missing after insertion: ' + relative);
-    return html.replace(first[0], first[0] + blocks[0] + marker);
+    html = insertAfterBodyParagraph(html, 2, blocks[1]);
+    html = insertAfterBodyParagraph(html, 1, blocks[0] + marker);
+    return html;
   });
   articles++;
   articleUnits += 2;

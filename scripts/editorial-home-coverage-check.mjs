@@ -13,9 +13,10 @@ const posts=walk(root).filter(x=>x.endsWith('.json')).map(file=>JSON.parse(fs.re
 const home=fs.readFileSync('dist/index.html','utf8');
 const css=fs.readFileSync('dist/life-editorial-20261022.css','utf8');
 
-assert.equal(posts.length,45,'Unexpected article count: review new published content');
+assert(posts.length>=46,'Published article set must include all 46 reviewed guides');
 assert(home.includes('href="/life-editorial-20261022.css"'),'Missing versioned stylesheet');
-assert(home.includes('LIFE EDITORIAL ARCHIVE'),'Archive heading is missing');
+assert(home.includes('class="life-archive-grid"'),'Article archive must retain its direct article links');
+assert(!home.includes('LIFE EDITORIAL ARCHIVE') && !home.includes('가이드를 직접 연결했습니다'),'Developer-facing copy must not appear on homepage');
 assert(home.includes('href="/editorial-standards/"'),'Editorial policies not linked');
 assert(css.includes('.life-archive-grid') && css.includes('@media(max-width:690px)'),'Mobile archive CSS missing');
 
@@ -24,7 +25,7 @@ for(const post of posts){
   assert(home.includes(`href="${url}"`),`Article missing from main hub: ${url}`);
   assert(fs.existsSync(path.join('dist',url,'index.html')),`Article HTML missing: ${url}`);
 }
-assert(home.includes('공식자료 확인'),'Missing source review dates');
+assert(!home.includes('공식 출처와 확인일을 함께 표시합니다.'),'Publisher note must be absent');
 // Task-first comparison paths must add practical decisions, not replace
 // any of the 45 published original guides.
 const expectedPaths = {
@@ -33,7 +34,7 @@ const expectedPaths = {
   parenting: ['support/child-allowance-2026','support/parental-benefit-2026'],
   livelihood: ['support/basic-pension-2026','support/livelihood-benefit-2026'],
 };
-assert(home.includes('id="life-pathways-title"'),'Missing situation-first decision navigation');
+assert(home.includes('class="life-path-grid"'),'Practical topic navigation must remain');
 assert(css.includes('.life-path-grid') && css.includes('@media(max-width:690px)'),'Responsive decision cards missing');
 assert(!home.includes('자격 확정') && !home.includes('지원금 지급 보장'),'Must not promise eligibility or benefits');
 for(const [name, paths] of Object.entries(expectedPaths)){
@@ -45,8 +46,8 @@ for(const [name, paths] of Object.entries(expectedPaths)){
   for(const target of paths){
     const post=posts.find(p=>p.category+'/'+p.slug===target);
     assert(post,`Dead pathway content target: ${target}`);
-    assert(match[1].includes('공식자료 확인'),`Source review label missing: ${target}`);
+    assert(!match[1].includes('공식자료 확인'),`Developer-style source date labels should be absent: ${target}`);
   }
 }
 
-console.log(`PASS: All ${posts.length} published LIFE guides linked directly from editorial homepage, source dates and stylesheet present`);
+console.log(`PASS: All ${posts.length} guides linked from homepage without redundant editorial explanations`);

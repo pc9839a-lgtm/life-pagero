@@ -28,6 +28,7 @@ const steps = [
   ['node', ['scripts/inject-tenping-ad.mjs']],
   ['node', ['scripts/inject-coupang-ad.mjs']],
   ['node', ['scripts/verify-editorial-depth.mjs']],
+  ['node', ['scripts/remove-editorial-fluff.mjs']],
   ['node', ['scripts/validate-build-output.mjs']],
 ];
 
