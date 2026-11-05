@@ -2,11 +2,7 @@ name: Verify finance rates visible in first public HTML
 on:
   push:
     branches: [main]
-    paths:
-      - 'functions/finance/[[path]].js'
-      - 'public/finance-live.js'
-      - '.github/workflows/verify-initial-finance-html-live.yml'
-  workflow_dispatch:
+  workflow_dispatch: {}
 permissions:
   contents: read
 jobs:
