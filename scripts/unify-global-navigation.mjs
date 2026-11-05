@@ -8,6 +8,7 @@ const CSS='/life-global-nav.css';
 const ITEMS=[
   {href:'/',label:'홈',section:'home'},
   {href:'/today/',label:'오늘',section:'today'},
+  {href:'/events/',label:'축제·행사',section:'events'},
   {href:'/food/',label:'먹거리',section:'food'},
   {href:'/deals/',label:'핫딜',section:'deals'},
   {href:'/finance/',label:'금융',section:'finance'},
@@ -23,6 +24,7 @@ const files=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(ent=>{
 const section=pathname=>{
   if(pathname==='/')return 'home';
   if(pathname.startsWith('/today/'))return 'today';
+  if(pathname.startsWith('/events/'))return 'events';
   if(pathname.startsWith('/deals/'))return 'deals';
   if(pathname.startsWith('/food/'))return 'food';
   if(pathname.startsWith('/finance/'))return 'finance';
@@ -55,4 +57,4 @@ for(const file of files(DIST).filter(p=>p.endsWith('.html'))){
   changed++;
 }
 if(changed<140)throw Error('[nav] Too few navigation documents: '+changed);
-console.log('[nav] One identical 6-link menu across '+changed+' pages; '+skipped+' non-site pages skipped.');
+console.log('[nav] One identical 7-link menu across '+changed+' pages; '+skipped+' non-site pages skipped.');

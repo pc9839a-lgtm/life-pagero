@@ -1,0 +1,42 @@
+name: Life weekly events sync
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 0 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: life-events-sync
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate event filters and mapping
+        run: node --test scripts/events.test.mjs
+      - name: Fetch approved free public data
+        env:
+          TOUR_API_KEY: ${{ secrets.TOUR_API_KEY }}
+          KOPIS_API_KEY: ${{ secrets.KOPIS_API_KEY }}
+          SEOUL_EVENT_API_KEY: ${{ secrets.SEOUL_EVENT_API_KEY }}
+        run: node scripts/sync-events.mjs
+      - name: Validate site output before publishing snapshot
+        run: npm run build
+      - name: Commit changed event snapshot only
+        run: |
+          if git diff --quiet -- content/events.json; then
+            echo 'Event snapshot unchanged.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add content/events.json
+          git commit -m "data(events): refresh verified public event snapshot"
+          git push

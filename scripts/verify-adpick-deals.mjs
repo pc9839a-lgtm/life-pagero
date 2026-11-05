@@ -36,10 +36,10 @@ check(page.includes('href="https://pagero.kr/life/deals/"'),'wrong canonical');
 check(origin.includes('grid-template-columns:repeat(3,minmax(0,1fr))'),'mobile 6-item navigation grid missing');
 check(fs.existsSync(path.join(DIST,"adpick-deals.js")),'deals frontend JS missing');
 check(fs.existsSync(path.join(DIST,"adpick-deals.css")),'deals CSS missing');
-for(const relative of ["index.html","today/index.html","finance/index.html","topics/index.html","deals/index.html","food/index.html"]){
+for(const relative of ["index.html","today/index.html","finance/index.html","topics/index.html","deals/index.html","food/index.html","events/index.html"]){
  const html=read(relative);
  const nav=html.match(/<nav\b[^>]*class="main-nav"[^>]*>[\s\S]*?<\/nav>/)?.[0]||"";
- check((nav.match(/<a href=/g)||[]).length===6,'five nav items not shown '+relative);
+ check((nav.match(/<a href=/g)||[]).length===7,'seven nav items not shown '+relative);
  check(nav.includes('<a href="/deals/"'),'nav hot deals link missing '+relative);
 }
 const realFetch=globalThis.fetch;

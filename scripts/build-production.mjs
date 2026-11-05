@@ -18,6 +18,11 @@ const steps = [
   ['node', ['scripts/expand-editorial-depth.mjs']],
   ['node', ['scripts/apply-verified-rich-guides.mjs']],
   ['node', ['scripts/replace-duplicate-editorial-images.mjs']],
+  ['node', ['--check', 'scripts/sync-events.mjs']],
+  ['node', ['--check', 'scripts/build-events.mjs']],
+  ['node', ['--check', 'scripts/verify-events.mjs']],
+  ['node', ['--check', 'public/events-ui.js']],
+  ['node', ['--test', 'scripts/events.test.mjs']],
   [npm, ['run', 'validate:content']],
   ['node', ['scripts/build.mjs']],
   ['node', ['scripts/build-series.mjs']],
@@ -48,6 +53,7 @@ const steps = [
   ['node', ['scripts/verify-trimmed-life-ui.mjs']],
   ['node', ['scripts/add-adpick-deals.mjs']],
   ['node', ['scripts/add-food-hub.mjs']],
+  ['node', ['scripts/build-events.mjs']],
   ['node', ['scripts/unify-global-navigation.mjs']],
   ['node', ['scripts/verify-global-navigation.mjs']],
   ['node', ['scripts/verify-sitewide-clean-ui.mjs']],
@@ -57,6 +63,7 @@ const steps = [
   ['node', ['scripts/verify-car-mortgage-calculators.mjs']],
   ['node', ['scripts/verify-adpick-deals.mjs']],
   ['node', ['scripts/verify-food-hub.mjs']],
+  ['node', ['scripts/verify-events.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);

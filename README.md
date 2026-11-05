@@ -86,3 +86,16 @@ AdSense 소유권 확인과 실제 광고 노출을 분리합니다.
 - `scripts/add-food-hub.mjs`는 11월 제철 식재료와 조리·보관 예시, 12개월 선택기와 집밥 메뉴 추천을 만듭니다. 콘텐츠는 지역과 어획·수확 시기에 따라 달라지는 대표 예시입니다.
 - 상품 검색은 기존 ADPICK for BIZ `/deals/?q=검색어`로 연결합니다. 음식 페이지에서는 제휴 API 호출이나 상품정보 저장을 하지 않으며 실제 조회·제휴 고지는 기존 딜 페이지에서 수행됩니다.
 - `scripts/verify-food-hub.mjs`가 SEO, 상단 6개 메뉴, 월별 데이터, 제휴 링크를 검증합니다.
+
+## 전국 축제·행사·공연 (/events/)
+
+- 새로운 공개 목록/상세는 `scripts/build-events.mjs`에서 기존 `dist` 빌드 결과를 보존하며 추가합니다.
+- 기본 필터는 **전국 / 전체 유형 / 무료+유료 모두 / 이번 주(월~일, KST)**입니다.
+- `content/events.json`은 확인된 공공데이터의 정적 스냅샷입니다. 방문자마다 외부 API를 호출하거나 D1에 기록하지 않습니다.
+- 무료 공급원: 한국관광공사 TourAPI, KOPIS, 서울시 문화행사 정보. 사진/포스터는 재사용 권한을 확인하기 전까지 **표시하지 않습니다**.
+- GitHub Actions `Life weekly events sync`는 매일 09:15 KST (UTC 00:15) 자동 갱신을 시도합니다. 저장소 Actions Secrets에 `TOUR_API_KEY`, `KOPIS_API_KEY`, `SEOUL_EVENT_API_KEY`를 등록해야 해당 소스가 수집됩니다. 무료 데이터라도 API 인증키 발급은 별도로 필요합니다.
+- 공개 시 행사별 고유 URL, OG 메타, KST 날짜 겹침 필터, 지역·종류·요금 필터, 모바일 기본 공유/링크 복사를 제공합니다.
+- 브라우저에서 네이티브 공유를 사용하므로 Android 공유 메뉴에서 카카오톡으로 전달할 수 있습니다. 카카오 직접 공유 SDK는 앱 키와 도메인 등록 후 추가합니다.
+- 사용자에게 조회 수·가짜 인기 순위·가짜 행사 데이터를 표시하지 않습니다. API 키가 없다면 페이지는 빈 상태를 정직하게 안내하고 `noindex` 처리합니다.
+- **중요:** 이 저장소의 공개 정식 주소는 `https://pagero.kr/life/`이고 `life.pagero.kr`은 현재 Functions 코드상 301 리다이렉트됩니다. 페이지로 메인 프록시의 `/life/events/` 라우팅/반영은 운영에서 별도 검증해야 합니다.
+- 테스트: `node --test scripts/events.test.mjs`, `npm run build`. 실제 API 응답 및 카카오톡 미리보기는 Secrets 등록과 배포 후 검수해야 합니다.
