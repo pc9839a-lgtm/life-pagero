@@ -53,13 +53,14 @@ write('index.html',home);
 const template=read('finance/index.html');
 const title='오늘의 날씨·주요뉴스·증권·코인 정보 | 생활비서';
 const description='지역별 기상청 날씨 관측, 언론사 최신 뉴스 헤드라인, 코스피·코스닥 자료와 업비트 원화 코인 시세를 출처 및 기준시각과 함께 확인합니다.';
-const fullBody='<div class="site-shell"><article class="portal-page finance-page today-page">'
+const fullBody='<div class="site-shell today-shell"><article class="portal-page finance-page today-page">'
   +'<nav class="portal-breadcrumbs" aria-label="현재 위치"><a href="/">홈</a> / 오늘의 정보</nav>'
   +'<h1>오늘의 정보</h1>'
   +'<p class="today-page-intro">날씨, 주요뉴스, 증권, 코인 자료를 한곳에서 확인할 수 있습니다. '
   +'모든 데이터는 출처와 관측·발표·수집 시각을 구분해 표시합니다.</p>'
-  +'<div class="today-full-grid">'+weather('full')+stocks('full')+crypto('full')+'</div>'
-  +news('full')
+  +'<div class="today-vertical-list">'
+  +news('full')+weather('full')+stocks('full')+crypto('full')
+  +'</div>'
   +'<section class="today-source-guidance"><h2>데이터는 어떻게 갱신되나요?</h2>'
   +'<p>날씨는 기상청 초단기실황(약 30분 캐시), 뉴스는 언론사가 공개한 RSS(약 10분 캐시), '
   +'코인은 업비트 원화마켓 공개 시세(약 3분 캐시)를 확인합니다. 브라우저를 열어 둔 동안에도 다시 조회합니다. '
