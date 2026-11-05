@@ -7,6 +7,9 @@ const check=(ok,reason)=>{if(!ok)throw Error('[food-qa] '+reason);};
 const page=read('food/index.html');
 const nav=page.match(/<nav\b[^>]*class="main-nav"[^>]*>[\s\S]*?<\/nav>/)?.[0]||'';
 check(page.includes('<h1>제철음식</h1>'),'food route missing heading');
+for(const redundant of ['식재료 · 집밥 · 장보기','이번 달 먹기 좋은 재료를 살펴보고','이번 달 식재료를 활용한 집밥 메뉴를 하나 골라보세요','아래 링크는 기존 제휴 상품 검색 메뉴로 이동합니다.']){
+ check(!page.includes(redundant),'redundant explanatory copy present: '+redundant);
+}
 check(page.includes('name="robots" content="index,follow"'),'food route must be indexable');
 check(page.includes('href="https://pagero.kr/life/food/"'),'food canonical wrong');
 check((page.match(/<link rel="canonical"/g)||[]).length===1,'duplicate canonical');
