@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const DIST=path.resolve('dist');
-const css='/life-editorial-20261105.css';
+const css='/life-editorial-20261106.css';
 const old=['/life-modern.css','/life-compact.css','/life-global-nav.css',
   '/today-dashboard.css','/today-wide.css'];
 const check=(condition,message)=>{if(!condition)throw Error('[editorial-qa] '+message);};
@@ -19,7 +19,7 @@ for(const absolute of pages){
   if(!html.includes('<header class="site-header">'))continue;
   check(html.includes('class="life-modern life-editorial '),
     'editorial body class missing '+relative);
-  check((html.match(/href="\/life-editorial-20261105\.css"/g)||[]).length===1,
+  check((html.match(/href="\/life-editorial-20261106\.css"/g)||[]).length===1,
     'editorial theme not loaded exactly once '+relative);
   check(!old.some(s=>html.includes('href="'+s+'"')),
     'conflicting old stylesheet still loaded '+relative);
