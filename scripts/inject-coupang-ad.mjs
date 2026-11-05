@@ -37,7 +37,7 @@ const css = [
   '.sidebar .life-coupang-placement--rail{width:100%;max-width:300px;min-width:0;padding:0;margin:0 0 20px;border:0;background:transparent}',
   '.sidebar .life-coupang-placement--rail .life-coupang-label{margin:0 0 8px}',
   '.sidebar .life-coupang-placement--rail .life-coupang-disclosure{font-size:11px;margin-top:8px}',
-  '@media(max-width:900px){.life-coupang-placement--rail{display:none!important}}',
+  '@media(max-width:900px){.life-coupang-placement--rail{display:none}}',
   '@media(max-width:700px){.life-coupang-placement{margin:22px 0 28px;padding:10px 0 12px;border-left:0;border-right:0}.life-coupang-label,.life-coupang-disclosure{padding-inline:8px}.life-coupang-widget{max-width:320px;margin-inline:auto}}',
 ].join('\n');
 fs.writeFileSync(path.join(DIST, 'coupang-banner.css'), css + '\n');
