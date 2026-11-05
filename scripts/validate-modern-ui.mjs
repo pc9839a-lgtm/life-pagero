@@ -39,7 +39,7 @@ assert(posts.length===46,'expected all 46 editorial pages, got '+posts.length);
 for(const file of posts){
   const html=read(file);
   assert(html.includes('class="life-modern life-modern-article"'),'article visual redesign missing: '+file);
-  assert(html.includes('class="portal-article-brief"'),'answer-first summary removed: '+file);
+  assert(html.includes('class="compact-answer"') && html.includes('class="compact-full-guide"'),'compact summary/full guide unavailable: '+file);
   const article=html.match(/<div class="article-content">([\s\S]*?)<div class="disclaimer">/)?.[1]||'';
   assert(article.length>1800,'editorial content removed: '+file);
   assert(!/<h[234](?:\s[^>]*)?>/.test(article),'user-removed article subheading was restored: '+file);
