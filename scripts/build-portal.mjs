@@ -146,6 +146,11 @@ const calculatorBody = '<div class="site-shell"><article class="portal-page port
 
 function makePage(body, pathname, title, description, withCalculator = false) {
   let html = read('about/index.html');
+  // Preserve the existing approved third-party banner loader and one main
+  // ad placement on newly generated finance pages.
+  const coupangBlock = html.match(/<aside class="life-coupang-placement[\s\S]*?<\/aside>/)?.[0];
+  if (!coupangBlock) throw new Error('Portal: existing ad block missing in page template');
+  body += coupangBlock;
   const replacements = [
     [/<title>[\s\S]*?<\/title>/, '<title>' + esc(title) + '</title>'],
     [/<meta name="description"[^>]*>/, '<meta name="description" content="' + esc(description) + '">'],
