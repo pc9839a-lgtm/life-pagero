@@ -1,0 +1,71 @@
+name: Verify finance rates visible in first public HTML
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'functions/finance/[[path]].js'
+      - 'public/finance-live.js'
+      - '.github/workflows/verify-initial-finance-html-live.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  initial-public-html:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install browser driver
+        run: |
+          npm install --no-save --no-package-lock playwright-core@1.56.1
+          which google-chrome
+      - name: Verify real rates immediately, even with browser JS disabled
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import {chromium} from 'playwright-core';
+          const browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',headless:true,args:['--no-sandbox']});
+          const sites=['https://life-pagero.pages.dev','https://pagero.kr/life'];
+          const status={};
+          try{
+            for(const base of sites) {
+              for(const width of [1280,390]) {
+                const page=await browser.newPage({viewport:{width,height:900},javaScriptEnabled:false});
+                let pass=false;
+                for(let attempt=1;attempt<=8;attempt++){
+                  try{
+                    let start=Date.now();
+                    const res=await page.goto(base+'/finance/savings/',{waitUntil:'domcontentloaded',timeout:55000});
+                    const tableVisible=await page.locator('#finance-rate-panel').isVisible();
+                    const rows=await page.locator('#finance-products tbody tr').count();
+                    const visible=await page.locator('#finance-products').innerText();
+                    if(res.status()!==200 || !tableVisible || rows<10 || !/\d+\.\d{2}%/.test(visible))
+                      throw Error('Initial savings data absent HTTP '+res.status()+' table '+tableVisible+' rows '+rows);
+                    let savingsMs=Date.now()-start;
+                    start=Date.now();
+                    await page.goto(base+'/finance/',{waitUntil:'domcontentloaded',timeout:55000});
+                    const cards=await page.locator('.finance-preview-card').count();
+                    const previewVisible=await page.locator('#finance-rate-preview').isVisible();
+                    const percentages=await page.locator('#finance-rate-preview').innerText();
+                    if(cards!==3 || !previewVisible || !/\d+\.\d{2}%/.test(percentages))
+                      throw Error('Initial finance overview rates absent cards '+cards+' visible '+previewVisible);
+                    console.log('INITIAL_HTML_FINANCE_VISIBLE',base,'width',width,
+                      'savings_rows',rows,'preview_cards',cards,'js_disabled',true,
+                      'savings_response_ms',savingsMs,'hub_response_ms',Date.now()-start);
+                    pass=true;break;
+                  }catch(error){
+                    console.log('INITIAL_HTML_WAIT',base,'width',width,'attempt',attempt,String(error.message).slice(0,180));
+                    if(attempt<8)await page.waitForTimeout(11000);
+                  }
+                }
+                await page.close();
+                if(!pass)throw Error('Real HTML did not render immediately on '+base+' at width '+width);
+                status[base+':'+width]='pass';
+              }
+            }
+            console.log('PUBLIC_FINANCE_RATES_VISIBLE_WITH_JAVASCRIPT_DISABLED',JSON.stringify(status));
+          }finally{await browser.close();}
+          NODE
