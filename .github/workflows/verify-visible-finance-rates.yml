@@ -29,6 +29,8 @@ jobs:
           node-version: 22
       - name: Build complete LIFE site
         run: npm run build
+      - name: Verify initial HTML has real rates without any browser JavaScript
+        run: node scripts/verify-finance-server-first.mjs
       - name: Browser driver
         run: |
           npm install --no-save --no-package-lock playwright-core@1.56.1
