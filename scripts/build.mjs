@@ -186,7 +186,7 @@ function header(pathname) {
 }
 
 function footer() {
-  return `<footer class="site-footer"><div class="footer-inner"><div><h2>${SITE.name}</h2><p>${SITE.description}</p><p><strong>중요:</strong> 정부기관이 아니며 신청·민원 처리를 대행하지 않습니다.</p></div><div><h3>콘텐츠</h3><ul><li><a href="/car/">자동차 생활행정</a></li><li><a href="/support/">정부지원·생활정책</a></li><li><a href="/rss.xml">RSS</a></li><li><a href="/llms.txt">llms.txt</a></li></ul></div><div><h3>운영 정보</h3><ul><li><a href="/about/">사이트 소개</a></li><li><a href="/privacy-policy/">개인정보처리방침</a></li><li><a href="/contact/">문의</a></li></ul></div></div><div class="footer-bottom"><div class="top-strip-inner">© 2026 ${SITE.name}</div></div></footer>`;
+  return `<footer class="site-footer"><div class="footer-inner"><div><h2>${SITE.name}</h2><p>정부기관이 아닙니다. 신청·민원 처리를 대행하지 않습니다.</p></div><div><h3>콘텐츠</h3><ul><li><a href="/car/">자동차 생활행정</a></li><li><a href="/support/">정부지원·생활정책</a></li><li><a href="/rss.xml">RSS</a></li><li><a href="/llms.txt">llms.txt</a></li></ul></div><div><h3>운영 정보</h3><ul><li><a href="/about/">사이트 소개</a></li><li><a href="/privacy-policy/">개인정보처리방침</a></li><li><a href="/contact/">문의</a></li></ul></div></div><div class="footer-bottom"><div class="top-strip-inner">© 2026 ${SITE.name}</div></div></footer>`;
 }
 
 const org = () => ({
@@ -232,7 +232,7 @@ function card(post) {
 }
 
 function side(current = '') {
-  return `<aside class="sidebar"><section class="sidebar-card"><h2>최근 확인 글</h2><ul class="sidebar-list">${posts.filter((post) => post.slug !== current).slice(0, 6).map((post) => `<li><a href="/${post.category}/${post.slug}/">${esc(post.title)}</a></li>`).join('')}</ul></section></aside>`;
+  return `<aside class="sidebar"><section class="sidebar-card"><h2>다른 글</h2><ul class="sidebar-list">${posts.filter((post) => post.slug !== current).slice(0, 6).map((post) => `<li><a href="/${post.category}/${post.slug}/">${esc(post.title)}</a></li>`).join('')}</ul></section></aside>`;
 }
 
 function crumb(post) {
@@ -294,7 +294,7 @@ function articleArchive(visiblePosts) {
     if (!matches.length) return '';
     return `<section class="life-archive-group" aria-label="${esc(meta.label)}"><h3><a href="/${category}/">${esc(meta.label)} <span aria-hidden="true">↗</span></a></h3><ul>${matches.map((post) => `<li><a href="/${post.category}/${post.slug}/"><span class="life-archive-title">${esc(post.title)}</span></a></li>`).join('')}</ul></section>`;
   }).filter(Boolean).join('');
-  return `<section class="section life-archive" aria-label="전체 생활정보 가이드"><div class="section-header"><div><h2>분야별 생활정보 전체보기</h2></div></div><div class="life-archive-grid">${blocks}</div></section>`;
+  return `<section class="section life-archive" aria-label="전체 생활정보 가이드"><div class="life-archive-grid">${blocks}</div></section>`;
 }
 
 
@@ -358,7 +358,7 @@ function decisionGuide() {
 function listing(key) {
   const category = CAT[key];
   const list = posts.filter((post) => post.category === key);
-  const body = `<div class="site-shell"><div class="content-grid"><div><section class="category-hero"><h1>${category.label}</h1><p>${category.desc}</p></section><section class="main-column section"><div class="section-header"><div><h2>전체 글</h2></div></div><div class="post-list">${list.map(card).join('')}</div></section></div>${side()}</div></div>`;
+  const body = `<div class="site-shell"><div class="content-grid"><div><section class="category-hero"><h1>${category.label}</h1><p>${category.desc}</p></section><section class="main-column section"><div class="post-list">${list.map(card).join('')}</div></section></div>${side()}</div></div>`;
   return page({ pathname: `/${key}/`, title: category.label, description: category.desc, body });
 }
 
@@ -387,7 +387,7 @@ write('/car/', listing('car'));
 write('/support/', listing('support'));
 for (const post of posts) write(`/${post.category}/${post.slug}/`, article(post));
 
-staticPage('/about/', '사이트 소개', '생활비서 운영 목적과 정보 제공 기준입니다.', `<h1>생활비서는 어떤 사이트인가요?</h1><p>자동차 생활행정과 정부·공공기관의 생활지원 정보를 읽기 쉬운 언어로 정리하는 독립 정보 사이트입니다.</p><h2>정부기관과의 관계</h2><p><strong>정부기관이나 공공기관의 공식 사이트가 아닙니다.</strong> 지원금 지급이나 민원 처리를 대행하지 않으며 결과를 보장하지 않습니다.</p><h2>운영 주체</h2><p>운영: 생활비서 편집팀<br>문의: <a href="mailto:${EMAIL}">${EMAIL}</a></p><h2>작성·검수 방식</h2><p>생활비서 편집팀은 정부 부처·공공기관·지자체가 공개한 안내와 법령을 확인한 뒤 대상, 기간, 금액, 신청 순서를 독자가 대조하기 쉬운 형태로 정리합니다. 각 글에 공식자료 확인일과 원문 링크를 표시하며, 제도 내용이 달라지면 확인일과 수정일을 함께 갱신합니다.</p><p>개별 신청자의 자격을 판정하거나 법률·세무 상담을 제공하지 않습니다. 실제 신청 전에는 글 하단의 공식 출처와 담당기관 안내를 최종 기준으로 확인해야 합니다.</p><h2>오류 수정 원칙</h2><p>공식 출처 변경, 링크 오류, 수치·기간 오류 제보를 확인하면 원문을 다시 대조한 뒤 수정합니다. 오류 제보는 <a href="mailto:${EMAIL}">${EMAIL}</a>로 받을 수 있습니다.</p><h2>광고와 편집의 분리</h2><p>광고주는 글의 선정과 평가에 관여하지 않으며 광고와 본문·이동 버튼을 구분합니다.</p>`);
+staticPage('/about/', '사이트 소개', '생활비서 운영 정보', `<h1>생활비서</h1><p>자동차 검사·세금·이전등록, 정부지원금, 생활행정 정보를 다룹니다.</p><p>정부기관이 아니며 신청·심사·지급을 대행하거나 보장하지 않습니다.</p><p>문의: <a href="mailto:${EMAIL}">${EMAIL}</a></p>`);
 staticPage('/privacy-policy/', '개인정보처리방침', '생활비서의 개인정보 및 Google 광고 쿠키·사용자 설정 안내입니다.', `<h1>개인정보처리방침</h1>
 <p>시행일: 2026년 10월 23일</p>
 <p>생활비서는 회원가입 없이 이용할 수 있는 독립 생활정보 사이트입니다. 본 안내는 사이트 접속 과정에서 처리될 수 있는 정보와 광고 관련 기술을 설명합니다.</p>
