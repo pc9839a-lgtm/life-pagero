@@ -1,5 +1,19 @@
 (() => {
   'use strict';
+  const detailCopy=document.querySelector('[data-copy-event]');
+  if(detailCopy)detailCopy.addEventListener('click',async()=>{
+    const url=location.href;
+    try{
+      await navigator.clipboard.writeText(url);
+      detailCopy.textContent='링크 복사 완료';
+    }catch{
+      const input=document.createElement('textarea');
+      input.value=url;input.style.position='fixed';input.style.left='-9999px';
+      document.body.appendChild(input);input.select();
+      const copied=document.execCommand('copy');input.remove();
+      detailCopy.textContent=copied?'링크 복사 완료':'주소창에서 링크를 복사해 주세요';
+    }
+  });
   const root=document.querySelector('.events-filters');
   if(!root)return;
   const el=selector=>document.querySelector(selector);
