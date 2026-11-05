@@ -40,7 +40,36 @@
 .today-news-title{display:block;font-size:13px;color:#1d344c;font-weight:740;line-height:1.6;overflow-wrap:anywhere}
 .today-news-title:hover{text-decoration:underline;text-underline-offset:3px;color:#1769e0}
 .today-news-meta{display:block;margin-top:4px;font-size:11px;color:#8291a2;line-height:1.4}
-.today-page{max-width:1100px}
+.life-modern .site-shell.today-shell{width:calc(100% - 40px);max-width:1600px;margin-inline:auto;padding-top:20px}
+.life-modern .portal-page.today-page{width:100%;max-width:none;margin:0;padding:26px 30px;border-radius:12px}
+.today-vertical-list{display:flex;flex-direction:column;align-items:stretch;gap:14px;margin:16px 0 0}
+.life-modern .today-vertical-list>.today-widget{width:100%;height:auto;min-height:0;padding:18px 22px;align-self:stretch}
+.today-vertical-list .today-weather-body{min-height:0}
+.today-vertical-list .today-coin-list{grid-template-columns:minmax(0,1fr)}
+.today-vertical-list .today-news-list li{padding:9px 0}
+.today-vertical-list .today-news-title{font-size:15px;line-height:1.55}
+.today-vertical-list .today-news-meta{margin-top:3px}
+.today-vertical-list .today-coin,.today-vertical-list .today-stock{min-height:42px;padding:8px 0}
+.today-vertical-list .today-coin-name,.today-vertical-list .today-stock-name{font-size:14px}
+.today-vertical-list .today-coin-price,.today-vertical-list .today-stock-value{font-size:14px}
+.today-vertical-list .today-coin-change,.today-vertical-list .today-stock-change{font-size:13px;min-width:88px}
+.today-vertical-list .today-coin-name small{font-size:11px}
+.today-vertical-list .today-widget-heading h3{font-size:18px}
+.today-vertical-list .today-widget-meta{font-size:11px}
+.today-coin[hidden]{display:none!important}
+.today-expand-button{display:block;width:100%;margin:8px 0 0;min-height:38px;padding:7px 12px;text-align:center;border:1px solid #e4eaf1;border-radius:5px;background:#fff;color:#1769e0;font-size:13px;font-weight:750;cursor:pointer}
+.today-expand-button:hover{background:#f5f8fc}
+@media(max-width:680px){
+  .life-modern .site-shell.today-shell{width:calc(100% - 20px);padding-top:12px}
+  .life-modern .portal-page.today-page{padding:17px 13px;border-radius:9px}
+  .today-vertical-list{gap:10px;margin-top:12px}
+  .life-modern .today-vertical-list>.today-widget{padding:13px 12px}
+  .today-vertical-list .today-news-title{font-size:13px}
+  .today-vertical-list .today-widget-heading h3{font-size:16px}
+  .today-vertical-list .today-coin-name,.today-vertical-list .today-stock-name{font-size:12px}
+  .today-vertical-list .today-coin-price,.today-vertical-list .today-stock-value{font-size:12px}
+  .today-vertical-list .today-coin-change,.today-vertical-list .today-stock-change{font-size:11px;min-width:55px}
+}
 .today-page-intro{font-size:14px;line-height:1.75;color:#576b80;margin:0 0 19px}
 .today-page>.today-widget{margin-top:18px}
 .today-page .today-full-grid{margin:14px 0 17px}
