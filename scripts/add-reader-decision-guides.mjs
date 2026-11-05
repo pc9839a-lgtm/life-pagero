@@ -98,9 +98,9 @@ for(const guide of guides){
   const linked=post.get(target);
   if(!linked)throw Error('Unpublished destination: '+target);
   if(!linked.reviewedAt)throw Error('Missing official-source review date: '+target);
-  return '<tr><th scope="row">'+esc(situation)+'</th><td>'+esc(advice)+'</td><td><a href="/'+esc(target)+'/">'+esc(label)+' ↗</a><span class="decision-date">공식자료 확인 '+esc(linked.reviewedAt)+'</span></td></tr>';
+  return '<tr><th scope="row">'+esc(situation)+'</th><td>'+esc(advice)+'</td><td><a href="/'+esc(target)+'/">'+esc(label)+' ↗</a></td></tr>';
  }).join('');
- const addition='<section class="reader-decision" aria-label="'+esc(guide.title)+'"><h2>'+esc(guide.title)+'</h2><p>아래 표는 선택할 글을 찾는 안내이며 개인별 신청 가능 여부를 판정하지 않습니다. 연결된 글의 확인일과 공식자료를 최종 기준으로 확인하세요.</p><div class="decision-table-wrap"><table><thead><tr><th scope="col">현재 상황</th><th scope="col">확인할 사항</th><th scope="col">다음에 읽을 글</th></tr></thead><tbody>'+rows+'</tbody></table></div></section>';
+ const addition='<section class="reader-decision" aria-label="'+esc(guide.title)+'"><div class="decision-table-wrap"><table><thead><tr><th scope="col">현재 상황</th><th scope="col">확인할 사항</th><th scope="col">다음에 읽을 글</th></tr></thead><tbody>'+rows+'</tbody></table></div></section>';
  html=html.replace('<section class="source-box">',addition+'<section class="source-box">');
  fs.writeFileSync(dest,html);
 }
