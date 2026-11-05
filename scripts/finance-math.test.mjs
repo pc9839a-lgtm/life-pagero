@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import { loanSchedule } from '../public/finance-loan-math.mjs';
+const input = {principal:100000000,annualRate:4.5,months:360,graceMonths:0,extraMonthly:0};
+const equal=loanSchedule({...input,method:'equal-payment'});
+const straight=loanSchedule({...input,method:'equal-principal'});
+const bullet=loanSchedule({...input,method:'bullet'});
+assert.equal(equal.rows.length,360);
+assert.equal(equal.rows.at(-1).balance,0);
+assert.equal(straight.rows.at(-1).balance,0);
+assert.equal(bullet.rows.at(-1).balance,0);
+assert(equal.totalInterest>straight.totalInterest,'Equal-payment interest should exceed equal-principal');
+assert(bullet.totalInterest>equal.totalInterest,'Bullet interest should exceed equal-payment');
+assert(straight.firstPayment>straight.lastPayment);
+assert(bullet.lastPayment>bullet.firstPayment);
+for(const method of ['equal-payment','equal-principal','bullet']){
+ const zero=loanSchedule({principal:12000000,annualRate:0,months:12,method});
+ assert.equal(zero.totalInterest,0);
+ assert.equal(zero.totalPaid,12000000);
+ assert.equal(zero.rows.at(-1).balance,0);
+ const prepay=loanSchedule({...input,method,extraMonthly:500000});
+ assert(prepay.totalInterest<=loanSchedule({...input,method}).totalInterest);
+ assert(prepay.paidOffMonths<=360);
+ const grace=loanSchedule({...input,method,graceMonths:12});
+ assert.equal(grace.rows.at(-1).balance,0);
+ assert.equal(grace.rows.length,360);
+}
+const grace=loanSchedule({...input,graceMonths:12});
+assert(grace.totalInterest>equal.totalInterest);
+assert.throws(()=>loanSchedule({...input,months:0}));
+assert.throws(()=>loanSchedule({...input,graceMonths:360}));
+assert.throws(()=>loanSchedule({...input,annualRate:-1}));
+assert.throws(()=>loanSchedule({...input,principal:0}));
+assert.throws(()=>loanSchedule({...input,method:'unknown'}));
+console.log('PASS: loan math 3 methods, zero rate, prepayment, grace, final balances, input guards');
