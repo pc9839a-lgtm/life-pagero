@@ -43,11 +43,12 @@ for(const relative of ["index.html","today/index.html","finance/index.html","top
  check(nav.includes('<a href="/deals/"'),'nav hot deals link missing '+relative);
 }
 const realFetch=globalThis.fetch;
-let hits=0;
+let hits=0,foodTagged=0;
 try{
  globalThis.fetch=async(url)=>{
    hits++;
    const path=String(url);
+   if(path.includes("p_data=life_food_search"))foodTagged++;
    check(path.includes('/api/test-placeholder/best?')||path.includes('/api/test-placeholder/search?'),'wrong API host or path');
    if(path.includes('/best?'))return new Response(JSON.stringify({success:true,data:{area:"today",list:[
       {title:"테스트 상품",price:32900,photo:"https://static.example.com/p.jpg",cp_name:"샘플 몰",commissionlink:"https://link.adpick.co.kr/test"}
@@ -70,6 +71,8 @@ try{
  check(invalid.status===400,'invalid search not rejected');
  const missing=await onRequestGet({request:new Request("https://life.example.com/deals/api"),env:{}});
  check(missing.status===503,'missing secret not rejected');
- check(hits===2,'unneeded external source requests');
+ const food=await onRequestGet(context("https://life.example.com/deals/api?mode=search&q=%EC%82%BC%EC%B9%98&src=food"));
+ check(food.status===200&&foodTagged===1,"food attribution failed");
+ check(hits===3,"unexpected affiliate API request count");
 } finally {globalThis.fetch=realFetch;}
 console.log("[adpick-qa] PASS: separate Hot Deals menu, homepage entry, noindex offer listings, API secret isolation and no-cache responses.");
