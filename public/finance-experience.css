@@ -128,3 +128,51 @@
  .finance-issue-filters{align-items:flex-start}
  .finance-issue-filters label{width:100%}
 }
+
+
+/* No-data finance experience: one action, never an API error card. */
+.life-modern .finance-official-shortcut{
+  margin:16px 0 22px;
+  padding:0;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.life-modern .finance-official-shortcut a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  min-height:50px;
+  padding:13px 18px;
+  font-size:14px;
+  font-weight:740;
+  letter-spacing:-.02em;
+  border:1px solid #dce6f7;
+  border-radius:12px;
+  color:#2359bd;
+  background:#f6f9ff;
+  box-shadow:none;
+  text-decoration:none;
+}
+.life-modern .finance-official-shortcut a:hover{
+  color:#184898;
+  border-color:#b3c8f3;
+  background:#eef5ff;
+}
+.life-modern .finance-official-shortcut a span{font-size:16px;font-weight:500}
+.life-modern .finance-official-inline{
+  margin:13px 0 0;
+  text-align:right;
+  font-size:13px;
+  font-weight:650;
+  color:#2563eb;
+}
+.life-modern .finance-data-section[hidden],
+.life-modern .finance-official-shortcut[hidden]{display:none!important}
+.life-modern .finance-data-section{margin-top:21px}
+@media(max-width:700px){
+ .life-modern .finance-official-shortcut{margin:12px 0 17px}
+ .life-modern .finance-official-shortcut a{min-height:48px;width:100%;font-size:13px}
+ .life-modern .finance-official-shortcut--issues a{width:auto;flex:1;min-width:125px}
+}
