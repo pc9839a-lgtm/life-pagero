@@ -89,7 +89,7 @@ for(const marker of [
  'grid-template-columns:1fr;gap:0', // one-column magazine list
  'body.life-editorial',
  '.life-editorial .today-news-list',
- '.life-editorial .article-content',
+ '.life-editorial.life-modern-article .article-content',
  '@media(max-width:700px)',
  'max-width:none'
 ])check(style.includes(marker),'editorial CSS missing critical rule: '+marker);
