@@ -9,6 +9,8 @@ const status=host.querySelector("[data-food-shop-status]");
 const query=String(host.dataset.foodGuideProducts||"").trim();
 if(!results||!status||query.length<2||query.length>40)return;
 const prefix=location.pathname.startsWith("/life/")?"/life/":"/";
+const preciseSearch=Object.freeze({"가리비":"홍가리비","고구마":"꿀고구마"});
+const searchQuery=preciseSearch[query]||query;
 const make=(tag,cls,value)=>{
   const element=document.createElement(tag);
   if(cls)element.className=cls;
@@ -45,7 +47,7 @@ function productImage(src){
   if(!photo){fallback();return frame;}
   const img=make("img");
   img.alt="";
-  img.loading="lazy";
+  img.loading="eager";
   img.decoding="async";
   // Some retailer CDNs block no-referrer image requests. Let the browser use
   // its default cross-origin referrer behavior and provide an error fallback.
@@ -82,9 +84,9 @@ async function load(){
   status.textContent="상품 조회 중";
   results.replaceChildren();
   const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),11000);
+  const timer=setTimeout(()=>controller.abort(),5500);
   try{
-    const params=new URLSearchParams({mode:"search",q:query,src:"food"});
+    const params=new URLSearchParams({mode:"search",q:searchQuery,src:"food"});
     const response=await fetch(prefix+"deals/api?"+params.toString(),{
       headers:{Accept:"application/json"},cache:"no-store",signal:controller.signal
     });
