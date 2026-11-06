@@ -31,7 +31,7 @@ const OYSTER_FRESH=/(생굴|깐굴|봉지굴|굴살|통영굴|석화|산지직�
 const NO_PREPARED_OYSTER=/(굴전|굴국|굴밥|굴죽|굴찜|굴튀김|굴라면|굴보쌈|굴소스|굴젓|굴무침|굴김치|훈제굴|구운굴|굴장|굴비)/i;
 const PERSIMMON_FRESH=/(단감|부유단감|태추단감|국내산|산지직송|생과|생과일|농산물|제철|햇과일|수확|과수원|신선)/i;
 const PERSIMMON_COUNT=/\d+\s*(?:개|과|입|팩|박스)/i;
-const NO_PREPARED_PERSIMMON=/(곶감|반건시|홍시|단감말랭이|말린단감|감식초|감잼|단감청|단감주스|단감착즙|단감칩|단감샐러드|단감 샐러드|단감퓨레)/i;
+const NO_PREPARED_PERSIMMON=/(곶감|반건시|홍시|단감\s*말랭이|말린\s*단감|감\s*식초|감\s*잼|단감\s*청|단감\s*주스|단감\s*착즙|단감\s*칩|단감\s*샐러드|단감\s*퓨레)/i;
 export function isRelevantFoodProduct(topic,title){
   if(typeof title!=="string"||!title.trim())return false;
   const text=title.normalize("NFKC").toLowerCase().replace(/\s+/g," ").trim();
