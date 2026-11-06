@@ -46,16 +46,6 @@
       box.replaceChildren(external(url,link,'today-official-link'));
     }
   };
-  const attachRefresh=(node,load)=>{
-    if(!node.closest('.today-viewport'))return;
-    const heading=node.querySelector('.today-widget-heading');
-    if(!heading)return;
-    const control=create('button','today-refresh','새로고침');
-    control.type='button';
-    control.setAttribute('aria-label','이 항목 새로고침');
-    control.addEventListener('click',load);
-    heading.append(control);
-  };
   async function get(url){
     const controller=new AbortController();
     const id=setTimeout(()=>controller.abort(),11500);
@@ -92,9 +82,7 @@
       }
     };
     selector?.addEventListener('change',load);
-    attachRefresh(node,load);
     load();
-    setInterval(load,45*60000);
   }
   function news(node){
     const box=node.querySelector('[data-news-items]');
@@ -146,9 +134,7 @@
       }
     };
     picker?.addEventListener('change',render);
-    attachRefresh(node,load);
     load();
-    setInterval(load,10*60000);
   }
   function crypto(node){
     const box=node.querySelector('[data-coin-items]');
@@ -192,9 +178,7 @@
         status(node,'');
       }
     };
-    attachRefresh(node,load);
     load();
-    setInterval(load,3*60000);
   }
   // Fallback to the public read-only FX reference if a subpath proxy cannot
   // reach the Cloudflare Pages /today/api/fx route. Do not display guessed rates.
@@ -261,9 +245,7 @@
         }
       }
     };
-    attachRefresh(node,load);
     if(box.dataset.fxPreloaded!=='true')load();
-    setInterval(load,60*60000);
   }
   function stock(node){
     const box=node.querySelector('[data-stock-items]');
@@ -291,7 +273,6 @@
         status(node,'');
       }
     };
-    attachRefresh(node,load);
     load();
     setInterval(load,6*3600000);
   }
