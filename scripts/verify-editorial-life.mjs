@@ -64,7 +64,7 @@ check((home.match(/class="life-home-service-card"/g)||[]).length===12,
   '4 by 3 portal shortcuts missing');
 for(const route of ['/today/','/finance/savings/','/finance/loan-payment/',
   '/finance/markets/','/food/','/events/','/deals/',
-  '/finance/mortgage-calculator/','/car/','/support/','/topics/']) {
+  '/finance/mortgage-calculator/','/car/','/support/','/real-estate/']) {
   check(home.includes('class="life-home-service-card" href="'+route+'"'),
     'homepage portal shortcut missing: '+route);
 }
