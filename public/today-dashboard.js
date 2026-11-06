@@ -196,6 +196,42 @@
     load();
     setInterval(load,3*60000);
   }
+  // Daily reference FX, not live bank quotes: display source date beside values.
+  function fx(node){
+    const box=node.querySelector('[data-fx-items]');
+    if(!box)return;
+    const official='https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html';
+    const expected=['USD','JPY','EUR','CNY'];
+    const load=async()=>{
+      status(node,'');
+      try{
+        const data=await get('today/api/fx');
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(data.sourceDate||'') ||
+          !Array.isArray(data.items)||data.items.length!==4)throw Error('FX_MISSING');
+        const list=create('div','today-fx-list');
+        for(const code of expected){
+          const row=data.items.find(item=>item.code===code);
+          if(!row||!Number.isFinite(row.krw)||row.krw<=0||
+            (row.unit!==1&&row.unit!==100))throw Error('FX_INVALID_'+code);
+          const item=create('div','today-fx');
+          const name=create('span','today-fx-name',row.name);
+          name.append(create('small','',String(row.unit)+' '+row.code));
+          item.append(name,create('strong','today-fx-value',pFmt.format(row.krw)+'원'));
+          list.append(item);
+        }
+        box.hidden=false;box.replaceChildren(list);
+        status(node,'ECB 참고환율 · '+data.sourceDate+' 기준 · 조회 '+localTime(data.retrievedAt)
+          +' · 은행 매매·송금 환율과 다름');
+      }catch(_){
+        fallback(box,'ECB 기준환율 확인',official,
+          '현재 기준환율을 불러오지 못했습니다. 출처에서 확인하세요.');
+        status(node,'');
+      }
+    };
+    attachRefresh(node,load);
+    load();
+    setInterval(load,60*60000);
+  }
   function stock(node){
     const box=node.querySelector('[data-stock-items]');
     if(!box)return;
@@ -229,5 +265,6 @@
   document.querySelectorAll('[data-today-weather]').forEach(weather);
   document.querySelectorAll('[data-today-news]').forEach(news);
   document.querySelectorAll('[data-today-crypto]').forEach(crypto);
+  document.querySelectorAll('[data-today-fx]').forEach(fx);
   document.querySelectorAll('[data-today-stocks]').forEach(stock);
 }());
