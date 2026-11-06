@@ -24,7 +24,7 @@ check(shopJs.includes('sponsored noopener noreferrer')&&shopJs.includes('cache:"
   'affiliate link rel or no-store missing');
 check(!shopJs.includes('ADPICK_BIZ_API_KEY'),'private ADPICK key leaked to browser');
 for(const marker of ['food-shop-product-bottom','food-shop-price-label',
-  'formatPrice(item.price)','상품 이미지 없음','구매처에서 보기',
+  'formatPrice(item.price)','상품 이미지 없음','구매하기',
   'img.addEventListener("error",fallback']){
   check(shopJs.includes(marker),'food card accessibility/price/image fallback missing '+marker);
 }
