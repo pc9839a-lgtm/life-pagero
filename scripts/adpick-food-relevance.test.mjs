@@ -134,7 +134,7 @@ test('general hot deals and other food searches preserve existing behavior',asyn
     ))).json();
     assert.equal(json.items.length,1,'general hot-deals search should not be changed');
     const other=await(await onRequestGet(context(
-      'https://life.example.com/deals/api?mode=search&q='+encodeURIComponent('단감')+'&src=food'
+      'https://life.example.com/deals/api?mode=search&q='+encodeURIComponent('사과')+'&src=food'
     ))).json();
     assert.equal(other.items.length,1,'unrelated food search behavior preserved');
     assert.equal(urls.length,2);
@@ -174,6 +174,33 @@ test('new food pages pass through server-side topic validation',async()=>{
     const req=context('https://life.example.com/deals/api?mode=search&q='+encodeURIComponent('가을무')+'&src=food');
     const result=await (await onRequestGet(req)).json();
     assert.deepEqual(result.items.map(i=>i.title),['국내산 가을무 5kg']);
+    assert.equal(urls.length,1);
+  });
+});
+
+test('fresh oysters are shown but oyster sauce, cooked dishes, oyster croaker and tools are blocked',()=>{
+  const allowed=['통영 생굴 1kg','국내산 손질 굴살 500g','냉동 석화 2kg','생굴 200g'];
+  const denied=['굴소스 500g','굴비 2kg','굴전 밀키트 300g','굴모양 쿠션 1kg','굴 낚시 미끼 1kg','굴젓 500g','굴 전자책 3권'];
+  for(const name of allowed)assert.equal(isRelevantFoodProduct('굴',name),true,name);
+  for(const name of denied)assert.equal(isRelevantFoodProduct('굴',name),false,name);
+});
+test('fresh whole sweet persimmons are shown but processed persimmon desserts are blocked',()=>{
+  const allowed=['국내산 단감 5kg','아삭한 태추단감 10과','제철 단감 5개','단감 1박스'];
+  const denied=['단감말랭이 500g','곶감 1kg','단감 샐러드 밀키트 2개','단감 모양 쿠션 2개','단감 식초 1병','단감 전자책 1권','홍시 5kg'];
+  for(const name of allowed)assert.equal(isRelevantFoodProduct('단감',name),true,name);
+  for(const name of denied)assert.equal(isRelevantFoodProduct('단감',name),false,name);
+});
+test('new oyster and persimmon guide API queries use fresh-ingredient rules',async()=>{
+  await mockRequests(()=>[link('국내산 생굴 500g',1),link('굴소스 500g',2)],async urls=>{
+    const req=context('https://life.example.com/deals/api?mode=search&q='+encodeURIComponent('생굴')+'&src=food');
+    const result=await(await onRequestGet(req)).json();
+    assert.deepEqual(result.items.map(i=>i.title),['국내산 생굴 500g']);
+    assert.equal(new URL(urls[0]).searchParams.get('limit'),'20');
+  });
+  await mockRequests(()=>[link('국내산 단감 10과',1),link('단감말랭이 1kg',2)],async urls=>{
+    const req=context('https://life.example.com/deals/api?mode=search&q='+encodeURIComponent('단감')+'&src=food');
+    const result=await(await onRequestGet(req)).json();
+    assert.deepEqual(result.items.map(i=>i.title),['국내산 단감 10과']);
     assert.equal(urls.length,1);
   });
 });
