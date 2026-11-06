@@ -22,6 +22,11 @@ const FRESH_UNIT=/\d+(?:[.,]\d+)?\s*(?:kg|g|킬로|키로|그램|마리)(?![a-z]
 const PROCESSED_OR_TOOLS=/(ebook|e-book|e북|e-북|전자책|전자도서|도서|책자|서적|도감|소설|기프트|모바일상품권|기프티콘|이유식|유아식|아기간식|아기밥|어린이용|키즈|키조개|조개전용|전용칼|손질칼|칼집|나이프|커터|커팅기|주방칼|칼날|칼세트|커터기|도마|식칼|조리도구|이쑤시개|용품|국자|집게|기프트카드|상품권|선물권|포장권|콘서트|어묵|조미|양념|맛살|통조림|가공품|가공식품|유아용|레토르트)/i;
 const SCALLOP_FRESH=/(생물|활가리비|생가리비|홍가리비|비단가리비|수산물|수산|해산물|산지직송|산지|원물|국내산|자연산|양식|손질|냉장|냉동|급냉|반각|관자|조개|신선)/i;
 const POTATO_FRESH=/(생고구마|햇고구마|꿀고구마|밤고구마|호박고구마|자색고구마|세척고구마|흙고구마|베니하루카|산지직송|산지|농산물|국내산|못난이|무세척|갓수확|농장|신선|수확)/i;
+const SAMCHI_FRESH=/(생삼치|손질삼치|냉동삼치|선동삼치|삼치필렛|삼치살|산지직송|수산물|국내산|냉장|냉동|원물|생물|손질|구이용|순살|토막)/i;
+const RADISH_FRESH=/(가을무|김장무|월동무|조선무|국산무|국산 무|햇무|산지직송|국내산|농산물|산지|재배|수확|못난이|무세척|흙무|통무)/i;
+const RADISH_ITEM=/(?:가을무|김장무|월동무|조선무|국산무|국산 무|햇무|흙무|통무|무우|(?:^|[\s\[(])무(?=$|[\s\])\d]))/i;
+const NO_PROCESSED_SAMCHI=/(삼치구이(?!용)|삼치조림|삼치회|삼치튀김|삼치덮밥|훈제삼치|구운삼치|양념삼치)/i;
+const NO_PROCESSED_RADISH=/(무김치|무생채|깍두기|동치미|단무지|무절임|무피클|무채볶음|무국|무말랭이|무조림|시래기)/i;
 export function isRelevantFoodProduct(topic,title){
   if(typeof title!=="string"||!title.trim())return false;
   const text=title.normalize("NFKC").toLowerCase().replace(/\s+/g," ").trim();
@@ -30,9 +35,15 @@ export function isRelevantFoodProduct(topic,title){
     return /가리비/.test(text)&&(FRESH_UNIT.test(text)||SCALLOP_FRESH.test(text));
   if(topic==="고구마")
     return /고구마/.test(text)&&(FRESH_UNIT.test(text)||POTATO_FRESH.test(text));
+  if(topic==="삼치")
+    return /삼치/.test(text)&&!NO_PROCESSED_SAMCHI.test(text)
+      &&(FRESH_UNIT.test(text)||SAMCHI_FRESH.test(text));
+  if(topic==="무")
+    return RADISH_ITEM.test(text)&&!NO_PROCESSED_RADISH.test(text)
+      &&(FRESH_UNIT.test(text)||RADISH_FRESH.test(text));
   return false;
 }
-const FOOD_TOPIC=Object.freeze({"가리비":"가리비","홍가리비":"가리비","고구마":"고구마","꿀고구마":"고구마"});
+const FOOD_TOPIC=Object.freeze({"가리비":"가리비","홍가리비":"가리비","고구마":"고구마","꿀고구마":"고구마","삼치":"삼치","손질삼치":"삼치","가을무":"무","국산 무":"무"});
 export async function onRequestGet({request,env}){
   const key=String(env?.ADPICK_BIZ_API_KEY||"").trim();
   if(!key)return reply({status:"unconfigured",items:[]},503);
