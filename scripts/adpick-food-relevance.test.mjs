@@ -92,29 +92,26 @@ test('ingredient API rejects irrelevant items even when Adpick search returns th
     assert.match(response.headers.get('cache-control'),/no-store/);
   });
 });
-test('one narrower query is tried when all broad hits are unrelated',async()=>{
-  await mockRequests(url=>{
-    if(url.searchParams.get('q')==='가리비')return irrelevantScallops.map((x,i)=>link(x,i));
-    if(url.searchParams.get('q')==='홍가리비')return [
-      link('홍가리비 낚시 미끼 3개',200),
-      link('국내산 홍가리비 2kg',201)
-    ];
-    return [];
-  },async urls=>{
-    const json=await (await onRequestGet(context())).json();
+test('narrow scallop lookup uses one upstream request and filters invalid inventory',async()=>{
+  await mockRequests(url=>[
+    link('홍가리비 낚시 미끼 3개',200),
+    link('국내산 홍가리비 2kg',201)
+  ],async urls=>{
+    const url='https://life.example.com/deals/api?mode=search&q=%ED%99%8D%EA%B0%80%EB%A6%AC%EB%B9%84&src=food';
+    const json=await(await onRequestGet(context(url))).json();
     assert.equal(json.items.length,1);
     assert.equal(json.items[0].title,'국내산 홍가리비 2kg');
-    assert.equal(json.items[0].commissionlink,'https://link.adpick.co.kr/item201');
-    assert.deepEqual(urls.map(x=>new URL(x).searchParams.get('q')),['가리비','홍가리비']);
+    assert.deepEqual(urls.map(u=>new URL(u).searchParams.get('q')),['홍가리비']);
+    assert.equal(new URL(urls[0]).searchParams.get('limit'),'20');
   });
 });
-test('no approved ingredients -> zero products; never fall back to ads for cosmetics or restaurants',async()=>{
+test('no matching products returns empty in one query; no double latency penalty',async()=>{
   await mockRequests(()=>irrelevantScallops.map((t,i)=>link(t,i)),async urls=>{
-    const response=await onRequestGet(context());
-    const json=await response.json();
+    const url='https://life.example.com/deals/api?mode=search&q=%ED%99%8D%EA%B0%80%EB%A6%AC%EB%B9%84&src=food';
+    const json=await(await onRequestGet(context(url))).json();
     assert.equal(json.status,'ok');
     assert.deepEqual(json.items,[]);
-    assert.equal(urls.length,2);
+    assert.equal(urls.length,1);
   });
 });
 test('sweet potato page excludes snacks and only returns real sweet potatoes',async()=>{
