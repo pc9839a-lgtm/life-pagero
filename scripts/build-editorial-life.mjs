@@ -66,10 +66,20 @@ const transformHome=html=>{
   // Preserve the working site search, but show it only when the header search control is selected.
   html=html.replace('<span class="life-home-kicker">LIFE PORTAL</span>','');
   html=html.replace('<h1>오늘 필요한 정보</h1>',
-    '<h1>오늘 궁금한 정보, 한곳에서</h1><p class="life-home-intro">날씨부터 금융·생활 도구까지</p>');
+    '<h1>오늘 필요한 정보</h1><p class="life-home-intro">날씨 · 금융 · 지원금 · 자동차</p>');
+  // Secondary campaign promos duplicated the actual destination grid and consumed
+  // the first screen. Their /events/ and /deals/ routes stay in the icon menu.
+  html=html.replace(/<section class="events-home-banner"[^>]*>[\s\S]*?<\/section>/,'');
+  html=html.replace(/<section class="adpick-home-entry"[^>]*>[\s\S]*?<\/section>/,'');
+  check(!html.includes('class="events-home-banner"') &&
+        !html.includes('class="adpick-home-entry"'),
+    'duplicate promotional homepage banners still take the first viewport');
+  // Search suggestion chips are only useful when the search drawer is open.
+  const suggestions=html.match(/<div class="portal-search-suggestions"[\s\S]*?<\/div>/)?.[0]||'';
+  if(suggestions)html=html.replace(suggestions,'');
   const searchForm=html.match(/<form class="portal-home-search"[\s\S]*?<\/form>/)?.[0];
   check(searchForm && searchForm.includes('id="portal-home-q"'),'original search form must exist');
-  html=html.replace(searchForm,'<div class="life-home-search-panel" id="life-home-search">'+searchForm+'</div>');
+  html=html.replace(searchForm,'<div class="life-home-search-panel" id="life-home-search">'+searchForm+suggestions+'</div>');
   const heroMatch=html.match(/<section class="hero portal-home-hero editorial-hero">[\s\S]*?<\/section>/)?.[0];
   check(heroMatch,'hero markup missing');
   html=html.replace(heroMatch,heroMatch.replace('</section>',grid+'</section>'));
