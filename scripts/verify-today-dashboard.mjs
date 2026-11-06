@@ -83,9 +83,9 @@ yes(today.includes('data-today-fx')&&today.includes('data-fx-items') &&
   'Today should replace stocks with exchange rates only');
 yes(today.includes('https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html'),
   'ECB currency reference source link missing');
-yes(today.includes('미국 달러')===false &&
+yes(!today.includes('class="today-fx-value"') &&
   today.includes('마지막 발표 영업일'),
-  'Do not hardcode today exchange rate values in public HTML');
+  'Do not hardcode exchange rate numbers in public HTML');
 yes(wideCss.includes('.today-fx-list') &&
   wideCss.includes('grid-template-columns:repeat(2,minmax(0,1fr))') &&
   wideCss.includes('.today-fx-list{grid-template-columns:1fr;gap:0}'),
