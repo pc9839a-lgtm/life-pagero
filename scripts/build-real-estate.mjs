@@ -12,19 +12,18 @@ if(!Array.isArray(listings)||listings.length!==3||listings.some(x=>x.sample!==tr
 }
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const save=(name,html)=>{const f=path.join(DIST,name);fs.mkdirSync(path.dirname(f),{recursive:true});fs.writeFileSync(f,html)};
-const sprite='/real-estate-media.webp';
-const tiles={
-  main:[0,0,360,480],
-  dongtan:[360,0,360,115],
-  siheung:[360,115,360,115],
-  suwon:[360,230,360,115],
-  sub1:[360,345,360,68],
-  sub2:[360,413,360,67]
+// Licensed stock architecture photos are used only for clearly marked fictional demos.
+const photos={
+  dongtan:'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=720&q=80',
+  siheung:'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=720&q=80',
+  suwon:'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=720&q=80',
+  main:'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=85',
+  sub1:'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80',
+  sub2:'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&q=80'
 };
 function visual(key,alt) {
-  const b=tiles[key];if(!b)throw Error('[real-estate] Missing sprite crop '+key);
-  return '<svg class="re-image" role="img" aria-label="'+esc(alt)+'" viewBox="'+b.join(' ')+'" preserveAspectRatio="xMidYMid slice">'
-    +'<image href="'+sprite+'" x="0" y="0" width="720" height="480" /></svg>';
+  if(!photos[key])throw Error('[real-estate] Missing photograph '+key);
+  return '<img class="re-image" src="'+photos[key]+'" alt="'+esc(alt)+'" loading="lazy" decoding="async">';
 }
 const pin='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>';
 const building='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V5l7-3 7 3v16M1 21h22M8 8h3M8 12h3M8 16h3"/></svg>';
@@ -56,9 +55,18 @@ const selectors='<form class="re-filter-panel" id="re-search-form" role="search"
   +'<div class="re-search-row">'+searchIcon+'<input id="re-query" type="search" aria-label="분양 현장 검색" placeholder="단지명, 지역, 시공사 검색" maxlength="80"><button type="submit">검색</button></div>'
   +'</form>';
 const adRail='<aside class="re-ad-rail" aria-label="분양정보 광고">'
-  +'<a class="re-ad re-ad-main" href="/real-estate/sample/" aria-label="가상 광고: 화성 동탄 프라임시티 상세페이지">'+visual('main','화성 동탄 프라임시티 가상 분양 홍보 대형 배너')+'<span class="re-ad-label">광고</span><span class="re-ad-fiction">가상 광고</span></a>'
-  +'<a class="re-ad re-ad-sub" href="/real-estate/sample-siheung/" aria-label="가상 광고: 시흥 배곧 더리버뷰 상세페이지">'+visual('sub1','시흥 배곧 더리버뷰 가상 분양 배너')+'<span class="re-ad-fiction">가상 광고</span></a>'
-  +'<a class="re-ad re-ad-sub" href="/real-estate/sample-suwon/" aria-label="가상 광고: 수원 광교 아울렛몰 상가 상세페이지">'+visual('sub2','수원 광교 상가 가상 분양 배너')+'<span class="re-ad-fiction">가상 광고</span></a>'
+  +'<a class="re-ad re-ad-main" href="/real-estate/sample/" aria-label="가상 광고: 화성 동탄 프라임시티 상세페이지">'
+  +'<div class="re-ad-art-main">'+visual('main','실제 분양 현장이 아닌 일반 고층 건물 참고 사진')+'<div class="re-banner-content">'
+  +'<div class="re-banner-kicker">동탄2신도시 핵심입지</div><h2>화성 동탄<br><em>프라임시티</em></h2>'
+  +'<p class="re-banner-supply">총 1,254세대 · 전용 59~114㎡ <small>(가상)</small></p>'
+  +'<div class="re-banner-fill"></div>'
+  +'<div class="re-banner-benefits"><span>GTX-A<br>(예정)</span><span>대형<br>쇼핑시설</span><span>우수한<br>교육환경</span><span>쾌적한<br>공원환경</span></div>'
+  +'<div class="re-banner-cta"><strong>3월 분양(예시) │ 관심고객 등록중!</strong><b>분양정보 확인하기 ›</b></div>'
+  +'</div></div><span class="re-ad-label">광고</span><span class="re-ad-fiction">가상 광고</span></a>'
+  +'<a class="re-ad re-ad-sub" href="/real-estate/sample-siheung/" aria-label="가상 광고: 시흥 배곧 더리버뷰 상세페이지">'
+  +'<div class="re-sub-content">'+visual('sub1','실제 현장이 아닌 건축물 참고 사진')+'<div><strong>시흥 배곧 더리버뷰</strong><p>바다와 공원이 만나는 프리미엄</p><span>자세히 보기 ›</span></div></div><span class="re-ad-fiction">가상 광고</span></a>'
+  +'<a class="re-ad re-ad-sub" href="/real-estate/sample-suwon/" aria-label="가상 광고: 수원 광교 아울렛몰 상가 상세페이지">'
+  +'<div class="re-sub-content re-sub-violet">'+visual('sub2','실제 현장이 아닌 건축물 참고 사진')+'<div><strong>광교 아울렛몰 상가</strong><p>안정적 수익! 프리미엄 상권!</p><span>분양문의 ›</span></div></div><span class="re-ad-fiction">가상 광고</span></a>'
   +'<p class="re-ad-legal">모든 분양 홍보물은 디자인용 가상 광고이며 실제 분양·상담이 아닙니다.</p></aside>';
 const crumb='<nav class="re-breadcrumb" aria-label="현재 위치"><a href="/">⌂　홈</a><span>›</span><span>부동산</span><span>›</span><strong>분양정보</strong></nav>';
 const heading='<header class="re-heading"><div class="re-h1">'+building+'<h1>부동산 분양정보</h1></div><p>전국 아파트, 오피스텔, 상가 등 분양 소식을 한눈에 확인하세요.</p></header>';
