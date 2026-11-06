@@ -322,19 +322,21 @@
       "visuals": [
         {
           "placement": "hero",
-          "filename": "Raw sweet potato.jpg",
-          "caption": "껍질째 보관하는 생고구마",
-          "alt": "표면에 흙이 남아 있는 생고구마 사진",
-          "attribution": "Fumikas Sagisavas · CC0",
-          "source": "https://commons.wikimedia.org/wiki/File:Raw_sweet_potato.jpg"
+          "filename": "pexels-7456548.jpg",
+          "caption": "보관 전 상태를 확인할 생고구마",
+          "alt": "나무상자에 쌓인 신선한 생고구마 사진",
+          "attribution": "Kindel Media · Pexels License",
+          "source": "https://www.pexels.com/photo/sweet-potatoes-in-a-crate-7456548/",
+          "downloadUrl": "https://images.pexels.com/photos/7456548/pexels-photo-7456548.jpeg?auto=compress&cs=tinysrgb&w=960"
         },
         {
           "placement": "박스 고구마 보관 순서",
-          "filename": "A sweet potato.jpg",
-          "caption": "생고구마의 표면 상태를 확인하고 물기·상처가 있는 것은 따로 분리",
-          "alt": "껍질 상태가 보이는 생고구마 사진",
-          "attribution": "JacquesDemien · CC0",
-          "source": "https://commons.wikimedia.org/wiki/File:A_sweet_potato.jpg"
+          "filename": "pexels-13059602.jpg",
+          "caption": "생고구마 겉면의 흙·상처·습기를 먼저 확인",
+          "alt": "껍질 표면이 드러난 생고구마 근접 사진",
+          "attribution": "Marcelo Verfe · Pexels License",
+          "source": "https://www.pexels.com/photo/close-up-shot-of-sweet-potatoes-13059602/",
+          "downloadUrl": "https://images.pexels.com/photos/13059602/pexels-photo-13059602.jpeg?auto=compress&cs=tinysrgb&w=960"
         }
       ],
       "summaryPoints": [
