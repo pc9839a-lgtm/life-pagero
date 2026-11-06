@@ -136,21 +136,33 @@ check(editorialStyle.includes('.life-home-tool-list{display:grid;grid-template-c
   'mobile calculators must be touch-friendly, single-column links');
 check(editorialStyle.includes('grid-template-columns:repeat(6,minmax(0,1fr))'),
   'six-item desktop navigation CSS missing');
-check(editorialStyle.includes('.modern-sponsored-area .life-coupang-widget')
-  && editorialStyle.includes('max-width:none'),
-  'mobile sponsored widget width remains constrained');
+check(editorialStyle.includes('.life-home-bottom-coupang .life-coupang-widget') &&
+  editorialStyle.includes('max-width:none'),
+  'bottom Coupang widget must fill the mobile width');
+check(editorialStyle.includes('--brand:#e95731;--brand-dark:#e95731;--brand-soft:#f5f6f7;') &&
+  editorialStyle.includes('life-home-all-link'),
+  'single restrained orange accent not configured');
 check((home.match(/class="portal-topic-card compact-topic"/g)||[]).length===6,
   'six original topic links lost');
 check(home.includes('<details class="compact-explore compact-latest" open>'),
   'recently updated original articles still hidden');
 check((home.match(/data-affiliate="tenping-/g)||[]).length===4,
   'original affiliate cards altered');
-check((home.match(/data-life-coupang-kind="(?:middle|body)"/g)||[]).length===2,
-  'original homepage advertising slots altered');
+check((home.match(/data-life-coupang-banner="sitewide-v4"/g)||[]).length===1,
+  'homepage must show exactly one Coupang banner');
+check((home.match(/data-life-coupang-kind="body"/g)||[]).length===1 &&
+      !home.includes('data-life-coupang-kind="middle"') &&
+      !home.includes('data-life-coupang-kind="rail"'),
+  'homepage must not retain original duplicate placements');
+check(home.includes('class="life-coupang-placement life-coupang-placement--body life-home-bottom-coupang"'),
+  'bottom-only Coupang placement missing');
+check(home.indexOf('life-home-bottom-coupang')>home.indexOf('<details class="modern-all-articles"') &&
+      home.indexOf('life-home-bottom-coupang')<home.lastIndexOf('</main>'),
+  'Coupang must be at the end of main content');
+check((home.match(/new PartnersCoupang\.G\(options\)/g)||[]).length===1,
+  'Coupang widget initialized more than once');
 check(home.includes('options.height=window.matchMedia("(max-width:700px)").matches?"320":"380";'),
-  'homepage-only larger Coupang banner height is missing');
-check((home.match(/data-life-coupang-kind="rail"/g)||[]).length===1,
-  'original sidebar advertising altered');
+  'original responsive Coupang dimensions must be retained');
 for(const name of ['car','support']){
   const html=read(name+'/index.html');
   check(html.includes('id="modern-article-list"')&&html.includes('id="modern-list-filter"'),

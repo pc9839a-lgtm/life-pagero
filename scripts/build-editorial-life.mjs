@@ -192,6 +192,26 @@ const transformHome=html=>{
     '<summary>최근 업데이트</summary>');
   check(html.includes('<details class="modern-all-articles">'),
     'full existing article archive missing');
+  // The homepage has three Coupang placements in the source build:
+  // two inline + one sidebar. Keep exactly the original publisher-configured
+  // body widget, relocate it below the page content, and remove the duplicates.
+  // All non-home pages retain their source advertising layout unchanged.
+  const coupangBlocks=[...html.matchAll(/<aside class="life-coupang-placement\b[^>]*>[\s\S]*?<\/aside>/g)];
+  check(coupangBlocks.length===3,'homepage must start with 3 original Coupang units');
+  const bottomCoupang=coupangBlocks.map(m=>m[0]).find(block=>
+    block.includes('data-life-coupang-kind="body"'));
+  check(bottomCoupang && bottomCoupang.includes('data-life-coupang-banner="sitewide-v4"'),
+    'original publisher Coupang widget missing');
+  for(const match of coupangBlocks)html=html.replace(match[0],'');
+  const bottomAd=bottomCoupang.replace(
+    'class="life-coupang-placement life-coupang-placement--body"',
+    'class="life-coupang-placement life-coupang-placement--body life-home-bottom-coupang"');
+  check(html.includes('</main>'),'homepage footer ad destination missing');
+  html=html.replace('</main>',bottomAd+'</main>');
+  check((html.match(/data-life-coupang-banner="sitewide-v4"/g)||[]).length===1,
+    'homepage Coupang must appear once only');
+  check(html.indexOf('life-home-bottom-coupang')>html.indexOf('class="modern-all-articles"'),
+    'homepage Coupang must remain at bottom after the content');
   return html;
 };
 const transformArticle=(html,relative)=>{
