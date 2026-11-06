@@ -231,7 +231,7 @@ const transformToday=html=>{
   check(html.includes('class="today-viewport"') &&
     html.includes('class="today-wide-content"'),'full-width Today wrappers missing');
   check(html.includes('data-today-news') && html.includes('data-today-weather') &&
-    html.includes('data-today-stocks') && html.includes('data-today-crypto'),
+    html.includes('data-today-fx') && html.includes('data-today-crypto'),
     'Today API elements missing');
   return html.replace('class="today-vertical-list today-dashboard-grid"','class="today-vertical-list today-dashboard-grid editorial-desk"');
 };
