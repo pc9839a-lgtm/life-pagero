@@ -61,7 +61,7 @@ try{
   assert.equal((await fourth.json()).value,2);
   assert.equal(fourth.headers.get('x-life-data-cache'),'HIT');
 
-  now+=61_000;
+  now+=181_000;
   let failedRefreshes=0;
   const failed=async()=>{failedRefreshes++;throw Error('UPSTREAM_UNAVAILABLE');};
   const stale=await cached(context(),'shared-people',60,failed,options);
