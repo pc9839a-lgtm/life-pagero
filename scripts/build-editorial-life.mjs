@@ -13,6 +13,8 @@ const CSS_HASH=createHash('sha256').update(fs.readFileSync(path.join(DIST,CSS.sl
 const CSS_HREF=CSS+'?v='+CSS_HASH;
 const TODAY_HASH=createHash('sha256')
   .update(fs.readFileSync(path.join(DIST,'today-wide.css'))).digest('hex').slice(0,12);
+const DASHBOARD_HASH=createHash('sha256')
+  .update(fs.readFileSync(path.join(DIST,'today-dashboard.js'))).digest('hex').slice(0,12);
 const oldStyles=[
   '/life-modern.css','/life-compact.css','/life-global-nav.css',
   '/today-dashboard.css'
@@ -256,6 +258,11 @@ for(const absolute of walk(DIST).filter(file=>file.endsWith('.html'))){
   html=removeOldStyles(html);
   html=html.replace('class="life-modern ','class="life-modern life-editorial ');
   html=html.replace('</head>','<link rel="stylesheet" href="'+CSS_HREF+'"></head>');
+  if(relative==='today/index.html'||relative==='finance/markets/index.html'){
+    const oldJs='src="/today-dashboard.js"';
+    check(html.includes(oldJs),'Today quote loader missing: '+relative);
+    html=html.replace(oldJs,'src="/today-dashboard.js?v='+DASHBOARD_HASH+'"');
+  }
   if(relative==='today/index.html'){
     // The dedicated Today layout must be loaded after the global editorial
     // design system; no changes to finance/markets or other shared widgets.
