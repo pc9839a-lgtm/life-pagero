@@ -105,19 +105,50 @@ const transformHome=html=>{
   check(html.includes(archiveAnchor),'article archive missing');
   html=html.replace(archiveAnchor,categoryDrawer+archiveAnchor);
 
+  // Use the published editorial articles' actual photos. Do not invent generic
+  // stock-like graphic placeholders: the same image is already used in each guide.
+  const escAttr=x=>String(x??'').replace(/[&<>"']/g,ch=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[ch]));
+  const guidePhoto=(category,slug)=>{
+    const file=path.resolve('content/posts',category,slug+'.json');
+    check(fs.existsSync(file),'published guide photo source missing '+slug);
+    const post=JSON.parse(fs.readFileSync(file,'utf8'));
+    const photo=post.series?.parts?.[0]?.image;
+    check(/^https:\/\//.test(photo||''),'published guide photo missing '+slug);
+    return {src:photo,alt:post.series.parts[0].imageAlt||post.title};
+  };
   const spotlight=[
-    {href:'/support/basic-pension-2026/',title:'2026 기초연금 대상 확인',sub:'신청 조건과 선정기준액',kind:'pension',icon:'<path d="M12 2v20M7 7h9a3 3 0 0 1 0 6H8h8a3 3 0 0 1 0 6H6"/>'},
-    {href:'/car/car-inspection-period/',title:'자동차 검사기간 조회',sub:'검사 시기와 확인 방법',kind:'car',icon:'<path d="m5 11 1.5-5h11L19 11M4 11h16v8H4zM7 15h2M15 15h2"/>'},
-    {href:'/support/housing-benefit-2026/',title:'2026 주거급여 신청 조건',sub:'소득 기준과 신청 방법',kind:'house',icon:'<path d="m3 10 9-7 9 7v10H3V10ZM9 20v-7h6v7"/>'}
+    {href:'/support/basic-pension-2026/',title:'2026 기초연금 대상 확인',sub:'신청 조건과 선정기준액',photo:guidePhoto('support','basic-pension-2026')},
+    {href:'/car/car-inspection-period/',title:'자동차 검사기간 조회',sub:'정기·종합검사 확인 방법',photo:guidePhoto('car','car-inspection-period')},
+    {href:'/support/housing-benefit-2026/',title:'2026 주거급여 신청 조건',sub:'소득 기준과 신청 방법',photo:guidePhoto('support','housing-benefit-2026')}
   ];
   const spotlightList=spotlight.map(item=>'<li><a href="'+item.href+'">'
-    +'<span class="life-home-spot-thumb life-home-spot-'+item.kind+'" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+item.icon+'</svg></span>'
+    +'<span class="life-home-spot-thumb"><img src="'+escAttr(item.photo.src)+'" alt="'+escAttr(item.photo.alt)+'" width="120" height="120" loading="lazy" decoding="async"></span>'
     +'<span class="life-home-spot-copy"><strong>'+item.title+'</strong><small>'+item.sub+'</small></span>'
     +'<span class="life-home-spot-arrow" aria-hidden="true">›</span></a></li>').join('');
   const popPattern=/(<section class="compact-popular"[\s\S]*?<ul>)[\s\S]*?(<\/ul><\/section>)/;
   check(popPattern.test(html),'original home editorial picks missing');
   html=html.replace(popPattern,'$1'+spotlightList+'$2');
   html=html.replace('>주요 생활정보</h2>','>지금 확인할 생활정보</h2>');
+
+  // Actual working calculators, not an invented statistics/benefits showcase.
+  const tools=[
+    {href:'/finance/loan-payment/',title:'대출 이자 계산',description:'월 상환액 · 총이자'},
+    {href:'/finance/savings-calculator/',title:'적금 만기 계산',description:'납입액 · 이자 · 세후 수령액'},
+    {href:'/tools/car-cost/',title:'자동차 유지비',description:'주행거리 · 연료비 · 유지비'}
+  ];
+  const toolLinks=tools.map((item,index)=>'<a class="life-home-tool-link" href="'+item.href+'">'
+    +'<span class="life-home-tool-number">0'+(index+1)+'</span>'
+    +'<span class="life-home-tool-copy"><strong>'+item.title+'</strong><small>'+item.description+'</small></span>'
+    +'<span class="life-home-tool-chevron" aria-hidden="true">↗</span></a>').join('');
+  const toolSection='<section class="life-home-tool-section" aria-labelledby="life-tool-title">'
+    +'<div class="life-home-section-heading"><h2 id="life-tool-title">생활 계산기</h2><a href="/finance/">금융 전체보기 <span aria-hidden="true">›</span></a></div>'
+    +'<div class="life-home-tool-list">'+toolLinks+'</div></section>';
+  const toolAnchor='<details class="compact-explore compact-latest"';
+  check(html.includes(toolAnchor),'latest articles missing for tool placement');
+  html=html.replace(toolAnchor,toolSection+toolAnchor);
+
   // Move existing labelled ads above the deep archive, not below every other block.
   const sponsorOpen='<section class="modern-sponsored-area" aria-label="광고 및 제휴">';
   const sponsorStart=html.indexOf(sponsorOpen);
