@@ -1358,6 +1358,24 @@ body.life-editorial{
 .life-editorial .food-shop-product:focus-visible{
   outline:2px solid var(--brand);outline-offset:3px;
 }
+.life-editorial .food-shop-actions{
+  display:flex;align-items:center;flex-wrap:wrap;gap:10px;
+  margin:15px 0 0;
+}
+.life-editorial .food-shop-search-link,
+.life-editorial .food-shop-retry{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:43px;padding:10px 19px;
+  border:1px solid #d9e0e6;border-radius:6px;
+  background:#fff;color:#2c3945;font-size:15px;
+  font-weight:770;line-height:1.5;text-decoration:none;
+  cursor:pointer;
+}
+.life-editorial .food-shop-search-link:hover,
+.life-editorial .food-shop-retry:hover{
+  border-color:var(--brand);color:var(--brand);
+}
+.life-editorial .food-shop-retry[hidden]{display:none}
 .life-editorial .food-shop-disclosure{
   margin:15px 0 0;color:#89949d;
   font-size:11px;line-height:1.55;
@@ -1394,6 +1412,9 @@ body.life-editorial{
   .life-editorial .food-shop-buy{
     min-height:40px;padding:8px 7px;font-size:12px;
   }
+  .life-editorial .food-shop-actions{gap:8px;margin-top:12px}
+  .life-editorial .food-shop-search-link,
+  .life-editorial .food-shop-retry{font-size:13px;min-height:41px;padding:9px 13px}
   .life-editorial .food-shop-photo-missing{font-size:12px}
 }
 @media(max-width:375px){
