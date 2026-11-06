@@ -30,7 +30,7 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
    oversized full-width weather panel that pushes everything below the fold. */
 .life-editorial .today-wide-content .today-dashboard-grid{
   display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);
-  grid-template-areas:"weather news" "stocks news" "crypto crypto";
+  grid-template-areas:"weather news" "fx news" "crypto crypto";
   align-items:start;column-gap:20px;row-gap:16px;
   width:100%;max-width:none;margin:0;padding:0;border:0
 }
@@ -43,7 +43,7 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   grid-area:weather;padding:21px 24px;background:#f7f8f9;border-color:#e8eaed
 }
 .life-editorial .today-wide-content .today-dashboard-grid>[data-today-news]{grid-area:news}
-.life-editorial .today-wide-content .today-dashboard-grid>[data-today-stocks]{grid-area:stocks}
+.life-editorial .today-wide-content .today-dashboard-grid>[data-today-fx]{grid-area:fx}
 .life-editorial .today-wide-content .today-dashboard-grid>[data-today-crypto]{grid-area:crypto}
 .life-editorial .today-wide-content .today-widget-heading{
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
@@ -121,43 +121,68 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   display:block;margin:0;text-align:left;color:#87939d;
   font-size:11px;line-height:1.4;white-space:normal
 }
-.life-editorial .today-wide-content .today-stock-list,
+/* FX is a reference-rate table, not a stock ticker. Show four complete
+   pairs with units and one KRW value; no false intraday change indicators. */
+.life-editorial .today-wide-content .today-fx-notice{
+  margin:0 0 9px;color:#78848d;font-size:12px;line-height:1.5
+}
+.life-editorial .today-wide-content .today-fx-list{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  column-gap:18px;row-gap:0;width:100%;min-width:0
+}
+.life-editorial .today-wide-content .today-fx{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  min-width:0;min-height:58px;margin:0;padding:12px 0;
+  border:0;border-bottom:1px solid #edf0f2;color:#26323c
+}
+.life-editorial .today-wide-content .today-fx-name{
+  display:block;min-width:0;font-size:14px;font-weight:700;
+  line-height:1.45;word-break:keep-all
+}
+.life-editorial .today-wide-content .today-fx-name small{
+  display:block;margin-top:3px;color:#83909b;font-size:11px;font-weight:490
+}
+.life-editorial .today-wide-content .today-fx-value{
+  margin-left:auto;color:#222d36;text-align:right;font-size:16px;font-weight:750;
+  white-space:nowrap;font-variant-numeric:tabular-nums
+}
+.life-editorial .today-wide-content .today-fx-list,
 .life-editorial .today-wide-content .today-coin-list{
   display:block;width:100%;min-width:0;margin:0;padding:0
 }
-.life-editorial .today-wide-content .today-stock,
+.life-editorial .today-wide-content .today-fx,
 .life-editorial .today-wide-content .today-coin{
   display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,170px) minmax(52px,82px);
   gap:9px;align-items:center;min-width:0;min-height:51px;
   margin:0;padding:9px 1px;border:0;border-bottom:1px solid #edf0f2;
   background:transparent;color:#26323c;text-decoration:none
 }
-.life-editorial .today-wide-content .today-stock:last-child,
+.life-editorial .today-wide-content .today-fx:last-child,
 .life-editorial .today-wide-content .today-coin:last-child{border-bottom:0}
-.life-editorial .today-wide-content .today-stock-name,
+.life-editorial .today-wide-content .today-fx-name,
 .life-editorial .today-wide-content .today-coin-name{
   min-width:0;color:#27323c;font-size:14px;font-weight:700;line-height:1.4
 }
 .life-editorial .today-wide-content .today-coin-name small{
   display:block;margin-top:2px;color:#87929b;font-size:11px;font-weight:490
 }
-.life-editorial .today-wide-content .today-stock-value,
+.life-editorial .today-wide-content .today-fx-value,
 .life-editorial .today-wide-content .today-coin-price{
   color:#222d36;text-align:right;font-size:14px;
   font-weight:740;white-space:nowrap;font-variant-numeric:tabular-nums
 }
-.life-editorial .today-wide-content .today-stock-change,
+.life-editorial .today-wide-content .today-fx-change,
 .life-editorial .today-wide-content .today-coin-change{
   color:#6d7883;text-align:right;font-size:12px;
   white-space:nowrap;font-variant-numeric:tabular-nums
 }
 /* Market gain/loss colors are semantic, not decorative palette variants. */
 .life-editorial .today-wide-content .today-coin-change.positive,
-.life-editorial .today-wide-content .today-stock-change.positive{color:#b94236}
+.life-editorial .today-wide-content .today-fx-change.positive{color:#b94236}
 .life-editorial .today-wide-content .today-coin-change.negative,
-.life-editorial .today-wide-content .today-stock-change.negative{color:#2868ab}
+.life-editorial .today-wide-content .today-fx-change.negative{color:#2868ab}
 .life-editorial .today-wide-content .today-coin-change.neutral,
-.life-editorial .today-wide-content .today-stock-change.neutral{color:#6c7984}
+.life-editorial .today-wide-content .today-fx-change.neutral{color:#6c7984}
 .life-editorial .today-wide-content .today-expand-button{
   display:flex;align-items:center;justify-content:center;width:100%;
   min-height:43px;margin:10px 0 0;padding:8px 12px;
@@ -188,7 +213,7 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   body.life-modern #main-content>.today-viewport{padding:19px 20px 40px}
   .life-editorial .today-wide-content .today-dashboard-grid{
     grid-template-columns:minmax(0,1fr);
-    grid-template-areas:"weather" "news" "stocks" "crypto";
+    grid-template-areas:"weather" "news" "fx" "crypto";
     row-gap:12px
   }
   .life-editorial .today-wide-content .today-dashboard-grid>.today-widget{
@@ -197,6 +222,9 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   .life-editorial .today-wide-content .today-dashboard-grid>[data-today-weather]{
     padding:20px 19px
   }
+}
+@media(max-width:900px){
+  .life-editorial .today-wide-content .today-fx-list{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:600px){
   body.life-editorial #main-content>.today-viewport,
@@ -229,18 +257,22 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   .life-editorial .today-wide-content .today-weather-temp{font-size:49px}
   .life-editorial .today-wide-content .today-weather-condition{font-size:14px}
   .life-editorial .today-wide-content .today-weather-details{font-size:12px}
+  .life-editorial .today-wide-content .today-fx-list{grid-template-columns:1fr;gap:0}
+  .life-editorial .today-wide-content .today-fx{min-height:52px;padding:9px 0}
+  .life-editorial .today-wide-content .today-fx-name{font-size:14px}
+  .life-editorial .today-wide-content .today-fx-value{font-size:15px}
   .life-editorial .today-wide-content .today-news-title{font-size:15px}
   .life-editorial .today-wide-content .today-news-list li{padding:11px 0}
-  .life-editorial .today-wide-content .today-stock,
+  .life-editorial .today-wide-content .today-fx,
   .life-editorial .today-wide-content .today-coin{
     grid-template-columns:minmax(0,1fr) minmax(88px,auto) 57px;
     gap:6px;min-height:51px;padding:9px 0
   }
-  .life-editorial .today-wide-content .today-stock-name,
+  .life-editorial .today-wide-content .today-fx-name,
   .life-editorial .today-wide-content .today-coin-name{font-size:13px}
-  .life-editorial .today-wide-content .today-stock-value,
+  .life-editorial .today-wide-content .today-fx-value,
   .life-editorial .today-wide-content .today-coin-price{font-size:12px}
-  .life-editorial .today-wide-content .today-stock-change,
+  .life-editorial .today-wide-content .today-fx-change,
   .life-editorial .today-wide-content .today-coin-change{font-size:11px}
   .life-editorial .today-wide-content .today-widget-meta{font-size:11px}
   .life-editorial .today-wide-content .today-source-guidance{margin-top:25px}
@@ -252,11 +284,11 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   .life-editorial .today-wide-content .today-dashboard-grid>[data-today-weather]{
     padding:16px 13px
   }
-  .life-editorial .today-wide-content .today-stock,
+  .life-editorial .today-wide-content .today-fx,
   .life-editorial .today-wide-content .today-coin{
     grid-template-columns:minmax(0,1fr) minmax(80px,auto) 50px;
     gap:4px
   }
   .life-editorial .today-wide-content .today-coin-change,
-  .life-editorial .today-wide-content .today-stock-change{font-size:10px}
+  .life-editorial .today-wide-content .today-fx-change{font-size:10px}
 }
