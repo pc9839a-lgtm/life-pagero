@@ -72,7 +72,7 @@ function appendProduct(item,index){
   price.append(make("span","food-shop-price-label","판매가"));
   price.append(make("strong","food-shop-price",formatPrice(item.price)));
   bottom.append(price);
-  bottom.append(make("span","food-shop-buy","구매처에서 보기"));
+  bottom.append(make("span","food-shop-buy","구매하기"));
   info.append(bottom);
   card.append(picture,info);
   results.append(card);
