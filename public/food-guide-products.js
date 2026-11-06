@@ -1,7 +1,7 @@
 (()=>{
 "use strict";
-// Food articles only. Product and price values are provided live by the
-// existing server-side ADPICK for BIZ endpoint. Never persist response data.
+// Live ADPICK data only. Keep provider product and price values untouched
+// server-side; format KRW for readability in the browser.
 const host=document.querySelector("[data-food-guide-products]");
 if(!host)return;
 const results=host.querySelector("[data-food-shop-results]");
@@ -19,42 +19,67 @@ const https=value=>{
   try{const url=new URL(String(value||""));return url.protocol==="https:"?url.href:null;}
   catch{return null;}
 };
+const formatPrice=raw=>{
+  if(raw==null||String(raw).trim()==="")return "가격 확인";
+  if(typeof raw==="number"){
+    return Number.isFinite(raw)&&raw>=0
+      ?Math.round(raw).toLocaleString("ko-KR")+"원"
+      :"가격 확인";
+  }
+  const original=String(raw).trim();
+  const cleaned=original.replace(/[,\s]/g,"").replace(/^[₩￦]/,"").replace(/원$/,"");
+  if(/^\d+(?:\.\d+)?$/.test(cleaned)){
+    const value=Number(cleaned);
+    if(Number.isFinite(value)&&value>=0)
+      return Math.round(value).toLocaleString("ko-KR")+"원";
+  }
+  // Do not infer a missing price or change provider's non-numeric description.
+  return original;
+};
+function productImage(src){
+  const frame=make("div","food-shop-image");
+  const fallback=()=>frame.replaceChildren(
+    make("span","food-shop-photo-missing","상품 이미지 없음")
+  );
+  const photo=https(src);
+  if(!photo){fallback();return frame;}
+  const img=make("img");
+  img.alt="";
+  img.loading="lazy";
+  img.decoding="async";
+  // Some retailer CDNs block no-referrer image requests. Let the browser use
+  // its default cross-origin referrer behavior and provide an error fallback.
+  img.addEventListener("error",fallback,{once:true});
+  img.src=photo;
+  frame.append(img);
+  return frame;
+}
 function appendProduct(item,index){
-  if(!item||typeof item.title!=="string")return false;
+  if(!item||typeof item.title!=="string"||!item.title.trim())return false;
   const affiliate=https(item.commissionlink);
   if(!affiliate)return false;
   const card=make("a","food-shop-product"+(index===0?" food-shop-product-first":""));
   card.href=affiliate;
   card.target="_blank";
   card.rel="sponsored noopener noreferrer";
-  const picture=make("div","food-shop-image");
-  const photo=https(item.photo);
-  if(photo){
-    const img=make("img");
-    img.src=photo;
-    img.alt="";
-    img.loading="lazy";
-    img.decoding="async";
-    img.referrerPolicy="no-referrer";
-    picture.append(img);
-  }else{
-    picture.append(make("span","food-shop-photo-missing","상품"));
-  }
+  card.setAttribute("aria-label",item.title+" 상품 확인");
+  const picture=productImage(item.photo);
   const info=make("div","food-shop-product-info");
-  info.append(make("span","food-shop-merchant",item.cp_name||"판매처 확인"));
+  info.append(make("span","food-shop-merchant",item.cp_name||"판매처"));
   info.append(make("strong","food-shop-name",item.title));
-  const price=item.price==null?"판매처에서 가격 확인"
-    :typeof item.price==="number"
-      ?item.price.toLocaleString("ko-KR")+"원"
-      :String(item.price);
-  info.append(make("span","food-shop-price",price));
-  info.append(make("span","food-shop-buy","상품 보기"));
+  const bottom=make("div","food-shop-product-bottom");
+  const price=make("div","food-shop-price-row");
+  price.append(make("span","food-shop-price-label","판매가"));
+  price.append(make("strong","food-shop-price",formatPrice(item.price)));
+  bottom.append(price);
+  bottom.append(make("span","food-shop-buy","구매처에서 보기"));
+  info.append(bottom);
   card.append(picture,info);
   results.append(card);
   return true;
 }
 async function load(){
-  status.textContent="관련 상품 확인 중";
+  status.textContent="상품 조회 중";
   results.replaceChildren();
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),11000);
