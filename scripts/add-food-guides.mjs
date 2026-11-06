@@ -136,8 +136,12 @@ for(const guide of dataset.guides){
   html=html.replace('<link rel="stylesheet" href="/life-food.css">','')
     .replace('<script defer src="/life-food.js"></script>','');
   html=html.replace('</head>','<script defer src="'+SHOP_SCRIPT_HREF+'"></script></head>');
-  html=html.replace(/<meta property="og:image"[^>]*>/,
-    '<meta property="og:image" content="'+esc(imageUrl(hero))+'">');
+  const ogImageTag='<meta property="og:image" content="'+esc(imageUrl(hero))+'">';
+  if(/<meta property="og:image"[^>]*>/.test(html)){
+    html=html.replace(/<meta property="og:image"[^>]*>/,ogImageTag);
+  }else{
+    html=html.replace('</head>',ogImageTag+'</head>');
+  }
   const articleSchema={
     '@context':'https://schema.org','@type':'Article',
     headline:guide.title,description:guide.description,
