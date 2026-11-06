@@ -58,28 +58,31 @@ const transformHome=html=>{
     {href:'/events/',label:'축제·행사',icon:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18M8 15h3"/>'},
     {href:'/real-estate/',label:'분양정보',icon:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'}
   ];
-  // Eight deliberate, non-duplicated first-screen destinations; the other four
-  // remain accessible without taking up permanent screen space.
-  const primaryOrder=['날씨','증권','금리비교','계산기','먹거리','핫딜','지원금','분양정보'];
+  // Editorial first, navigation second: a single six-item discoverability row.
+  // All other services remain linked in a lower page directory, not a nested drawer.
+  const primaryOrder=['날씨','금리비교','계산기','지원금','핫딜','분양정보'];
   const primary=primaryOrder.map(label=>services.find(item=>item.label===label));
   const secondary=services.filter(item=>!primaryOrder.includes(item.label));
-  check(primary.every(Boolean)&&primary.length===8&&secondary.length===4,
-    'homepage menu groups must cover all twelve original services');
+  check(primary.length===6&&primary.every(Boolean)&&secondary.length===6,
+    'six first-fold navigation links and six directory links required');
   const serviceLinks=primary.map(item=>'<a class="life-home-service-card" href="'+item.href+'">'
     +'<span class="life-home-service-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+item.icon+'</svg></span>'
     +'<span class="life-home-service-copy"><strong>'+item.label+'</strong></span></a>').join('');
   const grid='<nav class="life-home-service-grid" aria-label="주요 서비스 바로가기">'+serviceLinks+'</nav>';
   const otherLinks=secondary.map(item=>'<a href="'+item.href+'">'+item.label+
     '<span aria-hidden="true">›</span></a>').join('');
-  const more='<details class="life-home-more-services"><summary>다른 서비스 보기'
-    +'<span class="life-home-more-count">4개</span></summary>'
-    +'<nav class="life-home-more-links" aria-label="추가 서비스">'+otherLinks+'</nav></details>';
-  check((serviceLinks.match(/class="life-home-service-card"/g)||[]).length===8,
-    'eight primary menu items required');
-  check((otherLinks.match(/<a href=/g)||[]).length===4,
-    'four secondary menu destinations required');
+  const more='<section class="life-home-other-services" id="life-home-other-services" aria-labelledby="life-home-other-title">'
+    +'<div class="life-home-section-heading"><h2 id="life-home-other-title">다른 서비스</h2></div>'
+    +'<nav class="life-home-more-links" aria-label="다른 서비스 바로가기">'+otherLinks+'</nav></section>';
+  check((serviceLinks.match(/class="life-home-service-card"/g)||[]).length===6,
+    'six primary navigation links required');
+  check((otherLinks.match(/<a href=/g)||[]).length===6,
+    'six additional service links required');
   // Preserve the working site search, but show it only when the header search control is selected.
   html=html.replace('<span class="life-home-kicker">LIFE PORTAL</span>','');
+  html=html.replace('<h1>오늘 필요한 정보</h1>',
+    '<div class="life-home-title-row"><h1>오늘 필요한 정보</h1><a href="#life-home-other-services" class="life-home-all-link">전체 서비스 <span aria-hidden="true">›</span></a></div>');
+
   // The icon labels provide the navigation context; no redundant subtitle.
 
   // Secondary campaign promos duplicated the actual destination grid and consumed
@@ -97,7 +100,7 @@ const transformHome=html=>{
   html=html.replace(searchForm,'<div class="life-home-search-panel" id="life-home-search">'+searchForm+suggestions+'</div>');
   const heroMatch=html.match(/<section class="hero portal-home-hero editorial-hero">[\s\S]*?<\/section>/)?.[0];
   check(heroMatch,'hero markup missing');
-  html=html.replace(heroMatch,heroMatch.replace('</section>',grid+more+'</section>'));
+  html=html.replace(heroMatch,heroMatch.replace('</section>',grid+'</section>'));
   const searchIcon='<a class="life-home-header-search" href="#life-home-search" aria-label="검색창 열기" title="검색">'
     +'<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.5"/><path d="m16 16 5 5"/></svg></a>';
   const headerEnd='</div><nav class="main-nav"';
@@ -160,6 +163,10 @@ const transformHome=html=>{
   const toolSection='<section class="life-home-tool-section" aria-labelledby="life-tool-title">'
     +'<div class="life-home-section-heading"><h2 id="life-tool-title">생활 계산기</h2><a href="/finance/">금융 전체보기 <span aria-hidden="true">›</span></a></div>'
     +'<div class="life-home-tool-list">'+toolLinks+'</div></section>';
+  // Keep the full service directory below the actual content and tools.
+  const lowerNavAnchor='<details class="compact-explore compact-latest"';
+  check(html.includes(lowerNavAnchor),'latest article section missing for directory');
+  html=html.replace(lowerNavAnchor,more+lowerNavAnchor);
   const toolAnchor='<details class="compact-explore compact-latest"';
   check(html.includes(toolAnchor),'latest articles missing for tool placement');
   html=html.replace(toolAnchor,toolSection+toolAnchor);

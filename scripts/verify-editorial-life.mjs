@@ -60,15 +60,17 @@ const keywordPattern=/<div class="portal-search-suggestions"[\s\S]*?<\/div>/;
 const keyword=home.match(keywordPattern)?.[0]||'';
 check(!keyword || home.indexOf(keyword)>home.indexOf('class="life-home-search-panel"'),
   'search chips must remain in the closed search panel');
-check((home.match(/class="life-home-service-card"/g)||[]).length===8,
-  '4 by 2 primary navigation count incorrect');
-const more=home.match(/<details class="life-home-more-services">[\s\S]*?<\/details>/)?.[0]||'';
-check((more.match(/<a href=/g)||[]).length===4,
-  'four secondary menu links missing');
-for(const route of ['/finance/markets/','/finance/mortgage-calculator/','/car/','/events/'])
-  check(more.includes('href="'+route+'"'),'secondary menu destination missing: '+route);
+check((home.match(/class="life-home-service-card"/g)||[]).length===6,
+  'six focused quick routes expected');
+check(!home.includes('class="life-home-more-services"'),
+  'nested first-fold service drawer should be removed');
+const other=home.match(/<section class="life-home-other-services"[\s\S]*?<\/section>/)?.[0]||'';
+check((other.match(/<a href=/g)||[]).length===6,
+  'six additional links required in full directory');
+for(const route of ['/finance/markets/','/finance/mortgage-calculator/','/car/','/events/','/food/'])
+  check(other.includes('href="'+route+'"'),'directory destination missing: '+route);
 for(const route of ['/today/','/finance/savings/','/finance/loan-payment/',
-  '/finance/markets/','/food/','/deals/','/support/','/real-estate/']) {
+  '/deals/','/support/','/real-estate/']) {
   check(home.includes('class="life-home-service-card" href="'+route+'"'),
     'homepage portal shortcut missing: '+route);
 }
@@ -76,6 +78,13 @@ check(home.includes('class="life-home-service-grid"'),
   'compact primary grid missing');
 check(home.includes('aria-label="주요 서비스 바로가기"'),
   'accessible homepage primary navigation missing');
+check(home.includes('class="life-home-title-row"') &&
+  home.includes('href="#life-home-other-services"'),
+  'complete service directory must be linked from the first screen');
+const popularAboveDirectory=home.indexOf('<section class="compact-popular"');
+const directoryPosition=home.indexOf('<section class="life-home-other-services"');
+check(popularAboveDirectory>0 && directoryPosition>popularAboveDirectory,
+  'original editorial articles must appear before the long service list');
 check(home.includes('class="life-home-search-panel" id="life-home-search"')
   && home.includes('href="#life-home-search"') && home.includes('id="portal-home-q"'),
   'search drawer or keyboard-search form broken');
@@ -104,29 +113,29 @@ const archivePosition=home.indexOf('<details class="modern-all-articles">');
 check(sponsorPosition>0 && archivePosition>sponsorPosition,
   'original full-width ad section must appear before deep article archive');
 const editorialStyle=read('life-editorial-20261106.css');
-check(editorialStyle.includes('grid-auto-rows:minmax(87px,auto)') &&
-      editorialStyle.includes('width:31px;height:31px') &&
-      editorialStyle.includes('font-size:clamp(30px,2.9vw,36px)'),
-  'desktop compact grid and heading proportions missing');
-check(editorialStyle.includes('grid-auto-rows:minmax(76px,auto)') &&
+check(editorialStyle.includes('grid-template-columns:repeat(6,minmax(0,1fr))') &&
+      editorialStyle.includes('width:30px;height:30px') &&
+      editorialStyle.includes('font-size:clamp(29px,2.5vw,34px)'),
+  'desktop single-row primary nav missing');
+check(editorialStyle.includes('grid-auto-rows:minmax(83px,auto)') &&
       editorialStyle.includes('font-size:26px;line-height:1.25'),
-  'mobile primary menu sizing wrong');
+  'mobile three-column primary menu sizing wrong');
 check(editorialStyle.includes('grid-template-columns:1fr;gap:0') &&
   editorialStyle.includes('.life-home-tool-section') &&
   editorialStyle.includes('.life-home-spot-thumb img'),
   'editorial photo and calculator layout CSS missing');
 check(editorialStyle.includes('max-width:430px') &&
-  editorialStyle.includes('grid-auto-rows:minmax(76px,auto)') &&
-  editorialStyle.includes('font-size:12.5px'),
-  '320-430px mobile service grid not optimized');
+  editorialStyle.includes('grid-template-columns:repeat(3,minmax(0,1fr))') &&
+  editorialStyle.includes('font-size:13px'),
+  'mobile three-column quick navigation not optimized');
 check(editorialStyle.includes('overflow-x:auto;overflow-y:hidden;scrollbar-width:none') &&
   editorialStyle.includes('min-height:44px;padding:13px 1px 10px'),
   'sitewide 7-item navigation is not accessible on mobile');
 check(editorialStyle.includes('.life-home-tool-list{display:grid;grid-template-columns:1fr;gap:0}') &&
   editorialStyle.includes('.life-home-tool-link{min-height:77px'),
   'mobile calculators must be touch-friendly, single-column links');
-check(editorialStyle.includes('grid-template-columns:repeat(4,minmax(0,1fr))'),
-  '4-column service layout CSS missing');
+check(editorialStyle.includes('grid-template-columns:repeat(6,minmax(0,1fr))'),
+  'six-item desktop navigation CSS missing');
 check(editorialStyle.includes('.modern-sponsored-area .life-coupang-widget')
   && editorialStyle.includes('max-width:none'),
   'mobile sponsored widget width remains constrained');
