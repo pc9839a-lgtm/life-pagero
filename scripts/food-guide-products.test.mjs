@@ -90,7 +90,7 @@ test('provider KRW numeric strings display with comma and explicit 원 units',as
   assert.deepEqual(prices,['108,700원','29,900원','9,350원','가격 확인']);
   for(const card of r.results.children){
     assert.equal(card.children[1].children[2].children[0].children[0].textContent,'판매가');
-    assert.equal(card.children[1].children[2].children[1].textContent,'구매처에서 보기');
+    assert.equal(card.children[1].children[2].children[1].textContent,'구매하기');
     assert.equal(card.attributes['aria-label'].endsWith('상품 확인'),true);
   }
 });
