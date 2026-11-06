@@ -134,7 +134,7 @@ test('general hot deals and other food searches preserve existing behavior',asyn
     ))).json();
     assert.equal(json.items.length,1,'general hot-deals search should not be changed');
     const other=await(await onRequestGet(context(
-      'https://life.example.com/deals/api?mode=search&q=%EC%82%BC%EC%B9%98&src=food'
+      'https://life.example.com/deals/api?mode=search&q='+encodeURIComponent('단감')+'&src=food'
     ))).json();
     assert.equal(other.items.length,1,'unrelated food search behavior preserved');
     assert.equal(urls.length,2);
