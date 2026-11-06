@@ -172,7 +172,15 @@ const today=read('today/index.html');
 check(today.includes('class="today-viewport"')&&
   today.includes('class="today-vertical-list editorial-desk"'),
   'Today is no longer a full-width, vertical news reading page');
-const positions=['data-today-news','data-today-weather',
+check(today.includes('class="today-section-nav"') &&
+  today.includes('id="today-weather"') &&
+  today.includes('id="today-news"'),
+  'Today first-screen navigation or weather priority missing');
+const todaySheet='<link rel="stylesheet" href="/today-wide.css">';
+const generalSheet='<link rel="stylesheet" href="/life-editorial-20261106.css">';
+check(today.indexOf(todaySheet)>today.indexOf(generalSheet),
+  'Today-only layout must load after the global stylesheet');
+const positions=['data-today-weather','data-today-news',
   'data-today-stocks','data-today-crypto'].map(k=>today.indexOf(k));
 check(positions.every((p,i)=>p>=0&&(i===0||p>positions[i-1])),
   'Today section priority changed');
