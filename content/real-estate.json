@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 2,
+  "disclosure": "가상 분양정보 디자인 시안이며 실제 현장·공급규모·청약일정이 아닙니다.",
+  "listings": [
+    {
+      "slug": "sample",
+      "sample": true,
+      "approved": false,
+      "type": "apartment",
+      "category": "아파트",
+      "status": "ongoing",
+      "statusLabel": "분양중",
+      "region": "경기",
+      "title": "화성 동탄 프라임시티",
+      "description": "동탄2신도시 핵심 입지! 생활·교통·교육을 갖춘 프리미엄 대단지 (가상)",
+      "address": "경기 화성시 동탄2신도시 (가상)",
+      "supply": "실제 자료 확인 전",
+      "schedule": "실제 공고 확인 전",
+      "price": "확인 전",
+      "featured": true,
+      "graphic": "dongtan"
+    },
+    {
+      "slug": "sample-siheung",
+      "sample": true,
+      "approved": false,
+      "type": "apartment",
+      "category": "아파트",
+      "status": "upcoming",
+      "statusLabel": "분양예정",
+      "region": "경기",
+      "title": "시흥 배곧 더리버뷰",
+      "description": "배곧신도시 중심, 바다와 공원이 만나는 프리미엄 라이프 (가상)",
+      "address": "경기 시흥시 배곧신도시 (가상)",
+      "supply": "실제 자료 확인 전",
+      "schedule": "실제 공고 확인 전",
+      "price": "확인 전",
+      "featured": false,
+      "graphic": "siheung"
+    },
+    {
+      "slug": "sample-suwon",
+      "sample": true,
+      "approved": false,
+      "type": "commercial",
+      "category": "상가",
+      "status": "ongoing",
+      "statusLabel": "분양중",
+      "region": "경기",
+      "title": "수원 광교 아울렛몰 상가",
+      "description": "광교신도시 중심상권과 편리한 상업시설 (가상)",
+      "address": "경기 수원시 영통구 광교지구 (가상)",
+      "supply": "실제 자료 확인 전",
+      "schedule": "실제 공고 확인 전",
+      "price": "확인 전",
+      "featured": false,
+      "graphic": "suwon"
+    }
+  ]
+}

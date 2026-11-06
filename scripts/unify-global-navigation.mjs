@@ -12,6 +12,7 @@ const ITEMS=[
   {href:'/food/',label:'먹거리',section:'food'},
   {href:'/deals/',label:'핫딜',section:'deals'},
   {href:'/finance/',label:'금융',section:'finance'},
+  {href:'/real-estate/',label:'분양정보',section:'real-estate'},
   {href:'/topics/',label:'생활정보',section:'topics'}
 ];
 const esc=str=>String(str).replace(/[&<>"']/g,c=>({
@@ -28,6 +29,7 @@ const section=pathname=>{
   if(pathname.startsWith('/deals/'))return 'deals';
   if(pathname.startsWith('/food/'))return 'food';
   if(pathname.startsWith('/finance/'))return 'finance';
+  if(pathname.startsWith('/real-estate/'))return 'real-estate';
   if(pathname.startsWith('/topics/') ||
      pathname.startsWith('/car/') ||
      pathname.startsWith('/tools/car-cost/') ||

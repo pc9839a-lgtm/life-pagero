@@ -55,6 +55,7 @@ const steps = [
   ['node', ['scripts/add-food-hub.mjs']],
   ['node', ['scripts/add-food-guides.mjs']],
   ['node', ['scripts/build-events.mjs']],
+  ['node', ['scripts/build-real-estate.mjs']],
   ['node', ['scripts/unify-global-navigation.mjs']],
   ['node', ['scripts/verify-global-navigation.mjs']],
   ['node', ['scripts/verify-sitewide-clean-ui.mjs']],

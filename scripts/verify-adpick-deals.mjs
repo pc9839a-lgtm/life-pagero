@@ -45,7 +45,7 @@ check(fs.existsSync(path.join(DIST,"adpick-deals.css")),'deals CSS missing');
 for(const relative of ["index.html","today/index.html","finance/index.html","topics/index.html","deals/index.html","food/index.html","events/index.html"]){
  const html=read(relative);
  const nav=html.match(/<nav\b[^>]*class="main-nav"[^>]*>[\s\S]*?<\/nav>/)?.[0]||"";
- check((nav.match(/<a href=/g)||[]).length===7,'seven nav items not shown '+relative);
+ check((nav.match(/<a href=/g)||[]).length===8,'eight nav items not shown '+relative);
  check(nav.includes('<a href="/deals/"'),'nav hot deals link missing '+relative);
 }
 const realFetch=globalThis.fetch;

@@ -19,7 +19,7 @@ check(page.includes('삼치')&&page.includes('가리비')&&page.includes('해양
 check(page.includes('관련 상품 검색')&&page.includes('/deals/?q='),'ADPICK search handoff missing');
 check(page.includes('제휴 상품 링크를 통해 구매하면'),'affiliate disclosure missing');
 check(page.includes('src="/life-food.js"')&&page.includes('href="/life-food.css"'),'assets missing');
-check((nav.match(/<a href=/g)||[]).length===7,'seven-link navigation missing');
+check((nav.match(/<a href=/g)||[]).length===8,'eight-link navigation missing');
 check(nav.includes('<a href="/food/" aria-current="page">먹거리</a>'),'food active menu missing');
 check(read('sitemap.xml').includes('<loc>https://pagero.kr/life/food/</loc>'),'sitemap missing');
 check(JSON.parse(read('search-index.json')).some(item=>item.url==='/food/'),'search index missing');
@@ -67,4 +67,4 @@ for(const marker of ['.food-shopping-row','.food-recipe-details','.food-shopping
  check(css.includes(marker),'food UI style missing '+marker);
 }
 
-console.log('[food-qa] PASS: seven-link menu, 12 months, 36 recipes, grocery persistence, affiliate tracking and SEO.');
+console.log('[food-qa] PASS: eight-link menu, 12 months, 36 recipes, grocery persistence, affiliate tracking and SEO.');

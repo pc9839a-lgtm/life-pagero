@@ -56,7 +56,7 @@ const transformHome=html=>{
     {href:'/car/',label:'자동차',icon:'<path d="m5 11 1.5-5h11L19 11M4 11h16v8H4zM4 16h16M7 15h2M15 15h2M6 19v2M18 19v2"/>'},
     {href:'/support/',label:'지원금',icon:'<rect x="3" y="6" width="18" height="15" rx="2"/><path d="M12 6v15M3 11h18M10 6c-6-1-6-6-3-6 2 0 5 4 5 6ZM14 6c6-1 6-6 3-6-2 0-5 4-5 6Z"/>'},
     {href:'/events/',label:'축제·행사',icon:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18M8 15h3"/>'},
-    {href:'/topics/',label:'전체',icon:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'}
+    {href:'/real-estate/',label:'분양정보',icon:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'}
   ];
   const serviceLinks=services.map(item=>'<a class="life-home-service-card" href="'+item.href+'">'
     +'<span class="life-home-service-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+item.icon+'</svg></span>'
