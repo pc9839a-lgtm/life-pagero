@@ -48,7 +48,7 @@ test('food guide loads server-side ADPICK search using food attribution and curr
   const url=new URL(r.fetches[0][0],'https://pagero.kr');
   assert.equal(url.pathname,'/life/deals/api');
   assert.equal(url.searchParams.get('mode'),'search');
-  assert.equal(url.searchParams.get('q'),'가리비');
+  assert.equal(url.searchParams.get('q'),'홍가리비');
   assert.equal(url.searchParams.get('src'),'food');
   assert.equal(r.fetches[0][1].cache,'no-store');
   assert.equal(r.results.children.length,1);
@@ -62,7 +62,7 @@ test('direct Pages origin uses non-prefixed API path and sweet-potato keyword',a
   const r=await render({query:'고구마',pathname:'/food/sweet-potato-storage-guide/'});
   const url=new URL(r.fetches[0][0],'https://life-pagero.pages.dev');
   assert.equal(url.pathname,'/deals/api');
-  assert.equal(url.searchParams.get('q'),'고구마');
+  assert.equal(url.searchParams.get('q'),'꿀고구마');
 });
 test('invalid HTTP affiliate links are ignored and only first four valid products appear',async()=>{
   const items=[product('위험','http://unsafe.example.com/p'),
