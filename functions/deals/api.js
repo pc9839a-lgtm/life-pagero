@@ -27,6 +27,11 @@ const RADISH_FRESH=/(가을무|김장무|월동무|조선무|국산무|국산 �
 const RADISH_ITEM=/(?:가을무|김장무|월동무|조선무|국산무|국산 무|햇무|흙무|통무|무우|(?:^|[\s\[(])무(?=$|[\s\])\d]))/i;
 const NO_PROCESSED_SAMCHI=/(삼치구이(?!용)|삼치조림|삼치회|삼치튀김|삼치덮밥|훈제삼치|구운삼치|양념삼치)/i;
 const NO_PROCESSED_RADISH=/(무김치|무생채|깍두기|동치미|단무지|무절임|무피클|무채볶음|무국|무말랭이|무조림|시래기)/i;
+const OYSTER_FRESH=/(생굴|깐굴|봉지굴|굴살|통영굴|석화|산지직송|수산물|국내산|냉장|냉동|원물|생물|손질|자연산|양식)/i;
+const NO_PREPARED_OYSTER=/(굴전|굴국|굴밥|굴죽|굴찜|굴튀김|굴라면|굴보쌈|굴소스|굴젓|굴무침|굴김치|훈제굴|구운굴|굴장|굴비)/i;
+const PERSIMMON_FRESH=/(단감|부유단감|태추단감|국내산|산지직송|생과|생과일|농산물|제철|햇과일|수확|과수원|신선)/i;
+const PERSIMMON_COUNT=/\d+\s*(?:개|과|입|팩|박스)/i;
+const NO_PREPARED_PERSIMMON=/(곶감|반건시|홍시|단감말랭이|말린단감|감식초|감잼|단감청|단감주스|단감착즙|단감칩|단감샐러드|단감 샐러드|단감퓨레)/i;
 export function isRelevantFoodProduct(topic,title){
   if(typeof title!=="string"||!title.trim())return false;
   const text=title.normalize("NFKC").toLowerCase().replace(/\s+/g," ").trim();
@@ -41,9 +46,15 @@ export function isRelevantFoodProduct(topic,title){
   if(topic==="무")
     return RADISH_ITEM.test(text)&&!NO_PROCESSED_RADISH.test(text)
       &&(FRESH_UNIT.test(text)||RADISH_FRESH.test(text));
+  if(topic==="굴")
+    return /굴(?!비)|석화/.test(text)&&!NO_PREPARED_OYSTER.test(text)
+      &&(FRESH_UNIT.test(text)||OYSTER_FRESH.test(text));
+  if(topic==="단감")
+    return /단감/.test(text)&&!NO_PREPARED_PERSIMMON.test(text)
+      &&(FRESH_UNIT.test(text)||PERSIMMON_COUNT.test(text)||PERSIMMON_FRESH.test(text));
   return false;
 }
-const FOOD_TOPIC=Object.freeze({"가리비":"가리비","홍가리비":"가리비","고구마":"고구마","꿀고구마":"고구마","삼치":"삼치","손질삼치":"삼치","가을무":"무","국산 무":"무"});
+const FOOD_TOPIC=Object.freeze({"가리비":"가리비","홍가리비":"가리비","고구마":"고구마","꿀고구마":"고구마","삼치":"삼치","손질삼치":"삼치","가을무":"무","국산 무":"무","생굴":"굴","굴":"굴","단감":"단감"});
 export async function onRequestGet({request,env}){
   const key=String(env?.ADPICK_BIZ_API_KEY||"").trim();
   if(!key)return reply({status:"unconfigured",items:[]},503);
