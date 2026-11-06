@@ -53,6 +53,7 @@ const steps = [
   ['node', ['scripts/verify-trimmed-life-ui.mjs']],
   ['node', ['scripts/add-adpick-deals.mjs']],
   ['node', ['scripts/add-food-hub.mjs']],
+  ['node', ['scripts/prepare-food-photos.mjs']],
   ['node', ['scripts/add-food-guides.mjs']],
   ['node', ['scripts/build-events.mjs']],
   ['node', ['scripts/build-real-estate.mjs']],
