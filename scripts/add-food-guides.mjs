@@ -1,9 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 
 const DIST=path.resolve('dist');
 const SITE='https://pagero.kr/life';
 const dataset=JSON.parse(fs.readFileSync('content/food-guides.json','utf8'));
+const SHOP_SCRIPT='/food-guide-products.js';
+const SHOP_HASH=createHash('sha256').update(fs.readFileSync(path.join(DIST,SHOP_SCRIPT.slice(1)))).digest('hex').slice(0,12);
+const SHOP_SCRIPT_HREF=SHOP_SCRIPT+'?v='+SHOP_HASH;
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({
   '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
 }[c]));
@@ -47,7 +51,18 @@ for(const guide of dataset.guides){
   check(guide.sections.length>=4 && guide.faq.length>=2 && guide.sources.length>=2,
     'missing detailed editorial sections '+guide.slug);
   check(guide.sources.every(([,url])=>url.startsWith('https://')),'non-HTTPS source '+guide.slug);
+  check(typeof guide.shoppingQuery==='string' && guide.shoppingQuery.trim().length>=2
+    && guide.shoppingQuery.length<=40,'invalid ADPICK query '+guide.slug);
   const url='/food/'+guide.slug+'/';
+  const shopQuery=guide.shoppingQuery.trim();
+  const shopping='<section class="food-guide-shop" aria-labelledby="food-guide-shop-heading" '
+    +'data-food-guide-products="'+esc(shopQuery)+'">'
+    +'<div class="food-shop-heading"><h2 id="food-guide-shop-heading">관련 상품</h2>'
+    +'<a href="/deals/?q='+encodeURIComponent(shopQuery)+'&amp;src=food">더 찾아보기</a></div>'
+    +'<p class="food-shop-status" data-food-shop-status role="status">관련 상품 확인 중</p>'
+    +'<div class="food-shop-list" data-food-shop-results aria-live="polite"></div>'
+    +'<p class="food-shop-disclosure">제휴 링크로 구매하면 수수료를 받을 수 있습니다.</p>'
+    +'</section>';
   const facts='<dl class="food-guide-facts">'+guide.facts.map(([name,value])=>
     '<div><dt>'+esc(name)+'</dt><dd>'+esc(value)+'</dd></div>').join('')+'</dl>';
   const faq='<section class="food-guide-section food-guide-faq"><h2>자주 묻는 질문</h2>'
@@ -62,7 +77,7 @@ for(const guide of dataset.guides){
     +'<time datetime="'+dataset.publishedAt+'">2026.11.06</time></header>'
     +facts
     +'<div class="food-guide-content" itemprop="articleBody">'
-    +guide.sections.map(renderSection).join('')+faq
+    +guide.sections.map(renderSection).join('')+shopping+faq
     +'</div>'
     +'<section class="food-guide-sources"><h2>참고 자료</h2><ul>'
     +sourceList(guide)+'</ul></section>'
@@ -88,6 +103,7 @@ for(const guide of dataset.guides){
   html=html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g,'');
   html=html.replace('<link rel="stylesheet" href="/life-food.css">','')
     .replace('<script defer src="/life-food.js"></script>','');
+  html=html.replace('</head>','<script defer src="'+SHOP_SCRIPT_HREF+'"></script></head>');
   const articleSchema={
     '@context':'https://schema.org','@type':'Article',
     headline:guide.title,description:guide.description,
