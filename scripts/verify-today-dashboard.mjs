@@ -67,8 +67,8 @@ yes(wideCss.includes('#main-content>.today-viewport') &&
 yes(today.includes('href="/today-wide.css"'),
   'New uncached full-viewport CSS is not linked from Today page');
 for(const id of ['weather','news','stocks','crypto']){
-  yes(today.includes('id="today-'+id+'"')&&today.includes('href="#today-'+id+'"'),
-    'in-page navigation target missing: '+id);
+  yes(today.includes('id="today-'+id+'"'),
+    'information section anchor missing: '+id);
 }
 yes(!today.includes('class="today-section-nav"') &&
   today.includes('class="today-page-head"'),
