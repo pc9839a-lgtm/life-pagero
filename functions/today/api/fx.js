@@ -14,7 +14,7 @@ const CURRENCIES=[
 ];
 
 export async function onRequestGet(context) {
-  return cached(context,'fx-ecb-krw-reference',21600,async()=>{
+  return cached(context,'fx-ecb-krw-reference',86400,async()=>{
     const response=await fetch(URL,{
       headers:{Accept:'application/json','User-Agent':'Life-Pagero-FX/1.0'},
       signal:AbortSignal.timeout(8000)
@@ -41,5 +41,5 @@ export async function onRequestGet(context) {
       note:'마지막 발표 영업일의 참고환율입니다. 실시간 시세 또는 은행 매매·송금 환율이 아닙니다.',
       items
     };
-  });
+  },{staleSeconds:604800,retrySeconds:600});
 }

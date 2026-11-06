@@ -35,7 +35,7 @@ export async function onRequestGet(context) {
     return json({status:'unconfigured',city,label:CITIES[city].label,
       source:'기상청 초단기실황',sourceUrl:SOURCE,
       message:'현재 제공 가능한 날씨 자료가 없습니다.'},503);
-  return cached(context,'weather-'+city,1800,async () => {
+  return cached(context,'weather-'+city,3600,async () => {
     const coord=CITIES[city],base=kstBase(new Date());
     const api=new URL('https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst');
     let key=String(auth).trim();
@@ -75,5 +75,5 @@ export async function onRequestGet(context) {
       precipitationType:pty,condition,
       note:'지역 대표 관측격자 기준이며, 하늘 상태나 대기질 예보는 포함하지 않습니다.'
     };
-  });
+  },{staleSeconds:21600,retrySeconds:300});
 }

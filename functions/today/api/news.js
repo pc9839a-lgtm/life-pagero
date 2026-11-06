@@ -62,7 +62,7 @@ async function sourceFeed(feed) {
   return items;
 }
 export async function onRequestGet(context) {
-  return cached(context,'news-headlines',600,async () => {
+  return cached(context,'news-headlines',7200,async () => {
     const results=await Promise.allSettled(FEEDS.map(sourceFeed));
     const all=[],sources=[];
     results.forEach((out,i)=>{
@@ -87,5 +87,5 @@ export async function onRequestGet(context) {
       note:'기사 제목·언론사·발행시각만 표시하며 본문은 원본 기사에서 확인합니다.',
       partial:sources.some(s=>s.status!=='ok'),sources,items
     };
-  });
+  },{staleSeconds:21600,retrySeconds:300});
 }

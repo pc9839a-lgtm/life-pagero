@@ -8,7 +8,7 @@ const KOREAN = {
   DOT:'폴카닷',TRX:'트론',BCH:'비트코인캐시',XLM:'스텔라루멘'
 };
 export async function onRequestGet(context) {
-  return cached(context,'crypto-top-krw',180,async () => {
+  return cached(context,'crypto-top-krw',3600,async () => {
     const response = await fetch(URL, {
       headers:{Accept:'application/json','User-Agent':'Life-Pagero-Quote/1.0'},
       signal:AbortSignal.timeout(8000)
@@ -35,5 +35,5 @@ export async function onRequestGet(context) {
       market:'KRW',updatedFrom:'거래 시각은 종목별로 다를 수 있습니다.',
       items
     };
-  });
+  },{staleSeconds:10800,retrySeconds:300});
 }

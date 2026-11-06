@@ -48,6 +48,7 @@ const steps = [
   ['node', ['scripts/validate-modern-ui.mjs']],
   ['node', ['scripts/validate-compact-ui.mjs']],
   ['node', ['scripts/verify-today-dashboard.mjs']],
+  ['node', ['scripts/today-cache.test.mjs']],
   ['node', ['scripts/verify-verified-rich-guides.mjs']],
   ['node', ['scripts/trim-life-ui-copy.mjs']],
   ['node', ['scripts/verify-trimmed-life-ui.mjs']],
