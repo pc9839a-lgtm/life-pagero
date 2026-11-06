@@ -7,8 +7,8 @@ const SITE='https://pagero.kr/life';
 const model=JSON.parse(fs.readFileSync('content/food-guides.json','utf8'));
 const read=file=>fs.readFileSync(path.join(DIST,file),'utf8');
 const check=(ok,message)=>{if(!ok)throw Error('[food-guides-qa] '+message)};
-check(model.guides.length>=4,'published food guide catalog must include the latest two articles');
-for(const slug of ['samchi-grill-clean-freeze','autumn-radish-storage-beef-soup'])
+check(model.guides.length>=6,'published food guide catalog must include six original articles');
+for(const slug of ['samchi-grill-clean-freeze','autumn-radish-storage-beef-soup','oyster-clean-cook-storage','sweet-persimmon-storage-salad'])
   check(model.guides.some(g=>g.slug===slug),'new seasonal food guide missing '+slug);
 const sitemap=read('sitemap.xml');
 const index=JSON.parse(read('search-index.json'));
