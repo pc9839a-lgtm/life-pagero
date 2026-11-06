@@ -171,16 +171,21 @@ for(const name of ['car','support']){
 }
 const today=read('today/index.html');
 check(today.includes('class="today-viewport"')&&
-  today.includes('class="today-vertical-list editorial-desk"'),
-  'Today is no longer a full-width, vertical news reading page');
-check(today.includes('class="today-section-nav"') &&
+  today.includes('class="today-vertical-list today-dashboard-grid editorial-desk"'),
+  'Today first-screen dashboard missing');
+check(!today.includes('class="today-section-nav"') &&
   today.includes('id="today-weather"') &&
   today.includes('id="today-news"'),
-  'Today first-screen navigation or weather priority missing');
+  'Today weather/news hierarchy or duplicate tabs incorrect');
 const todaySheet='<link rel="stylesheet" href="/today-wide.css?v='+todayHash+'">';
 const generalSheet='<link rel="stylesheet" href="'+themeHref+'">';
 check(today.indexOf(todaySheet)>today.indexOf(generalSheet),
   'Today-only layout must load after the global stylesheet');
+const wideDashboard=read('today-wide.css');
+check(wideDashboard.includes('max-width:1360px') &&
+  wideDashboard.includes('grid-template-areas:"weather news" "stocks news" "crypto crypto"') &&
+  wideDashboard.includes('grid-template-areas:"weather" "news" "stocks" "crypto"'),
+  'Today desktop and mobile layouts must have separate information priorities');
 const positions=['data-today-weather','data-today-news',
   'data-today-stocks','data-today-crypto'].map(k=>today.indexOf(k));
 check(positions.every((p,i)=>p>=0&&(i===0||p>positions[i-1])),
