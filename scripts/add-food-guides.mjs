@@ -8,6 +8,20 @@ const dataset=JSON.parse(fs.readFileSync('content/food-guides.json','utf8'));
 const SHOP_SCRIPT='/food-guide-products.js';
 const SHOP_HASH=createHash('sha256').update(fs.readFileSync(path.join(DIST,SHOP_SCRIPT.slice(1)))).digest('hex').slice(0,12);
 const SHOP_SCRIPT_HREF=SHOP_SCRIPT+'?v='+SHOP_HASH;
+// Commons original photographs are reused under their listed free licenses.
+// Build the static image URL; neither product images nor product data are copied.
+const imageUrl=photo=>'https://commons.wikimedia.org/wiki/Special:FilePath/'
+  +encodeURIComponent(photo.filename.replaceAll(' ','_'))+'?width=960';
+const figure=(photo,hero=false)=>{
+  const attribution='<a href="'+esc(photo.source)+'" target="_blank" rel="noopener noreferrer">'
+    +esc(photo.attribution)+'</a>';
+  return '<figure class="food-guide-photo'+(hero?' food-guide-photo-hero':'')+'">'
+    +'<img src="'+esc(imageUrl(photo))+'" alt="'+esc(photo.alt)+'" width="960" height="640" '
+    +'loading="'+(hero?'eager':'lazy')+'" decoding="async" '
+    +(hero?'fetchpriority="high" ':'')
+    +'referrerpolicy="no-referrer">'
+    +'<figcaption>'+esc(photo.caption)+' · 사진: '+attribution+'</figcaption></figure>';
+};
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({
   '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
 }[c]));
@@ -43,7 +57,10 @@ const renderSection=section=>{
       +row.map((cell,i)=>(i===0?'<th scope="row">':'<td>')+esc(cell)+(i===0?'</th>':'</td>')).join('')
       +'</tr>').join('')+'</tbody></table></div>';
   else fail('unknown section type '+section.type);
-  return '<section class="food-guide-section"><h2>'+esc(section.title)+'</h2>'+body+'</section>';
+  const visual=section.visual||null;
+  return '<section class="food-guide-section" id="food-'+encodeURIComponent(section.title)+'">'
+    +'<h2>'+esc(section.title)+'</h2>'
+    +(visual?figure(visual):'')+body+'</section>';
 };
 const cards=[];
 for(const guide of dataset.guides){
@@ -55,6 +72,19 @@ for(const guide of dataset.guides){
     && guide.shoppingQuery.length<=40,'invalid ADPICK query '+guide.slug);
   const url='/food/'+guide.slug+'/';
   const shopQuery=guide.shoppingQuery.trim();
+  check(Array.isArray(guide.visuals)&&guide.visuals.length===2,
+    'food guide must have 2 licensed photographs '+guide.slug);
+  const hero=guide.visuals.find(x=>x.placement==='hero');
+  check(hero&&hero.alt&&hero.source,'missing credited hero photo '+guide.slug);
+  for(const section of guide.sections){
+    section.visual=guide.visuals.find(x=>x.placement===section.title)||null;
+  }
+  const navLinks=guide.sections.map(section=>
+    '<a href="#food-'+encodeURIComponent(section.title)+'">'+esc(section.title)+'</a>').join('');
+  const contents='<nav class="food-guide-contents" aria-label="이 글의 목차"><strong>바로가기</strong>'
+    +'<div>'+navLinks+'</div></nav>';
+  const takeaway='<ul class="food-guide-highlights">'
+    +guide.summaryPoints.map(point=>'<li>'+esc(point)+'</li>').join('')+'</ul>';
   const shopping='<section class="food-guide-shop" aria-labelledby="food-guide-shop-heading" '
     +'data-food-guide-products="'+esc(shopQuery)+'">'
     +'<div class="food-shop-heading"><h2 id="food-guide-shop-heading">관련 상품</h2>'
@@ -75,7 +105,7 @@ for(const guide of dataset.guides){
     +'<h1 itemprop="headline">'+esc(guide.title)+'</h1>'
     +'<p class="food-guide-lead" itemprop="description">'+esc(guide.lead)+'</p>'
     +'<time datetime="'+dataset.publishedAt+'">2026.11.06</time></header>'
-    +facts
+    +figure(hero,true)+facts+takeaway+contents
     +'<div class="food-guide-content" itemprop="articleBody">'
     +guide.sections.map(renderSection).join('')+shopping+faq
     +'</div>'
@@ -104,9 +134,12 @@ for(const guide of dataset.guides){
   html=html.replace('<link rel="stylesheet" href="/life-food.css">','')
     .replace('<script defer src="/life-food.js"></script>','');
   html=html.replace('</head>','<script defer src="'+SHOP_SCRIPT_HREF+'"></script></head>');
+  html=html.replace(/<meta property="og:image"[^>]*>/,
+    '<meta property="og:image" content="'+esc(imageUrl(hero))+'">');
   const articleSchema={
     '@context':'https://schema.org','@type':'Article',
     headline:guide.title,description:guide.description,
+    image:[imageUrl(hero)],
     datePublished:dataset.publishedAt,dateModified:dataset.publishedAt,
     inLanguage:'ko',mainEntityOfPage:SITE+url,
     author:{'@type':'Organization',name:'생활비서',url:SITE+'/'},
@@ -127,6 +160,7 @@ for(const guide of dataset.guides){
   check((html.match(/<link rel="canonical"/g)||[]).length===1,'duplicate canonical '+guide.slug);
   write('food/'+guide.slug+'/index.html',html);
   cards.push('<a class="food-guide-index-link" href="'+url+'">'
+    +'<img class="food-guide-index-photo" src="'+esc(imageUrl(hero))+'" alt="'+esc(hero.alt)+'" width="480" height="270" loading="lazy" decoding="async">'
     +'<span>'+esc(guide.eyebrow)+'</span><strong>'+esc(guide.title)+'</strong>'
     +'<small>'+esc(guide.description)+'</small></a>');
 }
