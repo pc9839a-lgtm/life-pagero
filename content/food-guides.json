@@ -142,7 +142,8 @@
         ]
       ],
       "related": "sweet-potato-storage-guide",
-      "relatedLabel": "고구마 보관법"
+      "relatedLabel": "고구마 보관법",
+      "shoppingQuery": "가리비"
     },
     {
       "slug": "sweet-potato-storage-guide",
@@ -284,7 +285,8 @@
         ]
       ],
       "related": "scallops-clean-steam-storage",
-      "relatedLabel": "가리비 손질·찜·보관"
+      "relatedLabel": "가리비 손질·찜·보관",
+      "shoppingQuery": "고구마"
     }
   ]
 }

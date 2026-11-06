@@ -16,6 +16,13 @@ const originalHub=['id="food-month"','id="food-list"','id="food-pick"',
   '제휴 상품 링크를 통해 구매하면'];
 for(const key of originalHub)check(food.includes(key),'original /food/ functionality missing '+key);
 const css=read('life-editorial-20261106.css');
+const shopJs=read('food-guide-products.js');
+const shopHash=createHash('sha256').update(shopJs).digest('hex').slice(0,12);
+check(shopJs.includes('prefix+"deals/api?"')&&shopJs.includes('src:"food"'),
+  'food products must use server-side ADPICK search with food attribution');
+check(shopJs.includes('sponsored noopener noreferrer')&&shopJs.includes('cache:"no-store"'),
+  'affiliate link rel or no-store missing');
+check(!shopJs.includes('ADPICK_BIZ_API_KEY'),'private ADPICK key leaked to browser');
 const hash=createHash('sha256').update(css).digest('hex').slice(0,12);
 for(const cssMarker of ['.food-guide-header','.food-guide-facts','.food-guide-steps',
   '.food-guide-table-wrap','.food-guides-index-list','@media(max-width:700px)'])
@@ -25,6 +32,18 @@ for(const guide of model.guides){
   const pathname='/food/'+guide.slug+'/';
   const html=read('food/'+guide.slug+'/index.html');
   const body=guide.sections.map(s=>JSON.stringify(s)).join('');
+  check(typeof guide.shoppingQuery==='string' && guide.shoppingQuery.length>=2
+    && guide.shoppingQuery.length<=40,'missing relevant shopping query '+guide.slug);
+  check(html.includes('data-food-guide-products="'+guide.shoppingQuery+'"'),
+    'live ADPICK shopping panel missing '+guide.slug);
+  check(html.includes('data-food-shop-results')&&html.includes('data-food-shop-status'),
+    'live affiliate product placeholders missing '+guide.slug);
+  check(html.includes('src="/food-guide-products.js?v='+shopHash+'"'),
+    'live ADPICK script not cache-versioned '+guide.slug);
+  check(html.includes('href="/deals/?q='+encodeURIComponent(guide.shoppingQuery)+'&amp;src=food"'),
+    'verified shopping search fallback missing '+guide.slug);
+  check(html.includes('제휴 링크로 구매하면 수수료를 받을 수 있습니다.'),
+    'affiliate disclosure missing '+guide.slug);
   check(body.length>1000,'guide lacks substantive original instructions '+guide.slug);
   check(!/(무엇을 알아볼까요|이번 글에서는|알아보겠습니다|확인해 보겠습니다|지금부터|정리해 드리겠습니다|도움이 되었기를)/.test(html),
     'AI-style explanatory filler appeared in '+guide.slug);
@@ -77,4 +96,4 @@ for(const guide of model.guides){
 }
 check((food.match(/class="food-guide-index-link"/g)||[]).length===2,
   'two and only two content links expected on food index');
-console.log('[food-guides-qa] PASS: 2 fully written SEO articles, source citations, 2 FAQ groups, single theme/mobile rules, shared navigation, hub links, index and sitemap.');
+console.log('[food-guides-qa] PASS: two sourced food articles with live ADPICK products, tracked fallback searches, secure affiliate links, SEO, and mobile styles.');

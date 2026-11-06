@@ -1064,3 +1064,32 @@ body.life-editorial{
  .life-editorial .food-guides-index-list{grid-template-columns:1fr}
  .life-editorial .food-guide-index-link>strong{font-size:16px}
 }
+
+
+/* Food guide shopping via live ADPICK; no static product placeholders. */
+.life-editorial .food-guide-shop{margin:30px 0 3px;padding:24px 0 21px;border-top:2px solid #26323c;border-bottom:1px solid #e7eaed}
+.life-editorial .food-shop-heading{display:flex;align-items:baseline;justify-content:space-between;gap:15px;margin:0 0 10px}
+.life-editorial .food-shop-heading h2{font-size:22px;font-weight:830;letter-spacing:-.045em;color:#26313b;margin:0}
+.life-editorial .food-shop-heading a{font-size:13px;color:var(--brand);font-weight:760;white-space:nowrap}
+.life-editorial .food-shop-status{font-size:12px;color:#7f8a94;margin:0 0 14px}
+.life-editorial .food-shop-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px}
+.life-editorial .food-shop-product{display:flex;gap:13px;align-items:center;min-width:0;padding:14px 0 15px;border-bottom:1px solid #eceef0;color:#2e3943;text-decoration:none}
+.life-editorial .food-shop-product:hover .food-shop-name{color:var(--brand)}
+.life-editorial .food-shop-image{display:grid;place-items:center;flex:0 0 100px;width:100px;height:100px;border:1px solid #eef0f2;border-radius:5px;background:#f7f8fa;overflow:hidden}
+.life-editorial .food-shop-image img{display:block;width:100%;height:100%;object-fit:contain}
+.life-editorial .food-shop-photo-missing{font-size:12px;color:#a2a9b0}
+.life-editorial .food-shop-product-info{display:flex;flex:1;flex-direction:column;align-items:flex-start;gap:4px;min-width:0}
+.life-editorial .food-shop-merchant{font-size:11px;font-weight:650;color:#7a8791}
+.life-editorial .food-shop-name{display:-webkit-box;max-width:100%;overflow:hidden;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:14px;line-height:1.5;word-break:keep-all;overflow-wrap:anywhere;font-weight:720;color:#2f3944}
+.life-editorial .food-shop-price{color:#283440;font-size:16px;font-weight:810;font-variant-numeric:tabular-nums;line-height:1.45}
+.life-editorial .food-shop-buy{color:var(--brand);font-size:12px;font-weight:760}
+.life-editorial .food-shop-disclosure{margin:13px 0 0;color:#87919b;font-size:11px;line-height:1.6}
+@media(max-width:700px){
+  .life-editorial .food-guide-shop{margin:20px 0 0;padding:17px 0}
+  .life-editorial .food-shop-heading h2{font-size:19px}
+  .life-editorial .food-shop-list{grid-template-columns:1fr;gap:0}
+  .life-editorial .food-shop-product{gap:12px;padding:12px 0}
+  .life-editorial .food-shop-image{flex-basis:88px;width:88px;height:88px}
+  .life-editorial .food-shop-name{font-size:13px}
+  .life-editorial .food-shop-price{font-size:15px}
+}
