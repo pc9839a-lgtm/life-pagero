@@ -23,7 +23,7 @@ const shopJs=read('food-guide-products.js');
 const photoManifest=JSON.parse(read('food-images/manifest.json'));
 const shopHash=createHash('sha256').update(shopJs).digest('hex').slice(0,12);
 check(shopJs.includes('preciseSearch')&&shopJs.includes('searchQuery')&&
-  shopJs.includes('5500'),'one-shot fast food affiliate search missing');
+  shopJs.includes('9000'),'one-shot fast food affiliate search missing');
 check(shopJs.includes('prefix+"deals/api?"')&&shopJs.includes('src:"food"'),
   'food products must use server-side ADPICK search with food attribution');
 check(shopJs.includes('sponsored noopener noreferrer')&&shopJs.includes('cache:"no-store"'),
