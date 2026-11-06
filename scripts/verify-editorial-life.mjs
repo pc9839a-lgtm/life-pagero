@@ -44,18 +44,38 @@ for(const absolute of pages){
 check(checked>=150,'not enough editorial pages: '+checked);
 check(articles===46,'all 46 articles must remain published: '+articles);
 const home=read('index.html');
-check(home.includes('<h1>오늘 필요한 정보</h1>'),'home title not rewritten');
+check(home.includes('<h1>오늘 궁금한 정보, 한곳에서</h1>'),'reference home headline missing');
 check(home.includes('class="hero portal-home-hero editorial-hero"'),
   'editorial home hero missing');
-check((home.match(/class="life-home-service-card"/g)||[]).length===6,
-  'six portal service shortcuts missing');
+check((home.match(/class="life-home-service-card"/g)||[]).length===12,
+  '4 by 3 portal shortcuts missing');
 for(const route of ['/today/','/finance/savings/','/finance/loan-payment/',
-  '/food/','/events/','/deals/']) {
+  '/finance/markets/','/food/','/events/','/deals/',
+  '/finance/mortgage-calculator/','/car/','/support/','/topics/']) {
   check(home.includes('class="life-home-service-card" href="'+route+'"'),
     'homepage portal shortcut missing: '+route);
 }
 check(home.includes('class="life-home-service-grid"'),
   'reference-inspired portal feature grid missing');
+check(home.includes('aria-label="생활비서 서비스 바로가기"'),
+  'accessible homepage service navigation missing');
+check(home.includes('class="life-home-search-panel" id="life-home-search"')
+  && home.includes('href="#life-home-search"') && home.includes('id="portal-home-q"'),
+  'search drawer or keyboard-search form broken');
+check(home.includes('<details class="life-home-more-categories">'),
+  'original editorial category links are not accessible');
+check((home.match(/class="life-home-spot-thumb /g)||[]).length===3,
+  'three thumbnail editorial links missing');
+const sponsorPosition=home.indexOf('<section class="modern-sponsored-area"');
+const archivePosition=home.indexOf('<details class="modern-all-articles">');
+check(sponsorPosition>0 && archivePosition>sponsorPosition,
+  'original full-width ad section must appear before deep article archive');
+const editorialStyle=read('life-editorial-20261106.css');
+check(editorialStyle.includes('grid-template-columns:repeat(4,minmax(0,1fr))'),
+  '4-column service layout CSS missing');
+check(editorialStyle.includes('.modern-sponsored-area .life-coupang-widget')
+  && editorialStyle.includes('max-width:none'),
+  'mobile sponsored widget width remains constrained');
 check((home.match(/class="portal-topic-card compact-topic"/g)||[]).length===6,
   'six original topic links lost');
 check(home.includes('<details class="compact-explore compact-latest" open>'),
