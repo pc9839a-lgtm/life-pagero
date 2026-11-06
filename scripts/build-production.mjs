@@ -53,6 +53,7 @@ const steps = [
   ['node', ['scripts/verify-trimmed-life-ui.mjs']],
   ['node', ['scripts/add-adpick-deals.mjs']],
   ['node', ['scripts/add-food-hub.mjs']],
+  ['node', ['scripts/add-food-guides.mjs']],
   ['node', ['scripts/build-events.mjs']],
   ['node', ['scripts/unify-global-navigation.mjs']],
   ['node', ['scripts/verify-global-navigation.mjs']],
@@ -64,6 +65,7 @@ const steps = [
   ['node', ['scripts/verify-car-mortgage-calculators.mjs']],
   ['node', ['scripts/verify-adpick-deals.mjs']],
   ['node', ['scripts/verify-food-hub.mjs']],
+  ['node', ['scripts/verify-food-guides.mjs']],
   ['node', ['scripts/verify-events.mjs']],
 ];
 
