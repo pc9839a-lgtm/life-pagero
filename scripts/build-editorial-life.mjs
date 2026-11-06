@@ -233,7 +233,7 @@ const transformToday=html=>{
   check(html.includes('data-today-news') && html.includes('data-today-weather') &&
     html.includes('data-today-stocks') && html.includes('data-today-crypto'),
     'Today API elements missing');
-  return html.replace('class="today-vertical-list"','class="today-vertical-list editorial-desk"');
+  return html.replace('class="today-vertical-list today-dashboard-grid"','class="today-vertical-list today-dashboard-grid editorial-desk"');
 };
 const transformCategory=(html,relative)=>{
   check(html.includes('id="modern-article-list"'),'category article list missing '+relative);
