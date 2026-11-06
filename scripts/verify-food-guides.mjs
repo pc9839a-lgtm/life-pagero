@@ -8,6 +8,7 @@ const model=JSON.parse(fs.readFileSync('content/food-guides.json','utf8'));
 const read=file=>fs.readFileSync(path.join(DIST,file),'utf8');
 const check=(ok,message)=>{if(!ok)throw Error('[food-guides-qa] '+message)};
 check(model.guides.length>=6,'published food guide catalog must include six original articles');
+check(model.guides.every(g=>g.visuals.length===2),'each guide must have 2 photos');
 for(const slug of ['samchi-grill-clean-freeze','autumn-radish-storage-beef-soup','oyster-clean-cook-storage','sweet-persimmon-storage-salad'])
   check(model.guides.some(g=>g.slug===slug),'new seasonal food guide missing '+slug);
 const sitemap=read('sitemap.xml');
@@ -89,6 +90,11 @@ for(const guide of model.guides){
   check((html.match(/class="food-guide-photo(?: food-guide-photo-hero)?"/g)||[]).length===2,
     'exactly two visual placements required '+guide.slug);
   for(const image of guide.visuals){
+    check(photoManifest[image.filename]?.startsWith('/food-images/'),
+      'photo must be a locally bundled asset, not remote fallback '+guide.slug);
+    const imageFile=path.join(DIST,photoManifest[image.filename].slice(1));
+    check(fs.existsSync(imageFile)&&fs.statSync(imageFile).size>=8000,
+      'locally bundled photo bytes missing '+guide.slug);
     check(photoManifest[image.filename]&&html.includes(photoManifest[image.filename]),
       'licensed or locally hosted photo URL not rendered '+guide.slug);
     check(html.includes(image.caption)&&html.includes(image.attribution),
@@ -139,7 +145,7 @@ for(const guide of model.guides){
     html.includes(new URL(url).hostname)),
     'unverified official citations missing '+guide.slug);
   check(guide.sources.every(([,url])=>
-    ['www.mof.go.kr','www.foodsafetykorea.go.kr','www.rda.go.kr','www.fda.gov','nongsaro.go.kr'].includes(new URL(url).hostname)),
+    ['www.mof.go.kr','www.foodsafetykorea.go.kr','www.rda.go.kr','www.fda.gov','nongsaro.go.kr','www.korea.kr','m.korea.kr','www.nihhs.go.kr','english.visitkorea.or.kr'].includes(new URL(url).hostname)),
     'unexpected source domain '+guide.slug);
   check(html.includes('href="/food/'+guide.related+'/"')&&slugs.has(guide.related),
     'related food guide internal link broken '+guide.slug);
