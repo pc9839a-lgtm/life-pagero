@@ -14,6 +14,10 @@ const SHOP_SCRIPT_HREF=SHOP_SCRIPT+'?v='+SHOP_HASH;
 const photoManifest=JSON.parse(fs.readFileSync(
   path.join(DIST,'food-images/manifest.json'),'utf8'));
 const imageUrl=photo=>photoManifest[photo.filename];
+const publicImageUrl=photo=>{
+  const url=imageUrl(photo);
+  return url.startsWith('/')?SITE+url:url;
+};
 const figure=(photo,hero=false)=>{
   const attribution='<a href="'+esc(photo.source)+'" target="_blank" rel="noopener noreferrer">'
     +esc(photo.attribution)+'</a>';
@@ -136,7 +140,7 @@ for(const guide of dataset.guides){
   html=html.replace('<link rel="stylesheet" href="/life-food.css">','')
     .replace('<script defer src="/life-food.js"></script>','');
   html=html.replace('</head>','<script defer src="'+SHOP_SCRIPT_HREF+'"></script></head>');
-  const ogImageTag='<meta property="og:image" content="'+esc(imageUrl(hero))+'">';
+  const ogImageTag='<meta property="og:image" content="'+esc(publicImageUrl(hero))+'">';
   if(/<meta property="og:image"[^>]*>/.test(html)){
     html=html.replace(/<meta property="og:image"[^>]*>/,ogImageTag);
   }else{
@@ -145,7 +149,7 @@ for(const guide of dataset.guides){
   const articleSchema={
     '@context':'https://schema.org','@type':'Article',
     headline:guide.title,description:guide.description,
-    image:[imageUrl(hero)],
+    image:[publicImageUrl(hero)],
     datePublished:dataset.publishedAt,dateModified:dataset.publishedAt,
     inLanguage:'ko',mainEntityOfPage:SITE+url,
     author:{'@type':'Organization',name:'생활비서',url:SITE+'/'},
