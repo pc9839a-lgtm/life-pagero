@@ -12,44 +12,77 @@ const safeLink=value=>{
   try{const url=new URL(String(value||""));return url.protocol==="https:"?url.href:null;}
   catch{return null;}
 };
+// A keyword hit is not enough to recommend an ingredient: "가리비" also
+// matches fishing lures and restaurant vouchers. Only recognize purchasable,
+// uncooked food for the two editorial articles. Fail closed if uncertain.
+// This filters the provider response at request time, never persists it.
+const NO_INGREDIENT=/(낚시|미끼|루어|에기|채비|피싱|낚싯|오징어미끼|낚시바늘|가라비|호텔|리조트|숙박|펜션|좌석|예약|입장권|체험|이용권|티켓|관광|여행|레스토랑|식당|횟집|뷔페|맛집|코스요리|세트메뉴|화로구이|뷔페|오마카세|쿠션|파운데이션|화장품|마스크팩|립스틱|스킨케어|크림|아이라이너|마사지|귀걸이|목걸이|키링|인형|스티커|완구|장난감|의류|티셔츠|가방|케이스|패턴|장식|모양|모형|공예|껍데기|패각|접시|그릇|식기|찜기|냄비|조리도구|프라이팬|보관용기|농약|비료|모종|씨앗|화분|재배키트|책|도서|그림|포스터|분말|가루|라떼|빵|쿠키|과자|스낵|칩|젤리|말랭이|맛사탕|캔디|케이크|퓨레|시럽|잼|스프|컵라면|라면|간식|사료|영양제|추출물|캡슐|즙|아이스크림|만두|볶음밥|비빔밥|도시락|밀키트|조리완료|완제품)/i;
+const FRESH_UNIT=/\d+(?:[.,]\d+)?\s*(?:kg|g|킬로|키로|그램|마리|미|개입|입|팩|봉)(?![a-z])/i;
+const SCALLOP_FRESH=/(생물|활가리비|생가리비|홍가리비|비단가리비|수산물|수산|해산물|산지직송|산지|원물|국내산|자연산|양식|손질|냉장|냉동|급냉|반각|관자|조개|신선)/i;
+const POTATO_FRESH=/(생고구마|햇고구마|꿀고구마|밤고구마|호박고구마|자색고구마|세척고구마|흙고구마|베니하루카|산지직송|산지|농산물|국내산|못난이|무세척|갓수확|농장|신선|수확)/i;
+export function isRelevantFoodProduct(topic,title){
+  if(typeof title!=="string"||!title.trim())return false;
+  const text=title.normalize("NFKC").toLowerCase().replace(/\s+/g," ").trim();
+  if(NO_INGREDIENT.test(text))return false;
+  if(topic==="가리비")
+    return /가리비/.test(text)&&(FRESH_UNIT.test(text)||SCALLOP_FRESH.test(text));
+  if(topic==="고구마")
+    return /고구마/.test(text)&&(FRESH_UNIT.test(text)||POTATO_FRESH.test(text));
+  return false;
+}
+const FALLBACK_SEARCH=Object.freeze({"가리비":"홍가리비","고구마":"꿀고구마"});
 export async function onRequestGet({request,env}){
   const key=String(env?.ADPICK_BIZ_API_KEY||"").trim();
   if(!key)return reply({status:"unconfigured",items:[]},503);
   const params=new URL(request.url).searchParams;
   const mode=params.get("mode")==="search"?"search":"best";
-  const endpoint=new URL(PROVIDER+"/"+encodeURIComponent(key)+"/"+mode);
-  endpoint.searchParams.set("limit","10");
-  if(mode==="best"){
-    const area=params.get("area")||"today";
-    if(!BEST_AREAS.has(area))return reply({status:"invalid_request",items:[]},400);
-    endpoint.searchParams.set("area",area);
-    endpoint.searchParams.set("p_data","life_deals_"+area);
-  } else {
-    const q=String(params.get("q")||"").trim();
-    if(q.length<2||q.length>40)return reply({status:"invalid_query",items:[]},400);
-    endpoint.searchParams.set("q",q);
-    endpoint.searchParams.set("p_data",params.get("src")==="food"?"life_food_search":"life_deals_search");
-  }
-  try{
+  const rawQuery=String(params.get("q")||"").trim();
+  if(mode==="search"&&(rawQuery.length<2||rawQuery.length>40))
+    return reply({status:"invalid_query",items:[]},400);
+  const isFoodSearch=mode==="search"&&params.get("src")==="food";
+  const foodTopic=isFoodSearch&&Object.hasOwn(FALLBACK_SEARCH,rawQuery)?rawQuery:null;
+  const area=params.get("area")||"today";
+  if(mode==="best"&&!BEST_AREAS.has(area))
+    return reply({status:"invalid_request",items:[]},400);
+  const fetchProducts=async term=>{
+    const endpoint=new URL(PROVIDER+"/"+encodeURIComponent(key)+"/"+mode);
+    endpoint.searchParams.set("limit","10");
+    if(mode==="best"){
+      endpoint.searchParams.set("area",area);
+      endpoint.searchParams.set("p_data","life_deals_"+area);
+    }else{
+      endpoint.searchParams.set("q",term);
+      endpoint.searchParams.set("p_data",isFoodSearch?"life_food_search":"life_deals_search");
+    }
     const response=await fetch(endpoint.href,{
       headers:{Accept:"application/json"},
-      signal:AbortSignal.timeout(10000)
+      signal:AbortSignal.timeout(8000)
     });
     if(!response.ok)throw new Error("UPSTREAM_"+response.status);
     const data=await response.json();
     if(data?.success!==true)throw new Error("API_REJECTED");
     const source=mode==="best"?data.data?.list:data.data;
     if(!Array.isArray(source))throw new Error("MALFORMED_RESPONSE");
-    // Keep product name, price, image, shop and affiliate URL unmodified.
-    // Drop entries without a safe commission link rather than fabricate URLs.
-    const items=source.slice(0,10).filter(row=>row&&typeof row==="object")
+    // Preserve provider names, prices, images and affiliate links unchanged.
+    // Only reject invalid HTTPS links and mismatched ingredient results.
+    return source.slice(0,10).filter(row=>row&&typeof row==="object")
       .filter(row=>safeLink(row.commissionlink)&&typeof row.title==="string")
+      .filter(row=>!foodTopic||isRelevantFoodProduct(foodTopic,row.title))
       .map(row=>({
         title:row.title,price:row.price??null,
         photo:safeLink(row.photo),cp_name:row.cp_name??"",
         commissionlink:safeLink(row.commissionlink)
       }));
-    return reply({status:"ok",mode,area:mode==="best"?params.get("area")||"today":null,items});
+  };
+  try{
+    let items=await fetchProducts(rawQuery);
+    if(foodTopic&&items.length===0){
+      // One narrowly scoped fallback; never fill the article with irrelevant
+      // hits just to reach the display limit.
+      try{items=await fetchProducts(FALLBACK_SEARCH[foodTopic]);}
+      catch{items=[];}
+    }
+    return reply({status:"ok",mode,area:mode==="best"?area:null,items});
   }catch(error){
     // Do not log URL or credentials.
     console.error("[adpick-biz] request failed",error instanceof Error?error.message:"unknown");
