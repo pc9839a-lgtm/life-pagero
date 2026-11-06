@@ -28,9 +28,15 @@
     a.target='_blank';a.rel='noopener noreferrer';
     return a;
   };
-  const fallback=(box,link,url)=>{
-    // If the card already has an official link, do not repeat it under an
-    // empty quote panel. Keep one usable action and no failure/status text.
+  const fallback=(box,link,url,message='현재 데이터를 표시하지 못했습니다. 공식 출처에서 확인하세요.')=>{
+    // /today/ must never look like a blank screen when a public API is
+    // unconfigured. Other existing embeds keep their compact fallback.
+    if(box.closest('.today-viewport')){
+      box.hidden=false;
+      box.replaceChildren(create('p','today-source-prompt',message),
+        external(url,link,'today-official-link'));
+      return;
+    }
     const header=box.closest('.today-widget')?.querySelector('.today-widget-heading a[href^="https://"]');
     if(header){
       box.replaceChildren();
@@ -39,6 +45,16 @@
       box.hidden=false;
       box.replaceChildren(external(url,link,'today-official-link'));
     }
+  };
+  const attachRefresh=(node,load)=>{
+    if(!node.closest('.today-viewport'))return;
+    const heading=node.querySelector('.today-widget-heading');
+    if(!heading)return;
+    const control=create('button','today-refresh','새로고침');
+    control.type='button';
+    control.setAttribute('aria-label','이 항목 새로고침');
+    control.addEventListener('click',load);
+    heading.append(control);
   };
   async function get(url){
     const controller=new AbortController();
@@ -76,6 +92,7 @@
       }
     };
     selector?.addEventListener('change',load);
+    attachRefresh(node,load);
     load();
     setInterval(load,45*60000);
   }
@@ -87,9 +104,9 @@
     const render=()=>{
       const category=picker?.value||'all';
       const selected=all.filter(row=>category==='all'||row.category===category);
-      const limit=node.dataset.mode==='compact'?5:8;
+      const limit=node.dataset.mode==='compact'?5:6;
       if(!selected.length){
-        fallback(box,'주요 뉴스 보기','https://www.yna.co.kr/');
+        fallback(box,'주요 뉴스 보기','https://www.yna.co.kr/','선택한 분야의 새 기사가 없습니다.');
         return;
       }
       const ul=create('ul','today-news-list');
@@ -129,6 +146,7 @@
       }
     };
     picker?.addEventListener('change',render);
+    attachRefresh(node,load);
     load();
     setInterval(load,10*60000);
   }
@@ -174,6 +192,7 @@
         status(node,'');
       }
     };
+    attachRefresh(node,load);
     load();
     setInterval(load,3*60000);
   }
@@ -203,6 +222,7 @@
         status(node,'');
       }
     };
+    attachRefresh(node,load);
     load();
     setInterval(load,6*3600000);
   }
