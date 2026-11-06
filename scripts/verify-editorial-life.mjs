@@ -5,11 +5,12 @@ import {createHash} from 'node:crypto';
 const DIST=path.resolve('dist');
 const css='/life-editorial-20261106.css';
 const old=['/life-modern.css','/life-compact.css','/life-global-nav.css',
-  '/today-dashboard.css','/today-wide.css'];
+  '/today-dashboard.css'];
 const check=(condition,message)=>{if(!condition)throw Error('[editorial-qa] '+message);};
 const read=p=>fs.readFileSync(path.join(DIST,p),'utf8');
 const themeHash=createHash('sha256').update(read(css.slice(1))).digest('hex').slice(0,12);
 const themeHref=css+'?v='+themeHash;
+const todayHash=createHash('sha256').update(read('today-wide.css')).digest('hex').slice(0,12);
 const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(ent=>{
   const full=path.join(dir,ent.name);
   return ent.isDirectory()?walk(full):[full];
@@ -172,7 +173,15 @@ const today=read('today/index.html');
 check(today.includes('class="today-viewport"')&&
   today.includes('class="today-vertical-list editorial-desk"'),
   'Today is no longer a full-width, vertical news reading page');
-const positions=['data-today-news','data-today-weather',
+check(today.includes('class="today-section-nav"') &&
+  today.includes('id="today-weather"') &&
+  today.includes('id="today-news"'),
+  'Today first-screen navigation or weather priority missing');
+const todaySheet='<link rel="stylesheet" href="/today-wide.css?v='+todayHash+'">';
+const generalSheet='<link rel="stylesheet" href="'+themeHref+'">';
+check(today.indexOf(todaySheet)>today.indexOf(generalSheet),
+  'Today-only layout must load after the global stylesheet');
+const positions=['data-today-weather','data-today-news',
   'data-today-stocks','data-today-crypto'].map(k=>today.indexOf(k));
 check(positions.every((p,i)=>p>=0&&(i===0||p>positions[i-1])),
   'Today section priority changed');

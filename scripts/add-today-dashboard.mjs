@@ -13,7 +13,7 @@ const write=(p,content)=>{
   fs.writeFileSync(file,content);
 };
 const block=(name,content,footer='',mode='compact') =>
-  '<section class="today-widget" data-mode="'+mode+'" data-today-'+name
+  '<section class="today-widget"'+(mode==='full'?' id="today-'+name+'"':'')+' data-mode="'+mode+'" data-today-'+name
   +' aria-label="'+(name==='weather'?'지역 날씨':name==='news'?'뉴스 헤드라인':name==='crypto'?'코인 시세':'코스피·코스닥')+'">'
   +content+'<p class="today-widget-meta" data-today-status role="status"></p>'
   +footer+'</section>';
@@ -55,17 +55,19 @@ const title='오늘의 날씨·주요뉴스·증권·코인 정보 | 생활비�
 const description='지역별 기상청 날씨 관측, 언론사 최신 뉴스 헤드라인, 코스피·코스닥 자료와 업비트 원화 코인 시세를 출처 및 기준시각과 함께 확인합니다.';
 const fullBody='<div class="today-viewport"><article class="today-wide-content">'
   +'<nav class="portal-breadcrumbs" aria-label="현재 위치"><a href="/">홈</a> / 오늘의 정보</nav>'
-  +'<h1>오늘의 정보</h1>'
-  +'<p class="today-page-intro">날씨, 주요뉴스, 증권, 코인 자료를 한곳에서 확인할 수 있습니다. '
-  +'모든 데이터는 출처와 관측·발표·수집 시각을 구분해 표시합니다.</p>'
+  +'<div class="today-page-head"><h1>오늘의 정보</h1>'
+  +'<p class="today-page-intro">날씨부터 뉴스, 증권·코인까지 필요한 정보를 확인하세요.</p></div>'
+  +'<nav class="today-section-nav" aria-label="이 페이지의 항목">'
+  +'<a href="#today-weather">날씨</a><a href="#today-news">주요뉴스</a>'
+  +'<a href="#today-stocks">증권</a><a href="#today-crypto">코인</a></nav>'
   +'<div class="today-vertical-list">'
-  +news('full')+weather('full')+stocks('full')+crypto('full')
+  +weather('full')+news('full')+stocks('full')+crypto('full')
   +'</div>'
-  +'<section class="today-source-guidance"><h2>데이터는 어떻게 갱신되나요?</h2>'
+  +'<section class="today-source-guidance"><h2>데이터 출처와 기준시각</h2>'
   +'<p>날씨는 기상청 초단기실황(약 30분 캐시), 뉴스는 언론사가 공개한 RSS(약 10분 캐시), '
   +'코인은 업비트 원화마켓 공개 시세(약 3분 캐시)를 확인합니다. 브라우저를 열어 둔 동안에도 다시 조회합니다. '
   +'증권은 한국거래소 종가자료 이용권한이 확인된 경우에만 표시하며 장중 실시간 시세가 아닙니다.</p>'
-  +'<p>뉴스는 제목·언론사·발행시각만 제공합니다. 본문과 상세 내용은 해당 언론사 원본에서 확인해야 합니다. '
+  +'<p>뉴스는 제목·언론사·발행시각만 제공합니다. 상세 내용은 해당 언론사 원문에서 확인하세요. '
   +'금융시장 자료는 투자 권유가 아니며 지연·변경될 수 있습니다.</p>'
   +'<div class="today-source-links">'
   +'<a href="https://www.weather.go.kr/" target="_blank" rel="noopener noreferrer">기상청</a>'
