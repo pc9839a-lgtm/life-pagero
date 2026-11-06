@@ -35,12 +35,36 @@ const transformHome=html=>{
   check((html.match(/class="portal-topic-card compact-topic"/g)||[]).length===6,
     'existing six topic destinations missing');
   html=html.replace('<section class="hero portal-home-hero">',
-    '<section class="hero portal-home-hero editorial-hero">');
+    '<section class="hero portal-home-hero editorial-hero"><span class="life-home-kicker">LIFE PORTAL</span>');
   html=html.replace('<h1>무엇을 찾고 계신가요?</h1>','<h1>오늘 필요한 정보</h1>');
   html=html.replace('<h2 id="portal-topic-title">분야별 찾기</h2>',
     '<h2 id="portal-topic-title">분야별 정보</h2>');
   html=html.replace('<h2 id="compact-popular-title">많이 찾는 정보</h2>',
     '<h2 id="compact-popular-title">주요 생활정보</h2>');
+
+  // Main-only redesign: discovery tiles for the existing, functioning routes.
+  // Do not change their URLs, the global navigation, editorial content or ads.
+  const serviceItems=[
+    {href:'/today/',label:'오늘의 정보',hint:'뉴스 · 날씨 · 시세',icon:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18M7 14h4"/>'},
+    {href:'/finance/savings/',label:'금리 비교',hint:'예금 · 적금',icon:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>'},
+    {href:'/finance/loan-payment/',label:'대출 계산',hint:'이자 · 월 상환액',icon:'<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h2M14 11h2M8 15h2M14 15h2"/>'},
+    {href:'/food/',label:'먹거리',hint:'제철 · 레시피',icon:'<path d="M4 3v7a3 3 0 0 0 6 0V3M7 3v18M16 21V3c3 2 4 6 4 10h-4"/>'},
+    {href:'/events/',label:'축제·행사',hint:'축제 · 공연 · 전시',icon:'<path d="M3 7a3 3 0 0 0 0 6v4h18v-4a3 3 0 0 1 0-6V5H3v2Z"/><path d="M13 5v12" stroke-dasharray="2 2"/>'},
+    {href:'/deals/',label:'추천상품',hint:'제휴 상품 검색',icon:'<path d="M5 8h14l1 13H4L5 8ZM9 9V6a3 3 0 0 1 6 0v3"/>'}
+  ];
+  const serviceCards=serviceItems.map(item=>'<a class="life-home-service-card" href="'+item.href+'">'
+    +'<span class="life-home-service-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+item.icon+'</svg></span>'
+    +'<span class="life-home-service-copy"><strong>'+item.label+'</strong><small>'+item.hint+'</small></span>'
+    +'<span class="life-home-service-arrow" aria-hidden="true">↗</span></a>').join('');
+  const serviceSection='<section class="life-home-services" aria-labelledby="life-home-services-title">'
+    +'<div class="life-home-section-head"><h2 id="life-home-services-title">바로가기</h2></div>'
+    +'<div class="life-home-service-grid">'+serviceCards+'</div></section>';
+  const topicAnchor='<section class="portal-home-section" aria-labelledby="portal-topic-title">';
+  check(html.includes(topicAnchor),'home category section missing');
+  html=html.replace(topicAnchor,serviceSection+topicAnchor);
+  check((html.match(/class="life-home-service-card"/g)||[]).length===6,
+    'main service links must all remain visible');
+
   const latest='<details class="compact-explore compact-latest">';
   check(html.includes(latest),'home recently updated posts missing');
   // Readers should not need to open an accordion to see actual articles.
