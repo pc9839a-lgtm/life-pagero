@@ -1,0 +1,58 @@
+
+/* Scoped free real-estate sidebar demo; other LIFE pages unaffected. */
+.life-editorial .re-shell{width:calc(100% - 72px);max-width:1240px;margin:0 auto;padding:24px 0 55px}
+.life-editorial .re-breadcrumb{font-size:12px;color:#818990;margin-bottom:22px}
+.life-editorial .re-header{padding:0 0 24px;border-bottom:1px solid #e6e8ea}
+.life-editorial .re-kicker{font-size:12px;font-weight:800;letter-spacing:.08em;color:#e95731}
+.life-editorial .re-header h1{margin:6px 0 8px;color:#20252b;font-size:35px;font-weight:850;line-height:1.27;letter-spacing:-.06em}
+.life-editorial .re-header p{margin:0;color:#707982;font-size:14px}
+.life-editorial .re-header-row{display:flex;justify-content:space-between;align-items:end;gap:18px}
+.life-editorial .re-action{display:inline-block;background:#e95731;color:#fff!important;border-radius:5px;padding:11px 17px;font-size:13px;font-weight:750;white-space:nowrap}
+.life-editorial .re-action:hover{background:#c54426}
+.life-editorial .re-columns{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:34px;align-items:start;padding-top:28px}
+.life-editorial .re-main{min-width:0}
+.life-editorial .re-titlebar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.life-editorial .re-titlebar h2{margin:0;font-size:19px;font-weight:800}
+.life-editorial .re-titlebar small{font-size:12px;color:#828b94}
+.life-editorial .re-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-bottom:15px;border-bottom:1px solid #e6e8ea}
+.life-editorial .re-filters button,.life-editorial .re-filters select{border:1px solid #dfe4e8;color:#5d6772;background:white;border-radius:5px;padding:8px 13px;font-size:12px;font-weight:700}
+.life-editorial .re-filters button[aria-pressed="true"]{color:#ba4529;border-color:#e95731;background:#fff4f0}
+.life-editorial .re-filters select{margin-left:auto}
+.life-editorial .re-listing{display:grid;grid-template-columns:260px minmax(0,1fr);margin-top:18px;border:1px solid #e6e8ea;border-radius:7px;overflow:hidden;background:white}
+.life-editorial .re-visual{position:relative;display:flex;align-items:end;justify-content:center;min-height:238px;overflow:hidden;background:#e4eaec}
+.life-editorial .re-visual svg{width:100%;height:100%;position:absolute;inset:0}
+.life-editorial .re-visual .re-watermark{position:absolute;left:12px;top:12px;padding:5px 8px;background:#252d33;color:white;font-size:11px;font-weight:750;border-radius:3px;z-index:1}
+.life-editorial .re-copy{padding:19px 21px 17px;display:flex;flex-direction:column;align-items:start;gap:9px}
+.life-editorial .re-chip{display:inline-block;color:#606c77;background:#f0f2f4;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:650}
+.life-editorial .re-copy h3{margin:0;color:#252b30;font-size:22px;line-height:1.3;font-weight:830;letter-spacing:-.05em}
+.life-editorial .re-copy p{margin:0;color:#748089;font-size:13px;line-height:1.65}
+.life-editorial .re-facts{display:flex;flex-wrap:wrap;gap:13px;color:#77818b;font-size:12px}
+.life-editorial .re-more{color:#e95731;font-size:13px;font-weight:780;margin-top:auto;padding-top:9px}
+.life-editorial .re-smallprint{margin:18px 0;color:#869099;font-size:12px}
+.life-editorial .re-side{position:sticky;top:20px;min-width:0}
+.life-editorial .re-side-heading{display:flex;justify-content:space-between;gap:10px;margin:0 0 9px;color:#737e88;font-size:12px}
+.life-editorial .re-side-heading strong{font-weight:750;color:#505b64}
+.life-editorial .re-banner{display:block;border:1px solid #e4e8ea;border-radius:7px;overflow:hidden;background:#fff}
+.life-editorial .re-banner .re-visual{height:303px;min-height:303px}
+.life-editorial .re-banner .re-banner-copy{padding:17px}
+.life-editorial .re-banner-copy small{font-size:11px;color:#e95731;font-weight:780}
+.life-editorial .re-banner-copy h3{margin:5px 0 7px;font-size:22px;line-height:1.3;letter-spacing:-.06em;font-weight:850}
+.life-editorial .re-banner-copy p{margin:0 0 13px;font-size:12px;color:#76808a}
+.life-editorial .re-banner-copy strong{display:block;background:#232b32;padding:10px;border-radius:4px;text-align:center;color:white;font-size:13px}
+.life-editorial .re-disclosure{color:#8a929a;text-align:center;font-size:11px;padding-top:9px}
+.life-editorial .re-empty{margin-top:18px;padding:48px 15px;text-align:center;background:#fbfbfb;border:1px dashed #e2e6e8;border-radius:6px;font-size:13px;color:#79848d}
+.life-editorial .re-process{margin-top:38px;border-top:1px solid #e6e8ea;padding-top:22px}
+.life-editorial .re-process h2{font-size:18px;margin:0 0 8px}
+.life-editorial .re-process p{margin:0 0 18px;font-size:13px;color:#74808a}
+.life-editorial .re-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.life-editorial .re-step{border:1px solid #e5e8ea;border-radius:5px;padding:17px}
+.life-editorial .re-step strong{display:block;font-size:13px;margin-bottom:9px}
+.life-editorial .re-step span{font-size:12px;color:#77828c}
+.life-editorial .re-detail{margin:25px 0 0;border-top:1px solid #e7e9eb}
+.life-editorial .re-detail dl{display:grid;grid-template-columns:175px 1fr;gap:0;margin:0}
+.life-editorial .re-detail dt,.life-editorial .re-detail dd{border-bottom:1px solid #e8eaec;padding:14px 4px;margin:0;font-size:13px}
+.life-editorial .re-detail dt{color:#727e88;font-weight:750}
+.life-editorial .re-detail dd{color:#303b45}
+.life-editorial .re-warning{padding:13px 16px;margin-top:18px;background:#f7f8f9;color:#76818b;font-size:12px}
+@media(max-width:950px){.life-editorial .re-columns{grid-template-columns:minmax(0,1fr) 270px;gap:20px}.life-editorial .re-listing{grid-template-columns:185px 1fr}}
+@media(max-width:760px){.life-editorial .re-shell{width:calc(100% - 32px);padding:18px 0 38px}.life-editorial .re-header h1{font-size:29px}.life-editorial .re-header-row{display:block}.life-editorial .re-action{margin-top:16px}.life-editorial .re-columns{grid-template-columns:1fr;gap:30px;padding-top:22px}.life-editorial .re-listing{grid-template-columns:1fr}.life-editorial .re-listing .re-visual{min-height:210px}.life-editorial .re-side{position:static;border-top:1px solid #e6e8ea;padding-top:20px}.life-editorial .re-banner{display:grid;grid-template-columns:38% 1fr}.life-editorial .re-banner .re-visual{height:100%;min-height:192px}.life-editorial .re-banner .re-banner-copy{padding:13px}.life-editorial .re-banner-copy h3{font-size:18px}.life-editorial .re-steps{grid-template-columns:1fr}.life-editorial .re-detail dl{grid-template-columns:120px 1fr}}
