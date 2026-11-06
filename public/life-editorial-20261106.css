@@ -65,13 +65,13 @@ body.life-editorial{
 .life-editorial.life-modern-home .home-grid{display:block}
 .life-editorial.life-modern-home .home-grid>.main-column{padding:0;border:0;background:transparent}
 .life-editorial.life-modern-home .hero.portal-home-hero{
-  display:block;max-width:none;min-height:0;margin:0;padding:43px 14px 28px;
+  display:block;max-width:none;min-height:0;margin:0;padding:29px 14px 23px;
   text-align:left;background:#fff;color:#1b2229;
   border:0;border-bottom:1px solid #e8eaed;border-radius:0;box-shadow:none
 }
 .life-editorial.life-modern-home .portal-home-hero h1{
-  max-width:none;margin:0 0 9px;font-size:clamp(36px,3.6vw,48px);
-  line-height:1.35;font-weight:840;letter-spacing:-.046em;color:#161b20
+  max-width:none;margin:0 0 12px;font-size:clamp(30px,2.9vw,36px);
+  line-height:1.3;font-weight:800;letter-spacing:-.043em;color:#161b20
 }
 .life-editorial.life-modern-home .life-home-intro{margin:0;color:#636e78;font-size:18px;line-height:1.5}
 .life-editorial.life-modern-home .life-home-search-panel{display:none;width:100%;margin:19px 0 0}
@@ -96,35 +96,65 @@ body.life-editorial{
 }
 .life-editorial.life-modern-home .life-home-service-grid{
   display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
-  grid-auto-rows:minmax(112px,auto);column-gap:10px;row-gap:8px;
-  width:min(100%,1120px);margin:27px auto 0
+  grid-auto-rows:minmax(87px,auto);gap:0;
+  width:min(100%,1040px);margin:18px auto 0;
+  border:1px solid #e6e9eb;border-radius:10px;overflow:hidden;background:#fff
 }
 .life-editorial.life-modern-home .life-home-service-card{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:15px;min-width:0;min-height:112px;padding:15px 6px;
-  border:0;border-radius:9px;background:transparent;color:#171b20;
+  gap:6px;min-width:0;min-height:87px;padding:9px 6px;
+  border:0;border-right:1px solid #edf0f2;border-bottom:1px solid #edf0f2;
+  border-radius:0;background:transparent;color:#171b20;
   text-align:center;text-decoration:none;transform:none;box-shadow:none
 }
+.life-editorial.life-modern-home .life-home-service-card:nth-child(4n){border-right:0}
+.life-editorial.life-modern-home .life-home-service-card:nth-child(n+5){border-bottom:0}
 .life-editorial.life-modern-home .life-home-service-card:hover{background:#f7f7f7;color:var(--brand)}
 .life-editorial.life-modern-home .life-home-service-card:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 .life-editorial.life-modern-home .life-home-service-icon{
-  display:grid;place-items:center;flex:none;width:49px;height:49px;
+  display:grid;place-items:center;flex:none;width:34px;height:34px;
   margin:0;padding:0;border:0;border-radius:0;background:transparent;color:currentColor
 }
-.life-editorial.life-modern-home .life-home-service-icon svg{display:block;width:41px;height:41px}
+.life-editorial.life-modern-home .life-home-service-icon svg{display:block;width:31px;height:31px}
 .life-editorial.life-modern-home .life-home-service-copy{display:block;min-width:0}
 .life-editorial.life-modern-home .life-home-service-copy strong{
-  display:block;font-size:18px;font-weight:740;letter-spacing:-.035em;
+  display:block;font-size:15px;font-weight:710;letter-spacing:-.025em;
   color:inherit;white-space:nowrap;line-height:1.4
 }
+/* Secondary destinations stay available, but no longer compete with primary links. */
+.life-editorial.life-modern-home .life-home-more-services{
+  width:min(100%,1040px);margin:0 auto;text-align:left;
+  border:0;background:#fff
+}
+.life-editorial.life-modern-home .life-home-more-services>summary{
+  display:flex;align-items:center;justify-content:center;gap:9px;cursor:pointer;
+  list-style:none;min-height:45px;margin:0;padding:11px 6px 4px;
+  color:#64717e;font-size:13px;font-weight:670
+}
+.life-editorial.life-modern-home .life-home-more-services>summary::-webkit-details-marker{display:none}
+.life-editorial.life-modern-home .life-home-more-services>summary::after{content:"⌄";font-size:17px;line-height:1}
+.life-editorial.life-modern-home .life-home-more-services[open]>summary::after{content:"⌃"}
+.life-editorial.life-modern-home .life-home-more-count{font-size:11px;color:#929aa2;font-weight:500}
+.life-editorial.life-modern-home .life-home-more-links{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:0;margin:7px 0 4px;border:1px solid #edf0f2;border-radius:8px;overflow:hidden
+}
+.life-editorial.life-modern-home .life-home-more-links a{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  min-width:0;min-height:50px;padding:10px 5px;border-right:1px solid #edf0f2;
+  text-decoration:none;font-size:13px;color:#485662;font-weight:650
+}
+.life-editorial.life-modern-home .life-home-more-links a:last-child{border-right:0}
+.life-editorial.life-modern-home .life-home-more-links a span{color:#9aa4ad;font-size:17px}
+.life-editorial.life-modern-home .life-home-more-links a:hover{color:var(--brand);background:#fff9f6}
 /* The three editorial picks imitate the reference's thumbnail + title + subline rows. */
 .life-editorial.life-modern-home .compact-popular{
-  margin:13px 0 35px;padding:0 14px;border:0;border-top:1px solid #e6e8ea;
+  margin:10px 0 35px;padding:0 14px;border:0;border-top:1px solid #e6e8ea;
   border-radius:0;background:#fff
 }
 .life-editorial.life-modern-home .compact-popular-top{
   display:flex;align-items:center;justify-content:space-between;gap:12px;
-  margin:0;padding:28px 0 15px;border:0
+  margin:0;padding:20px 0 12px;border:0
 }
 .life-editorial.life-modern-home .compact-popular-top h2{
   margin:0;color:#161b21;font-size:27px;font-weight:800;letter-spacing:-.044em
@@ -609,14 +639,18 @@ body.life-editorial{
   .life-editorial.life-modern-home .header-inner{min-height:62px;padding:8px 4px}
   .life-editorial.life-modern-home .brand-copy strong{font-size:21px}
   .life-editorial.life-modern-home .life-home-header-search{width:44px;height:44px}
-  .life-editorial.life-modern-home .hero.portal-home-hero{padding:28px 4px 23px;margin:0}
-  .life-editorial.life-modern-home .portal-home-hero h1{font-size:30px;line-height:1.22;letter-spacing:-.045em;margin:0 0 8px}
+  .life-editorial.life-modern-home .hero.portal-home-hero{padding:18px 4px 13px;margin:0}
+  .life-editorial.life-modern-home .portal-home-hero h1{font-size:26px;line-height:1.25;letter-spacing:-.04em;margin:0 0 8px}
   .life-editorial.life-modern-home .life-home-intro{font-size:14px}
-  .life-editorial.life-modern-home .life-home-service-grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(92px,auto);column-gap:3px;row-gap:5px;margin:21px auto 0;max-width:430px}
-  .life-editorial.life-modern-home .life-home-service-card{min-height:92px;padding:10px 2px;gap:9px;border-radius:7px}
-  .life-editorial.life-modern-home .life-home-service-icon{width:34px;height:34px}
-  .life-editorial.life-modern-home .life-home-service-icon svg{width:30px;height:30px}
-  .life-editorial.life-modern-home .life-home-service-copy strong{font-size:12.7px;font-weight:690;letter-spacing:-.038em}
+  .life-editorial.life-modern-home .life-home-service-grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(76px,auto);gap:0;margin:12px auto 0;max-width:430px}
+  .life-editorial.life-modern-home .life-home-service-card{min-height:76px;padding:8px 2px;gap:5px;border-radius:0}
+  .life-editorial.life-modern-home .life-home-service-icon{width:28px;height:28px}
+  .life-editorial.life-modern-home .life-home-service-icon svg{width:26px;height:26px}
+  .life-editorial.life-modern-home .life-home-service-copy strong{font-size:12.5px;font-weight:700;letter-spacing:-.03em}
+  .life-editorial.life-modern-home .life-home-more-services>summary{min-height:43px;font-size:12.5px;padding:10px 5px 4px}
+  .life-editorial.life-modern-home .life-home-more-links{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .life-editorial.life-modern-home .life-home-more-links a:nth-child(2){border-right:0}
+  .life-editorial.life-modern-home .life-home-more-links a:nth-child(-n+2){border-bottom:1px solid #edf0f2}
   .life-editorial.life-modern-home .compact-popular{margin:7px 0 23px;padding:0 4px}
   .life-editorial.life-modern-home .compact-popular-top{padding:17px 0 9px}
   .life-editorial.life-modern-home .compact-popular-top h2{font-size:21px}
@@ -692,7 +726,7 @@ body.life-editorial{
 /* 320–370px: prevent four-column icon labels or post previews from overflowing. */
 @media(max-width:370px){
   .life-editorial.life-modern-home .home-shell,.life-editorial.life-modern-home .site-header{width:calc(100% - 18px)}
-  .life-editorial.life-modern-home .portal-home-hero h1{font-size:27px}
+  .life-editorial.life-modern-home .portal-home-hero h1{font-size:25px}
   .life-editorial.life-modern-home .life-home-service-grid{column-gap:0}
   .life-editorial.life-modern-home .life-home-service-card{padding-inline:0}
   .life-editorial.life-modern-home .life-home-service-copy strong{font-size:11.5px}

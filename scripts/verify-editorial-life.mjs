@@ -50,28 +50,32 @@ check(home.includes('class="hero portal-home-hero editorial-hero"'),
 check(!home.includes('class="events-home-banner"') &&
   !home.includes('class="adpick-home-entry"'),
   'duplicate event/deal campaign boxes crowd the first fold');
-check(home.includes('날씨 · 금융 · 지원금 · 자동차'),
-  'homepage description should be simple and factual');
+check(!home.includes('class="life-home-intro"'),
+  'redundant intro repeats the menu labels');
 const heroStart=home.indexOf('<section class="hero portal-home-hero editorial-hero">');
 const heroEnd=home.indexOf('</section>',heroStart);
-check(heroStart>0 && heroEnd>heroStart && home.indexOf('aria-label="생활비서 서비스 바로가기"',heroStart)<heroEnd,
-  '12 primary services must be inside homepage hero');
+check(heroStart>0 && heroEnd>heroStart && home.indexOf('aria-label="주요 서비스 바로가기"',heroStart)<heroEnd,
+  'eight primary services must be inside homepage hero');
 const keywordPattern=/<div class="portal-search-suggestions"[\s\S]*?<\/div>/;
 const keyword=home.match(keywordPattern)?.[0]||'';
 check(!keyword || home.indexOf(keyword)>home.indexOf('class="life-home-search-panel"'),
   'search chips must remain in the closed search panel');
-check((home.match(/class="life-home-service-card"/g)||[]).length===12,
-  '4 by 3 portal shortcuts missing');
+check((home.match(/class="life-home-service-card"/g)||[]).length===8,
+  '4 by 2 primary navigation count incorrect');
+const more=home.match(/<details class="life-home-more-services">[\s\S]*?<\/details>/)?.[0]||'';
+check((more.match(/<a href=/g)||[]).length===4,
+  'four secondary menu links missing');
+for(const route of ['/finance/markets/','/finance/mortgage-calculator/','/car/','/events/'])
+  check(more.includes('href="'+route+'"'),'secondary menu destination missing: '+route);
 for(const route of ['/today/','/finance/savings/','/finance/loan-payment/',
-  '/finance/markets/','/food/','/events/','/deals/',
-  '/finance/mortgage-calculator/','/car/','/support/','/real-estate/']) {
+  '/finance/markets/','/food/','/deals/','/support/','/real-estate/']) {
   check(home.includes('class="life-home-service-card" href="'+route+'"'),
     'homepage portal shortcut missing: '+route);
 }
 check(home.includes('class="life-home-service-grid"'),
-  'reference-inspired portal feature grid missing');
-check(home.includes('aria-label="생활비서 서비스 바로가기"'),
-  'accessible homepage service navigation missing');
+  'compact primary grid missing');
+check(home.includes('aria-label="주요 서비스 바로가기"'),
+  'accessible homepage primary navigation missing');
 check(home.includes('class="life-home-search-panel" id="life-home-search"')
   && home.includes('href="#life-home-search"') && home.includes('id="portal-home-q"'),
   'search drawer or keyboard-search form broken');
@@ -100,20 +104,20 @@ const archivePosition=home.indexOf('<details class="modern-all-articles">');
 check(sponsorPosition>0 && archivePosition>sponsorPosition,
   'original full-width ad section must appear before deep article archive');
 const editorialStyle=read('life-editorial-20261106.css');
-check(editorialStyle.includes('grid-auto-rows:minmax(112px,auto)') &&
-      editorialStyle.includes('width:41px;height:41px') &&
-      editorialStyle.includes('font-size:clamp(36px,3.6vw,48px)'),
-  'large desktop portal heading and icon proportions missing');
-check(editorialStyle.includes('grid-auto-rows:minmax(92px,auto)') &&
-      editorialStyle.includes('font-size:30px;line-height:1.22'),
-  'mobile heading and touch targets still too small');
+check(editorialStyle.includes('grid-auto-rows:minmax(87px,auto)') &&
+      editorialStyle.includes('width:31px;height:31px') &&
+      editorialStyle.includes('font-size:clamp(30px,2.9vw,36px)'),
+  'desktop compact grid and heading proportions missing');
+check(editorialStyle.includes('grid-auto-rows:minmax(76px,auto)') &&
+      editorialStyle.includes('font-size:26px;line-height:1.25'),
+  'mobile primary menu sizing wrong');
 check(editorialStyle.includes('grid-template-columns:1fr;gap:0') &&
   editorialStyle.includes('.life-home-tool-section') &&
   editorialStyle.includes('.life-home-spot-thumb img'),
   'editorial photo and calculator layout CSS missing');
 check(editorialStyle.includes('max-width:430px') &&
-  editorialStyle.includes('grid-auto-rows:minmax(92px,auto)') &&
-  editorialStyle.includes('font-size:12.7px'),
+  editorialStyle.includes('grid-auto-rows:minmax(76px,auto)') &&
+  editorialStyle.includes('font-size:12.5px'),
   '320-430px mobile service grid not optimized');
 check(editorialStyle.includes('overflow-x:auto;overflow-y:hidden;scrollbar-width:none') &&
   editorialStyle.includes('min-height:44px;padding:13px 1px 10px'),

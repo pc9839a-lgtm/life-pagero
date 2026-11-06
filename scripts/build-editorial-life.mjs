@@ -58,15 +58,30 @@ const transformHome=html=>{
     {href:'/events/',label:'축제·행사',icon:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18M8 15h3"/>'},
     {href:'/real-estate/',label:'분양정보',icon:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'}
   ];
-  const serviceLinks=services.map(item=>'<a class="life-home-service-card" href="'+item.href+'">'
+  // Eight deliberate, non-duplicated first-screen destinations; the other four
+  // remain accessible without taking up permanent screen space.
+  const primaryOrder=['날씨','증권','금리비교','계산기','먹거리','핫딜','지원금','분양정보'];
+  const primary=primaryOrder.map(label=>services.find(item=>item.label===label));
+  const secondary=services.filter(item=>!primaryOrder.includes(item.label));
+  check(primary.every(Boolean)&&primary.length===8&&secondary.length===4,
+    'homepage menu groups must cover all twelve original services');
+  const serviceLinks=primary.map(item=>'<a class="life-home-service-card" href="'+item.href+'">'
     +'<span class="life-home-service-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+item.icon+'</svg></span>'
     +'<span class="life-home-service-copy"><strong>'+item.label+'</strong></span></a>').join('');
-  const grid='<nav class="life-home-service-grid" aria-label="생활비서 서비스 바로가기">'+serviceLinks+'</nav>';
-  check((serviceLinks.match(/class="life-home-service-card"/g)||[]).length===12,'12 accessible shortcuts required');
+  const grid='<nav class="life-home-service-grid" aria-label="주요 서비스 바로가기">'+serviceLinks+'</nav>';
+  const otherLinks=secondary.map(item=>'<a href="'+item.href+'">'+item.label+
+    '<span aria-hidden="true">›</span></a>').join('');
+  const more='<details class="life-home-more-services"><summary>다른 서비스 보기'
+    +'<span class="life-home-more-count">4개</span></summary>'
+    +'<nav class="life-home-more-links" aria-label="추가 서비스">'+otherLinks+'</nav></details>';
+  check((serviceLinks.match(/class="life-home-service-card"/g)||[]).length===8,
+    'eight primary menu items required');
+  check((otherLinks.match(/<a href=/g)||[]).length===4,
+    'four secondary menu destinations required');
   // Preserve the working site search, but show it only when the header search control is selected.
   html=html.replace('<span class="life-home-kicker">LIFE PORTAL</span>','');
-  html=html.replace('<h1>오늘 필요한 정보</h1>',
-    '<h1>오늘 필요한 정보</h1><p class="life-home-intro">날씨 · 금융 · 지원금 · 자동차</p>');
+  // The icon labels provide the navigation context; no redundant subtitle.
+
   // Secondary campaign promos duplicated the actual destination grid and consumed
   // the first screen. Their /events/ and /deals/ routes stay in the icon menu.
   html=html.replace(/<section class="events-home-banner"[^>]*>[\s\S]*?<\/section>/,'');
@@ -82,7 +97,7 @@ const transformHome=html=>{
   html=html.replace(searchForm,'<div class="life-home-search-panel" id="life-home-search">'+searchForm+suggestions+'</div>');
   const heroMatch=html.match(/<section class="hero portal-home-hero editorial-hero">[\s\S]*?<\/section>/)?.[0];
   check(heroMatch,'hero markup missing');
-  html=html.replace(heroMatch,heroMatch.replace('</section>',grid+'</section>'));
+  html=html.replace(heroMatch,heroMatch.replace('</section>',grid+more+'</section>'));
   const searchIcon='<a class="life-home-header-search" href="#life-home-search" aria-label="검색창 열기" title="검색">'
     +'<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.5"/><path d="m16 16 5 5"/></svg></a>';
   const headerEnd='</div><nav class="main-nav"';
