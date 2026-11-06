@@ -23,10 +23,21 @@ check(shopJs.includes('prefix+"deals/api?"')&&shopJs.includes('src:"food"'),
 check(shopJs.includes('sponsored noopener noreferrer')&&shopJs.includes('cache:"no-store"'),
   'affiliate link rel or no-store missing');
 check(!shopJs.includes('ADPICK_BIZ_API_KEY'),'private ADPICK key leaked to browser');
+for(const marker of ['food-shop-product-bottom','food-shop-price-label',
+  'formatPrice(item.price)','상품 이미지 없음','구매처에서 보기',
+  'img.addEventListener("error",fallback']){
+  check(shopJs.includes(marker),'food card accessibility/price/image fallback missing '+marker);
+}
 const hash=createHash('sha256').update(css).digest('hex').slice(0,12);
 for(const cssMarker of ['.food-guide-header','.food-guide-facts','.food-guide-steps',
   '.food-guide-table-wrap','.food-guides-index-list','@media(max-width:700px)'])
   check(css.includes(cssMarker),'guide mobile/readability rule missing '+cssMarker);
+for(const marker of ['grid-template-columns:180px minmax(0,1fr)',
+  '.food-shop-price{','.food-shop-buy{',
+  '@media(max-width:600px)','grid-template-columns:142px minmax(0,1fr)',
+  '.food-shop-image{height:158px']){
+  check(css.includes(marker),'readable large shopping cards CSS missing '+marker);
+}
 const slugs=new Set(model.guides.map(g=>g.slug));
 for(const guide of model.guides){
   const pathname='/food/'+guide.slug+'/';
