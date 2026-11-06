@@ -11,8 +11,11 @@ const product=(title,link='https://link.adpick.co.kr/test')=>({
 function domElement(tag='div'){
   return {
     tag,children:[],textContent:'',className:'',href:'',rel:'',target:'',
+    events:{},attributes:{},
     append(...items){this.children.push(...items)},
     replaceChildren(...items){this.children=items},
+    setAttribute(name,value){this.attributes[name]=value},
+    addEventListener(type,fn){this.events[type]=fn}
   };
 }
 async function render({query='가리비',pathname='/life/food/scallops-clean-steam-storage/',
@@ -72,6 +75,39 @@ test('failed or unconfigured API does not fabricate prices or shopping URLs',asy
   const r=await render({response:{ok:false,status:503}});
   assert.equal(r.results.children.length,0);
   assert.equal(r.status.textContent,'상품을 불러오지 못했습니다.');
+});
+test('provider KRW numeric strings display with comma and explicit 원 units',async()=>{
+  const entries=[
+    {...product('코스트코 가리비 관자 907g'),price:'108700'},
+    {...product('국내산 홍가리비 2kg'),price:'29,900원'},
+    {...product('손질 가리비살 500g'),price:9350},
+    {...product('국내산 가리비 1kg'),price:null}
+  ];
+  const r=await render({response:{ok:true,json:async()=>({status:'ok',items:entries})}});
+  assert.equal(r.results.children.length,4);
+  const prices=r.results.children.map(card=>
+    card.children[1].children[2].children[0].children[1].textContent);
+  assert.deepEqual(prices,['108,700원','29,900원','9,350원','가격 확인']);
+  for(const card of r.results.children){
+    assert.equal(card.children[1].children[2].children[0].children[0].textContent,'판매가');
+    assert.equal(card.children[1].children[2].children[1].textContent,'구매처에서 보기');
+    assert.equal(card.attributes['aria-label'].endsWith('상품 확인'),true);
+  }
+});
+test('broken external product image becomes neutral placeholder instead of broken icon',async()=>{
+  const r=await render();
+  const photo=r.results.children[0].children[0];
+  assert.equal(photo.children[0].tag,'img');
+  photo.children[0].events.error();
+  assert.equal(photo.children.length,1);
+  assert.equal(photo.children[0].className,'food-shop-photo-missing');
+  assert.equal(photo.children[0].textContent,'상품 이미지 없음');
+});
+test('missing product thumbnail is replaced with static honest no-image label',async()=>{
+  const entry={...product('생가리비 1kg'),photo:null,price:'27000'};
+  const r=await render({response:{ok:true,json:async()=>({status:'ok',items:[entry]})}});
+  assert.equal(r.results.children[0].children[0].children[0].textContent,'상품 이미지 없음');
+  assert.equal(r.results.children[0].children[1].children[2].children[0].children[1].textContent,'27,000원');
 });
 test('provider strings are treated as text, never inserted as HTML',async()=>{
   const r=await render({response:{ok:true,json:async()=>({status:'ok',items:[
