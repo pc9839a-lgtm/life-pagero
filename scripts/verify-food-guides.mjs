@@ -97,7 +97,7 @@ for(const guide of model.guides){
       'locally bundled photo bytes missing '+guide.slug);
     check(photoManifest[image.filename]&&html.includes(photoManifest[image.filename]),
       'licensed or locally hosted photo URL not rendered '+guide.slug);
-    check(html.includes(image.caption)&&html.includes(image.attribution),
+    check(html.includes(image.caption)&&html.includes(image.attribution.replaceAll("'",'&#39;')),
       'photo caption or licensing credit missing '+guide.slug);
     check(html.includes(image.alt),'image alt missing '+guide.slug);
   }
