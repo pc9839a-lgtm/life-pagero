@@ -196,6 +196,35 @@
     load();
     setInterval(load,3*60000);
   }
+  // Fallback to the public read-only FX reference if a subpath proxy cannot
+  // reach the Cloudflare Pages /today/api/fx route. Do not display guessed rates.
+  async function getFx(){
+    try{return await get('today/api/fx');}
+    catch(_){
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),8500);
+      try{
+        const response=await fetch(
+          'https://api.frankfurter.dev/v1/latest?base=EUR&symbols=KRW,USD,JPY,CNY',
+          {signal:controller.signal,mode:'cors',credentials:'omit'}
+        );
+        if(!response.ok)throw Error('FX_PUBLIC_HTTP_'+response.status);
+        const raw=await response.json();
+        if(raw?.base!=='EUR'||!/^\d{4}-\d{2}-\d{2}$/.test(raw?.date||''))
+          throw Error('FX_PUBLIC_DATE_INVALID');
+        const k=Number(raw?.rates?.KRW);
+        if(!Number.isFinite(k)||k<=0)throw Error('FX_PUBLIC_KRW_INVALID');
+        const units={USD:1,JPY:100,EUR:1,CNY:1};
+        const names={USD:'미국 달러',JPY:'일본 엔',EUR:'유로',CNY:'중국 위안'};
+        const items=Object.entries(units).map(([code,unit])=>{
+          const quote=code==='EUR'?1:Number(raw.rates?.[code]);
+          if(!Number.isFinite(quote)||quote<=0)throw Error('FX_PUBLIC_QUOTE_INVALID_'+code);
+          return {code,name:names[code],unit,krw:k/quote*unit};
+        });
+        return {sourceDate:raw.date,retrievedAt:new Date().toISOString(),items};
+      }finally{clearTimeout(timer);}
+    }
+  }
   // Daily reference FX, not live bank quotes: display source date beside values.
   function fx(node){
     const box=node.querySelector('[data-fx-items]');
@@ -205,7 +234,7 @@
     const load=async()=>{
       status(node,'');
       try{
-        const data=await get('today/api/fx');
+        const data=await getFx();
         if(!/^\d{4}-\d{2}-\d{2}$/.test(data.sourceDate||'') ||
           !Array.isArray(data.items)||data.items.length!==4)throw Error('FX_MISSING');
         const list=create('div','today-fx-list');
@@ -223,13 +252,17 @@
         status(node,'ECB 참고환율 · '+data.sourceDate+' 기준 · 조회 '+localTime(data.retrievedAt)
           +' · 은행 매매·송금 환율과 다름');
       }catch(_){
-        fallback(box,'ECB 기준환율 확인',official,
-          '현재 기준환율을 불러오지 못했습니다. 출처에서 확인하세요.');
-        status(node,'');
+        if(box.querySelector('.today-fx-value')){
+          status(node,'새 환율을 확인하지 못했습니다. 표시된 기준일의 참고환율입니다.');
+        }else{
+          fallback(box,'ECB 기준환율 확인',official,
+            '현재 기준환율을 불러오지 못했습니다. 출처에서 확인하세요.');
+          status(node,'');
+        }
       }
     };
     attachRefresh(node,load);
-    load();
+    if(box.dataset.fxPreloaded!=='true')load();
     setInterval(load,60*60000);
   }
   function stock(node){
