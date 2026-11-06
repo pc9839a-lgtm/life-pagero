@@ -210,8 +210,7 @@ const transformHome=html=>{
   html=html.replace('</main>',bottomAd+'</main>');
   check((html.match(/data-life-coupang-banner="sitewide-v4"/g)||[]).length===1,
     'homepage Coupang must appear once only');
-  check(html.indexOf('class="life-home-bottom-coupang"')===-1 ||
-    html.lastIndexOf('life-home-bottom-coupang')>html.indexOf('class="modern-all-articles"'),
+  check(html.indexOf('life-home-bottom-coupang')>html.indexOf('class="modern-all-articles"'),
     'homepage Coupang must remain at bottom after the content');
   return html;
 };
