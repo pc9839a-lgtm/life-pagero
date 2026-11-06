@@ -112,3 +112,33 @@
  .life-editorial .re-details{grid-template-columns:110px minmax(0,1fr)}
 }
 @media(max-width:360px){.life-editorial .re-card{grid-template-columns:90px minmax(0,1fr)}.life-editorial .re-photo{min-height:155px}.life-editorial .re-card h2{font-size:14px}}
+
+/* Photo-led advertisements, with crisp real HTML copy instead of image-only labels. */
+.life-editorial .re-photo .re-image{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.life-editorial .re-ad-main{background:#061b3d}
+.life-editorial .re-ad-art-main{position:absolute;inset:0;overflow:hidden;background:#0a2044}
+.life-editorial .re-ad-art-main>.re-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 55%;opacity:.88;filter:saturate(1.12)}
+.life-editorial .re-banner-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:stretch;height:100%;padding:34px 19px 13px;color:#fff;background:linear-gradient(180deg,#041e4de8 0%,#051f4bc7 35%,#0719314d 51%,#071a37f0 74%,#071b39 100%)}
+.life-editorial .re-banner-kicker{margin:0 0 6px;color:#ffdf03;font-size:16px;font-weight:860;line-height:1.35}
+.life-editorial .re-banner-content h2{margin:0 0 7px;color:white;font-size:clamp(27px,2.9vw,37px);line-height:1.06;letter-spacing:-.075em;font-weight:900;text-shadow:0 2px 8px #0a1d31aa}
+.life-editorial .re-banner-content h2 em{font-style:italic;color:#ffde0c}
+.life-editorial .re-banner-supply{margin:2px 0 0;color:#fff;font-size:13px;font-weight:760;text-shadow:0 1px 3px #061026}
+.life-editorial .re-banner-supply small{font-size:10px;font-weight:600}
+.life-editorial .re-banner-fill{flex:1;min-height:15px}
+.life-editorial .re-banner-benefits{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:13px 0;color:#fff;text-align:center;font-size:10px;line-height:1.35;font-weight:750}
+.life-editorial .re-banner-benefits span{border-right:1px solid #ffffff64}
+.life-editorial .re-banner-benefits span:last-child{border-right:0}
+.life-editorial .re-banner-cta{padding:10px 9px;background:#ffde13;border-radius:10px;text-align:center;color:#091a39;line-height:1.3}
+.life-editorial .re-banner-cta strong{display:block;margin-bottom:7px;font-size:14px;font-weight:880;letter-spacing:-.035em}
+.life-editorial .re-banner-cta b{display:block;margin:0 auto;padding:8px 6px;border-radius:22px;background:#ec152c;color:white;font-size:17px;font-weight:850}
+.life-editorial .re-ad .re-ad-fiction{z-index:4}
+.life-editorial .re-sub-content{position:absolute;inset:0;background:#0a3971;overflow:hidden}
+.life-editorial .re-sub-content>.re-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.85}
+.life-editorial .re-sub-content>div{position:absolute;inset:0;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;padding:12px 14px;color:white;background:linear-gradient(90deg,#0b407fdc,#19569494 55%,transparent)}
+.life-editorial .re-sub-content strong{max-width:85%;font-size:clamp(17px,1.9vw,22px);line-height:1.18;font-weight:850;letter-spacing:-.06em;text-shadow:0 1px 5px #071a31cc}
+.life-editorial .re-sub-content p{margin:0;color:white;font-size:11px;font-weight:720;line-height:1.3;text-shadow:0 1px 4px #071a31cc}
+.life-editorial .re-sub-content span{display:block;background:#fff;padding:5px 12px;border-radius:20px;color:#132544;font-weight:800;font-size:10px;line-height:1.1;margin-top:3px}
+.life-editorial .re-sub-violet{background:#302d60}
+.life-editorial .re-sub-violet>div{background:linear-gradient(90deg,#272452e8,#514e7da3 56%,transparent)}
+@media(max-width:850px) and (min-width:621px){.life-editorial .re-ad-main{min-height:310px}.life-editorial .re-banner-content{padding:22px 13px 11px}.life-editorial .re-banner-content h2{font-size:28px}.life-editorial .re-banner-benefits{padding:8px 0}.life-editorial .re-banner-cta b{font-size:13px}.life-editorial .re-sub-content strong{font-size:17px}}
+@media(max-width:620px){.life-editorial .re-banner-content h2{font-size:36px}.life-editorial .re-sub-content strong{font-size:20px}}
