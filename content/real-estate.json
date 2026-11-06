@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "listings": [
+    {
+      "slug": "sample",
+      "sample": true,
+      "category": "아파트",
+      "region": "인천",
+      "title": "송도 신규 분양 현장 A",
+      "description": "광고 지면을 확인하기 위한 가상 분양 현장입니다. 실제 사업지나 공급 조건이 아닙니다.",
+      "status": "시안",
+      "address": "미입력 (예시 지역: 인천)",
+      "price": "확인 전",
+      "schedule": "확인 전",
+      "supply": "미입력",
+      "officialSource": null,
+      "advertiser": null,
+      "approved": false
+    }
+  ]
+}
