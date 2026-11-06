@@ -14,7 +14,7 @@ const write=(p,content)=>{
 };
 const block=(name,content,footer='',mode='compact') =>
   '<section class="today-widget"'+(mode==='full'?' id="today-'+name+'"':'')+' data-mode="'+mode+'" data-today-'+name
-  +' aria-label="'+(name==='weather'?'지역 날씨':name==='news'?'뉴스 헤드라인':name==='crypto'?'코인 시세':'코스피·코스닥')+'">'
+  +' aria-label="'+(name==='weather'?'지역 날씨':name==='news'?'뉴스 헤드라인':name==='crypto'?'코인 시세':name==='fx'?'기준환율':'코스피·코스닥')+'">'
   +content+'<p class="today-widget-meta" data-today-status role="status"></p>'
   +footer+'</section>';
 const weather=mode=>block('weather',
@@ -35,6 +35,11 @@ const stocks=mode=>block('stocks',
   +'<a href="https://data.krx.co.kr/" target="_blank" rel="noopener noreferrer">KRX 공식 데이터</a></div>'
   +'<div data-stock-items></div>',
   '',mode);
+const fx=mode=>block('fx',
+  '<div class="today-widget-heading"><h3>환율</h3>'
+  +'<a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html" target="_blank" rel="noopener noreferrer">기준환율 출처</a></div>'
+  +'<p class="today-fx-notice">주요 통화별 원화 환산 · 마지막 발표 영업일 기준</p>'
+  +'<div data-fx-items><a class="today-official-link" href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html" target="_blank" rel="noopener noreferrer">기준환율 확인</a></div>','',mode);
 const news=mode=>block('news',
   '<div class="today-widget-heading"><h3>주요뉴스</h3>'
   +(mode==='full'?'<label>분류 <select data-news-filter><option value="all">전체</option><option value="경제">경제</option></select></label>':'<a href="/today/">더 보기</a>')
@@ -51,25 +56,25 @@ if(home.includes('class="today-glance"'))throw Error('Unexpected crowded homepag
 write('index.html',home);
 
 const template=read('finance/index.html');
-const title='오늘의 날씨·주요뉴스·증권·코인 정보 | 생활비서';
-const description='지역별 기상청 날씨 관측, 언론사 최신 뉴스 헤드라인, 코스피·코스닥 자료와 업비트 원화 코인 시세를 출처 및 기준시각과 함께 확인합니다.';
+const title='오늘의 날씨·주요뉴스·환율·코인 정보 | 생활비서';
+const description='지역별 날씨, 언론사 주요뉴스, 미국 달러·일본 엔·유로·중국 위안화 원화 기준환율 및 업비트 코인 시세를 출처와 기준시각과 함께 확인합니다.';
 const fullBody='<div class="today-viewport"><article class="today-wide-content">'
   +'<nav class="portal-breadcrumbs" aria-label="현재 위치"><a href="/">홈</a> / 오늘의 정보</nav>'
   +'<div class="today-page-head"><h1>오늘의 정보</h1>'
-  +'<p class="today-page-intro">날씨, 주요뉴스, 주식·코인 시세</p></div>'
+  +'<p class="today-page-intro">날씨, 주요뉴스, 환율·코인 시세</p></div>'
   +'<div class="today-vertical-list today-dashboard-grid">'
-  +weather('full')+news('full')+stocks('full')+crypto('full')
+  +weather('full')+news('full')+fx('full')+crypto('full')
   +'</div>'
   +'<section class="today-source-guidance"><h2>데이터 출처와 기준시각</h2>'
   +'<p>날씨는 기상청 초단기실황(약 30분 캐시), 뉴스는 언론사가 공개한 RSS(약 10분 캐시), '
   +'코인은 업비트 원화마켓 공개 시세(약 3분 캐시)를 확인합니다. 브라우저를 열어 둔 동안에도 다시 조회합니다. '
-  +'증권은 한국거래소 종가자료 이용권한이 확인된 경우에만 표시하며 장중 실시간 시세가 아닙니다.</p>'
+  +'환율은 유럽중앙은행(ECB)의 마지막 발표 영업일 참고환율로, 은행의 실시간 매매·송금 환율과 다릅니다.</p>'
   +'<p>뉴스는 제목·언론사·발행시각만 제공합니다. 상세 내용은 해당 언론사 원문에서 확인하세요. '
   +'금융시장 자료는 투자 권유가 아니며 지연·변경될 수 있습니다.</p>'
   +'<div class="today-source-links">'
   +'<a href="https://www.weather.go.kr/" target="_blank" rel="noopener noreferrer">기상청</a>'
   +'<a href="https://www.yna.co.kr/" target="_blank" rel="noopener noreferrer">연합뉴스</a>'
-  +'<a href="https://data.krx.co.kr/" target="_blank" rel="noopener noreferrer">한국거래소</a>'
+  +'<a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html" target="_blank" rel="noopener noreferrer">유럽중앙은행 환율</a>'
   +'<a href="https://upbit.com/" target="_blank" rel="noopener noreferrer">업비트</a>'
   +'</div></section></article></div>';
 let page=template;
@@ -125,9 +130,9 @@ for(const file of walk(DIST).filter(f=>f.endsWith('.html'))){
 }
 const entries=JSON.parse(read('search-index.json'));
 if(!entries.some(e=>e.url==='/today/'))entries.push({
-  title:'오늘의 날씨·주요뉴스·증권·코인 정보',
-  description:'기상청 날씨, 언론사 최신 헤드라인, 코스피·코스닥, 업비트 코인 원화시세',
-  keywords:['오늘 날씨','오늘 주요뉴스','코스피 지수','코스닥 종가','비트코인 시세','코인 가격','증권','경제뉴스'],
+  title:'오늘의 날씨·주요뉴스·환율·코인 정보',
+  description:'기상청 날씨, 최신 뉴스, USD·JPY·EUR·CNY 기준환율, 업비트 원화 코인 시세',
+  keywords:['오늘 날씨','오늘 주요뉴스','달러 환율','엔화 환율','유로 환율','위안화 환율','비트코인 시세','코인 가격'],
   url:'/today/'
 });
 write('search-index.json',JSON.stringify(entries));
