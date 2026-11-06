@@ -11,9 +11,11 @@ const CSS='/life-editorial-20261106.css';
 // Cloudflare/browser caching without creating another cascading stylesheet.
 const CSS_HASH=createHash('sha256').update(fs.readFileSync(path.join(DIST,CSS.slice(1)))).digest('hex').slice(0,12);
 const CSS_HREF=CSS+'?v='+CSS_HASH;
+const TODAY_HASH=createHash('sha256')
+  .update(fs.readFileSync(path.join(DIST,'today-wide.css'))).digest('hex').slice(0,12);
 const oldStyles=[
   '/life-modern.css','/life-compact.css','/life-global-nav.css',
-  '/today-dashboard.css','/today-wide.css'
+  '/today-dashboard.css'
 ];
 const read=name=>fs.readFileSync(path.join(DIST,name),'utf8');
 const write=(name,html)=>fs.writeFileSync(path.join(DIST,name),html);
@@ -259,7 +261,8 @@ for(const absolute of walk(DIST).filter(file=>file.endsWith('.html'))){
     // design system; no changes to finance/markets or other shared widgets.
     const todaySheet='<link rel="stylesheet" href="/today-wide.css">';
     check(html.includes(todaySheet),'Today-only stylesheet missing');
-    html=html.replace(todaySheet,'').replace('</head>',todaySheet+'</head>');
+    const todayVersioned='<link rel="stylesheet" href="/today-wide.css?v='+TODAY_HASH+'">';
+    html=html.replace(todaySheet,'').replace('</head>',todayVersioned+'</head>');
   }
   check((html.match(/<link rel="canonical"/g)||[]).length===1,
     'canonical lost: '+relative);
