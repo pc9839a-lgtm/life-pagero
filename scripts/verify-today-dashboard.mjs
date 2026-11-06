@@ -55,10 +55,10 @@ yes(!today.includes('class="site-shell today-shell"') &&
   'Old 890px site-shell/portal-page wrapper still constrains Today screen');
 yes(today.includes('class="today-vertical-list"')&&!today.includes('class="today-full-grid"'),
   'Today screen must have one vertical column with no three-card grid');
-const order=['data-today-news','data-today-weather','data-today-stocks','data-today-crypto']
+const order=['data-today-weather','data-today-news','data-today-stocks','data-today-crypto']
   .map(key=>today.indexOf(key));
 yes(order.every((position,index)=>position>=0&&(index===0||position>order[index-1])),
-  'News, weather, stocks and crypto must be rendered in vertical priority order');
+  'Weather, news, stocks and crypto must follow editorial priority');
 const dashboardCss=read('today-dashboard.css');
 const wideCss=read('today-wide.css');
 yes(wideCss.includes('#main-content>.today-viewport') &&
@@ -66,6 +66,17 @@ yes(wideCss.includes('#main-content>.today-viewport') &&
   'Today dedicated stylesheet must use 100% viewport with no max-width cap');
 yes(today.includes('href="/today-wide.css"'),
   'New uncached full-viewport CSS is not linked from Today page');
+for(const id of ['weather','news','stocks','crypto']){
+  yes(today.includes('id="today-'+id+'"')&&today.includes('href="#today-'+id+'"'),
+    'in-page navigation target missing: '+id);
+}
+yes(today.includes('class="today-section-nav"') &&
+  today.includes('class="today-page-head"'),
+  'improved first-screen hierarchy missing');
+yes(wideCss.includes('max-width:1040px') &&
+  wideCss.includes('grid-template-columns:minmax(0,1fr) minmax(90px,auto) 56px') &&
+  wideCss.includes('@media(max-width:360px)'),
+  'desktop reading width or mobile small-screen rules missing');
 yes(!markets.includes('href="/today-wide.css"'),
   'Today-only viewport override leaked into another page');
 yes(dashboardCss.includes('.today-vertical-list{display:flex;flex-direction:column'),
@@ -73,6 +84,10 @@ yes(dashboardCss.includes('.today-vertical-list{display:flex;flex-direction:colu
 const dashboardJs=read('today-dashboard.js');
 yes(dashboardJs.includes('news more')===false&&dashboardJs.includes('today-expand-button'),
   'Expandable concise data lists are missing');
+yes(dashboardJs.includes('today-source-prompt') &&
+  dashboardJs.includes('attachRefresh(node,load)') &&
+  dashboardJs.includes('control.addEventListener(\'click\',load)'),
+  'visible error fallback or functional refresh missing');
 
 yes(today.includes('언론사 원문')&&today.includes('articles')===false,
   'full page should link to original stories without copied body');
