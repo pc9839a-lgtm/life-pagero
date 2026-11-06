@@ -80,7 +80,7 @@ export async function onRequestGet({request,env}){
     }
     const response=await fetch(endpoint.href,{
       headers:{Accept:"application/json"},
-      signal:AbortSignal.timeout(foodTopic?4000:8000)
+      signal:AbortSignal.timeout(foodTopic?7000:8000)
     });
     if(!response.ok)throw new Error("UPSTREAM_"+response.status);
     const data=await response.json();
