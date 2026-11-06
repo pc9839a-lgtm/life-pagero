@@ -254,6 +254,13 @@ for(const absolute of walk(DIST).filter(file=>file.endsWith('.html'))){
   html=removeOldStyles(html);
   html=html.replace('class="life-modern ','class="life-modern life-editorial ');
   html=html.replace('</head>','<link rel="stylesheet" href="'+CSS_HREF+'"></head>');
+  if(relative==='today/index.html'){
+    // The dedicated Today layout must be loaded after the global editorial
+    // design system; no changes to finance/markets or other shared widgets.
+    const todaySheet='<link rel="stylesheet" href="/today-wide.css">';
+    check(html.includes(todaySheet),'Today-only stylesheet missing');
+    html=html.replace(todaySheet,'').replace('</head>',todaySheet+'</head>');
+  }
   check((html.match(/<link rel="canonical"/g)||[]).length===1,
     'canonical lost: '+relative);
   check((html.match(/<h1(?:\s[^>]*)?>/g)||[]).length===1,
