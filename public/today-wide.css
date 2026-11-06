@@ -68,16 +68,6 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   border:1px solid #d8dfe4;border-radius:7px;
   background-color:#fff;color:#26323c;font-size:14px
 }
-.life-editorial .today-wide-content .today-refresh{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-height:38px;padding:7px 11px;border:1px solid #dfe4e8;
-  border-radius:7px;background:#fff;color:#6e7984;
-  font-size:12px;font-weight:650;cursor:pointer
-}
-.life-editorial .today-wide-content .today-refresh:hover,
-.life-editorial .today-wide-content .today-refresh:focus-visible{
-  color:#e95731;border-color:#e95731
-}
 .life-editorial .today-wide-content .today-widget-meta{
   display:block;margin:11px 0 0;color:#7a8690;
   font-size:11px;line-height:1.5;overflow-wrap:break-word
@@ -250,9 +240,6 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   .life-editorial .today-wide-content .today-widget-heading h3{font-size:19px}
   .life-editorial .today-wide-content .today-widget-heading select{
     min-height:40px;max-width:115px;font-size:13px
-  }
-  .life-editorial .today-wide-content .today-refresh{
-    min-height:36px;padding:7px 9px;font-size:11px
   }
   .life-editorial .today-wide-content .today-weather-temp{font-size:49px}
   .life-editorial .today-wide-content .today-weather-condition{font-size:14px}
