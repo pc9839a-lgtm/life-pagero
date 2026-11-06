@@ -35,7 +35,7 @@ for(const id of ['portal-loan-form','loan-method-comparison','loan-schedule-tabl
 must(loan.includes('상환방식별 비교')&&loan.includes('월별 상환표'),
   'functional table headings removed');
 const today=get('today/index.html');
-for(const item of ['data-today-news','data-today-crypto','data-today-weather','data-today-stocks']){
+for(const item of ['data-today-news','data-today-crypto','data-today-weather','data-today-fx']){
   must(today.includes(item),'today widget missing '+item);
 }
 must(today.includes('class="today-source-links"'),
