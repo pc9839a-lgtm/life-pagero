@@ -54,8 +54,11 @@ for(const asset of ['finance-live.js','today-dashboard.js']){
 const today=read('today/index.html');
 check(count(today,/class="today-widget"/g)===4,'Four today modules must remain available on dedicated page');
 check(today.includes('https://www.weather.go.kr/')&&today.includes('https://upbit.com/')&&
- today.includes('https://data.krx.co.kr/')&&today.includes('https://www.yna.co.kr/'),
- 'Official alternatives not available for all dashboard modules');
+ today.includes('https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html')&&
+ today.includes('https://www.yna.co.kr/'),
+ 'Official alternatives not available for all four Today modules');
+check(today.includes('data-today-fx')&&!today.includes('data-today-stocks'),
+ 'Today should show FX instead of stock indices');
 for(const f of ['finance/index.html','finance/savings/index.html','finance/markets/index.html']){
   const html=read(f);
   check(!html.includes('실시간 공시 데이터 사용 불가'),'Finance error state returned: '+f);
