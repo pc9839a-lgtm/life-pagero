@@ -22,7 +22,9 @@ const tasks=DATA.guides.flatMap(guide=>
 await Promise.all(tasks.map(async({guide,photo,name})=>{
   const target=path.join(folder,name);
   try{
-    const url=directUrl(photo.filename);
+    const url=photo.downloadUrl||directUrl(photo.filename);
+    if(!['upload.wikimedia.org','images.pexels.com'].includes(new URL(url).hostname))
+      throw Error('unexpected image host');
     const response=await fetch(url,{
       headers:{Accept:'image/jpeg','User-Agent':'LifePageroFoodGuide/1.0 (source attribution retained)'},
       signal:AbortSignal.timeout(6000)
@@ -39,7 +41,7 @@ await Promise.all(tasks.map(async({guide,photo,name})=>{
   }catch(error){
     console.warn('[food-photo] external Commons image fallback: '+photo.filename+
       ' ('+String(error.message||error).slice(0,90)+')');
-    manifest[photo.filename]=directUrl(photo.filename);
+    manifest[photo.filename]=photo.downloadUrl||directUrl(photo.filename);
   }
 }));
 fs.writeFileSync(path.join(folder,'manifest.json'),JSON.stringify(manifest,null,2));
