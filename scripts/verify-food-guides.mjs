@@ -128,6 +128,8 @@ for(const guide of model.guides){
     'publication date lost '+guide.slug);
   check(guide.sections.every(s=>html.includes('<h2>'+s.title+'</h2>')),
     'article sections lost '+guide.slug);
+  check(html.includes('<h2>꿀팁</h2>')&&!html.includes('<h2>자주 묻는 질문</h2>'),
+    'food guide tips section label not updated '+guide.slug);
   check(guide.faq.every(([q,a])=>html.includes(q)&&html.includes(a)),
     'practical FAQ answers missing '+guide.slug);
   check(guide.sources.length>=2&&guide.sources.every(([label,url])=>

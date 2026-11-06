@@ -105,7 +105,7 @@ for(const guide of dataset.guides){
     +'</section>';
   const facts='<dl class="food-guide-facts">'+guide.facts.map(([name,value])=>
     '<div><dt>'+esc(name)+'</dt><dd>'+esc(value)+'</dd></div>').join('')+'</dl>';
-  const faq='<section class="food-guide-section food-guide-faq"><h2>자주 묻는 질문</h2>'
+  const faq='<section class="food-guide-section food-guide-faq"><h2>꿀팁</h2>'
     +guide.faq.map(([question,answer])=>'<div class="food-guide-qa"><h3>'
     +esc(question)+'</h3><p>'+esc(answer)+'</p></div>').join('')+'</section>';
   const body='<div class="site-shell"><article class="food-guide" itemscope itemtype="https://schema.org/Article">'
