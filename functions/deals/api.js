@@ -48,7 +48,7 @@ export async function onRequestGet({request,env}){
     return reply({status:"invalid_request",items:[]},400);
   const fetchProducts=async term=>{
     const endpoint=new URL(PROVIDER+"/"+encodeURIComponent(key)+"/"+mode);
-    endpoint.searchParams.set("limit","10");
+    endpoint.searchParams.set("limit",foodTopic?"30":"10");
     if(mode==="best"){
       endpoint.searchParams.set("area",area);
       endpoint.searchParams.set("p_data","life_deals_"+area);
@@ -67,7 +67,7 @@ export async function onRequestGet({request,env}){
     if(!Array.isArray(source))throw new Error("MALFORMED_RESPONSE");
     // Preserve provider names, prices, images and affiliate links unchanged.
     // Only reject invalid HTTPS links and mismatched ingredient results.
-    return source.slice(0,10).filter(row=>row&&typeof row==="object")
+    return source.slice(0,foodTopic?30:10).filter(row=>row&&typeof row==="object")
       .filter(row=>safeLink(row.commissionlink)&&typeof row.title==="string")
       .filter(row=>!foodTopic||isRelevantFoodProduct(foodTopic,row.title))
       .map(row=>({
