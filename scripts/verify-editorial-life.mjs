@@ -11,6 +11,7 @@ const read=p=>fs.readFileSync(path.join(DIST,p),'utf8');
 const themeHash=createHash('sha256').update(read(css.slice(1))).digest('hex').slice(0,12);
 const themeHref=css+'?v='+themeHash;
 const todayHash=createHash('sha256').update(read('today-wide.css')).digest('hex').slice(0,12);
+const dashboardHash=createHash('sha256').update(read('today-dashboard.js')).digest('hex').slice(0,12);
 const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(ent=>{
   const full=path.join(dir,ent.name);
   return ent.isDirectory()?walk(full):[full];
@@ -181,6 +182,11 @@ const todaySheet='<link rel="stylesheet" href="/today-wide.css?v='+todayHash+'">
 const generalSheet='<link rel="stylesheet" href="'+themeHref+'">';
 check(today.indexOf(todaySheet)>today.indexOf(generalSheet),
   'Today-only layout must load after the global stylesheet');
+for(const filename of ['today/index.html','finance/markets/index.html']){
+  const page=read(filename);
+  check(page.includes('src="/today-dashboard.js?v='+dashboardHash+'"'),
+    'Current client-side quote renderer must be cache-busted: '+filename);
+}
 const wideDashboard=read('today-wide.css');
 check(wideDashboard.includes('max-width:1360px') &&
   wideDashboard.includes('grid-template-areas:"weather news" "fx news" "crypto crypto"') &&
