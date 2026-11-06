@@ -39,6 +39,15 @@ for (const file of walk(CONTENT_ROOT).filter((item) => item.endsWith('.json'))) 
   for (const part of post.series?.parts || []) add(part.image, 'image', owner);
 }
 
+// Food-guide citations and photo licensing must be checked too. Previously
+// validate:external only inspected content/posts, silently skipping /food/.
+const foodGuides = JSON.parse(fs.readFileSync('content/food-guides.json','utf8'));
+for (const guide of foodGuides.guides) {
+  const owner = 'food/' + guide.slug;
+  for (const [,url] of guide.sources) add(url, 'source', owner);
+  for (const photo of guide.visuals) add(photo.source, 'image-credit', owner);
+}
+
 async function request(record, method) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);

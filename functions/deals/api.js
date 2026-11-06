@@ -16,7 +16,7 @@ const safeLink=value=>{
 // matches fishing lures and restaurant vouchers. Only recognize purchasable,
 // uncooked food for the two editorial articles. Fail closed if uncertain.
 // This filters the provider response at request time, never persists it.
-const NO_INGREDIENT=/(낚시|미끼|루어|에기|채비|피싱|낚싯|오징어미끼|낚시바늘|가라비|호텔|리조트|숙박|펜션|좌석|예약|입장권|체험|이용권|티켓|관광|여행|레스토랑|식당|횟집|뷔페|맛집|코스요리|세트메뉴|화로구이|뷔페|오마카세|쿠션|파운데이션|화장품|마스크팩|립스틱|스킨케어|크림|아이라이너|마사지|귀걸이|목걸이|키링|인형|스티커|완구|장난감|의류|티셔츠|가방|케이스|패턴|장식|모양|모형|공예|껍데기|패각|접시|그릇|식기|찜기|냄비|조리도구|프라이팬|보관용기|농약|비료|모종|씨앗|화분|재배키트|책|도서|그림|포스터|분말|가루|라떼|빵|쿠키|과자|스낵|칩|젤리|말랭이|맛사탕|캔디|케이크|퓨레|시럽|잼|스프|컵라면|라면|간식|사료|영양제|추출물|캡슐|즙|아이스크림|만두|볶음밥|비빔밥|도시락|밀키트|조리완료|완제품)/i;
+const NO_INGREDIENT=/(투어|tour|e[ -]?bike|e[ -]?바이크|자전거|사이클|사파리|입장료|기념품|낚시|미끼|루어|에기|채비|피싱|낚싯|오징어미끼|낚시바늘|가라비|호텔|리조트|숙박|펜션|좌석|예약|입장권|체험|이용권|티켓|관광|여행|레스토랑|식당|횟집|뷔페|맛집|코스요리|세트메뉴|화로구이|뷔페|오마카세|쿠션|파운데이션|화장품|마스크팩|립스틱|스킨케어|크림|아이라이너|마사지|귀걸이|목걸이|키링|인형|스티커|완구|장난감|의류|티셔츠|가방|케이스|패턴|장식|모양|모형|공예|껍데기|패각|접시|그릇|식기|찜기|냄비|조리도구|프라이팬|보관용기|농약|비료|모종|씨앗|화분|재배키트|책|도서|그림|포스터|분말|가루|라떼|빵|쿠키|과자|스낵|칩|젤리|말랭이|맛사탕|캔디|케이크|퓨레|시럽|잼|스프|컵라면|라면|간식|사료|영양제|추출물|캡슐|즙|아이스크림|만두|볶음밥|비빔밥|도시락|밀키트|조리완료|완제품)/i;
 // Weight alone does not prove food relevance, but raw ingredient weights help.
 const FRESH_UNIT=/\d+(?:[.,]\d+)?\s*(?:kg|g|킬로|키로|그램|마리)(?![a-z])/i;
 const PROCESSED_OR_TOOLS=/(ebook|e-book|e북|e-북|전자책|전자도서|도서|책자|서적|도감|소설|기프트|모바일상품권|기프티콘|이유식|유아식|아기간식|아기밥|어린이용|키즈|키조개|조개전용|전용칼|손질칼|칼집|나이프|커터|커팅기|주방칼|칼날|칼세트|커터기|도마|식칼|조리도구|이쑤시개|용품|국자|집게|기프트카드|상품권|선물권|포장권|콘서트|어묵|조미|양념|맛살|통조림|가공품|가공식품|유아용|레토르트)/i;
@@ -80,7 +80,7 @@ export async function onRequestGet({request,env}){
     }
     const response=await fetch(endpoint.href,{
       headers:{Accept:"application/json"},
-      signal:AbortSignal.timeout(foodTopic?4000:8000)
+      signal:AbortSignal.timeout(foodTopic?7000:8000)
     });
     if(!response.ok)throw new Error("UPSTREAM_"+response.status);
     const data=await response.json();

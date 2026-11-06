@@ -204,3 +204,8 @@ test('new oyster and persimmon guide API queries use fresh-ingredient rules',asy
     assert.equal(urls.length,1);
   });
 });
+
+test('actual Adpick hot deal tour must not appear in fresh sweet-potato shopping',()=>{
+  assert.equal(isRelevantFoodProduct('고구마','카호쿠 고구마 수확 &amp; E-바이크 컨트리사이드 투어'),false);
+  assert.equal(isRelevantFoodProduct('고구마','해남산 생고구마 3kg'),true);
+});

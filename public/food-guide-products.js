@@ -87,7 +87,7 @@ async function load(){
   if(retry)retry.hidden=true;
   results.replaceChildren();
   const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),5500);
+  const timer=setTimeout(()=>controller.abort(),9000);
   try{
     const params=new URLSearchParams({mode:"search",q:searchQuery,src:"food"});
     const response=await fetch(prefix+"deals/api?"+params.toString(),{
