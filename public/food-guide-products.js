@@ -6,10 +6,12 @@ const host=document.querySelector("[data-food-guide-products]");
 if(!host)return;
 const results=host.querySelector("[data-food-shop-results]");
 const status=host.querySelector("[data-food-shop-status]");
+const retry=host.querySelector("[data-food-shop-retry]");
 const query=String(host.dataset.foodGuideProducts||"").trim();
 if(!results||!status||query.length<2||query.length>40)return;
 const prefix=location.pathname.startsWith("/life/")?"/life/":"/";
-const preciseSearch=Object.freeze({"가리비":"홍가리비","고구마":"꿀고구마"});
+// Use the keywords confirmed to return ingredient results in live ADPICK.
+const preciseSearch=Object.freeze({"가리비":"홍가리비","고구마":"고구마"});
 const searchQuery=preciseSearch[query]||query;
 const make=(tag,cls,value)=>{
   const element=document.createElement(tag);
@@ -82,6 +84,7 @@ function appendProduct(item,index){
 }
 async function load(){
   status.textContent="상품 조회 중";
+  if(retry)retry.hidden=true;
   results.replaceChildren();
   const controller=new AbortController();
   const timer=setTimeout(()=>controller.abort(),5500);
@@ -98,12 +101,15 @@ async function load(){
       if(count>=4)break;
       if(appendProduct(item,count))count++;
     }
-    status.textContent=count?count+"개 상품":"현재 표시할 상품이 없습니다.";
+    status.textContent=count?count+"개 상품":"현재 등록된 식재료 상품이 없습니다.";
+    if(!count&&retry)retry.hidden=false;
   }catch{
-    status.textContent="상품을 불러오지 못했습니다.";
+    status.textContent="상품 조회에 실패했습니다.";
+    if(retry)retry.hidden=false;
   }finally{
     clearTimeout(timer);
   }
 }
+if(retry)retry.addEventListener("click",load);
 load();
 })();

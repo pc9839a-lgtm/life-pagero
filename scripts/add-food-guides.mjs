@@ -85,18 +85,22 @@ for(const guide of dataset.guides){
   for(const section of guide.sections){
     section.visual=guide.visuals.find(x=>x.placement===section.title)||null;
   }
-  const navLinks=guide.sections.map(section=>
-    '<a href="#food-'+encodeURIComponent(section.title)+'">'+esc(section.title)+'</a>').join('');
+  const navLinks=guide.sections.map((section,i)=>
+    '<a href="#food-'+encodeURIComponent(section.title)+'">'+esc(section.title)+'</a>'
+    +(i===1?'<a href="#food-shopping">관련 상품</a>':'')).join('');
   const contents='<nav class="food-guide-contents" aria-label="이 글의 목차"><strong>바로가기</strong>'
     +'<div>'+navLinks+'</div></nav>';
   const takeaway='<ul class="food-guide-highlights">'
     +guide.summaryPoints.map(point=>'<li>'+esc(point)+'</li>').join('')+'</ul>';
-  const shopping='<section class="food-guide-shop" aria-labelledby="food-guide-shop-heading" '
+  const shopping='<section class="food-guide-shop" id="food-shopping" aria-labelledby="food-guide-shop-heading" '
     +'data-food-guide-products="'+esc(shopQuery)+'">'
-    +'<div class="food-shop-heading"><h2 id="food-guide-shop-heading">관련 상품</h2>'
-    +'<a href="/deals/?q='+encodeURIComponent(shopQuery)+'&amp;src=food">더 찾아보기</a></div>'
-    +'<p class="food-shop-status" data-food-shop-status role="status">관련 상품 확인 중</p>'
+    +'<div class="food-shop-heading"><h2 id="food-guide-shop-heading">관련 상품</h2></div>'
+    +'<p class="food-shop-status" data-food-shop-status role="status">상품 조회 중</p>'
     +'<div class="food-shop-list" data-food-shop-results aria-live="polite"></div>'
+    +'<div class="food-shop-actions">'
+    +'<a class="food-shop-search-link" href="/deals/?q='+encodeURIComponent(shopQuery)+'&amp;src=food">상품 더 찾아보기</a>'
+    +'<button class="food-shop-retry" type="button" data-food-shop-retry hidden>다시 불러오기</button>'
+    +'</div>'
     +'<p class="food-shop-disclosure">제휴 링크로 구매하면 수수료를 받을 수 있습니다.</p>'
     +'</section>';
   const facts='<dl class="food-guide-facts">'+guide.facts.map(([name,value])=>
@@ -113,7 +117,7 @@ for(const guide of dataset.guides){
     +'<time datetime="'+dataset.publishedAt+'">2026.11.06</time></header>'
     +figure(hero,true)+facts+takeaway+contents
     +'<div class="food-guide-content" itemprop="articleBody">'
-    +guide.sections.map(renderSection).join('')+shopping+faq
+    +guide.sections.map((section,i)=>renderSection(section)+(i===1?shopping:'')).join('')+faq
     +'</div>'
     +'<section class="food-guide-sources"><h2>참고 자료</h2><ul>'
     +sourceList(guide)+'</ul></section>'

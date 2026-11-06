@@ -32,6 +32,14 @@ for(const marker of ['food-shop-product-bottom','food-shop-price-label',
   check(shopJs.includes(marker),'food card accessibility/price/image fallback missing '+marker);
 }
 const hash=createHash('sha256').update(css).digest('hex').slice(0,12);
+for(const fontRule of [
+  'font-size:19px;line-height:1.82',
+  'font-size:17px;font-weight:750;background:#fafbfc',
+  '.food-guide-table-wrap td{color:#33414d;font-size:17px}',
+  '.food-shop-retry[hidden]{display:none'
+]){
+  check(css.includes(fontRule),'food desktop readability/fallback CSS missing '+fontRule);
+}
 for(const cssMarker of ['.food-guide-header','.food-guide-facts','.food-guide-steps',
   '.food-guide-table-wrap','.food-guides-index-list','.food-guide-photo',
   '.food-guide-highlights','.food-guide-contents','@media(max-width:700px)'])
@@ -51,8 +59,16 @@ for(const guide of model.guides){
     && guide.shoppingQuery.length<=40,'missing relevant shopping query '+guide.slug);
   check(html.includes('data-food-guide-products="'+guide.shoppingQuery+'"'),
     'live ADPICK shopping panel missing '+guide.slug);
-  check(html.includes('data-food-shop-results')&&html.includes('data-food-shop-status'),
-    'live affiliate product placeholders missing '+guide.slug);
+  check(html.includes('data-food-shop-results')&&html.includes('data-food-shop-status')
+    &&html.includes('data-food-shop-retry'),
+    'live affiliate product placeholders and manual reload missing '+guide.slug);
+  check(html.includes('id="food-shopping"')&&
+    html.includes('href="#food-shopping"'),
+    'shopping section should be reachable from the article table of contents '+guide.slug);
+  const shoppingPosition=html.indexOf('id="food-shopping"');
+  const thirdSectionPosition=html.indexOf('<h2>'+guide.sections[2].title+'</h2>');
+  check(shoppingPosition>=0&&thirdSectionPosition>shoppingPosition,
+    'shopping hidden too far below recipe or table '+guide.slug);
   check(html.includes('src="/food-guide-products.js?v='+shopHash+'"'),
     'live ADPICK script not cache-versioned '+guide.slug);
   check(html.includes('href="/deals/?q='+encodeURIComponent(guide.shoppingQuery)+'&amp;src=food"'),

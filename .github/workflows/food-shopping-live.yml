@@ -1,0 +1,15 @@
+name: Food shopping live API smoke
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  shop_api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check actual food products in production
+        run: node scripts/audit-food-shop-live.mjs

@@ -22,10 +22,13 @@ async function render({query='가리비',pathname='/life/food/scallops-clean-ste
   response={ok:true,json:async()=>({status:'ok',items:[product('생가리비 1kg')]})}}={}){
   const results=domElement();
   const status=domElement();
+  const retry=domElement('button');
+  retry.hidden=true;
   const root={
     dataset:{foodGuideProducts:query},
     querySelector:selector=>selector==='[data-food-shop-results]'?results:
-      selector==='[data-food-shop-status]'?status:null
+      selector==='[data-food-shop-status]'?status:
+      selector==='[data-food-shop-retry]'?retry:null
   };
   const fetches=[];
   const ctx={
@@ -40,7 +43,7 @@ async function render({query='가리비',pathname='/life/food/scallops-clean-ste
   };
   vm.runInNewContext(source,ctx);
   await new Promise(resolve=>setTimeout(resolve,15));
-  return {results,status,fetches};
+  return {results,status,fetches,retry};
 }
 test('food guide loads server-side ADPICK search using food attribution and current proxy prefix',async()=>{
   const r=await render();
@@ -62,7 +65,7 @@ test('direct Pages origin uses non-prefixed API path and sweet-potato keyword',a
   const r=await render({query:'고구마',pathname:'/food/sweet-potato-storage-guide/'});
   const url=new URL(r.fetches[0][0],'https://life-pagero.pages.dev');
   assert.equal(url.pathname,'/deals/api');
-  assert.equal(url.searchParams.get('q'),'꿀고구마');
+  assert.equal(url.searchParams.get('q'),'고구마');
 });
 test('invalid HTTP affiliate links are ignored and only first four valid products appear',async()=>{
   const items=[product('위험','http://unsafe.example.com/p'),
@@ -74,7 +77,8 @@ test('invalid HTTP affiliate links are ignored and only first four valid product
 test('failed or unconfigured API does not fabricate prices or shopping URLs',async()=>{
   const r=await render({response:{ok:false,status:503}});
   assert.equal(r.results.children.length,0);
-  assert.equal(r.status.textContent,'상품을 불러오지 못했습니다.');
+  assert.equal(r.status.textContent,'상품 조회에 실패했습니다.');
+  assert.equal(r.retry.hidden,false);
 });
 test('provider KRW numeric strings display with comma and explicit 원 units',async()=>{
   const entries=[
@@ -116,4 +120,15 @@ test('provider strings are treated as text, never inserted as HTML',async()=>{
   const card=r.results.children[0];
   assert.equal(card.children[1].children[1].textContent,'<script>alert(1)</script>');
   assert.equal(card.children[1].children[0].tag,'span');
+});
+
+test('failed live shop exposes manual reload without showing fake product cards',async()=>{
+  const r=await render({response:{ok:false,status:500}});
+  assert.equal(r.results.children.length,0);
+  assert.equal(r.retry.hidden,false);
+  assert.equal(typeof r.retry.events.click,'function');
+  r.retry.events.click();
+  await new Promise(resolve=>setTimeout(resolve,15));
+  assert.equal(r.fetches.length,2);
+  assert.equal(r.retry.hidden,false);
 });
