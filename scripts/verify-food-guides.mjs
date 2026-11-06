@@ -17,6 +17,7 @@ const originalHub=['id="food-month"','id="food-list"','id="food-pick"',
 for(const key of originalHub)check(food.includes(key),'original /food/ functionality missing '+key);
 const css=read('life-editorial-20261106.css');
 const shopJs=read('food-guide-products.js');
+const photoManifest=JSON.parse(read('food-images/manifest.json'));
 const shopHash=createHash('sha256').update(shopJs).digest('hex').slice(0,12);
 check(shopJs.includes('preciseSearch')&&shopJs.includes('searchQuery')&&
   shopJs.includes('5500'),'one-shot fast food affiliate search missing');
@@ -70,8 +71,8 @@ for(const guide of model.guides){
   check((html.match(/class="food-guide-photo(?: food-guide-photo-hero)?"/g)||[]).length===2,
     'exactly two visual placements required '+guide.slug);
   for(const image of guide.visuals){
-    check(html.includes(encodeURIComponent(image.filename.replaceAll(' ','_'))),
-      'licensed photo URL not rendered '+guide.slug);
+    check(photoManifest[image.filename]&&html.includes(photoManifest[image.filename]),
+      'licensed or locally hosted photo URL not rendered '+guide.slug);
     check(html.includes(image.caption)&&html.includes(image.attribution),
       'photo caption or licensing credit missing '+guide.slug);
     check(html.includes(image.alt),'image alt missing '+guide.slug);
