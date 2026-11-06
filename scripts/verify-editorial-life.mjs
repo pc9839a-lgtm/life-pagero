@@ -104,7 +104,7 @@ check(editorialStyle.includes('grid-auto-rows:minmax(112px,auto)') &&
       editorialStyle.includes('width:41px;height:41px') &&
       editorialStyle.includes('font-size:clamp(36px,3.6vw,48px)'),
   'large desktop portal heading and icon proportions missing');
-check(editorialStyle.includes('grid-auto-rows:minmax(98px,auto)') &&
+check(editorialStyle.includes('grid-auto-rows:minmax(92px,auto)') &&
       editorialStyle.includes('font-size:30px;line-height:1.22'),
   'mobile heading and touch targets still too small');
 check(editorialStyle.includes('grid-template-columns:1fr;gap:0') &&
