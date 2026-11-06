@@ -812,3 +812,82 @@ body.life-editorial{
   .life-editorial .savings-page-head{align-items:flex-start}
 }
 
+
+
+/* Food guide editorial articles — food-specific only */
+.life-editorial .food-guide{width:100%;max-width:1050px;margin:0 auto;padding:12px 0 56px;background:#fff}
+.life-editorial .food-guide .portal-breadcrumbs{margin:0 0 22px;color:#838d97;font-size:12px}
+.life-editorial .food-guide-header{padding:0 0 24px;border-bottom:1px solid #e3e7ea}
+.life-editorial .food-guide-category{display:inline-block;margin-bottom:10px;color:var(--brand);font-size:13px;font-weight:770}
+.life-editorial .food-guide-header h1{margin:0 0 17px;font-size:clamp(29px,3.3vw,43px);line-height:1.3;color:#202a35;font-weight:850;letter-spacing:-.055em}
+.life-editorial .food-guide-lead{max-width:850px;margin:0 0 14px;color:#343f4c;font-size:18px;line-height:1.8;font-weight:530;word-break:keep-all}
+.life-editorial .food-guide-header time{font-size:12px;color:#89929b}
+.life-editorial .food-guide-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:24px 0 8px;padding:16px 0;border-top:2px solid #252d35;border-bottom:1px solid #e1e5e8}
+.life-editorial .food-guide-facts>div{min-width:0;padding:2px 18px;border-right:1px solid #e6e9eb}
+.life-editorial .food-guide-facts>div:first-child{padding-left:0}
+.life-editorial .food-guide-facts>div:last-child{border-right:0}
+.life-editorial .food-guide-facts dt{margin:0 0 7px;color:#73808b;font-size:12px;font-weight:680}
+.life-editorial .food-guide-facts dd{margin:0;color:#29343f;font-size:15px;font-weight:750;line-height:1.5;overflow-wrap:anywhere}
+.life-editorial .food-guide-content{width:100%;min-width:0}
+.life-editorial .food-guide-section{padding:30px 0 24px;border-bottom:1px solid #e9ecef}
+.life-editorial .food-guide-section h2{margin:0 0 17px;color:#242d36;font-size:clamp(21px,2.3vw,25px);font-weight:810;letter-spacing:-.045em;line-height:1.5}
+.life-editorial .food-guide-section h3{margin:20px 0 11px;color:#35414e;font-size:16px;font-weight:760}
+.life-editorial .food-guide-section p,.life-editorial .food-guide-section li{font-size:16px;line-height:1.85;color:#3e4a55;word-break:keep-all}
+.life-editorial .food-guide-section p{margin:0 0 13px}
+.life-editorial .food-guide-section ul:not(.food-guide-ingredients){padding:0 0 0 21px;margin:0}
+.life-editorial .food-guide-section ul:not(.food-guide-ingredients)>li{padding:0 0 10px 2px}
+.life-editorial .food-guide-steps{counter-reset:food-steps;list-style:none;padding:0;margin:0}
+.life-editorial .food-guide-steps>li{position:relative;counter-increment:food-steps;padding:13px 0 15px 37px;border-bottom:1px solid #f0f1f2}
+.life-editorial .food-guide-steps>li:last-child{border-bottom:0}
+.life-editorial .food-guide-steps>li::before{content:counter(food-steps);position:absolute;left:0;top:14px;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#f3f5f6;color:#45515d;font-size:12px;font-weight:770}
+.life-editorial .food-guide-steps>li strong{display:block;margin:0 0 4px;font-size:16px;font-weight:780;color:#2b3540}
+.life-editorial .food-guide-steps>li p{margin:0}
+.life-editorial .food-guide-ingredients{list-style:none;padding:0;margin:0 0 20px;border-top:1px solid #e7eaed}
+.life-editorial .food-guide-ingredients li{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:11px 3px;border-bottom:1px solid #e7eaed}
+.life-editorial .food-guide-ingredients strong{font-size:14px;color:#303b45;font-weight:720;white-space:nowrap}
+.life-editorial .food-guide-table-wrap{width:100%;max-width:100%;overflow-x:auto}
+.life-editorial .food-guide-table-wrap table{width:100%;min-width:0;border-collapse:collapse;table-layout:fixed;font-size:15px}
+.life-editorial .food-guide-table-wrap th,.life-editorial .food-guide-table-wrap td{padding:14px 13px;border-bottom:1px solid #e8ecf0;text-align:left;vertical-align:top;line-height:1.75;overflow-wrap:anywhere;word-break:keep-all}
+.life-editorial .food-guide-table-wrap thead th{color:#3d4a57;font-size:13px;font-weight:780;background:#f7f8f9;border-top:1px solid #e4e8eb}
+.life-editorial .food-guide-table-wrap tbody th{width:34%;color:#35414d;font-size:14px;font-weight:750;background:#fafbfc}
+.life-editorial .food-guide-table-wrap td{color:#4e5a65;font-size:14px}
+.life-editorial .food-guide-qa{padding:4px 0 12px}
+.life-editorial .food-guide-qa h3{font-size:16px;margin:15px 0 5px;color:#25323f}
+.life-editorial .food-guide-qa p{margin:0 0 10px;font-size:15px}
+.life-editorial .food-guide-sources{margin:27px 0 0;padding:20px 0 15px;border-top:2px solid #29313a}
+.life-editorial .food-guide-sources h2{font-size:16px;font-weight:790;margin:0 0 12px}
+.life-editorial .food-guide-sources ul{margin:0;padding:0;list-style:none}
+.life-editorial .food-guide-sources li{padding:6px 0}
+.life-editorial .food-guide-sources a{font-size:13px;line-height:1.6;color:#65727e;text-decoration:underline;text-underline-offset:3px;text-decoration-color:#c8cfd4}
+.life-editorial .food-guide-sources a:hover{color:var(--brand)}
+.life-editorial .food-guide-related{display:flex;flex-wrap:wrap;gap:10px 22px;margin:20px 0 0;padding:19px 0 0;border-top:1px solid #e4e7eb}
+.life-editorial .food-guide-related a{display:inline-flex;align-items:center;color:var(--brand);font-size:14px;font-weight:760}
+.life-editorial .food-guides-index-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;border-top:2px solid #27303a}
+.life-editorial .food-guide-index-link{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;padding:17px 0 19px;border-bottom:1px solid #e6e9ed}
+.life-editorial .food-guide-index-link>span{font-size:12px;font-weight:700;color:var(--brand)}
+.life-editorial .food-guide-index-link>strong{color:#25303b;font-size:18px;font-weight:810;line-height:1.45;letter-spacing:-.03em}
+.life-editorial .food-guide-index-link>small{color:#75818b;font-size:12px;line-height:1.65;word-break:keep-all}
+.life-editorial .food-guide-index-link:hover>strong{color:var(--brand)}
+@media(max-width:700px){
+ .life-editorial .food-guide{padding:6px 0 40px}
+ .life-editorial .food-guide .portal-breadcrumbs{margin-bottom:16px}
+ .life-editorial .food-guide-header{padding-bottom:18px}
+ .life-editorial .food-guide-header h1{font-size:29px;line-height:1.35;margin-bottom:12px}
+ .life-editorial .food-guide-lead{font-size:15px;line-height:1.8}
+ .life-editorial .food-guide-facts{grid-template-columns:1fr;margin-top:18px;padding:6px 0}
+ .life-editorial .food-guide-facts>div{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:10px 2px;border:0;border-bottom:1px solid #edf0f1}
+ .life-editorial .food-guide-facts>div:last-child{border-bottom:0}
+ .life-editorial .food-guide-facts dt{min-width:78px;font-size:11px;margin:0}
+ .life-editorial .food-guide-facts dd{font-size:13px;text-align:right}
+ .life-editorial .food-guide-section{padding:23px 0 20px}
+ .life-editorial .food-guide-section h2{font-size:21px;margin-bottom:12px}
+ .life-editorial .food-guide-section h3{font-size:15px}
+ .life-editorial .food-guide-section p,.life-editorial .food-guide-section li{font-size:15px}
+ .life-editorial .food-guide-steps>li strong{font-size:15px}
+ .life-editorial .food-guide-table-wrap th,.life-editorial .food-guide-table-wrap td{padding:11px 9px;font-size:12px}
+ .life-editorial .food-guide-table-wrap tbody th{font-size:12px}
+ .life-editorial .food-guide-qa h3{font-size:15px}
+ .life-editorial .food-guide-qa p{font-size:14px}
+ .life-editorial .food-guides-index-list{grid-template-columns:1fr}
+ .life-editorial .food-guide-index-link>strong{font-size:16px}
+}
