@@ -7,7 +7,9 @@ const SITE='https://pagero.kr/life';
 const model=JSON.parse(fs.readFileSync('content/food-guides.json','utf8'));
 const read=file=>fs.readFileSync(path.join(DIST,file),'utf8');
 const check=(ok,message)=>{if(!ok)throw Error('[food-guides-qa] '+message)};
-check(model.guides.length===2,'exactly two verified original guide entries expected');
+check(model.guides.length>=4,'published food guide catalog must include the latest two articles');
+for(const slug of ['samchi-grill-clean-freeze','autumn-radish-storage-beef-soup'])
+  check(model.guides.some(g=>g.slug===slug),'new seasonal food guide missing '+slug);
 const sitemap=read('sitemap.xml');
 const index=JSON.parse(read('search-index.json'));
 const food=read('food/index.html');
@@ -137,7 +139,7 @@ for(const guide of model.guides){
     html.includes(new URL(url).hostname)),
     'unverified official citations missing '+guide.slug);
   check(guide.sources.every(([,url])=>
-    ['www.mof.go.kr','www.foodsafetykorea.go.kr','www.rda.go.kr','www.fda.gov'].includes(new URL(url).hostname)),
+    ['www.mof.go.kr','www.foodsafetykorea.go.kr','www.rda.go.kr','www.fda.gov','nongsaro.go.kr'].includes(new URL(url).hostname)),
     'unexpected source domain '+guide.slug);
   check(html.includes('href="/food/'+guide.related+'/"')&&slugs.has(guide.related),
     'related food guide internal link broken '+guide.slug);
@@ -149,6 +151,6 @@ for(const guide of model.guides){
   check(index.some(x=>x.url===pathname&&x.title===guide.seoTitle),
     'article not searchable '+guide.slug);
 }
-check((food.match(/class="food-guide-index-link"/g)||[]).length===2,
-  'two and only two content links expected on food index');
-console.log('[food-guides-qa] PASS: two sourced food articles with live ADPICK products, tracked fallback searches, secure affiliate links, SEO, and mobile styles.');
+check((food.match(/class="food-guide-index-link"/g)||[]).length===model.guides.length,
+  'all current guides must appear on food index');
+console.log('[food-guides-qa] PASS: '+model.guides.length+' sourced food articles with live ADPICK products, tracked fallback searches, secure affiliate links, SEO, and mobile styles.');
