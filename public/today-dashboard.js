@@ -104,7 +104,7 @@
     const render=()=>{
       const category=picker?.value||'all';
       const selected=all.filter(row=>category==='all'||row.category===category);
-      const limit=node.dataset.mode==='compact'?5:6;
+      const limit=node.dataset.mode==='compact'?5:4;
       if(!selected.length){
         fallback(box,'주요 뉴스 보기','https://www.yna.co.kr/','선택한 분야의 새 기사가 없습니다.');
         return;

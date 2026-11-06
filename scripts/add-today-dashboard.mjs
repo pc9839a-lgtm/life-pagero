@@ -56,11 +56,8 @@ const description='지역별 기상청 날씨 관측, 언론사 최신 뉴스 �
 const fullBody='<div class="today-viewport"><article class="today-wide-content">'
   +'<nav class="portal-breadcrumbs" aria-label="현재 위치"><a href="/">홈</a> / 오늘의 정보</nav>'
   +'<div class="today-page-head"><h1>오늘의 정보</h1>'
-  +'<p class="today-page-intro">날씨부터 뉴스, 증권·코인까지 필요한 정보를 확인하세요.</p></div>'
-  +'<nav class="today-section-nav" aria-label="이 페이지의 항목">'
-  +'<a href="#today-weather">날씨</a><a href="#today-news">주요뉴스</a>'
-  +'<a href="#today-stocks">증권</a><a href="#today-crypto">코인</a></nav>'
-  +'<div class="today-vertical-list">'
+  +'<p class="today-page-intro">날씨, 주요뉴스, 주식·코인 시세</p></div>'
+  +'<div class="today-vertical-list today-dashboard-grid">'
   +weather('full')+news('full')+stocks('full')+crypto('full')
   +'</div>'
   +'<section class="today-source-guidance"><h2>데이터 출처와 기준시각</h2>'

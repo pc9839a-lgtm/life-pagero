@@ -53,8 +53,8 @@ yes(today.includes('class="today-viewport"') &&
 yes(!today.includes('class="site-shell today-shell"') &&
   !today.includes('class="portal-page finance-page today-page"'),
   'Old 890px site-shell/portal-page wrapper still constrains Today screen');
-yes(today.includes('class="today-vertical-list"')&&!today.includes('class="today-full-grid"'),
-  'Today screen must have one vertical column with no three-card grid');
+yes(today.includes('class="today-vertical-list today-dashboard-grid"')&&!today.includes('class="today-full-grid"'),
+  'Today needs a coherent first-screen dashboard without the old card grid');
 const order=['data-today-weather','data-today-news','data-today-stocks','data-today-crypto']
   .map(key=>today.indexOf(key));
 yes(order.every((position,index)=>position>=0&&(index===0||position>order[index-1])),
@@ -67,23 +67,25 @@ yes(wideCss.includes('#main-content>.today-viewport') &&
 yes(today.includes('href="/today-wide.css"'),
   'New uncached full-viewport CSS is not linked from Today page');
 for(const id of ['weather','news','stocks','crypto']){
-  yes(today.includes('id="today-'+id+'"')&&today.includes('href="#today-'+id+'"'),
-    'in-page navigation target missing: '+id);
+  yes(today.includes('id="today-'+id+'"'),
+    'information section anchor missing: '+id);
 }
-yes(today.includes('class="today-section-nav"') &&
+yes(!today.includes('class="today-section-nav"') &&
   today.includes('class="today-page-head"'),
-  'improved first-screen hierarchy missing');
-yes(wideCss.includes('max-width:1040px') &&
-  wideCss.includes('grid-template-columns:minmax(0,1fr) minmax(90px,auto) 56px') &&
-  wideCss.includes('@media(max-width:360px)'),
-  'desktop reading width or mobile small-screen rules missing');
+  'remove the redundant anchor tab row to expose live information');
+yes(wideCss.includes('max-width:1360px') &&
+  wideCss.includes('grid-template-areas:"weather news" "stocks news" "crypto crypto"') &&
+  wideCss.includes('@media(max-width:350px)') &&
+  wideCss.includes('grid-template-areas:"weather" "news" "stocks" "crypto"'),
+  'desktop first-fold dashboard or single-column mobile layout missing');
 yes(!markets.includes('href="/today-wide.css"'),
   'Today-only viewport override leaked into another page');
 yes(dashboardCss.includes('.today-vertical-list{display:flex;flex-direction:column'),
   'Today page must stack full-width blocks on desktop and mobile');
 const dashboardJs=read('today-dashboard.js');
-yes(dashboardJs.includes('news more')===false&&dashboardJs.includes('today-expand-button'),
-  'Expandable concise data lists are missing');
+yes(dashboardJs.includes('news more')===false&&dashboardJs.includes('today-expand-button') &&
+  dashboardJs.includes("const limit=node.dataset.mode==='compact'?5:4;"),
+  'Four concise headlines and expandable full list missing');
 yes(dashboardJs.includes('today-source-prompt') &&
   dashboardJs.includes('attachRefresh(node,load)') &&
   dashboardJs.includes('control.addEventListener(\'click\',load)'),
@@ -103,4 +105,4 @@ yes(!index.some(x=>x.url.includes('today/api')),'API must never be in public sea
 for(const name of ['today-dashboard.css','today-dashboard.js']){
   yes(fs.statSync(path.join(DIST,name)).size>2500,'dashboard asset not generated: '+name);
 }
-console.log('[today-qa] /today/ source-backed widgets, minimal homepage, verified source links, finance embeds, SEO, ads and search passed.');
+console.log('[today-qa] /today/ weather and news first, desktop dashboard plus mobile stack, source links, SEO, ads and search passed.');
