@@ -193,7 +193,8 @@ check(positions.every((p,i)=>p>=0&&(i===0||p>positions[i-1])),
 check(today.includes('data-today-fx')&&!today.includes('data-today-stocks'),
   'Today stocks must be replaced by daily exchange rates');
 check(today.includes('data-fx-items') &&
-  today.includes('ECB') &&
+  today.includes('>환율</h3>') &&
+  today.includes('https://www.ecb.europa.eu/') &&
   !today.includes('>증권</h3>'),
   'Today reference FX panel missing or stock panel still visible');
 for(const target of ['https://www.yna.co.kr/','https://www.weather.go.kr/',
