@@ -140,3 +140,40 @@ test('general hot deals and other food searches preserve existing behavior',asyn
     assert.equal(urls.length,2);
   });
 });
+
+
+test('samchi product search only admits fresh, uncooked seafood',()=>{
+  const allowed=['국내산 손질 삼치 500g','냉동 순살 삼치 1kg',
+    '구이용 생삼치 2마리','삼치 500g'];
+  const denied=['삼치구이 밀키트 2개','삼치조림 300g','삼치 낚시 미끼 1kg',
+    '삼치 모양 쿠션 2개','삼치 양념 조리완료 500g','삼치 전자책 1kg'];
+  for(const name of allowed)assert.equal(isRelevantFoodProduct('삼치',name),true,name);
+  for(const name of denied)assert.equal(isRelevantFoodProduct('삼치',name),false,name);
+});
+test('autumn radish filter accepts raw radish but not pickles and prepared foods',()=>{
+  const allowed=['국내산 가을무 5kg','김장무 10kg 산지직송',
+    '가을무 3개 묶음','제주 월동무 5kg'];
+  const denied=['가을무 깍두기 5kg','동치미 가을무 2kg',
+    '국산 무말랭이 1kg','무선 청소기 2kg','가을무 모종 5개',
+    '고구마 5kg','무김치 5kg','가을무 전자책 1권'];
+  for(const name of allowed)assert.equal(isRelevantFoodProduct('무',name),true,name);
+  for(const name of denied)assert.equal(isRelevantFoodProduct('무',name),false,name);
+});
+test('new food pages pass through server-side topic validation',async()=>{
+  await mockRequests(()=>[
+    link('국내산 손질 삼치 500g',1),link('삼치구이 밀키트 300g',2)
+  ],async urls=>{
+    const req=context('https://life.example.com/deals/api?mode=search&q='+encodeURIComponent('삼치')+'&src=food');
+    const result=await (await onRequestGet(req)).json();
+    assert.deepEqual(result.items.map(i=>i.title),['국내산 손질 삼치 500g']);
+    assert.equal(new URL(urls[0]).searchParams.get('limit'),'20');
+  });
+  await mockRequests(()=>[
+    link('국내산 가을무 5kg',1),link('가을무 깍두기 5kg',2)
+  ],async urls=>{
+    const req=context('https://life.example.com/deals/api?mode=search&q='+encodeURIComponent('가을무')+'&src=food');
+    const result=await (await onRequestGet(req)).json();
+    assert.deepEqual(result.items.map(i=>i.title),['국내산 가을무 5kg']);
+    assert.equal(urls.length,1);
+  });
+});
