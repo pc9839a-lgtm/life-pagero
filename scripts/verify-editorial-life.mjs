@@ -47,6 +47,15 @@ const home=read('index.html');
 check(home.includes('<h1>오늘 필요한 정보</h1>'),'home title not rewritten');
 check(home.includes('class="hero portal-home-hero editorial-hero"'),
   'editorial home hero missing');
+check((home.match(/class="life-home-service-card"/g)||[]).length===6,
+  'six portal service shortcuts missing');
+for(const route of ['/today/','/finance/savings/','/finance/loan-payment/',
+  '/food/','/events/','/deals/']) {
+  check(home.includes('class="life-home-service-card" href="'+route+'"'),
+    'homepage portal shortcut missing: '+route);
+}
+check(home.includes('class="life-home-service-grid"'),
+  'reference-inspired portal feature grid missing');
 check((home.match(/class="portal-topic-card compact-topic"/g)||[]).length===6,
   'six original topic links lost');
 check(home.includes('<details class="compact-explore compact-latest" open>'),
