@@ -102,10 +102,17 @@ const dashboardJs=read('today-dashboard.js');
 yes(dashboardJs.includes('news more')===false&&dashboardJs.includes('today-expand-button') &&
   dashboardJs.includes("const limit=node.dataset.mode==='compact'?5:4;"),
   'Four concise headlines and expandable full list missing');
-yes(dashboardJs.includes('today-source-prompt') &&
-  dashboardJs.includes('attachRefresh(node,load)') &&
-  dashboardJs.includes('control.addEventListener(\'click\',load)'),
-  'visible error fallback or functional refresh missing');
+yes(dashboardJs.includes('today-source-prompt'),
+  'API unavailable fallback must remain readable');
+yes(!dashboardJs.includes('attachRefresh(') &&
+  !dashboardJs.includes('today-refresh') &&
+  !dashboardJs.includes('setInterval(load,45*60000)') &&
+  !dashboardJs.includes('setInterval(load,10*60000)') &&
+  !dashboardJs.includes('setInterval(load,3*60000)') &&
+  !dashboardJs.includes('setInterval(load,60*60000)'),
+  'Today must not poll API endpoints or show manual refresh controls');
+yes(!wideCss.includes('.today-refresh'),
+  'Unused refresh button CSS still present');
 
 yes(today.includes('언론사 원문')&&today.includes('articles')===false,
   'full page should link to original stories without copied body');
