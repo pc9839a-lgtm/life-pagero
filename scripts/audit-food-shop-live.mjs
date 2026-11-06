@@ -1,50 +1,52 @@
 import {spawnSync} from 'node:child_process';
-// Production-facing, credential-free diagnostics for public food affiliate API.
-// Does not print private keys, full provider URLs, or user data.
-const checks=[
-  ['public-scallop-general','https://pagero.kr/life/deals/api?mode=search&q='+encodeURIComponent('가리비')+'&src=food'],
-  ['public-scallop-specific','https://pagero.kr/life/deals/api?mode=search&q='+encodeURIComponent('홍가리비')+'&src=food'],
-  ['public-potato-general','https://pagero.kr/life/deals/api?mode=search&q='+encodeURIComponent('고구마')+'&src=food'],
-  ['origin-scallop-general','https://life-pagero.pages.dev/deals/api?mode=search&q='+encodeURIComponent('가리비')+'&src=food']
+import {isRelevantFoodProduct} from '../functions/deals/api.js';
+
+// Live diagnostics must cover every published /food/ article, not only the
+// first two. This is observational on PRs because the production deployment
+// can legitimately lag a proposed change.
+const catalog=[
+  ['scallops-clean-steam-storage','가리비','가리비'],
+  ['sweet-potato-storage-guide','고구마','고구마'],
+  ['samchi-grill-clean-freeze','삼치','삼치'],
+  ['autumn-radish-storage-beef-soup','가을무','무'],
+  ['oyster-clean-cook-storage','생굴','굴'],
+  ['sweet-persimmon-storage-salad','단감','단감']
 ];
-await Promise.all(checks.map(async([name,url])=>{
+const base='https://pagero.kr/life';
+for(const [slug,query,topic] of catalog){
   const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),7500);
+  const timer=setTimeout(()=>controller.abort(),9000);
+  const url=base+'/deals/api?'+new URLSearchParams({mode:'search',q:query,src:'food'});
   try{
     const start=Date.now();
-    const response=await fetch(url,{signal:controller.signal,cache:'no-store',headers:{Accept:'application/json'}});
-    const raw=await response.text();
+    const response=await fetch(url,{cache:'no-store',signal:controller.signal,headers:{Accept:'application/json'}});
     let data;
-    try{data=JSON.parse(raw)}catch{}
+    try{data=await response.json()}catch{data=null}
+    const items=Array.isArray(data?.items)?data.items:[];
+    const mismatched=items.filter(x=>!isRelevantFoodProduct(topic,x.title||''));
     console.log('[food-shop-live]',JSON.stringify({
-      name,http:response.status,ms:Date.now()-start,
-      result:data?.status||'invalid-response',
-      itemCount:Array.isArray(data?.items)?data.items.length:null,
-      items:Array.isArray(data?.items)?data.items.slice(0,4).map(x=>x.title?.slice(0,70)):[],
-      responseType:response.headers.get('content-type')
+      slug,query,http:response.status,ms:Date.now()-start,status:data?.status||'invalid-response',
+      itemCount:items.length,rejected: mismatched.map(x=>String(x.title).slice(0,80)).slice(0,4),
+      examples:items.map(x=>String(x.title).slice(0,66)).slice(0,3)
     }));
-  }catch(error){console.log('[food-shop-live]',JSON.stringify({name,error:String(error?.message||error)}))}
-  finally{clearTimeout(timer)}
-}));
-
-
-// Headless browser check of actual running public JS, not a source-only assertion.
-for(const slug of ['scallops-clean-steam-storage','sweet-potato-storage-guide']){
-  const url='https://pagero.kr/life/food/'+slug+'/';
+  }catch(error){
+    console.warn('[food-shop-live]',JSON.stringify({slug,query,error:String(error?.message||error)}));
+  }finally{clearTimeout(timer)}
+}
+for(const [slug] of catalog){
+  const url=base+'/food/'+slug+'/';
   const chrome=spawnSync('google-chrome',[
     '--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',
     '--virtual-time-budget=9000','--dump-dom',url
-  ],{encoding:'utf8',timeout:17500,maxBuffer:12*1024*1024});
+  ],{encoding:'utf8',timeout:18000,maxBuffer:12*1024*1024});
   const dom=chrome.stdout||'';
   const shopStatus=dom.match(/class="food-shop-status"[^>]*>([^<]*)<\/p>/)?.[1]||'not-found';
   const cards=(dom.match(/class="food-shop-product(?: food-shop-product-first)?"/g)||[]).length;
   const sectionIndex=dom.indexOf('id="food-shopping"');
-  const tableIndex=dom.indexOf('해감과 익힘, 헷갈리기 쉬운 부분');
+  const photoPaths=(dom.match(/src="\/life\/food-images\/[^"]+"/g)||[]).length;
   console.log('[food-browser]',JSON.stringify({
-    slug,exit:chrome.status,htmlBytes:dom.length,hasShopSection:sectionIndex!==-1,
-    cards,shopStatus:shopStatus.slice(0,80),shopBeforeTable:sectionIndex!==-1&&
-    tableIndex!==-1&&sectionIndex<tableIndex,
-    scriptVersioned:/food-guide-products\.js\?v=[a-f0-9]{12}/.test(dom),
-    stderr:(chrome.stderr||'').split('\n').filter(s=>/ERROR|ERR_/.test(s)).slice(-2)
+    slug,exit:chrome.status,hasShopSection:sectionIndex!==-1,cards,
+    shopStatus:shopStatus.slice(0,80),localPhotoPaths:photoPaths,
+    scriptVersioned:/food-guide-products\.js\?v=[a-f0-9]{12}/.test(dom)
   }));
 }
