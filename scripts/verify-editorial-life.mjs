@@ -116,8 +116,8 @@ check(editorialStyle.includes('grid-template-columns:1fr;gap:0') &&
   editorialStyle.includes('.life-home-spot-thumb img'),
   'editorial photo and calculator layout CSS missing');
 check(editorialStyle.includes('max-width:430px') &&
-  editorialStyle.includes('grid-auto-rows:minmax(92px,auto)') &&
-  editorialStyle.includes('font-size:12.7px'),
+  editorialStyle.includes('grid-auto-rows:minmax(76px,auto)') &&
+  editorialStyle.includes('font-size:12.5px'),
   '320-430px mobile service grid not optimized');
 check(editorialStyle.includes('overflow-x:auto;overflow-y:hidden;scrollbar-width:none') &&
   editorialStyle.includes('min-height:44px;padding:13px 1px 10px'),
