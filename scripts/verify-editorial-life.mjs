@@ -84,6 +84,8 @@ check((home.match(/data-affiliate="tenping-/g)||[]).length===4,
   'original affiliate cards altered');
 check((home.match(/data-life-coupang-kind="(?:middle|body)"/g)||[]).length===2,
   'original homepage advertising slots altered');
+check(home.includes('options.height=window.matchMedia("(max-width:700px)").matches?"320":"380";'),
+  'homepage-only larger Coupang banner height is missing');
 check((home.match(/data-life-coupang-kind="rail"/g)||[]).length===1,
   'original sidebar advertising altered');
 for(const name of ['car','support']){

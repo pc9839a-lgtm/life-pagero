@@ -62,6 +62,9 @@ function inlineFor(kind) {
     'options.width=' + JSON.stringify(BANNER.mobile.width) + ';',
     'options.height=' + JSON.stringify(BANNER.mobile.height) + ';',
     '}',
+    'if(document.body.classList.contains("life-modern-home")&&'+JSON.stringify(kind)+'!=="rail"){',
+    'options.height=window.matchMedia("(max-width:700px)").matches?"320":"380";',
+    '}',
     'new PartnersCoupang.G(options);',
     '})();',
   ].join('');
