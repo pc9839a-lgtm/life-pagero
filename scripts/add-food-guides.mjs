@@ -8,10 +8,12 @@ const dataset=JSON.parse(fs.readFileSync('content/food-guides.json','utf8'));
 const SHOP_SCRIPT='/food-guide-products.js';
 const SHOP_HASH=createHash('sha256').update(fs.readFileSync(path.join(DIST,SHOP_SCRIPT.slice(1)))).digest('hex').slice(0,12);
 const SHOP_SCRIPT_HREF=SHOP_SCRIPT+'?v='+SHOP_HASH;
-// Commons original photographs are reused under their listed free licenses.
-// Build the static image URL; neither product images nor product data are copied.
-const imageUrl=photo=>'https://commons.wikimedia.org/wiki/Special:FilePath/'
-  +encodeURIComponent(photo.filename.replaceAll(' ','_'))+'?width=960';
+// Photographs are copied at build time when Wikimedia is reachable, then
+// served locally by Cloudflare Pages. The original Commons URL is retained as
+// a fallback and for the photographer/license credit.
+const photoManifest=JSON.parse(fs.readFileSync(
+  path.join(DIST,'food-images/manifest.json'),'utf8'));
+const imageUrl=photo=>photoManifest[photo.filename];
 const figure=(photo,hero=false)=>{
   const attribution='<a href="'+esc(photo.source)+'" target="_blank" rel="noopener noreferrer">'
     +esc(photo.attribution)+'</a>';
