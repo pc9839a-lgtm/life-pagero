@@ -6,7 +6,6 @@
 
 const CACHE_ORIGIN='https://life-pagero.pages.dev/today/api/';
 const inFlight=new Map();
-const ttl=Math.max;
 const cacheKey=(key,kind)=>new Request(CACHE_ORIGIN+key+'__'+kind,{method:'GET'});
 const cacheAvailable=()=>typeof caches!=='undefined'&&caches.default?caches.default:null;
 const forCache=(response,age)=> {
