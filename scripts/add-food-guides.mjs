@@ -178,7 +178,7 @@ for(const guide of dataset.guides){
     +'<span>'+esc(guide.eyebrow)+'</span><strong>'+esc(guide.title)+'</strong>'
     +'<small>'+esc(guide.description)+'</small></a>');
 }
-check(cards.length===2,'expected exactly two substantive food articles');
+check(cards.length===dataset.guides.length&&cards.length>=4,'food guide hub list must include all guides');
 const before='<section class="food-section food-choice"';
 let home=read('food/index.html');
 check(home.includes(before),'food hub choice section not found');
@@ -202,4 +202,4 @@ for(const guide of dataset.guides){
 }
 write('sitemap.xml',sitemap);
 write('search-index.json',JSON.stringify(index));
-console.log('[food-guides] Published 2 full articles, linked on /food/, added canonical/Article/Breadcrumb, sitemap and site search.');
+console.log('[food-guides] Published '+dataset.guides.length+' full articles, linked on /food/, with canonical/Article/Breadcrumb, sitemap and site search.');
