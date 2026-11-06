@@ -44,9 +44,22 @@ for(const absolute of pages){
 check(checked>=150,'not enough editorial pages: '+checked);
 check(articles===46,'all 46 articles must remain published: '+articles);
 const home=read('index.html');
-check(home.includes('<h1>오늘 궁금한 정보, 한곳에서</h1>'),'reference home headline missing');
+check(home.includes('<h1>오늘 필요한 정보</h1>'),'clear functional homepage headline missing');
 check(home.includes('class="hero portal-home-hero editorial-hero"'),
   'editorial home hero missing');
+check(!home.includes('class="events-home-banner"') &&
+  !home.includes('class="adpick-home-entry"'),
+  'duplicate event/deal campaign boxes crowd the first fold');
+check(home.includes('날씨 · 금융 · 지원금 · 자동차'),
+  'homepage description should be simple and factual');
+const heroStart=home.indexOf('<section class="hero portal-home-hero editorial-hero">');
+const heroEnd=home.indexOf('</section>',heroStart);
+check(heroStart>0 && heroEnd>heroStart && home.indexOf('aria-label="생활비서 서비스 바로가기"',heroStart)<heroEnd,
+  '12 primary services must be inside homepage hero');
+const keywordPattern=/<div class="portal-search-suggestions"[\s\S]*?<\/div>/;
+const keyword=home.match(keywordPattern)?.[0]||'';
+check(!keyword || home.indexOf(keyword)>home.indexOf('class="life-home-search-panel"'),
+  'search chips must remain in the closed search panel');
 check((home.match(/class="life-home-service-card"/g)||[]).length===12,
   '4 by 3 portal shortcuts missing');
 for(const route of ['/today/','/finance/savings/','/finance/loan-payment/',
@@ -71,6 +84,13 @@ const archivePosition=home.indexOf('<details class="modern-all-articles">');
 check(sponsorPosition>0 && archivePosition>sponsorPosition,
   'original full-width ad section must appear before deep article archive');
 const editorialStyle=read('life-editorial-20261106.css');
+check(editorialStyle.includes('grid-auto-rows:minmax(112px,auto)') &&
+      editorialStyle.includes('width:41px;height:41px') &&
+      editorialStyle.includes('font-size:clamp(36px,3.6vw,48px)'),
+  'large desktop portal heading and icon proportions missing');
+check(editorialStyle.includes('grid-auto-rows:minmax(98px,auto)') &&
+      editorialStyle.includes('font-size:30px;line-height:1.22'),
+  'mobile heading and touch targets still too small');
 check(editorialStyle.includes('grid-template-columns:repeat(4,minmax(0,1fr))'),
   '4-column service layout CSS missing');
 check(editorialStyle.includes('.modern-sponsored-area .life-coupang-widget')
