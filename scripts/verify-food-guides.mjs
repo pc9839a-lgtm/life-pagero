@@ -17,7 +17,10 @@ const originalHub=['id="food-month"','id="food-list"','id="food-pick"',
 for(const key of originalHub)check(food.includes(key),'original /food/ functionality missing '+key);
 const css=read('life-editorial-20261106.css');
 const shopJs=read('food-guide-products.js');
+const photoManifest=JSON.parse(read('food-images/manifest.json'));
 const shopHash=createHash('sha256').update(shopJs).digest('hex').slice(0,12);
+check(shopJs.includes('preciseSearch')&&shopJs.includes('searchQuery')&&
+  shopJs.includes('5500'),'one-shot fast food affiliate search missing');
 check(shopJs.includes('prefix+"deals/api?"')&&shopJs.includes('src:"food"'),
   'food products must use server-side ADPICK search with food attribution');
 check(shopJs.includes('sponsored noopener noreferrer')&&shopJs.includes('cache:"no-store"'),
@@ -30,7 +33,8 @@ for(const marker of ['food-shop-product-bottom','food-shop-price-label',
 }
 const hash=createHash('sha256').update(css).digest('hex').slice(0,12);
 for(const cssMarker of ['.food-guide-header','.food-guide-facts','.food-guide-steps',
-  '.food-guide-table-wrap','.food-guides-index-list','@media(max-width:700px)'])
+  '.food-guide-table-wrap','.food-guides-index-list','.food-guide-photo',
+  '.food-guide-highlights','.food-guide-contents','@media(max-width:700px)'])
   check(css.includes(cssMarker),'guide mobile/readability rule missing '+cssMarker);
 for(const marker of ['grid-template-columns:180px minmax(0,1fr)',
   '.food-shop-price{','.food-shop-buy{',
@@ -56,6 +60,28 @@ for(const guide of model.guides){
   check(html.includes('제휴 링크로 구매하면 수수료를 받을 수 있습니다.'),
     'affiliate disclosure missing '+guide.slug);
   check(body.length>1000,'guide lacks substantive original instructions '+guide.slug);
+  check(Array.isArray(guide.visuals)&&guide.visuals.length===2,
+    'two source-licensed article images required '+guide.slug);
+  check(guide.summaryPoints.length===3,
+    'practical decision highlights missing '+guide.slug);
+  check(html.includes('class="food-guide-photo food-guide-photo-hero"'),
+    'visually prominent hero photo missing '+guide.slug);
+  check(html.includes('class="food-guide-contents"')&&html.includes('class="food-guide-highlights"'),
+    'scannable photo-led article structure missing '+guide.slug);
+  check((html.match(/class="food-guide-photo(?: food-guide-photo-hero)?"/g)||[]).length===2,
+    'exactly two visual placements required '+guide.slug);
+  for(const image of guide.visuals){
+    check(photoManifest[image.filename]&&html.includes(photoManifest[image.filename]),
+      'licensed or locally hosted photo URL not rendered '+guide.slug);
+    check(html.includes(image.caption)&&html.includes(image.attribution),
+      'photo caption or licensing credit missing '+guide.slug);
+    check(html.includes(image.alt),'image alt missing '+guide.slug);
+  }
+  check(html.includes('"image":['),'Article image JSON-LD omitted '+guide.slug);
+  check(html.includes('property="og:image"'),'OG social photo missing '+guide.slug);
+  check(html.includes('loading="eager"')&&html.includes('loading="lazy"'),
+    'hero priority and lazy supplementary photo missing '+guide.slug);
+
   check(!/(무엇을 알아볼까요|이번 글에서는|알아보겠습니다|확인해 보겠습니다|지금부터|정리해 드리겠습니다|도움이 되었기를)/.test(html),
     'AI-style explanatory filler appeared in '+guide.slug);
   check(html.includes('name="robots" content="index,follow"'),'article noindex '+guide.slug);

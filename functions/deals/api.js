@@ -32,7 +32,7 @@ export function isRelevantFoodProduct(topic,title){
     return /고구마/.test(text)&&(FRESH_UNIT.test(text)||POTATO_FRESH.test(text));
   return false;
 }
-const FALLBACK_SEARCH=Object.freeze({"가리비":"홍가리비","고구마":"꿀고구마"});
+const FOOD_TOPIC=Object.freeze({"가리비":"가리비","홍가리비":"가리비","고구마":"고구마","꿀고구마":"고구마"});
 export async function onRequestGet({request,env}){
   const key=String(env?.ADPICK_BIZ_API_KEY||"").trim();
   if(!key)return reply({status:"unconfigured",items:[]},503);
@@ -42,13 +42,13 @@ export async function onRequestGet({request,env}){
   if(mode==="search"&&(rawQuery.length<2||rawQuery.length>40))
     return reply({status:"invalid_query",items:[]},400);
   const isFoodSearch=mode==="search"&&params.get("src")==="food";
-  const foodTopic=isFoodSearch&&Object.hasOwn(FALLBACK_SEARCH,rawQuery)?rawQuery:null;
+  const foodTopic=isFoodSearch&&Object.hasOwn(FOOD_TOPIC,rawQuery)?FOOD_TOPIC[rawQuery]:null;
   const area=params.get("area")||"today";
   if(mode==="best"&&!BEST_AREAS.has(area))
     return reply({status:"invalid_request",items:[]},400);
   const fetchProducts=async term=>{
     const endpoint=new URL(PROVIDER+"/"+encodeURIComponent(key)+"/"+mode);
-    endpoint.searchParams.set("limit",foodTopic?"30":"10");
+    endpoint.searchParams.set("limit",foodTopic?"20":"10");
     if(mode==="best"){
       endpoint.searchParams.set("area",area);
       endpoint.searchParams.set("p_data","life_deals_"+area);
@@ -58,7 +58,7 @@ export async function onRequestGet({request,env}){
     }
     const response=await fetch(endpoint.href,{
       headers:{Accept:"application/json"},
-      signal:AbortSignal.timeout(8000)
+      signal:AbortSignal.timeout(foodTopic?4000:8000)
     });
     if(!response.ok)throw new Error("UPSTREAM_"+response.status);
     const data=await response.json();
@@ -67,7 +67,7 @@ export async function onRequestGet({request,env}){
     if(!Array.isArray(source))throw new Error("MALFORMED_RESPONSE");
     // Preserve provider names, prices, images and affiliate links unchanged.
     // Only reject invalid HTTPS links and mismatched ingredient results.
-    return source.slice(0,foodTopic?30:10).filter(row=>row&&typeof row==="object")
+    return source.slice(0,foodTopic?20:10).filter(row=>row&&typeof row==="object")
       .filter(row=>safeLink(row.commissionlink)&&typeof row.title==="string")
       .filter(row=>!foodTopic||isRelevantFoodProduct(foodTopic,row.title))
       .map(row=>({
@@ -77,13 +77,9 @@ export async function onRequestGet({request,env}){
       }));
   };
   try{
-    let items=await fetchProducts(rawQuery);
-    if(foodTopic&&items.length===0){
-      // One narrowly scoped fallback; never fill the article with irrelevant
-      // hits just to reach the display limit.
-      try{items=await fetchProducts(FALLBACK_SEARCH[foodTopic]);}
-      catch{items=[];}
-    }
+    // The article uses one narrow ingredient query to avoid two sequential
+    // upstream requests. An empty result is preferable to slow, irrelevant ads.
+    const items=await fetchProducts(rawQuery);
     return reply({status:"ok",mode,area:mode==="best"?area:null,items});
   }catch(error){
     // Do not log URL or credentials.
