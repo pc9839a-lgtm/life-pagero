@@ -7,7 +7,7 @@ const read=p=>fs.readFileSync(path.join(DIST,p),"utf8");
 const check=(value,label)=>{if(!value)throw Error("[adpick-qa] "+label);};
 const home=read("index.html"),page=read("deals/index.html");
 const origin=read("life-editorial-20261105.css");
-check(home.includes('class="adpick-home-entry"'),'homepage shortcut missing');
+check(home.includes('class="life-home-service-card" href="/deals/"'),'homepage shortcut missing');
 check(home.includes('href="/deals/"'),'homepage route missing');
 check(home.includes('href="/adpick-deals.css?v=20261106e"'),'homepage shortcut style missing');
 check(page.includes('<h1>오늘의 핫딜</h1>'),'standalone deals H1 missing');
@@ -23,7 +23,8 @@ check(shoppingStyles.includes('var(--brand,#e95731)'),'site accent color missing
 check(shoppingStyles.includes('background:#202833'),'high-contrast hero background missing');
 check(shoppingStyles.includes('grid-column:span 2'),'featured product grid missing');
 check(read("adpick-deals.js").includes('adpick-card--featured'),'first product visual priority missing');
-check(home.includes('<h2>오늘의 핫딜</h2>'),'homepage deals title missing');
+check(home.includes('<strong>핫딜</strong>') && !home.includes('class="adpick-home-entry"'),
+  'homepage deals entry should be the existing navigation icon, without a duplicate promo banner');
 for(const unwanted of ['수익 추천', '애드픽 비즈 API 제공', '상품 데이터를 별도로 저장하거나', '가격 인하 상품이라는 의미가 아닙니다']) {
  check(!page.includes(unwanted),'internal implementation copy leaked into deals page: '+unwanted);
 }
@@ -80,4 +81,4 @@ try{
  check(food.status===200&&foodTagged===1,"food attribution failed");
  check(hits===3,"unexpected affiliate API request count");
 } finally {globalThis.fetch=realFetch;}
-console.log("[adpick-qa] PASS: separate Hot Deals menu, homepage entry, noindex offer listings, API secret isolation and no-cache responses.");
+console.log("[adpick-qa] PASS: standalone Hot Deals, homepage icon shortcut, noindex offer listings, API secret isolation and no-cache responses.");
