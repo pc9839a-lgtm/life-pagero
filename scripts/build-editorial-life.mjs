@@ -42,28 +42,84 @@ const transformHome=html=>{
   html=html.replace('<h2 id="compact-popular-title">많이 찾는 정보</h2>',
     '<h2 id="compact-popular-title">주요 생활정보</h2>');
 
-  // Main-only redesign: discovery tiles for the existing, functioning routes.
-  // Do not change their URLs, the global navigation, editorial content or ads.
-  const serviceItems=[
-    {href:'/today/',label:'오늘의 정보',hint:'뉴스 · 날씨 · 시세',icon:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18M7 14h4"/>'},
-    {href:'/finance/savings/',label:'금리 비교',hint:'예금 · 적금',icon:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>'},
-    {href:'/finance/loan-payment/',label:'대출 계산',hint:'이자 · 월 상환액',icon:'<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h2M14 11h2M8 15h2M14 15h2"/>'},
-    {href:'/food/',label:'먹거리',hint:'제철 · 레시피',icon:'<path d="M4 3v7a3 3 0 0 0 6 0V3M7 3v18M16 21V3c3 2 4 6 4 10h-4"/>'},
-    {href:'/events/',label:'축제·행사',hint:'축제 · 공연 · 전시',icon:'<path d="M3 7a3 3 0 0 0 0 6v4h18v-4a3 3 0 0 1 0-6V5H3v2Z"/><path d="M13 5v12" stroke-dasharray="2 2"/>'},
-    {href:'/deals/',label:'추천상품',hint:'제휴 상품 검색',icon:'<path d="M5 8h14l1 13H4L5 8ZM9 9V6a3 3 0 0 1 6 0v3"/>'}
+  // The supplied 4 × 3 reference is the homepage layout contract, not a card gallery.
+  // All twelve destinations are existing pages; content, tracking and sponsored links remain unchanged.
+  const services=[
+    {href:'/today/',label:'날씨',icon:'<path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/><circle cx="12" cy="12" r="4"/>'},
+    {href:'/finance/markets/',label:'증권',icon:'<path d="m3 17 7-7 4 4 7-8M15 6h6v6"/>'},
+    {href:'/finance/markets/',label:'코인',icon:'<path d="M10 3v18M14 3v18M7 7h8a3 3 0 0 1 0 6H8h8a3 3 0 0 1 0 6H7"/>'},
+    {href:'/finance/loan-payment/',label:'계산기',icon:'<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h2M14 11h2M8 15h2M14 15h2"/>'},
+    {href:'/food/',label:'먹거리',icon:'<path d="M4 3v7a3 3 0 0 0 6 0V3M7 3v18M16 21V3c3 2 4 6 4 10h-4"/>'},
+    {href:'/finance/savings/',label:'금리비교',icon:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>'},
+    {href:'/deals/',label:'핫딜',icon:'<path d="M5 8h14l1 13H4L5 8ZM9 9V6a3 3 0 0 1 6 0v3"/>'},
+    {href:'/finance/mortgage-calculator/',label:'주택대출',icon:'<path d="m3 10 9-7 9 7v10H3V10ZM9 20v-7h6v7"/>'},
+    {href:'/car/',label:'자동차',icon:'<path d="m5 11 1.5-5h11L19 11M4 11h16v8H4zM4 16h16M7 15h2M15 15h2M6 19v2M18 19v2"/>'},
+    {href:'/support/',label:'지원금',icon:'<rect x="3" y="6" width="18" height="15" rx="2"/><path d="M12 6v15M3 11h18M10 6c-6-1-6-6-3-6 2 0 5 4 5 6ZM14 6c6-1 6-6 3-6-2 0-5 4-5 6Z"/>'},
+    {href:'/events/',label:'축제·행사',icon:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18M8 15h3"/>'},
+    {href:'/topics/',label:'전체',icon:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'}
   ];
-  const serviceCards=serviceItems.map(item=>'<a class="life-home-service-card" href="'+item.href+'">'
+  const serviceLinks=services.map(item=>'<a class="life-home-service-card" href="'+item.href+'">'
     +'<span class="life-home-service-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+item.icon+'</svg></span>'
-    +'<span class="life-home-service-copy"><strong>'+item.label+'</strong><small>'+item.hint+'</small></span>'
-    +'<span class="life-home-service-arrow" aria-hidden="true">↗</span></a>').join('');
-  const serviceSection='<section class="life-home-services" aria-labelledby="life-home-services-title">'
-    +'<div class="life-home-section-head"><h2 id="life-home-services-title">바로가기</h2></div>'
-    +'<div class="life-home-service-grid">'+serviceCards+'</div></section>';
+    +'<span class="life-home-service-copy"><strong>'+item.label+'</strong></span></a>').join('');
+  const grid='<nav class="life-home-service-grid" aria-label="생활비서 서비스 바로가기">'+serviceLinks+'</nav>';
+  check((serviceLinks.match(/class="life-home-service-card"/g)||[]).length===12,'12 accessible shortcuts required');
+  // Preserve the working site search, but show it only when the header search control is selected.
+  html=html.replace('<span class="life-home-kicker">LIFE PORTAL</span>','');
+  html=html.replace('<h1>오늘 필요한 정보</h1>',
+    '<h1>오늘 궁금한 정보, 한곳에서</h1><p class="life-home-intro">날씨부터 금융·생활 도구까지</p>');
+  const searchForm=html.match(/<form class="portal-home-search"[\s\S]*?<\/form>/)?.[0];
+  check(searchForm && searchForm.includes('id="portal-home-q"'),'original search form must exist');
+  html=html.replace(searchForm,'<div class="life-home-search-panel" id="life-home-search">'+searchForm+'</div>');
+  const heroMatch=html.match(/<section class="hero portal-home-hero editorial-hero">[\s\S]*?<\/section>/)?.[0];
+  check(heroMatch,'hero markup missing');
+  html=html.replace(heroMatch,heroMatch.replace('</section>',grid+'</section>'));
+  const searchIcon='<a class="life-home-header-search" href="#life-home-search" aria-label="검색창 열기" title="검색">'
+    +'<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.5"/><path d="m16 16 5 5"/></svg></a>';
+  const headerEnd='</div><nav class="main-nav"';
+  check(html.includes(headerEnd),'home header anchor missing');
+  html=html.replace(headerEnd,searchIcon+headerEnd);
+
+  // Existing six editorial destinations are retained in an expandable area,
+  // instead of repeating another 6-card menu above the editorial feed.
   const topicAnchor='<section class="portal-home-section" aria-labelledby="portal-topic-title">';
-  check(html.includes(topicAnchor),'home category section missing');
-  html=html.replace(topicAnchor,serviceSection+topicAnchor);
-  check((html.match(/class="life-home-service-card"/g)||[]).length===6,
-    'main service links must all remain visible');
+  const topicStart=html.indexOf(topicAnchor);
+  const popularStart=html.indexOf('<section class="compact-popular"',topicStart);
+  check(topicStart>0 && popularStart>topicStart,'topic/popular sequence missing');
+  const topicSection=html.slice(topicStart,popularStart);
+  check((topicSection.match(/class="portal-topic-card compact-topic"/g)||[]).length===6,
+    'six existing editorial topics must be preserved');
+  html=html.slice(0,topicStart)+html.slice(popularStart);
+  const categoryDrawer='<details class="life-home-more-categories"><summary>생활정보 분야 더보기</summary>'
+    +topicSection+'</details>';
+  const archiveAnchor='<details class="modern-all-articles">';
+  check(html.includes(archiveAnchor),'article archive missing');
+  html=html.replace(archiveAnchor,categoryDrawer+archiveAnchor);
+
+  const spotlight=[
+    {href:'/support/basic-pension-2026/',title:'2026 기초연금 대상 확인',sub:'신청 조건과 선정기준액',kind:'pension',icon:'<path d="M12 2v20M7 7h9a3 3 0 0 1 0 6H8h8a3 3 0 0 1 0 6H6"/>'},
+    {href:'/car/car-inspection-period/',title:'자동차 검사기간 조회',sub:'검사 시기와 확인 방법',kind:'car',icon:'<path d="m5 11 1.5-5h11L19 11M4 11h16v8H4zM7 15h2M15 15h2"/>'},
+    {href:'/support/housing-benefit-2026/',title:'2026 주거급여 신청 조건',sub:'소득 기준과 신청 방법',kind:'house',icon:'<path d="m3 10 9-7 9 7v10H3V10ZM9 20v-7h6v7"/>'}
+  ];
+  const spotlightList=spotlight.map(item=>'<li><a href="'+item.href+'">'
+    +'<span class="life-home-spot-thumb life-home-spot-'+item.kind+'" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+item.icon+'</svg></span>'
+    +'<span class="life-home-spot-copy"><strong>'+item.title+'</strong><small>'+item.sub+'</small></span>'
+    +'<span class="life-home-spot-arrow" aria-hidden="true">›</span></a></li>').join('');
+  const popPattern=/(<section class="compact-popular"[\s\S]*?<ul>)[\s\S]*?(<\/ul><\/section>)/;
+  check(popPattern.test(html),'original home editorial picks missing');
+  html=html.replace(popPattern,'$1'+spotlightList+'$2');
+  html=html.replace('>주요 생활정보</h2>','>지금 확인할 생활정보</h2>');
+  // Move existing labelled ads above the deep archive, not below every other block.
+  const sponsorOpen='<section class="modern-sponsored-area" aria-label="광고 및 제휴">';
+  const sponsorStart=html.indexOf(sponsorOpen);
+  const sponsorClose='</section></div><aside class="sidebar">';
+  const sponsorEnd=html.indexOf(sponsorClose,sponsorStart);
+  check(sponsorStart>0 && sponsorEnd>sponsorStart,'sponsored section boundary missing');
+  const sponsorSection=html.slice(sponsorStart,sponsorEnd+'</section>'.length);
+  html=html.slice(0,sponsorStart)+html.slice(sponsorEnd+'</section>'.length);
+  const sponsorTarget='<details class="modern-all-articles">';
+  check(html.includes(sponsorTarget),'cannot relocate preserved sponsors');
+  html=html.replace(sponsorTarget,sponsorSection+sponsorTarget);
+  check((html.match(/data-affiliate="tenping-/g)||[]).length===4,'sponsored cards must not be lost');
 
   const latest='<details class="compact-explore compact-latest">';
   check(html.includes(latest),'home recently updated posts missing');
