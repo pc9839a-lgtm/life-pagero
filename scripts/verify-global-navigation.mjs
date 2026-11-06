@@ -4,7 +4,7 @@ import path from 'node:path';
 const DIST=path.resolve('dist');
 const EXPECTED=[
   ['/', '홈'], ['/today/','오늘'], ['/events/','축제·행사'], ['/food/','먹거리'], ['/deals/','핫딜'], ['/finance/','금융'],
-  ['/topics/','생활정보']
+  ['/real-estate/','분양정보'], ['/topics/','생활정보']
 ];
 const read=relative=>fs.readFileSync(path.join(DIST,relative),'utf8');
 const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(ent=>{
@@ -38,9 +38,10 @@ for(const absolute of walk(DIST).filter(p=>p.endsWith('.html'))){
   else if(pathname.startsWith('/food/'))want=3;
   else if(pathname.startsWith('/deals/'))want=4;
   else if(pathname.startsWith('/finance/'))want=5;
+  else if(pathname.startsWith('/real-estate/'))want=6;
   else if(pathname.startsWith('/topics/')||pathname.startsWith('/car/')||
           pathname.startsWith('/tools/car-cost/')||
-          pathname.startsWith('/support/'))want=6;
+          pathname.startsWith('/support/'))want=7;
   const currentIndices=entries.flatMap((entry,i)=>entry[2]?[i]:[]);
   if(currentIndices.length!==(want<0?0:1) || (want>=0&&currentIndices[0]!==want))
     fail('active section selection',relative);
@@ -61,7 +62,7 @@ for(const marker of ['grid-template-columns:repeat(4,minmax(0,1fr))','@media(max
 }
 for(const p of ['index.html','today/index.html','finance/index.html','finance/savings/index.html',
   'finance/markets/index.html','finance/loan-payment/index.html',
-  'car/index.html','support/index.html','topics/index.html','events/index.html','food/index.html','deals/index.html',
+  'car/index.html','support/index.html','topics/index.html','events/index.html','food/index.html','deals/index.html','real-estate/index.html',
   'tools/car-cost/index.html','finance/mortgage-calculator/index.html',
   'finance/savings-calculator/index.html','about/index.html','search/index.html']){
   if(!read(p).includes('aria-label="전체 메뉴"'))fail('global header lost',p);
@@ -85,4 +86,4 @@ if(!read('sitemap.xml').includes('<loc>https://pagero.kr/life/topics/</loc>')) {
 if(!JSON.parse(read('search-index.json')).some(e=>e.url==='/topics/')) {
   fail('Topics missing from local search index','search-index.json');
 }
-console.log('[nav-qa] '+checked+' HTML documents share an identical seven-link menu, correct active state, one stylesheet and working links.');
+console.log('[nav-qa] '+checked+' HTML documents share an identical eight-link menu, correct active state, one stylesheet and working links.');
