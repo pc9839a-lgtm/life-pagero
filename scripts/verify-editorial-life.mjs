@@ -77,8 +77,24 @@ check(home.includes('class="life-home-search-panel" id="life-home-search"')
   'search drawer or keyboard-search form broken');
 check(home.includes('<details class="life-home-more-categories">'),
   'original editorial category links are not accessible');
-check((home.match(/class="life-home-spot-thumb /g)||[]).length===3,
-  'three thumbnail editorial links missing');
+const editorialRows=home.match(/<section class="compact-popular"[\s\S]*?<\/section>/)?.[0]||'';
+check((editorialRows.match(/class="life-home-spot-thumb"/g)||[]).length===3,
+  'three published editorial thumbnails missing');
+check((editorialRows.match(/loading="lazy" decoding="async"/g)||[]).length===3,
+  'published editorial images not rendered');
+for(const marker of ['/support/basic-pension-2026/','/car/car-inspection-period/',
+  '/support/housing-benefit-2026/']){
+  check(editorialRows.includes('href="'+marker+'"'),'featured guide link missing: '+marker);
+}
+check(!editorialRows.includes('life-home-spot-thumb life-home-spot-'),
+  'generic illustration tiles should be replaced with real guide images');
+check(home.includes('class="life-home-tool-section"') &&
+  home.includes('id="life-tool-title"'),
+  'working calculator panel missing');
+for(const route of ['/finance/loan-payment/','/finance/savings-calculator/','/tools/car-cost/']){
+  check(home.includes('class="life-home-tool-link" href="'+route+'"'),
+    'calculator entry missing: '+route);
+}
 const sponsorPosition=home.indexOf('<section class="modern-sponsored-area"');
 const archivePosition=home.indexOf('<details class="modern-all-articles">');
 check(sponsorPosition>0 && archivePosition>sponsorPosition,
@@ -91,6 +107,20 @@ check(editorialStyle.includes('grid-auto-rows:minmax(112px,auto)') &&
 check(editorialStyle.includes('grid-auto-rows:minmax(98px,auto)') &&
       editorialStyle.includes('font-size:30px;line-height:1.22'),
   'mobile heading and touch targets still too small');
+check(editorialStyle.includes('grid-template-columns:1fr;gap:0') &&
+  editorialStyle.includes('.life-home-tool-section') &&
+  editorialStyle.includes('.life-home-spot-thumb img'),
+  'editorial photo and calculator layout CSS missing');
+check(editorialStyle.includes('max-width:430px') &&
+  editorialStyle.includes('grid-auto-rows:minmax(92px,auto)') &&
+  editorialStyle.includes('font-size:12.7px'),
+  '320-430px mobile service grid not optimized');
+check(editorialStyle.includes('overflow-x:auto;overflow-y:hidden;scrollbar-width:none') &&
+  editorialStyle.includes('min-height:44px;padding:13px 1px 10px'),
+  'sitewide 7-item navigation is not accessible on mobile');
+check(editorialStyle.includes('.life-home-tool-list{display:grid;grid-template-columns:1fr;gap:0}') &&
+  editorialStyle.includes('.life-home-tool-link{min-height:77px'),
+  'mobile calculators must be touch-friendly, single-column links');
 check(editorialStyle.includes('grid-template-columns:repeat(4,minmax(0,1fr))'),
   '4-column service layout CSS missing');
 check(editorialStyle.includes('.modern-sponsored-area .life-coupang-widget')
