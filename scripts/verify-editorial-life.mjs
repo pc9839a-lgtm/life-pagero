@@ -183,15 +183,21 @@ check(today.indexOf(todaySheet)>today.indexOf(generalSheet),
   'Today-only layout must load after the global stylesheet');
 const wideDashboard=read('today-wide.css');
 check(wideDashboard.includes('max-width:1360px') &&
-  wideDashboard.includes('grid-template-areas:"weather news" "stocks news" "crypto crypto"') &&
-  wideDashboard.includes('grid-template-areas:"weather" "news" "stocks" "crypto"'),
+  wideDashboard.includes('grid-template-areas:"weather news" "fx news" "crypto crypto"') &&
+  wideDashboard.includes('grid-template-areas:"weather" "news" "fx" "crypto"'),
   'Today desktop and mobile layouts must have separate information priorities');
 const positions=['data-today-weather','data-today-news',
-  'data-today-stocks','data-today-crypto'].map(k=>today.indexOf(k));
+  'data-today-fx','data-today-crypto'].map(k=>today.indexOf(k));
 check(positions.every((p,i)=>p>=0&&(i===0||p>positions[i-1])),
   'Today section priority changed');
+check(today.includes('data-today-fx')&&!today.includes('data-today-stocks'),
+  'Today stocks must be replaced by daily exchange rates');
+check(today.includes('data-fx-items') &&
+  today.includes('ECB') &&
+  !today.includes('>증권</h3>'),
+  'Today reference FX panel missing or stock panel still visible');
 for(const target of ['https://www.yna.co.kr/','https://www.weather.go.kr/',
-  'https://upbit.com/','https://data.krx.co.kr/']){
+  'https://upbit.com/','https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html']){
   check(today.includes(target),'Today official source lost: '+target);
 }
 const calc=read('finance/loan-payment/index.html');
