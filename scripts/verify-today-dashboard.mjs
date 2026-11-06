@@ -55,10 +55,10 @@ yes(!today.includes('class="site-shell today-shell"') &&
   'Old 890px site-shell/portal-page wrapper still constrains Today screen');
 yes(today.includes('class="today-vertical-list today-dashboard-grid"')&&!today.includes('class="today-full-grid"'),
   'Today needs a coherent first-screen dashboard without the old card grid');
-const order=['data-today-weather','data-today-news','data-today-stocks','data-today-crypto']
+const order=['data-today-weather','data-today-news','data-today-fx','data-today-crypto']
   .map(key=>today.indexOf(key));
 yes(order.every((position,index)=>position>=0&&(index===0||position>order[index-1])),
-  'Weather, news, stocks and crypto must follow editorial priority');
+  'Weather, news, exchange rates and crypto must follow editorial priority');
 const dashboardCss=read('today-dashboard.css');
 const wideCss=read('today-wide.css');
 yes(wideCss.includes('#main-content>.today-viewport') &&
@@ -66,7 +66,7 @@ yes(wideCss.includes('#main-content>.today-viewport') &&
   'Today dedicated stylesheet must use 100% viewport with no max-width cap');
 yes(today.includes('href="/today-wide.css"'),
   'New uncached full-viewport CSS is not linked from Today page');
-for(const id of ['weather','news','stocks','crypto']){
+for(const id of ['weather','news','fx','crypto']){
   yes(today.includes('id="today-'+id+'"'),
     'information section anchor missing: '+id);
 }
@@ -74,10 +74,26 @@ yes(!today.includes('class="today-section-nav"') &&
   today.includes('class="today-page-head"'),
   'remove the redundant anchor tab row to expose live information');
 yes(wideCss.includes('max-width:1360px') &&
-  wideCss.includes('grid-template-areas:"weather news" "stocks news" "crypto crypto"') &&
+  wideCss.includes('grid-template-areas:"weather news" "fx news" "crypto crypto"') &&
   wideCss.includes('@media(max-width:350px)') &&
-  wideCss.includes('grid-template-areas:"weather" "news" "stocks" "crypto"'),
+  wideCss.includes('grid-template-areas:"weather" "news" "fx" "crypto"'),
   'desktop first-fold dashboard or single-column mobile layout missing');
+yes(today.includes('data-today-fx')&&today.includes('data-fx-items') &&
+  today.includes('>환율</h3>') && !today.includes('data-today-stocks'),
+  'Today should replace stocks with exchange rates only');
+yes(today.includes('https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html'),
+  'ECB currency reference source link missing');
+yes(today.includes('미국 달러')===false &&
+  today.includes('마지막 발표 영업일'),
+  'Do not hardcode today exchange rate values in public HTML');
+yes(wideCss.includes('.today-fx-list') &&
+  wideCss.includes('grid-template-columns:repeat(2,minmax(0,1fr))') &&
+  wideCss.includes('.today-fx-list{grid-template-columns:1fr;gap:0}'),
+  'Desktop and mobile reference FX layout missing');
+const fxFunction=read('today-dashboard.js');
+yes(fxFunction.includes("get('today/api/fx')") &&
+  fxFunction.includes("document.querySelectorAll('[data-today-fx]').forEach(fx)"),
+  'Today browser must fetch and render the four reference rates');
 yes(!markets.includes('href="/today-wide.css"'),
   'Today-only viewport override leaked into another page');
 yes(dashboardCss.includes('.today-vertical-list{display:flex;flex-direction:column'),
@@ -105,4 +121,4 @@ yes(!index.some(x=>x.url.includes('today/api')),'API must never be in public sea
 for(const name of ['today-dashboard.css','today-dashboard.js']){
   yes(fs.statSync(path.join(DIST,name)).size>2500,'dashboard asset not generated: '+name);
 }
-console.log('[today-qa] /today/ weather and news first, desktop dashboard plus mobile stack, source links, SEO, ads and search passed.');
+console.log('[today-qa] /today/ weather, news, FX, crypto; finance/markets stocks unchanged; SEO, ads and mobile passed.');
