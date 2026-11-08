@@ -113,12 +113,16 @@ yes(!dashboardJs.includes('attachRefresh(') &&
   'Today must not poll API endpoints or show manual refresh controls');
 yes(!wideCss.includes('.today-refresh'),
   'Unused refresh button CSS still present');
-yes(dashboardJs.includes("if(box.dataset.weatherPreloaded!=='true')load();") &&
+yes(dashboardJs.includes("if(box.dataset.weatherPreloaded!=='true')whenViewed(node,load);") &&
   dashboardJs.includes("const data=initial||await get('today/api/news')") &&
   dashboardJs.includes("const data=initial||await get('today/api/crypto')") &&
   dashboardJs.includes('data-today-news-seed') &&
   dashboardJs.includes('data-today-crypto-seed'),
   'Warm Today widgets must reuse the first HTML snapshot with no duplicate API requests');
+yes(dashboardJs.includes('whenViewed(node,load)') &&
+  dashboardJs.includes('pendingRequests=new Map()') &&
+  !dashboardJs.includes('setInterval(load,6*3600000)'),
+  'Cold Today widgets must load on view, coalesce duplicates and never poll KRX');
 
 yes(today.includes('언론사 원문')&&today.includes('articles')===false,
   'full page should link to original stories without copied body');

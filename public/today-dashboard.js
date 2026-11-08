@@ -46,15 +46,48 @@
       box.replaceChildren(external(url,link,'today-official-link'));
     }
   };
-  async function get(url){
-    const controller=new AbortController();
-    const id=setTimeout(()=>controller.abort(),11500);
-    try{
-      const response=await fetch(prefix+url.replace(/^\//,''),{signal:controller.signal});
-      const payload=await response.json();
-      if(!response.ok || payload.status!=='ok')throw new Error(payload.message||'응답 오류');
-      return payload;
-    }finally{clearTimeout(id);}
+  // Only one request per URL while several widgets mount on the same page.
+  // No persistent storage: changing or refreshing the page fetches on demand.
+  const pendingRequests=new Map();
+  function get(url){
+    if(pendingRequests.has(url))return pendingRequests.get(url);
+    const job=(async()=>{
+      const controller=new AbortController();
+      const id=setTimeout(()=>controller.abort(),11500);
+      try{
+        const response=await fetch(prefix+(url.startsWith('/')?url.slice(1):url),{signal:controller.signal});
+        const payload=await response.json();
+        if(!response.ok || payload.status!=='ok')
+          throw new Error(payload.message||'응답 오류');
+        return payload;
+      }finally{clearTimeout(id);}
+    })();
+    pendingRequests.set(url,job);
+    job.finally(()=>{if(pendingRequests.get(url)===job)pendingRequests.delete(url);})
+      .catch(()=>{});
+    return job;
+  }
+  // Cold widgets do not consume a Functions request before the user reaches
+  // them. Respect background tabs as well as below-fold widgets.
+  function whenViewed(node,load){
+    let started=false,viewed=false,observer=null;
+    const tryStart=()=>{
+      if(started||!viewed||document.visibilityState==='hidden')return;
+      started=true;
+      observer?.disconnect();
+      document.removeEventListener?.('visibilitychange',tryStart);
+      load();
+    };
+    document.addEventListener?.('visibilitychange',tryStart);
+    if(typeof IntersectionObserver==='function'){
+      observer=new IntersectionObserver(entries=>{
+        if(entries.some(entry=>entry.isIntersecting)){viewed=true;tryStart();}
+      },{rootMargin:'0px',threshold:0});
+      observer.observe(node);
+    }else{
+      viewed=true;
+      tryStart();
+    }
   }
   function weather(node){
     const selector=node.querySelector('[data-weather-city]');
@@ -84,7 +117,7 @@
     selector?.addEventListener('change',load);
     // The HTML already carries the same shared edge snapshot. Only city
     // changes or cold data need a browser API request.
-    if(box.dataset.weatherPreloaded!=='true')load();
+    if(box.dataset.weatherPreloaded!=='true')whenViewed(node,load);
   }
   function news(node){
     const box=node.querySelector('[data-news-items]');
@@ -145,7 +178,8 @@
       }
     };
     picker?.addEventListener('change',render);
-    load();
+    if(initial)load();
+    else whenViewed(node,load);
   }
   function crypto(node){
     const box=node.querySelector('[data-coin-items]');
@@ -196,7 +230,8 @@
         status(node,'');
       }
     };
-    load();
+    if(initial)load();
+    else whenViewed(node,load);
   }
   // Fallback to the public read-only FX reference if a subpath proxy cannot
   // reach the Cloudflare Pages /today/api/fx route. Do not display guessed rates.
@@ -263,7 +298,7 @@
         }
       }
     };
-    if(box.dataset.fxPreloaded!=='true')load();
+    if(box.dataset.fxPreloaded!=='true')whenViewed(node,load);
   }
   function stock(node){
     const box=node.querySelector('[data-stock-items]');
@@ -291,8 +326,8 @@
         status(node,'');
       }
     };
-    load();
-    setInterval(load,6*3600000);
+    // Index closes are daily; background tabs must not poll KRX every 6h.
+    whenViewed(node,load);
   }
   document.querySelectorAll('[data-today-weather]').forEach(weather);
   document.querySelectorAll('[data-today-news]').forEach(news);

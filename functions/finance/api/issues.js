@@ -1,3 +1,5 @@
+import {cached} from '../../today/api/_shared.js';
+
 // Official source headlines only. This is not an exchange price feed and does
 // not claim real-time, exhaustive news coverage or editorially verified summaries.
 const FEEDS = [
@@ -49,19 +51,11 @@ async function load(feed){
       return [{title,url:address,publishedAt:iso,source:feed.name,type:feed.type}];
     });
 }
-const result=(body,status=200)=>new Response(JSON.stringify(body),{
-  status,headers:{
-    'Content-Type':'application/json; charset=utf-8',
-    'Cache-Control':status===200?'public, max-age=60, s-maxage=600':'no-store',
-    'X-Content-Type-Options':'nosniff'
-  }
-});
 export async function onRequestGet(context) {
-  const request=new Request(context.request.url,{method:'GET'});
-  const cache=typeof caches==='object'&&caches.default?caches.default:null;
-  const cached=cache?await cache.match(request):null;
-  if(cached)return cached;
-  const loaded=await Promise.allSettled(FEEDS.map(load));
+  // Official headlines are public and request-invariant. One shared cached
+  // response replaces four RSS requests per visitor/edge cache miss.
+  return cached(context,'finance-official-issues',1800,async()=>{
+    const loaded=await Promise.allSettled(FEEDS.map(load));
   const items=[],sources=[];
   loaded.forEach((res,index)=>{
     const feed=FEEDS[index];
@@ -71,9 +65,8 @@ export async function onRequestGet(context) {
   const seen=new Set();
   const unique=items.sort((a,b)=>b.publishedAt.localeCompare(a.publishedAt))
     .filter(item=>{if(seen.has(item.url))return false;seen.add(item.url);return true;}).slice(0,36);
-  if(!unique.length)return result({status:'unavailable',message:'현재 공식 발표·공시 피드를 확인할 수 없습니다.',sources},502);
-  const response=result({status:'ok',sourceType:'공식 발표·공시 RSS',retrievedAt:new Date().toISOString(),
-    partial:sources.some(x=>x.status!=='ok'),sources,items:unique},200);
-  if(cache)context.waitUntil(cache.put(request,response.clone()));
-  return response;
+    if(!unique.length)throw Error('FINANCE_NEWS_NO_VERIFIED_ITEMS');
+    return {sourceType:'공식 발표·공시 RSS',
+      partial:sources.some(x=>x.status!=='ok'),sources,items:unique};
+  },{staleSeconds:21600,retrySeconds:600});
 }

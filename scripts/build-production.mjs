@@ -51,6 +51,7 @@ const steps = [
   ['node', ['scripts/validate-compact-ui.mjs']],
   ['node', ['scripts/verify-today-dashboard.mjs']],
   ['node', ['scripts/today-cache.test.mjs']],
+  ['node', ['--test', 'scripts/api-cost.test.mjs']],
   ['node', ['scripts/verify-verified-rich-guides.mjs']],
   ['node', ['scripts/trim-life-ui-copy.mjs']],
   ['node', ['scripts/verify-trimmed-life-ui.mjs']],
@@ -73,6 +74,8 @@ const steps = [
   ['node', ['scripts/verify-food-hub.mjs']],
   ['node', ['scripts/verify-food-guides.mjs']],
   ['node', ['scripts/verify-events.mjs']],
+  ['node', ['scripts/write-function-routes.mjs']],
+  ['node', ['scripts/verify-function-routes.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);

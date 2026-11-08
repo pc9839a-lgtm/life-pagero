@@ -1,3 +1,5 @@
+import {cached} from '../../today/api/_shared.js';
+
 // Cloudflare Pages Function. FSS_API_KEY is a Cloudflare Pages secret
 // (never placed in browser HTML or checked into Git).
 const allow = new Set(['deposit','saving']);
@@ -43,11 +45,10 @@ export async function onRequestGet(context) {
     return json({status:'unconfigured',source:'금융감독원 금융상품한눈에',
       message:'현재 제공 가능한 공시 자료가 없습니다.',
       officialUrl:'https://finlife.fss.or.kr/'},503);
-  const cacheKey=new Request(url.toString(),{method:'GET'});
-  const cache=typeof caches==='object'&&caches.default?caches.default:null;
-  const cached=cache?await cache.match(cacheKey):null;
-  if(cached) return cached;
-  try{
+  // Public FSS rates are identical for all visitors and change on a daily
+  // disclosure cycle. Use a canonical key independent of parameter order or
+  // user hostname, with stale data during upstream interruptions.
+  const response=await cached(context,'fss-'+kind+'-'+group,21600,async()=>{
     const first=await readPage(key,kind,group,1);
     const max=Math.min(8,Math.max(1,Number(first.max_page_no)||1));
     const pages=[first];
@@ -87,18 +88,14 @@ export async function onRequestGet(context) {
       }];
     });
     if(!products.length)throw new Error('FSS_EMPTY');
-    const response=json({
-      status:'ok',source:'금융감독원 금융상품한눈에',kind,group,
-      retrievedAt:new Date().toISOString(),
+    return {
+      source:'금융감독원 금융상품한눈에',kind,group,
       returnedPages:pages.length,mayBeTruncated:pages.length<(Number(first.max_page_no)||1),
       count:products.length,products
-    },200,900);
-    if(cache)context.waitUntil(cache.put(cacheKey,response.clone()));
-    return response;
-  }catch(error){
-    console.error('FSS product data unavailable',String(error?.message||error));
-    return json({status:'unavailable',source:'금융감독원 금융상품한눈에',
-      message:'현재 공시 데이터를 불러오지 못했습니다. 공식 비교공시에서 확인하세요.',
-      officialUrl:'https://finlife.fss.or.kr/'},502);
-  }
+    };
+  },{staleSeconds:86400,retrySeconds:600});
+  // Keep the pre-existing allowlist CORS response for direct read-only clients.
+  const headers=new Headers(response.headers);
+  headers.set('Access-Control-Allow-Origin','https://pagero.kr');
+  return new Response(response.body,{status:response.status,headers});
 }
