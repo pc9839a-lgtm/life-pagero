@@ -12,7 +12,7 @@ check(home.includes('href="/deals/"'),'homepage route missing');
 check(home.includes('href="/adpick-deals.css?v=20261106e"'),'homepage shortcut style missing');
 check(page.includes('<h1>오늘의 핫딜</h1>'),'standalone deals H1 missing');
 check(page.includes('class="adpick-page-heading"'),'shopping heading layout missing');
-check(page.includes('class="adpick-hero"'),'distinct dark shopping hero missing');
+check(page.includes('class="adpick-hero"'),'shopping hero section missing');
 check(page.includes('class="adpick-eyebrow"'),'visible Hot Deals eyebrow missing');
 check(page.includes('class="adpick-search-field"'),'prominent shopping search missing');
 check(page.includes('class="adpick-products"'),'product list layout missing');
@@ -20,7 +20,8 @@ const shoppingStyles=read("adpick-deals.css");
 check(shoppingStyles.includes('grid-template-columns:repeat(4,minmax(0,1fr))'),'desktop shopping grid missing');
 check(shoppingStyles.includes('grid-template-columns:repeat(2,minmax(0,1fr))'),'mobile two-column grid missing');
 check(shoppingStyles.includes('var(--brand,#e95731)'),'site accent color missing');
-check(shoppingStyles.includes('background:#202833'),'high-contrast hero background missing');
+check(shoppingStyles.includes('background:#fff') && shoppingStyles.includes('border-bottom:1px solid var(--line)'),
+  'deals hero should use the same light editorial background and divider');
 check(shoppingStyles.includes('grid-column:span 2'),'featured product grid missing');
 check(read("adpick-deals.js").includes('adpick-card--featured'),'first product visual priority missing');
 check(home.includes('<strong>핫딜</strong>') && !home.includes('class="adpick-home-entry"'),
