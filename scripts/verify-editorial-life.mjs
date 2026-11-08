@@ -34,6 +34,10 @@ for(const absolute of pages){
     'primary headline altered '+relative);
   check(html.includes('aria-label="전체 메뉴"'),
     'global navigation lost '+relative);
+  check((html.match(/class="life-header-search-toggle"/g)||[]).length===1,
+    'exactly one common mobile search button required '+relative);
+  check(html.includes('aria-label="검색"'),
+    'mobile search control must be accessible '+relative);
   if(/^(?:car|support)\/[^/]+\/index\.html$/.test(relative)){
     check(html.includes('<details id="compact-full-guide" class="compact-full-guide" open>'),
       'complete original article is still collapsed '+relative);
@@ -115,6 +119,16 @@ const archivePosition=home.indexOf('<details class="modern-all-articles">');
 check(sponsorPosition>0 && archivePosition>sponsorPosition,
   'original full-width ad section must appear before deep article archive');
 const editorialStyle=read('life-editorial-20261106.css');
+check(editorialStyle.includes('.life-editorial .nav-inner{display:grid;grid-template-columns:repeat(8,minmax(0,1fr))') &&
+      editorialStyle.includes('.life-editorial .nav-inner{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))') &&
+      editorialStyle.includes('.life-editorial.life-modern-home .main-nav{display:block}') &&
+      editorialStyle.includes('.life-editorial .life-header-search-toggle{display:flex}'),
+  'sitewide navigation must be one-row desktop, 4x2 mobile and visible on the homepage');
+check(!editorialStyle.includes('.life-editorial.life-modern-home .header-search,.life-editorial.life-modern-home .main-nav{display:none}') &&
+      !editorialStyle.includes('overflow-x:auto;scrollbar-width:none;justify-content:flex-start') &&
+      !editorialStyle.includes('touch-action:pan-x;scroll-padding-inline'),
+  'old home-hidden or mobile-scrolling menu CSS must be removed');
+
 check(editorialStyle.includes('grid-template-columns:repeat(6,minmax(0,1fr))') &&
       editorialStyle.includes('width:30px;height:30px') &&
       editorialStyle.includes('font-size:clamp(29px,2.5vw,34px)'),
@@ -130,9 +144,10 @@ check(editorialStyle.includes('max-width:430px') &&
   editorialStyle.includes('grid-template-columns:repeat(3,minmax(0,1fr))') &&
   editorialStyle.includes('font-size:13px'),
   'mobile three-column quick navigation not optimized');
-check(editorialStyle.includes('overflow-x:auto;overflow-y:hidden;scrollbar-width:none') &&
-  editorialStyle.includes('min-height:44px;padding:13px 1px 10px'),
-  'sitewide 7-item navigation is not accessible on mobile');
+check(editorialStyle.includes('grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(43px,auto)') &&
+  editorialStyle.includes('.life-editorial .nav-inner a:nth-child(n+5){border-top:1px solid #f1f2f3}') &&
+  !editorialStyle.includes('overflow-x:auto;overflow-y:hidden;scrollbar-width:none'),
+  'sitewide 8-link navigation must be visible as 4x2 rows on mobile');
 check(editorialStyle.includes('.life-home-tool-list{display:grid;grid-template-columns:1fr;gap:0}') &&
   editorialStyle.includes('.life-home-tool-link{min-height:77px'),
   'mobile calculators must be touch-friendly, single-column links');

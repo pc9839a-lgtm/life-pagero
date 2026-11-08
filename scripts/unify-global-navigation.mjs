@@ -51,6 +51,17 @@ for(const file of files(DIST).filter(p=>p.endsWith('.html'))){
   const count=[...html.matchAll(nav)].length;
   if(count!==1)throw Error('[nav] Expected exactly one global menu in '+relative+', got '+count);
   html=html.replace(nav,render(section(pathname)));
+  // One visually identical search action on every mobile header. The desktop
+  // keeps its existing working search form; the home icon opens its local form.
+  const searchHref=pathname==='/'?'#life-home-search':'/search/';
+  const searchAction='<a class="life-header-search-toggle" href="'+searchHref+'" aria-label="검색" title="검색">'
+    +'<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">'
+    +'<circle cx="10.8" cy="10.8" r="6.5"/><path d="m16 16 5 5"/></svg></a>';
+  const headerClose='</div><nav class="main-nav"';
+  if(!html.includes(headerClose))throw Error('[nav] Header insertion point missing: '+relative);
+  if(html.includes('class="life-header-search-toggle"'))
+    throw Error('[nav] Duplicate site search control: '+relative);
+  html=html.replace(headerClose,searchAction+headerClose);
   if(!html.includes('href="'+CSS+'"')){
     if(!html.includes('</head>'))throw Error('[nav] Document head missing: '+relative);
     html=html.replace('</head>','<link rel="stylesheet" href="'+CSS+'"></head>');
@@ -59,4 +70,4 @@ for(const file of files(DIST).filter(p=>p.endsWith('.html'))){
   changed++;
 }
 if(changed<140)throw Error('[nav] Too few navigation documents: '+changed);
-console.log('[nav] One identical 7-link menu across '+changed+' pages; '+skipped+' non-site pages skipped.');
+console.log('[nav] One identical 8-link menu and mobile search across '+changed+' pages; '+skipped+' non-site pages skipped.');
