@@ -28,8 +28,8 @@ body.life-editorial{
 .life-editorial .top-strip{display:none}
 .life-editorial .site-header{position:relative;top:auto;z-index:10;background:#fff;box-shadow:none;border-bottom:1px solid var(--line);backdrop-filter:none}
 .life-editorial .header-inner,.life-editorial .nav-inner,.life-editorial .site-shell,.life-editorial .footer-inner,
-.life-editorial .top-strip-inner{width:calc(100% - 72px);max-width:1560px;margin-left:auto;margin-right:auto}
-.life-editorial .header-inner,.life-editorial .nav-inner{max-width:1160px}
+.life-editorial .top-strip-inner{width:calc(100% - 72px);max-width:1160px;margin-left:auto;margin-right:auto}
+.life-editorial .header-inner,.life-editorial .nav-inner,.life-editorial .site-shell,.life-editorial .footer-inner{max-width:1160px}
 .life-editorial .header-inner{display:flex;min-height:70px;align-items:center;justify-content:space-between;gap:20px;padding:10px 0}
 .life-editorial .brand{display:inline-flex;align-items:center;gap:12px;flex-shrink:0}
 .life-editorial .brand-mark{display:none}
