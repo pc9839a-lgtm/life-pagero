@@ -82,13 +82,23 @@
       }
     };
     selector?.addEventListener('change',load);
-    load();
+    // The HTML already carries the same shared edge snapshot. Only city
+    // changes or cold data need a browser API request.
+    if(box.dataset.weatherPreloaded!=='true')load();
   }
   function news(node){
     const box=node.querySelector('[data-news-items]');
     const picker=node.querySelector('[data-news-filter]');
     if(!box)return;
     let all=[];
+    // Embed contains only verified headlines from the shared edge snapshot;
+    // it preserves the local category filter and "more" control without HTTP.
+    let initial=null;
+    try{
+      const seed=node.querySelector('[data-today-news-seed]');
+      if(seed)initial=JSON.parse(seed.textContent);
+      if(!Array.isArray(initial?.items)||!initial.items.length)initial=null;
+    }catch(_){initial=null;}
     const render=()=>{
       const category=picker?.value||'all';
       const selected=all.filter(row=>category==='all'||row.category===category);
@@ -124,7 +134,8 @@
     const load=async()=>{
       status(node,'');
       try{
-        const data=await get('today/api/news');
+        const data=initial||await get('today/api/news');
+        initial=null;
         all=Array.isArray(data.items)?data.items:[];
         render();
         status(node,'언론사 · '+localTime(data.retrievedAt));
@@ -139,10 +150,17 @@
   function crypto(node){
     const box=node.querySelector('[data-coin-items]');
     if(!box)return;
+    let initial=null;
+    try{
+      const seed=node.querySelector('[data-today-crypto-seed]');
+      if(seed)initial=JSON.parse(seed.textContent);
+      if(!Array.isArray(initial?.items)||initial.items.length<3)initial=null;
+    }catch(_){initial=null;}
     const load=async()=>{
       status(node,'');
       try{
-        const data=await get('today/api/crypto');
+        const data=initial||await get('today/api/crypto');
+        initial=null;
         const items=(data.items||[]).slice(0,node.dataset.mode==='compact'?4:12);
         const list=create('div','today-coin-list');
         for(const row of items){

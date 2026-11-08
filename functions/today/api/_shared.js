@@ -106,6 +106,19 @@ export async function cached(context,key,seconds,loader,options={}){
       message:'현재 자료를 확인할 수 없습니다.'},502);
   }
 }
+// Read only an already-warm fresh snapshot. Never wake an upstream source
+// on the HTML path: a cold Today page must not wait for RSS/KMA/Upbit.
+export async function peekCached(key){
+  if(!/^[a-z0-9-]+$/.test(key))return null;
+  const store=cacheAvailable();
+  if(!store)return null;
+  try{
+    const response=await store.match(cacheKey(key,'fresh'));
+    if(!response?.ok)return null;
+    const data=await response.json();
+    return data?.status==='ok'?data:null;
+  }catch{return null;}
+}
 export function finite(value){
   if(value===''||value==null)return null;
   const n=Number(String(value).replaceAll(',',''));
