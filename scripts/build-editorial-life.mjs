@@ -22,7 +22,6 @@ const MENU_STYLE_HASHES=MENU_STYLES.map(name=>[name,createHash('sha256')
   .update(fs.readFileSync(path.join(DIST,name))).digest('hex').slice(0,12)]);
 const versionMenuStyles=html=>{
   for(const [name,hash] of MENU_STYLE_HASHES){
-    const prefix='<link rel="stylesheet" href="/'+name;
     // Replace an old fixed version (or unversioned href), not add CSS.
     const regexp=new RegExp('(<link rel="stylesheet" href="/'+
       name.replaceAll('.','\\.')+')(?:\\?[^"]*)?(")','g');
