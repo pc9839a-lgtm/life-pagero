@@ -42,9 +42,9 @@ for(const marker of ['food-shop-product-bottom','food-shop-price-label',
 }
 const hash=createHash('sha256').update(css).digest('hex').slice(0,12);
 for(const fontRule of [
-  'font-size:19px;line-height:1.82',
-  'font-size:17px;font-weight:750;background:#fafbfc',
-  '.food-guide-table-wrap td{color:#33414d;font-size:17px}',
+  'font-size:var(--life-body-size);line-height:var(--life-body-line)',
+  'font-size:var(--life-body-size);font-weight:750;background:#fafbfc',
+  '.food-guide-table-wrap td{color:#33414d;font-size:var(--life-body-size)}',
   '.food-shop-retry[hidden]{display:none'
 ]){
   check(css.includes(fontRule),'food desktop readability/fallback CSS missing '+fontRule);
