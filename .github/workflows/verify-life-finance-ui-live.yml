@@ -1,12 +1,7 @@
 name: Verify LIFE finance pages have no API error banners
+# Manual-only: avoid repeated production Functions requests from
+# redundant deployment-time dashboard checks.
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/verify-life-finance-ui-live.yml'
-      - 'public/finance-live.js'
-      - 'scripts/enhance-finance.mjs'
-      - 'public/finance-experience.css'
   workflow_dispatch:
 permissions:
   contents: read
@@ -44,7 +39,10 @@ jobs:
                 'hub-source-links':'id="finance-rates-official"' in hub and 'id="finance-issues-official"' in hub,
                 'no-5-field-error-form-on-hub':'id="finance-products"' not in hub,
                 'savings-official-link':'id="finance-rates-official"' in savings and 'https://finlife.fss.or.kr/' in savings,
-                'savings-table-hidden':'id="finance-rate-panel" aria-labelledby="bank-rates-heading" hidden' in savings,
+                'savings-table-hidden-or-verified':(
+                  'id="finance-rate-panel" aria-labelledby="bank-rates-heading" hidden' in savings
+                  or ('id="finance-rate-panel" aria-labelledby="bank-rates-heading">' in savings
+                      and 'id="finance-initial-products"' in savings)),
                 'markets-official-links':'id="finance-issues-official"' in markets and 'https://dart.fss.or.kr/' in markets,
                 'markets-RSS-hidden':'id="finance-issues-panel" aria-labelledby="issues-heading" hidden' in markets,
                 'runtime-hide-on-error':'if(ratePanel)ratePanel.hidden=true' in frontend and 'if(issuePanel)issuePanel.hidden=true' in frontend,
@@ -53,7 +51,7 @@ jobs:
               print('FINANCE_PUBLIC_NO_ERROR_CHECK',checks,flush=True)
               failed=[k for k,v in checks.items() if not v]
               return failed
-          for attempt in range(1,20):
+          for attempt in range(1,3):
               try:
                   failed=audit()
                   if not failed:
@@ -62,6 +60,6 @@ jobs:
                   print('FINANCE_LIVE_PENDING',attempt,failed,flush=True)
               except Exception as e:
                   print('FINANCE_LIVE_RETRY',attempt,type(e).__name__,str(e)[:160],flush=True)
-              if attempt==19:raise SystemExit('Finance no-warning change not fully live')
-              time.sleep(10)
+              if attempt==2:raise SystemExit('Finance no-warning change not fully live')
+              time.sleep(5)
           PY

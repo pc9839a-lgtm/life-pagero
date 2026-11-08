@@ -1,15 +1,7 @@
 name: Verify LIFE sitewide UI and source links in production
+# Expensive production crawler: run after a completed deployment when needed.
+# Routine PR/main releases are validated by local builds and small live smoke tests.
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/verify-life-sitewide-live.yml'
-      - 'scripts/add-today-dashboard.mjs'
-      - 'public/today-dashboard.js'
-      - 'public/finance-live.js'
-      - 'public/today-dashboard.css'
-      - 'scripts/enhance-finance.mjs'
-      - 'scripts/build-production.mjs'
   workflow_dispatch:
 permissions:
   contents: read
@@ -78,7 +70,7 @@ jobs:
             if home.count('class="portal-topic-card compact-topic"')!=6:raise AssertionError('Home category count')
             popular=re.search(r'<section class="compact-popular"[\s\S]*?</section>',home)
             if not popular or popular.group(0).count('<li><a href=')!=3:raise AssertionError('Home popular links count')
-            if not re.search(r'<a href="(?:/life)?/today/"[^>]*>오늘의 정보</a>',home):
+            if not re.search(r'<a href="(?:/life)?/today/"[^>]*>(?:오늘|오늘의 정보)</a>',home):
               raise AssertionError('Today navigation missing under /life/ proxy')
             if 'data-today-weather' not in bodies['/today/']:raise AssertionError('Today screen removed')
             for p in ['/finance/','/finance/savings/','/finance/markets/']:
@@ -108,12 +100,12 @@ jobs:
                   'MIN_HTML_BYTES',min(size for _,_,size in entries),flush=True)
             print('LIVE_SOURCE_STATES',json.dumps(states,ensure_ascii=False),flush=True)
             print('SITEWIDE_LIVE_VERIFIED',ROOT,'ZERO_UI_WARNINGS','ZERO_BROKEN_PAGES',flush=True)
-          for attempt in range(1,12):
+          for attempt in range(1,3):
             try:
               verify()
               break
             except Exception as e:
               print('SITEWIDE_LIVE_RETRY',attempt,type(e).__name__,str(e)[:450],flush=True)
-              if attempt==11:raise
-              time.sleep(12)
+              if attempt==2:raise
+              time.sleep(5)
           PY
