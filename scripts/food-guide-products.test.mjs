@@ -205,6 +205,9 @@ test('loading state coalesces multiple manual taps into only one API request',as
   r.retry.events.click();
   r.retry.events.click();
   assert.equal(r.fetches.length,1);
+  // Let the async fetch continuation enter response.json() before resolving it.
+  await new Promise(resolve=>setTimeout(resolve,5));
+  assert.equal(typeof finish,'function');
   finish({status:'ok',items:[product('생가리비 1kg')]});
   await new Promise(resolve=>setTimeout(resolve,15));
   assert.equal(r.results.children.length,1);
