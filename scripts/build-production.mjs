@@ -21,6 +21,8 @@ const steps = [
   ['node', ['--check', 'scripts/sync-events.mjs']],
   ['node', ['--check', 'scripts/build-events.mjs']],
   ['node', ['--check', 'scripts/verify-events.mjs']],
+  ['node', ['--check', 'functions/today/[[path]].js']],
+  ['node', ['--check', 'public/today-dashboard.js']],
   ['node', ['--check', 'public/events-ui.js']],
   ['node', ['--test', 'scripts/events.test.mjs']],
   [npm, ['run', 'validate:content']],
