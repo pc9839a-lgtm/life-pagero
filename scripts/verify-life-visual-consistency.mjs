@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 
 // Assert the actual source stylesheet for each route, not a late override.
 const ROOT=path.resolve('dist');
@@ -113,4 +114,26 @@ for(const file of [
     'sitewide theme should appear once '+file);
   assert.ok(html.includes('aria-label="전체 메뉴"'),'nav missing '+file);
 }
+// CSS version changes whenever its content changes. Otherwise an updated
+// menu can still appear with the previous typography from the browser cache.
+const versionedStyles=['events-ui.css','real-estate.css','adpick-deals.css',
+  'life-food.css','finance-experience.css'];
+const filesIn=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(item=>{
+  const full=path.join(dir,item.name);
+  return item.isDirectory()?filesIn(full):[full];
+});
+let checkedLinks=0;
+for(const file of filesIn(ROOT).filter(file=>file.endsWith('.html'))){
+  const html=fs.readFileSync(file,'utf8');
+  for(const style of versionedStyles){
+    const prefix='href="/'+style;
+    if(!html.includes(prefix))continue;
+    const hash=createHash('sha256').update(read(style)).digest('hex').slice(0,12);
+    assert.ok(html.includes(prefix+'?v='+hash+'"'),
+      'CSS cache version is stale in '+path.relative(ROOT,file)+': '+style);
+    checkedLinks++;
+  }
+}
+assert.ok(checkedLinks>=5,'expected versioned menu styles on the public pages');
+
 console.log('[visual-consistency] PASS: one Pretendard face and desktop/mobile H1/H2/card/body/lead scales across ten menus and seven stylesheets');
