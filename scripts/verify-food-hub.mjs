@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {createHash} from 'node:crypto';
 
 const DIST=path.resolve('dist');
 const read=file=>fs.readFileSync(path.join(DIST,file),'utf8');
@@ -18,7 +19,10 @@ check(page.includes('id="food-pick"')&&page.includes('id="food-result"'),'dinner
 check(page.includes('삼치')&&page.includes('가리비')&&page.includes('해양수산부 발표 확인'),'verified November example missing');
 check(page.includes('관련 상품 검색')&&page.includes('/deals/?q='),'ADPICK search handoff missing');
 check(page.includes('제휴 상품 링크를 통해 구매하면'),'affiliate disclosure missing');
-check(page.includes('src="/life-food.js"')&&page.includes('href="/life-food.css"'),'assets missing');
+const foodCssHash=createHash('sha256').update(read('life-food.css')).digest('hex').slice(0,12);
+check(page.includes('src="/life-food.js"')&&
+  page.includes('href="/life-food.css?v='+foodCssHash+'"'),
+  'food assets or current versioned CSS missing');
 check((nav.match(/<a href=/g)||[]).length===8,'eight-link navigation missing');
 check(nav.includes('<a href="/food/" aria-current="page">먹거리</a>'),'food active menu missing');
 check(read('sitemap.xml').includes('<loc>https://pagero.kr/life/food/</loc>'),'sitemap missing');
