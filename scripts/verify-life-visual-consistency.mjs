@@ -1,0 +1,116 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+
+// Assert the actual source stylesheet for each route, not a late override.
+const ROOT=path.resolve('dist');
+const read=file=>fs.readFileSync(path.join(ROOT,file),'utf8');
+const esc=value=>value.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&');
+const css={
+  theme:read('life-editorial-20261106.css'),
+  today:read('today-wide.css'),
+  food:read('life-food.css'),
+  events:read('events-ui.css'),
+  estate:read('real-estate.css'),
+  deals:read('adpick-deals.css'),
+  finance:read('finance-experience.css')
+};
+const expectRules=(sheet,selector,property,value)=>{
+  const regex=new RegExp(esc(selector)+'\\s*\\{([^{}]*)\\}','g');
+  const matches=[...css[sheet].matchAll(regex)];
+  assert.ok(matches.length>0,'missing '+sheet+': '+selector);
+  for(const item of matches){
+    const declaration=new RegExp(esc(property)+'\\s*:\\s*'+esc(value)+'\\s*(?:;|$)');
+    assert.match(item[1],declaration,sheet+' '+selector+' must use '+property+': '+value);
+  }
+};
+for(const marker of [
+  '--life-page-title-size:36px;--life-section-title-size:24px',
+  '--life-body-size:16px;--life-lead-size:15px',
+  '--life-page-title-size:28px;--life-section-title-size:21px',
+  '--life-body-size:15px;--life-lead-size:14px',
+  'font-family:"Pretendard Variable",Pretendard',
+  '.life-editorial :is(input,button,select,textarea){font-family:inherit}',
+  '--brand:#e95731'
+])assert.ok(css.theme.includes(marker),'missing design token: '+marker);
+
+const pageTitles=[
+ ['theme','.life-editorial.life-modern-home .portal-home-hero h1'],
+ ['theme','.life-editorial.life-modern-category .category-hero h1'],
+ ['theme','.life-editorial.life-modern-article .article-header h1'],
+ ['theme','.life-editorial .topics-page h1'],
+ ['theme','.life-editorial .portal-page.finance-page h1,.life-editorial .portal-page h1'],
+ ['theme','.life-editorial .today-wide-content h1'],
+ ['theme','.life-editorial .food-guide-header h1'],
+ ['today','.life-editorial .today-wide-content .today-page-head h1'],
+ ['food','.life-editorial .food-hero h1'],
+ ['events','.events-intro h1,.events-detail-head h1'],
+ ['events','.events-intro h1'],
+ ['estate','.life-editorial .re-h1 h1'],
+ ['deals','.life-editorial .adpick-page-heading h1'],
+ ['finance','.finance-page h1']
+];
+for(const [sheet,selector] of pageTitles)
+  expectRules(sheet,selector,'font-size','var(--life-page-title-size)');
+const sections=[
+ ['theme','.life-editorial.life-modern-home .compact-popular-top h2'],
+ ['theme','.life-editorial.life-modern-home .life-home-section-heading h2'],
+ ['theme','.life-editorial .finance-section-title h2'],
+ ['theme','.life-editorial .today-widget-heading h3'],
+ ['theme','.life-editorial .food-guide-section h2'],
+ ['today','.life-editorial .today-wide-content .today-widget-heading h3'],
+ ['food','.life-editorial .food-section h2'],
+ ['events','.events-empty h2'],
+ ['deals','.life-editorial .adpick-section-head h2'],
+ ['finance','.finance-section-title h2']
+];
+for(const [sheet,selector] of sections)
+  expectRules(sheet,selector,'font-size','var(--life-section-title-size)');
+const cardTitles=[
+ ['theme','.life-editorial.life-modern-home .compact-latest .post-card h3'],
+ ['theme','.life-editorial.life-modern-category .post-card h3'],
+ ['theme','.life-editorial .finance-hub-card strong'],
+ ['theme','.life-editorial .today-news-title'],
+ ['theme','.life-editorial .food-shop-name'],
+ ['today','.life-editorial .today-wide-content .today-news-title'],
+ ['food','.life-editorial .food-card-top h3'],
+ ['events','.events-card h3'],
+ ['estate','.life-editorial .re-card h2']
+];
+for(const [sheet,selector] of cardTitles)
+  expectRules(sheet,selector,'font-size','var(--life-card-title-size)');
+for(const [sheet,selector] of [
+ ['theme','.life-editorial.life-modern-article .article-content'],
+ ['theme','.life-editorial .food-guide-section p,.life-editorial .food-guide-section li']
+])expectRules(sheet,selector,'font-size','var(--life-body-size)');
+for(const [sheet,selector] of [
+ ['theme','.life-editorial.life-modern-home .life-home-intro'],
+ ['theme','.life-editorial .food-guide-lead'],
+ ['today','.life-editorial .today-wide-content .today-page-intro'],
+ ['events','.events-intro p'],
+ ['estate','.life-editorial .re-heading p'],
+ ['deals','.life-editorial .adpick-page-heading p'],
+ ['finance','.finance-page-intro']
+])expectRules(sheet,selector,'font-size','var(--life-lead-size)');
+
+assert.ok(!css.events.includes('#1769e0'),'blue events accent still active');
+assert.ok(!css.finance.includes('#1769e0'),'blue finance accent still active');
+assert.ok(!css.estate.includes('#1450ef'),'blue estate accent still active');
+assert.ok(css.estate.includes('font-family:inherit'),'estate overrides site font');
+assert.ok(css.deals.includes('font-family:inherit'),'deals overrides site font');
+assert.ok(!css.deals.includes('background:#202833'),'inconsistent deals hero remains');
+assert.ok(css.theme.includes('.life-editorial .nav-inner{display:grid;grid-template-columns:repeat(8,minmax(0,1fr))'),'desktop nav lost');
+assert.ok(css.theme.includes('.life-editorial .nav-inner{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))'),'mobile nav lost');
+for(const file of [
+ 'index.html','today/index.html','events/index.html',
+ 'food/index.html','deals/index.html','finance/index.html',
+ 'real-estate/index.html','topics/index.html',
+ 'car/index.html','support/index.html'
+]){
+  const html=read(file);
+  assert.ok(html.includes('class="life-modern life-editorial '),'theme body missing '+file);
+  assert.equal((html.match(/href="\/life-editorial-20261106\.css\?v=/g)||[]).length,1,
+    'sitewide theme should appear once '+file);
+  assert.ok(html.includes('aria-label="전체 메뉴"'),'nav missing '+file);
+}
+console.log('[visual-consistency] PASS: one Pretendard face and desktop/mobile H1/H2/card/body/lead scales across ten menus and seven stylesheets');
