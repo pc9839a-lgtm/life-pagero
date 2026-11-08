@@ -5,14 +5,25 @@
 body.life-editorial{
   --brand:#e95731;--brand-dark:#e95731;--brand-soft:#f5f6f7;
   --ink:#1c232b;--muted:#707983;--line:#e6e7e8;
-  --surface:#fff;--bg:#fff;--radius:6px;--shadow:none;--content:1560px;
+  --surface:#fff;--bg:#fff;--radius:8px;--shadow:none;--content:1160px;
+  /* One typography and UI rhythm for home, all hubs and article templates. */
+  --life-page-title-size:36px;--life-section-title-size:24px;
+  --life-subsection-title-size:20px;--life-card-title-size:17px;
+  --life-body-size:16px;--life-lead-size:15px;--life-caption-size:12px;
+  --life-heading-color:#202832;--life-muted-color:#6c7782;
+  --life-heading-weight:800;--life-section-weight:780;--life-card-weight:750;
+  --life-heading-tracking:-.045em;--life-heading-line:1.3;--life-body-line:1.75;
+  --life-content-gap:24px;--life-card-radius:8px;
   background:#fff;color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;
-  font-size:15px;line-height:1.6;letter-spacing:-.012em;word-break:keep-all;
+  font-size:var(--life-body-size);line-height:var(--life-body-line);letter-spacing:-.012em;word-break:keep-all;
   overflow-wrap:break-word;-webkit-font-smoothing:antialiased;
 }
 .life-editorial a{color:inherit;text-decoration:none}
 .life-editorial a:hover{color:var(--brand)}
 .life-editorial button,.life-editorial input,.life-editorial select,.life-editorial textarea{font:inherit}
+/* All elements inherit the same Pretendard face (including form controls). */
+.life-editorial :is(input,button,select,textarea){font-family:inherit}
+.life-editorial :is(h1,h2,h3){font-family:inherit;letter-spacing:var(--life-heading-tracking)}
 .life-editorial :focus-visible{outline:2px solid var(--brand);outline-offset:3px}
 .life-editorial .top-strip{display:none}
 .life-editorial .site-header{position:relative;top:auto;z-index:10;background:#fff;box-shadow:none;border-bottom:1px solid var(--line);backdrop-filter:none}
@@ -71,15 +82,15 @@ body.life-editorial{
 }
 .life-editorial.life-modern-home .life-home-title-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .life-editorial.life-modern-home .portal-home-hero h1{
-  max-width:none;margin:0;font-size:clamp(29px,2.5vw,34px);
-  line-height:1.3;font-weight:790;letter-spacing:-.045em;color:#161b20
+  max-width:none;margin:0;font-size:var(--life-page-title-size);
+  line-height:var(--life-heading-line);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color)
 }
 .life-editorial.life-modern-home .life-home-all-link{
   display:inline-flex;align-items:center;gap:4px;flex:none;color:var(--brand);
   text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap
 }
 .life-editorial.life-modern-home .life-home-all-link:hover{color:var(--brand)}
-.life-editorial.life-modern-home .life-home-intro{margin:0;color:#636e78;font-size:18px;line-height:1.5}
+.life-editorial.life-modern-home .life-home-intro{margin:0;color:var(--life-muted-color);font-size:var(--life-lead-size);line-height:1.6}
 .life-editorial.life-modern-home .life-home-search-panel{display:none;width:100%;margin:19px 0 0}
 .life-editorial.life-modern-home .life-home-search-panel:target{display:block}
 .life-editorial.life-modern-home .portal-search-suggestions{display:none}
@@ -126,7 +137,7 @@ body.life-editorial{
 /* Complete directory below the news and calculators, not an accordion above the fold. */
 .life-editorial.life-modern-home .life-home-other-services{margin:16px 14px 29px;padding:16px 0 0;border-top:1px solid #e7e9eb}
 .life-editorial.life-modern-home .life-home-other-services .life-home-section-heading{margin:0 0 7px}
-.life-editorial.life-modern-home .life-home-other-services .life-home-section-heading h2{font-size:20px}
+.life-editorial.life-modern-home .life-home-other-services .life-home-section-heading h2{font-size:var(--life-section-title-size);line-height:1.35;font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
 .life-editorial.life-modern-home .life-home-more-links{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:0;padding:0
 }
@@ -147,8 +158,8 @@ body.life-editorial{
   margin:0;padding:19px 0 12px;border:0
 }
 .life-editorial.life-modern-home .compact-popular-top h2{
-  margin:0;color:#161b21;font-size:27px;font-weight:800;letter-spacing:-.044em
-}
+  margin:0;color:var(--life-heading-color);font-size:var(--life-section-title-size);font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking)
+;line-height:1.35;}
 .life-editorial.life-modern-home .compact-popular-top>a{color:#7d858b;font-size:13px}
 .life-editorial.life-modern-home .compact-popular ul{
   display:grid;grid-template-columns:1fr;list-style:none;gap:0;margin:0;padding:0
@@ -177,7 +188,7 @@ body.life-editorial{
 /* Real tools: one row, visible labels, no misleading numerical metrics. */
 .life-editorial.life-modern-home .life-home-tool-section{margin:34px 14px 35px;padding:0}
 .life-editorial.life-modern-home .life-home-section-heading{display:flex;align-items:baseline;justify-content:space-between;gap:15px;margin:0 0 14px}
-.life-editorial.life-modern-home .life-home-section-heading h2{margin:0;font-size:25px;font-weight:800;letter-spacing:-.045em;color:#1c232a;line-height:1.35}
+.life-editorial.life-modern-home .life-home-section-heading h2{margin:0;font-size:var(--life-section-title-size);font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);line-height:1.35}
 .life-editorial.life-modern-home .life-home-section-heading>a{font-size:13px;font-weight:560;color:#73808a;white-space:nowrap}
 .life-editorial.life-modern-home .life-home-tool-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .life-editorial.life-modern-home .life-home-tool-link{
@@ -231,13 +242,13 @@ body.life-editorial{
 }
 .life-editorial.life-modern-home .compact-latest .post-thumb img{width:100%;height:100%;object-fit:cover}
 .life-editorial.life-modern-home .compact-latest .post-body{min-width:0;padding:0}
-.life-editorial.life-modern-home .compact-latest .post-card h3{margin:5px 0;font-size:17px;line-height:1.42;font-weight:760;letter-spacing:-.03em}
+.life-editorial.life-modern-home .compact-latest .post-card h3{margin:5px 0;font-size:var(--life-card-title-size);line-height:1.45;font-weight:var(--life-card-weight);letter-spacing:-.025em;color:var(--life-heading-color);}
 .life-editorial.life-modern-home .compact-latest .post-card p{font-size:12px;color:#79828c;line-height:1.5}
 .life-editorial.life-modern-home .compact-tools .compact-tool-links{display:flex;flex-wrap:wrap;gap:8px;padding:16px 0}
 .life-editorial.life-modern-home .compact-tool-links a{display:inline-flex;padding:9px 12px;border:1px solid #e3e6e9;border-radius:6px;background:#fff;font-size:13px}
 .life-editorial.life-modern-home .compact-tools .compact-tool-links a:hover{border-color:var(--brand);color:var(--brand)}
 .life-editorial.life-modern-home .life-home-more-categories .portal-home-section{margin:12px 0 20px;padding:0;border:0;background:#fff}
-.life-editorial.life-modern-home .life-home-more-categories .portal-section-heading h2{font-size:16px;margin:0 0 12px}
+.life-editorial.life-modern-home .life-home-more-categories .portal-section-heading h2{font-size:var(--life-section-title-size);margin:0 0 12px;line-height:1.35;font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
 .life-editorial.life-modern-home .life-home-more-categories .portal-topic-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0}
 .life-editorial.life-modern-home .life-home-more-categories .portal-topic-card.compact-topic{margin:0;padding:0;border:1px solid #e8ebed;border-radius:8px;background:#fff;min-width:0}
 .life-editorial.life-modern-home .life-home-more-categories .compact-topic-link{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:88px;padding:12px 4px;gap:7px;text-align:center}
@@ -363,8 +374,8 @@ body.life-editorial{
 .life-editorial.life-modern-category .content-grid{display:block}
 .life-editorial.life-modern-category .main-column.section{width:100%;margin:0;padding:0;border:0;border-radius:0;background:transparent}
 .life-editorial.life-modern-category .category-hero{padding:10px 0 20px;border:0;border-bottom:2px solid #28313a;background:transparent;border-radius:0}
-.life-editorial.life-modern-category .category-hero h1{font-size:clamp(30px,3.1vw,43px);font-weight:850;letter-spacing:-.06em}
-.life-editorial.life-modern-category .category-hero p{color:#6e7782;font-size:14px}
+.life-editorial.life-modern-category .category-hero h1{font-size:var(--life-page-title-size);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);line-height:var(--life-heading-line);color:var(--life-heading-color);}
+.life-editorial.life-modern-category .category-hero p{color:var(--life-muted-color);font-size:var(--life-lead-size);line-height:1.6;}
 .life-editorial.life-modern-category .modern-list-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 0;border-bottom:1px solid var(--line)}
 .life-editorial.life-modern-category .modern-count{font-size:13px;font-weight:700;color:#66717e}
 .life-editorial.life-modern-category .modern-list-filter{width:min(100%,330px);height:39px;padding:7px 13px;background:#fafafa;border:1px solid #e1e4e7;border-radius:5px;font-size:13px}
@@ -372,7 +383,7 @@ body.life-editorial{
 .life-editorial.life-modern-category .post-card{display:grid;grid-template-columns:150px minmax(0,1fr);align-items:start;gap:21px;padding:20px 0;margin:0;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;background:#fff}
 .life-editorial.life-modern-category .post-thumb{width:150px;min-height:110px;max-height:125px;overflow:hidden;border-radius:5px;object-fit:cover}
 .life-editorial.life-modern-category .post-body{padding:0}
-.life-editorial.life-modern-category .post-card h3{margin:4px 0 8px;font-size:19px;line-height:1.45;font-weight:780}
+.life-editorial.life-modern-category .post-card h3{margin:4px 0 8px;font-size:var(--life-card-title-size);line-height:1.45;font-weight:var(--life-card-weight);letter-spacing:-.025em;color:var(--life-heading-color);}
 .life-editorial.life-modern-category .post-card p{color:#68737f;font-size:13px;line-height:1.7;margin:4px 0}
 .life-editorial.life-modern-category .post-card .post-meta{font-size:12px;color:#8a929c}
 .life-editorial.life-modern-category .compact-explore{margin:12px 0;border:0;border-bottom:1px solid var(--line);background:#fff}
@@ -383,7 +394,7 @@ body.life-editorial{
 
 /* Eight shared destinations are always in the same order on every page. */
 .life-editorial .topics-page{width:100%;max-width:none;margin:0;padding:12px 0 40px;border:0;border-radius:0;background:#fff}
-.life-editorial .topics-page h1{margin:0 0 25px;font-size:clamp(30px,3.2vw,43px);font-weight:830;color:#202832;letter-spacing:-.065em}
+.life-editorial .topics-page h1{margin:0 0 25px;font-size:var(--life-page-title-size);font-weight:var(--life-heading-weight);color:var(--life-heading-color);letter-spacing:var(--life-heading-tracking);line-height:var(--life-heading-line);}
 .life-editorial .topics-hub-list{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:none;margin:0;padding:0;border-top:2px solid #252c34}
 .life-editorial .topics-hub-link{display:grid;grid-template-columns:minmax(145px,220px) minmax(0,1fr) 22px;gap:15px;align-items:center;min-height:68px;padding:15px 5px;border-bottom:1px solid #e6e7e8;color:#27313c}
 .life-editorial .topics-hub-link:hover{background:#fffaf8;color:var(--brand)}
@@ -393,7 +404,7 @@ body.life-editorial{
 @media(max-width:700px){
   .life-editorial .nav-inner a{min-height:43px;font-size:12px}
   .life-editorial .topics-page{padding-top:6px}
-  .life-editorial .topics-page h1{font-size:30px;margin-bottom:18px}
+  .life-editorial .topics-page h1{font-size:var(--life-page-title-size);margin-bottom:18px;line-height:var(--life-heading-line);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
   .life-editorial .topics-hub-link{grid-template-columns:minmax(0,1fr) 14px;gap:5px 12px;padding:14px 3px;min-height:60px}
   .life-editorial .topics-hub-link strong{font-size:15px}
   .life-editorial .topics-hub-link span:not(.topics-chevron){grid-column:1;grid-row:2;font-size:12px}
@@ -405,7 +416,7 @@ body.life-editorial{
 .life-editorial.life-modern-article .content-grid{display:block}
 .life-editorial.life-modern-article .article-shell{display:block;width:100%;max-width:none;padding:0;border:0}
 .life-editorial.life-modern-article .article-header{max-width:1060px;margin:0 auto;padding:12px 0 22px;border-bottom:2px solid #303841;background:#fff}
-.life-editorial.life-modern-article .article-header h1{font-size:clamp(31px,3.8vw,48px);font-weight:850;line-height:1.27;letter-spacing:-.062em;color:#1e2730}
+.life-editorial.life-modern-article .article-header h1{font-size:var(--life-page-title-size);font-weight:var(--life-heading-weight);line-height:var(--life-heading-line);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color)}
 .life-editorial.life-modern-article .article-header p,.life-editorial.life-modern-article .article-header .article-meta{color:#78818b;font-size:13px}
 .life-editorial.life-modern-article .compact-answer{max-width:1060px;margin:24px auto 0;padding:19px 0 17px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:#fff}
 .life-editorial.life-modern-article .compact-answer-primary{margin:0;font-size:19px;line-height:1.7;font-weight:700;color:#26313c}
@@ -414,7 +425,7 @@ body.life-editorial{
 .life-editorial.life-modern-article .compact-more-answers>summary{font-size:13px;color:#686e77}
 .life-editorial.life-modern-article .compact-full-guide{display:block;max-width:1060px;margin:0 auto;padding:0;border:0;border-radius:0;background:#fff}
 .life-editorial.life-modern-article .compact-full-guide>summary{display:block;margin:0;padding:13px 0;border:0;font-size:12px;font-weight:630;color:#7c858f;cursor:pointer}
-.life-editorial.life-modern-article .article-content{padding:8px 0 28px;font-size:17px;line-height:1.93;color:#2d3540}
+.life-editorial.life-modern-article .article-content{padding:8px 0 28px;font-size:var(--life-body-size);line-height:var(--life-body-line);color:#2d3540}
 .life-editorial.life-modern-article .article-content p{margin:0 0 20px}
 .life-editorial.life-modern-article .article-content ul,.life-editorial.life-modern-article .article-content ol{padding-left:22px;margin:12px 0 24px}
 .life-editorial.life-modern-article .article-content li{padding:3px 0}
@@ -425,19 +436,19 @@ body.life-editorial{
 
 /* Finance pages: one reading plane with clear action rows. */
 .life-editorial .portal-page.finance-page{max-width:none;width:100%;padding:10px 0 35px;margin:0;border:0;border-radius:0;background:#fff}
-.life-editorial .portal-page.finance-page h1,.life-editorial .portal-page h1{font-size:clamp(29px,3.2vw,43px);font-weight:830;line-height:1.3;letter-spacing:-.065em;color:#202832}
+.life-editorial .portal-page.finance-page h1,.life-editorial .portal-page h1{font-size:var(--life-page-title-size);font-weight:var(--life-heading-weight);line-height:var(--life-heading-line);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color)}
 .life-editorial .portal-breadcrumbs{font-size:12px;color:#86909c;margin:0 0 15px}
 .life-editorial .finance-hub-grid,.life-editorial .finance-market-links{display:grid;grid-template-columns:1fr;gap:0;margin:16px 0 28px;border-top:2px solid #252c34}
 .life-editorial .finance-hub-card{display:flex;align-items:center;justify-content:space-between;min-height:59px;padding:16px 4px;background:#fff;border:0;border-bottom:1px solid var(--line);border-radius:0;color:#26303b}
 .life-editorial .finance-hub-card::after{content:"↗";font-size:16px;color:var(--brand);font-weight:750}
 .life-editorial .finance-hub-card:hover{color:var(--brand);background:#fffaf8;border-color:var(--line)}
-.life-editorial .finance-hub-card strong{font-size:17px;font-weight:750}
+.life-editorial .finance-hub-card strong{font-size:var(--life-card-title-size);font-weight:var(--life-card-weight);line-height:1.45;letter-spacing:-.025em;color:var(--life-heading-color);}
 .life-editorial .finance-hub-card span{display:none}
 .life-editorial .finance-official-shortcut{display:flex;flex-wrap:wrap;gap:10px;margin:17px 0}
 .life-editorial .finance-official-shortcut a{display:inline-flex;align-items:center;padding:10px 13px;border:1px solid #e3e5e8;border-radius:5px;font-size:13px;font-weight:700;background:#fff}
 .life-editorial .finance-official-shortcut a:hover{border-color:var(--brand);color:var(--brand)}
 .life-editorial .finance-data-section{padding:18px 0;margin:18px 0 0;border-top:1px solid var(--line)}
-.life-editorial .finance-section-title h2{font-size:20px;font-weight:800}
+.life-editorial .finance-section-title h2{font-size:var(--life-section-title-size);font-weight:var(--life-section-weight);line-height:1.35;letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
 .life-editorial .finance-filter-bar{background:#fafafa;border:1px solid var(--line);border-radius:5px;padding:14px}
 .life-editorial .finance-rate-table th{background:#fafafa;color:#5c6570}
 .life-editorial .finance-rate-table td{background:#fff}
@@ -455,8 +466,8 @@ body.life-editorial{
     margin:0 0 14px
   }
   .life-editorial #finance-rate-panel .finance-section-title h2{
-    font-size:19px;margin:0
-  }
+    font-size:var(--life-section-title-size);margin:0
+  ;line-height:1.35;font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
   .life-editorial #finance-rate-panel .finance-filter-bar{
     display:grid;
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -586,18 +597,18 @@ body.life-editorial{
    Headers, lists, weather values and fallback links stay actual live content. */
 .life-editorial #main-content>.today-viewport{display:block;width:100%;max-width:none;margin:0;padding:24px clamp(16px,3vw,56px) 50px}
 .life-editorial .today-wide-content{display:block;width:100%;max-width:none;margin:0;padding:0;border:0;background:#fff}
-.life-editorial .today-wide-content h1{font-size:clamp(31px,3.4vw,48px);line-height:1.25;font-weight:850;letter-spacing:-.066em;color:#1e2730;margin:8px 0 23px}
+.life-editorial .today-wide-content h1{font-size:var(--life-page-title-size);line-height:var(--life-heading-line);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);margin:8px 0 23px}
 .life-editorial .today-vertical-list{display:block;width:100%;max-width:none;margin:0;border-top:2px solid #252c35}
 .life-editorial .today-vertical-list>.today-widget{display:block;width:100%;max-width:none;height:auto;min-height:0;margin:0;padding:22px 0 23px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;box-shadow:none}
 .life-editorial .today-widget-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;min-height:30px;margin:0 0 12px}
-.life-editorial .today-widget-heading h3{font-size:21px;font-weight:830;line-height:1.35;color:#1e2630;letter-spacing:-.05em;margin:0}
+.life-editorial .today-widget-heading h3{font-size:var(--life-section-title-size);font-weight:var(--life-section-weight);line-height:1.35;color:var(--life-heading-color);letter-spacing:var(--life-heading-tracking);margin:0}
 .life-editorial .today-widget-heading a{font-size:12px;font-weight:720;color:var(--brand)}
 .life-editorial .today-widget-heading label{font-size:12px;color:#74808c}
 .life-editorial .today-widget-heading select{border:1px solid #dcdfe2;border-radius:4px;padding:6px 9px;background:#fff;font-size:13px;color:#313b45}
 .life-editorial .today-news-list{list-style:none;margin:0;padding:0}
 .life-editorial .today-news-list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 20px;align-items:center;margin:0;padding:13px 0;border:0;border-bottom:1px solid #eceeef}
 .life-editorial .today-news-list li:last-child{border-bottom:0}
-.life-editorial .today-news-title{grid-column:1;font-size:17px;line-height:1.5;font-weight:720;color:#242e37;letter-spacing:-.028em}
+.life-editorial .today-news-title{grid-column:1;font-size:var(--life-card-title-size);line-height:1.45;font-weight:var(--life-card-weight);color:var(--life-heading-color);letter-spacing:-.025em}
 .life-editorial .today-news-title:hover{color:var(--brand)}
 .life-editorial .today-news-meta{grid-column:2;font-size:12px;line-height:1.3;color:#87919c;text-align:right;white-space:nowrap}
 .life-editorial .today-widget-meta{display:block;margin:10px 0 0;font-size:11px;color:#8a949e;line-height:1.45}
@@ -627,7 +638,7 @@ body.life-editorial{
 .life-editorial .today-two-grid{display:block}
 .life-editorial .today-market-inserts .today-widget{padding:15px 0;border:0;border-bottom:1px solid var(--line);border-radius:0}
 .life-editorial .today-market-inserts .today-widget+.today-widget{margin-top:16px}
-.life-editorial .today-market-inserts .today-widget-heading h3{font-size:19px}
+.life-editorial .today-market-inserts .today-widget-heading h3{font-size:var(--life-section-title-size);line-height:1.35;font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
 
 /* Responsive editorial surfaces. */
 @media(max-width:1024px){
@@ -638,7 +649,12 @@ body.life-editorial{
   .life-editorial .today-news-meta{grid-column:1;text-align:left}
 }
 @media(max-width:700px){
-  body.life-editorial{font-size:14px}
+  body.life-editorial{
+    --life-page-title-size:28px;--life-section-title-size:21px;
+    --life-subsection-title-size:18px;--life-card-title-size:16px;
+    --life-body-size:15px;--life-lead-size:14px;--life-content-gap:18px;
+    font-size:var(--life-body-size)
+  }
   .life-editorial .header-inner,.life-editorial .nav-inner,.life-editorial .site-shell,.life-editorial .footer-inner{width:calc(100% - 24px)}
   .life-editorial.life-modern-home .home-shell{width:calc(100% - 24px)}
   .life-editorial .header-inner{min-height:62px;gap:10px;padding:8px 0}
@@ -654,8 +670,8 @@ body.life-editorial{
   .life-editorial .site-shell{padding:17px 0 35px}
   .life-editorial.life-modern-home .home-shell{width:calc(100% - 24px)}
   .life-editorial.life-modern-home .hero.portal-home-hero{padding:20px 4px 12px;margin:0}
-  .life-editorial.life-modern-home .portal-home-hero h1{font-size:26px;line-height:1.25;letter-spacing:-.04em;margin:0}
-  .life-editorial.life-modern-home .life-home-intro{font-size:14px}
+  .life-editorial.life-modern-home .portal-home-hero h1{font-size:var(--life-page-title-size);line-height:var(--life-heading-line);letter-spacing:var(--life-heading-tracking);margin:0;font-weight:var(--life-heading-weight);color:var(--life-heading-color);}
+  .life-editorial.life-modern-home .life-home-intro{font-size:var(--life-lead-size);line-height:1.6;color:var(--life-muted-color);}
   .life-editorial.life-modern-home .life-home-service-grid{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(83px,auto);gap:0;margin:14px auto 0;max-width:430px}
   .life-editorial.life-modern-home .life-home-service-card{min-height:83px;padding:8px 2px;gap:6px;border-radius:7px}
   .life-editorial.life-modern-home .life-home-service-icon{width:32px;height:32px}
@@ -664,12 +680,12 @@ body.life-editorial{
   .life-editorial.life-modern-home .life-home-title-row{align-items:center;gap:8px}
   .life-editorial.life-modern-home .life-home-all-link{font-size:12px}
   .life-editorial.life-modern-home .life-home-other-services{margin:12px 4px 25px;padding-top:13px}
-  .life-editorial.life-modern-home .life-home-other-services .life-home-section-heading h2{font-size:18px}
+  .life-editorial.life-modern-home .life-home-other-services .life-home-section-heading h2{font-size:var(--life-section-title-size);line-height:1.35;font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
   .life-editorial.life-modern-home .life-home-more-links{grid-template-columns:repeat(2,minmax(0,1fr))}
   .life-editorial.life-modern-home .life-home-more-links a{min-height:45px;font-size:13px;padding:8px 8px 8px 0}
   .life-editorial.life-modern-home .compact-popular{margin:7px 0 23px;padding:0 4px}
   .life-editorial.life-modern-home .compact-popular-top{padding:17px 0 9px}
-  .life-editorial.life-modern-home .compact-popular-top h2{font-size:21px}
+  .life-editorial.life-modern-home .compact-popular-top h2{font-size:var(--life-section-title-size);line-height:1.35;font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
   .life-editorial.life-modern-home .compact-popular-top>a{font-size:12px}
   .life-editorial.life-modern-home .compact-popular li a{min-height:94px;padding:10px 0;gap:13px}
   .life-editorial.life-modern-home .life-home-spot-thumb{width:76px;height:76px;border-radius:9px}
@@ -683,11 +699,11 @@ body.life-editorial{
   .life-editorial.life-modern-home .compact-latest .post-card,
   .life-editorial.life-modern-home .compact-latest .post-card:first-child{grid-template-columns:69px minmax(0,1fr);gap:10px;padding:11px 0}
   .life-editorial.life-modern-home .compact-latest .post-thumb{width:69px;height:67px;min-height:67px}
-  .life-editorial.life-modern-home .compact-latest .post-card h3{font-size:15px;line-height:1.45}
+  .life-editorial.life-modern-home .compact-latest .post-card h3{font-size:var(--life-card-title-size);line-height:1.45;font-weight:var(--life-card-weight);letter-spacing:-.025em;color:var(--life-heading-color);}
   .life-editorial.life-modern-home .life-home-more-categories .portal-topic-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .life-editorial.life-modern-home .life-home-tool-section{margin:22px 4px 28px}
   .life-editorial.life-modern-home .life-home-section-heading{margin:0 0 10px}
-  .life-editorial.life-modern-home .life-home-section-heading h2{font-size:21px}
+  .life-editorial.life-modern-home .life-home-section-heading h2{font-size:var(--life-section-title-size);line-height:1.35;font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
   .life-editorial.life-modern-home .life-home-section-heading>a{font-size:12px}
   .life-editorial.life-modern-home .life-home-tool-list{display:grid;grid-template-columns:1fr;gap:0}
   .life-editorial.life-modern-home .life-home-tool-link{min-height:77px;gap:12px;padding:12px 4px;border:0;border-bottom:1px solid #eaedef;border-radius:0}
@@ -712,23 +728,23 @@ body.life-editorial{
   .life-editorial.life-modern-home .modern-sponsored-area .life-sponsor-grid .life-affiliate-title{font-size:17px}
   .life-editorial.life-modern-home .modern-sponsored-area>.life-coupang-placement{padding:12px 10px}
   .life-editorial.life-modern-home .modern-sponsored-area .life-coupang-widget{width:100%;max-width:none;min-height:250px}
-  .life-editorial.life-modern-category .category-hero h1{font-size:30px}
+  .life-editorial.life-modern-category .category-hero h1{font-size:var(--life-page-title-size);line-height:var(--life-heading-line);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
   .life-editorial.life-modern-category .post-card{grid-template-columns:94px minmax(0,1fr);gap:11px;padding:16px 0}
   .life-editorial.life-modern-category .post-thumb{width:94px;min-height:88px;max-height:94px}
-  .life-editorial.life-modern-category .post-card h3{font-size:15px;line-height:1.45}
+  .life-editorial.life-modern-category .post-card h3{font-size:var(--life-card-title-size);line-height:1.45;font-weight:var(--life-card-weight);letter-spacing:-.025em;color:var(--life-heading-color);}
   .life-editorial.life-modern-category .post-card p{font-size:12px}
   .life-editorial.life-modern-category .modern-list-toolbar{align-items:stretch;flex-wrap:wrap}
   .life-editorial.life-modern-category .modern-list-filter{width:100%;max-width:none}
-  .life-editorial.life-modern-article .article-header h1{font-size:30px}
+  .life-editorial.life-modern-article .article-header h1{font-size:var(--life-page-title-size);line-height:var(--life-heading-line);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
   .life-editorial.life-modern-article .compact-answer-primary{font-size:16px}
-  .life-editorial.life-modern-article .article-content{font-size:16px;line-height:1.85}
+  .life-editorial.life-modern-article .article-content{font-size:var(--life-body-size);line-height:var(--life-body-line)}
   .life-editorial .portal-page.finance-page{padding-top:4px}
   .life-editorial .portal-page.finance-page h1{font-size:30px}
   .life-editorial #main-content>.today-viewport{padding:16px 12px 35px}
-  .life-editorial .today-wide-content h1{font-size:31px;margin:5px 0 16px}
+  .life-editorial .today-wide-content h1{font-size:var(--life-page-title-size);margin:5px 0 16px;line-height:var(--life-heading-line);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
   .life-editorial .today-vertical-list>.today-widget{padding:17px 0}
-  .life-editorial .today-widget-heading h3{font-size:19px}
-  .life-editorial .today-news-title{font-size:14px}
+  .life-editorial .today-widget-heading h3{font-size:var(--life-section-title-size);line-height:1.35;font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
+  .life-editorial .today-news-title{font-size:var(--life-card-title-size);line-height:1.45;font-weight:var(--life-card-weight);letter-spacing:-.025em;color:var(--life-heading-color);}
   .life-editorial .today-news-meta{font-size:11px}
   .life-editorial .today-news-list li{padding:11px 0}
   .life-editorial .today-coin,.life-editorial .today-stock{grid-template-columns:minmax(0,1fr) auto 58px;gap:7px}
@@ -742,7 +758,7 @@ body.life-editorial{
 /* 320–370px: prevent four-column icon labels or post previews from overflowing. */
 @media(max-width:370px){
   .life-editorial.life-modern-home .home-shell{width:calc(100% - 18px)}
-  .life-editorial.life-modern-home .portal-home-hero h1{font-size:24px}
+  .life-editorial.life-modern-home .portal-home-hero h1{font-size:var(--life-page-title-size);line-height:var(--life-heading-line);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
   .life-editorial.life-modern-home .life-home-service-grid{column-gap:0}
   .life-editorial.life-modern-home .life-home-service-card{padding-inline:0}
   .life-editorial.life-modern-home .life-home-service-copy strong{font-size:11.5px}
@@ -773,9 +789,9 @@ body.life-editorial{
 }
 .life-editorial .savings-page-head h1,
 .life-editorial .lifestyle-calc-page>h1{
-  font-size:clamp(28px,2.7vw,38px);line-height:1.3;
-  letter-spacing:-.06em;font-weight:840;margin:0;
-}
+  font-size:var(--life-page-title-size);line-height:var(--life-heading-line);
+  letter-spacing:var(--life-heading-tracking);font-weight:var(--life-heading-weight);margin:0;
+color:var(--life-heading-color);}
 .life-editorial .savings-page-links{
   display:flex;align-items:center;flex-wrap:wrap;gap:7px 14px;justify-content:flex-end;
 }
@@ -1048,7 +1064,7 @@ body.life-editorial{
     padding:0 0 13px;margin:0 0 15px;
   }
   .life-editorial .savings-page-head h1,
-  .life-editorial .lifestyle-calc-page>h1{font-size:28px}
+  .life-editorial .lifestyle-calc-page>h1{font-size:var(--life-page-title-size);line-height:var(--life-heading-line);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
   .life-editorial .savings-page-head>a{font-size:11px}
   .life-editorial .calculator-workspace{gap:12px;margin-bottom:18px}
   .life-editorial .calculator-workspace>form{padding:18px 15px;border-radius:10px}
@@ -1091,8 +1107,8 @@ body.life-editorial{
 .life-editorial .food-guide .portal-breadcrumbs{margin:0 0 22px;color:#838d97;font-size:12px}
 .life-editorial .food-guide-header{padding:0 0 24px;border-bottom:1px solid #e3e7ea}
 .life-editorial .food-guide-category{display:inline-block;margin-bottom:10px;color:var(--brand);font-size:13px;font-weight:770}
-.life-editorial .food-guide-header h1{margin:0 0 17px;font-size:clamp(29px,3.3vw,43px);line-height:1.3;color:#202a35;font-weight:850;letter-spacing:-.055em}
-.life-editorial .food-guide-lead{max-width:850px;margin:0 0 14px;color:#343f4c;font-size:18px;line-height:1.8;font-weight:530;word-break:keep-all}
+.life-editorial .food-guide-header h1{margin:0 0 17px;font-size:var(--life-page-title-size);line-height:var(--life-heading-line);color:var(--life-heading-color);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking)}
+.life-editorial .food-guide-lead{max-width:850px;margin:0 0 14px;color:var(--life-muted-color);font-size:var(--life-lead-size);line-height:1.6;font-weight:530;word-break:keep-all}
 .life-editorial .food-guide-header time{font-size:12px;color:#89929b}
 .life-editorial .food-guide-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:24px 0 8px;padding:16px 0;border-top:2px solid #252d35;border-bottom:1px solid #e1e5e8}
 .life-editorial .food-guide-facts>div{min-width:0;padding:2px 18px;border-right:1px solid #e6e9eb}
@@ -1102,9 +1118,9 @@ body.life-editorial{
 .life-editorial .food-guide-facts dd{margin:0;color:#29343f;font-size:15px;font-weight:750;line-height:1.5;overflow-wrap:anywhere}
 .life-editorial .food-guide-content{width:100%;min-width:0}
 .life-editorial .food-guide-section{padding:30px 0 24px;border-bottom:1px solid #e9ecef}
-.life-editorial .food-guide-section h2{margin:0 0 19px;color:#242d36;font-size:clamp(24px,2.4vw,29px);font-weight:810;letter-spacing:-.045em;line-height:1.4}
-.life-editorial .food-guide-section h3{margin:23px 0 13px;color:#35414e;font-size:20px;font-weight:770}
-.life-editorial .food-guide-section p,.life-editorial .food-guide-section li{font-size:19px;line-height:1.82;color:#333f4a;word-break:keep-all}
+.life-editorial .food-guide-section h2{margin:0 0 19px;color:var(--life-heading-color);font-size:var(--life-section-title-size);font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);line-height:1.35}
+.life-editorial .food-guide-section h3{margin:23px 0 13px;color:#35414e;font-size:var(--life-subsection-title-size);font-weight:var(--life-section-weight)}
+.life-editorial .food-guide-section p,.life-editorial .food-guide-section li{font-size:var(--life-body-size);line-height:var(--life-body-line);color:#333f4a;word-break:keep-all}
 .life-editorial .food-guide-section p{margin:0 0 13px}
 .life-editorial .food-guide-section ul:not(.food-guide-ingredients){padding:0 0 0 21px;margin:0}
 .life-editorial .food-guide-section ul:not(.food-guide-ingredients)>li{padding:0 0 10px 2px}
@@ -1118,14 +1134,14 @@ body.life-editorial{
 .life-editorial .food-guide-ingredients li{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:11px 3px;border-bottom:1px solid #e7eaed}
 .life-editorial .food-guide-ingredients strong{font-size:18px;color:#303b45;font-weight:740;white-space:nowrap}
 .life-editorial .food-guide-table-wrap{width:100%;max-width:100%;overflow-x:auto}
-.life-editorial .food-guide-table-wrap table{width:100%;min-width:0;border-collapse:collapse;table-layout:fixed;font-size:18px}
-.life-editorial .food-guide-table-wrap th,.life-editorial .food-guide-table-wrap td{padding:18px 17px;border-bottom:1px solid #e8ecf0;text-align:left;vertical-align:top;line-height:1.75;overflow-wrap:anywhere;word-break:keep-all}
-.life-editorial .food-guide-table-wrap thead th{color:#3d4a57;font-size:16px;font-weight:780;background:#f7f8f9;border-top:1px solid #e4e8eb}
-.life-editorial .food-guide-table-wrap tbody th{width:34%;color:#35414d;font-size:17px;font-weight:750;background:#fafbfc}
-.life-editorial .food-guide-table-wrap td{color:#33414d;font-size:17px}
+.life-editorial .food-guide-table-wrap table{width:100%;min-width:0;border-collapse:collapse;table-layout:fixed;font-size:var(--life-body-size)}
+.life-editorial .food-guide-table-wrap th,.life-editorial .food-guide-table-wrap td{padding:18px 17px;border-bottom:1px solid #e8ecf0;text-align:left;vertical-align:top;line-height:1.75;overflow-wrap:anywhere;word-break:keep-all;font-size:var(--life-body-size);}
+.life-editorial .food-guide-table-wrap thead th{color:#3d4a57;font-size:var(--life-body-size);font-weight:780;background:#f7f8f9;border-top:1px solid #e4e8eb}
+.life-editorial .food-guide-table-wrap tbody th{width:34%;color:#35414d;font-size:var(--life-body-size);font-weight:750;background:#fafbfc}
+.life-editorial .food-guide-table-wrap td{color:#33414d;font-size:var(--life-body-size)}
 .life-editorial .food-guide-qa{padding:4px 0 12px}
-.life-editorial .food-guide-qa h3{font-size:20px;margin:17px 0 7px;color:#25323f}
-.life-editorial .food-guide-qa p{margin:0 0 13px;font-size:18px}
+.life-editorial .food-guide-qa h3{font-size:var(--life-subsection-title-size);margin:17px 0 7px;color:#25323f;font-weight:var(--life-section-weight);}
+.life-editorial .food-guide-qa p{margin:0 0 13px;font-size:var(--life-body-size);line-height:var(--life-body-line);}
 .life-editorial .food-guide-sources{margin:27px 0 0;padding:20px 0 15px;border-top:2px solid #29313a}
 .life-editorial .food-guide-sources h2{font-size:16px;font-weight:790;margin:0 0 12px}
 .life-editorial .food-guide-sources ul{margin:0;padding:0;list-style:none}
@@ -1137,31 +1153,31 @@ body.life-editorial{
 .life-editorial .food-guides-index-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;border-top:2px solid #27303a}
 .life-editorial .food-guide-index-link{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0;padding:17px 0 19px;border-bottom:1px solid #e6e9ed}
 .life-editorial .food-guide-index-link>span{font-size:12px;font-weight:700;color:var(--brand)}
-.life-editorial .food-guide-index-link>strong{color:#25303b;font-size:18px;font-weight:810;line-height:1.45;letter-spacing:-.03em}
+.life-editorial .food-guide-index-link>strong{color:var(--life-heading-color);font-size:var(--life-card-title-size);font-weight:var(--life-card-weight);line-height:1.45;letter-spacing:-.025em}
 .life-editorial .food-guide-index-link>small{color:#75818b;font-size:12px;line-height:1.65;word-break:keep-all}
 .life-editorial .food-guide-index-link:hover>strong{color:var(--brand)}
 @media(max-width:700px){
  .life-editorial .food-guide{padding:6px 0 40px}
  .life-editorial .food-guide .portal-breadcrumbs{margin-bottom:16px}
  .life-editorial .food-guide-header{padding-bottom:18px}
- .life-editorial .food-guide-header h1{font-size:29px;line-height:1.35;margin-bottom:12px}
- .life-editorial .food-guide-lead{font-size:15px;line-height:1.8}
+ .life-editorial .food-guide-header h1{font-size:var(--life-page-title-size);line-height:var(--life-heading-line);margin-bottom:12px;font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
+ .life-editorial .food-guide-lead{font-size:var(--life-lead-size);line-height:1.6;color:var(--life-muted-color);}
  .life-editorial .food-guide-facts{grid-template-columns:1fr;margin-top:18px;padding:6px 0}
  .life-editorial .food-guide-facts>div{display:flex;justify-content:space-between;gap:12px;align-items:baseline;padding:10px 2px;border:0;border-bottom:1px solid #edf0f1}
  .life-editorial .food-guide-facts>div:last-child{border-bottom:0}
  .life-editorial .food-guide-facts dt{min-width:78px;font-size:11px;margin:0}
  .life-editorial .food-guide-facts dd{font-size:13px;text-align:right}
  .life-editorial .food-guide-section{padding:23px 0 20px}
- .life-editorial .food-guide-section h2{font-size:23px;margin-bottom:14px}
- .life-editorial .food-guide-section h3{font-size:17px}
- .life-editorial .food-guide-section p,.life-editorial .food-guide-section li{font-size:16px;line-height:1.8}
+ .life-editorial .food-guide-section h2{font-size:var(--life-section-title-size);margin-bottom:14px;line-height:1.35;font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
+ .life-editorial .food-guide-section h3{font-size:var(--life-subsection-title-size);font-weight:var(--life-section-weight);}
+ .life-editorial .food-guide-section p,.life-editorial .food-guide-section li{font-size:var(--life-body-size);line-height:var(--life-body-line)}
  .life-editorial .food-guide-steps>li strong{font-size:17px}
- .life-editorial .food-guide-table-wrap th,.life-editorial .food-guide-table-wrap td{padding:13px 10px;font-size:15px}
- .life-editorial .food-guide-table-wrap tbody th{font-size:15px}
- .life-editorial .food-guide-qa h3{font-size:17px}
- .life-editorial .food-guide-qa p{font-size:16px}
+ .life-editorial .food-guide-table-wrap th,.life-editorial .food-guide-table-wrap td{padding:13px 10px;font-size:var(--life-body-size)}
+ .life-editorial .food-guide-table-wrap tbody th{font-size:var(--life-body-size)}
+ .life-editorial .food-guide-qa h3{font-size:var(--life-subsection-title-size);font-weight:var(--life-section-weight);}
+ .life-editorial .food-guide-qa p{font-size:var(--life-body-size);line-height:var(--life-body-line);}
  .life-editorial .food-guides-index-list{grid-template-columns:1fr}
- .life-editorial .food-guide-index-link>strong{font-size:16px}
+ .life-editorial .food-guide-index-link>strong{font-size:var(--life-card-title-size);line-height:1.45;font-weight:var(--life-card-weight);letter-spacing:-.025em;color:var(--life-heading-color);}
 }
 
 
@@ -1262,8 +1278,8 @@ body.life-editorial{
   gap:14px;margin:0 0 8px;
 }
 .life-editorial .food-shop-heading h2{
-  margin:0;color:#26313b;font-size:23px;line-height:1.35;
-  font-weight:840;letter-spacing:-.045em;
+  margin:0;color:var(--life-heading-color);font-size:var(--life-section-title-size);line-height:1.35;
+  font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);
 }
 .life-editorial .food-shop-heading a{
   display:inline-flex;align-items:center;min-height:36px;
@@ -1316,9 +1332,9 @@ body.life-editorial{
 .life-editorial .food-shop-name{
   display:-webkit-box;overflow:hidden;-webkit-line-clamp:3;
   -webkit-box-orient:vertical;max-width:100%;
-  margin:0;color:#242e39;
-  font-size:16px;line-height:1.55;font-weight:790;
-  letter-spacing:-.027em;word-break:keep-all;overflow-wrap:anywhere;
+  margin:0;color:var(--life-heading-color);
+  font-size:var(--life-card-title-size);line-height:1.45;font-weight:var(--life-card-weight);
+  letter-spacing:-.025em;word-break:keep-all;overflow-wrap:anywhere;
 }
 .life-editorial .food-shop-product-bottom{
   display:flex;flex-direction:column;gap:13px;
@@ -1384,7 +1400,7 @@ body.life-editorial{
   .life-editorial .food-guide-shop{
     margin:24px 0 5px;padding:21px 0 19px;
   }
-  .life-editorial .food-shop-heading h2{font-size:20px}
+  .life-editorial .food-shop-heading h2{font-size:var(--life-section-title-size);line-height:1.35;font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
   .life-editorial .food-shop-heading a{font-size:12px}
   .life-editorial .food-shop-status{margin-bottom:12px}
   .life-editorial .food-shop-list{grid-template-columns:1fr;gap:11px}
@@ -1396,8 +1412,8 @@ body.life-editorial{
   .life-editorial .food-shop-image{height:158px;border-radius:6px}
   .life-editorial .food-shop-merchant{margin:0 0 5px;font-size:11px}
   .life-editorial .food-shop-name{
-    font-size:14px;line-height:1.5;-webkit-line-clamp:2;
-  }
+    font-size:var(--life-card-title-size);line-height:1.45;-webkit-line-clamp:2;
+  font-weight:var(--life-card-weight);letter-spacing:-.025em;color:var(--life-heading-color);}
   .life-editorial .food-shop-product-bottom{gap:9px;padding-top:8px}
   .life-editorial .food-shop-price-label{font-size:11px}
   .life-editorial .food-shop-price{font-size:21px;line-height:1.3}
@@ -1415,7 +1431,7 @@ body.life-editorial{
     gap:10px;min-height:168px;padding:10px;
   }
   .life-editorial .food-shop-image{height:146px}
-  .life-editorial .food-shop-name{font-size:13px}
+  .life-editorial .food-shop-name{font-size:var(--life-card-title-size);line-height:1.45;font-weight:var(--life-card-weight);letter-spacing:-.025em;color:var(--life-heading-color);}
   .life-editorial .food-shop-price{font-size:18px}
   .life-editorial .food-shop-buy{min-height:37px;font-size:11px}
 }
