@@ -49,7 +49,7 @@ function productImage(src){
   if(!photo){fallback();return frame;}
   const img=make("img");
   img.alt="";
-  img.loading="eager";
+  img.loading="lazy";
   img.decoding="async";
   // Some retailer CDNs block no-referrer image requests. Let the browser use
   // its default cross-origin referrer behavior and provide an error fallback.
@@ -82,7 +82,13 @@ function appendProduct(item,index){
   results.append(card);
   return true;
 }
+let inFlight=false;
+let hasAutoRequested=false;
 async function load(){
+  // Coalesce concurrent viewport events and repeated manual clicks.
+  if(inFlight)return;
+  inFlight=true;
+  hasAutoRequested=true;
   status.textContent="상품 조회 중";
   if(retry)retry.hidden=true;
   results.replaceChildren();
@@ -108,8 +114,43 @@ async function load(){
     if(retry)retry.hidden=false;
   }finally{
     clearTimeout(timer);
+    inFlight=false;
   }
 }
 if(retry)retry.addEventListener("click",load);
-load();
+// Never spend a Cloudflare Functions invocation on article entry alone.
+// Product data is requested only when the actual shopping panel is in view.
+status.textContent="관련 상품 영역에 도착하면 상품을 불러옵니다.";
+let pendingWhileHidden=false;
+const loadWhenVisible=()=>{
+  if(hasAutoRequested)return;
+  if(document.visibilityState==="hidden"){
+    pendingWhileHidden=true;
+    return;
+  }
+  hasAutoRequested=true;
+  load();
+};
+if(typeof IntersectionObserver==="function"){
+  const observer=new IntersectionObserver(entries=>{
+    if(entries.some(entry=>entry.isIntersecting&&entry.intersectionRatio>=0.15)){
+      observer.disconnect();
+      loadWhenVisible();
+    }
+  },{root:null,rootMargin:"0px",threshold:0.15});
+  observer.observe(host);
+}else if(retry){
+  // Older browsers without IntersectionObserver retain intentional access.
+  status.textContent="상품을 보려면 불러오기 버튼을 눌러주세요.";
+  retry.textContent="상품 불러오기";
+  retry.hidden=false;
+}
+if(document.addEventListener){
+  document.addEventListener("visibilitychange",()=>{
+    if(pendingWhileHidden&&document.visibilityState!=="hidden"){
+      pendingWhileHidden=false;
+      loadWhenVisible();
+    }
+  });
+}
 })();
