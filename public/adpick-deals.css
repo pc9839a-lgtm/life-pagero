@@ -1,6 +1,6 @@
 /* Hot Deals only. One restrained accent, no gradients or decorative shadows. */
 .life-editorial .adpick-deals{
-  width:100%;max-width:1180px;margin:0 auto;padding:20px 0 72px;
+  width:100%;max-width:1160px;margin:0 auto;padding:20px 0 72px;
   color:var(--ink,#1c232b);font-family:inherit;
 }
 .life-editorial .adpick-deals .portal-breadcrumbs{
