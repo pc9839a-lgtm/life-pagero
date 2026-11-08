@@ -29,14 +29,15 @@ function withStatus(html,key,message){
   return html.replace(pattern,(_full,before,after)=>before+escapeHtml(message)+after);
 }
 function withItems(html,attribute,kind,body,payload){
-  const opening='<div '+attribute+'>';
-  const pattern=new RegExp('<div '+attribute+'>[\\s\\S]*?<\\/div>');
+  // Weather already has a class before data-weather-items, while the
+  // remaining widget containers have data-* as their first attribute.
+  const pattern=new RegExp('(<div\\b(?=[^>]*\\b'+attribute+'\\b)[^>]*>)[\\s\\S]*?<\\/div>');
   if(!pattern.test(html))return html;
   const script=payload?
     '<script type="application/json" data-today-'+kind+'-seed>'+
       JSON.stringify(payload).replace(/</g,'\\u003c')+'</script>':'';
-  return html.replace(pattern,()=>'<div '+attribute+' data-'+kind+
-    '-preloaded="true">'+body+'</div>'+script);
+  return html.replace(pattern,(_whole,opening)=>opening.slice(0,-1)+
+    ' data-'+kind+'-preloaded="true">'+body+'</div>'+script);
 }
 function renderVerifiedFx(html,data){
   if(!/^\d{4}-\d{2}-\d{2}$/.test(data?.sourceDate||'')
