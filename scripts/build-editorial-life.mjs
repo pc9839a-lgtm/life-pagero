@@ -15,6 +15,21 @@ const TODAY_HASH=createHash('sha256')
   .update(fs.readFileSync(path.join(DIST,'today-wide.css'))).digest('hex').slice(0,12);
 const DASHBOARD_HASH=createHash('sha256')
   .update(fs.readFileSync(path.join(DIST,'today-dashboard.js'))).digest('hex').slice(0,12);
+
+const MENU_STYLES=['events-ui.css','real-estate.css','adpick-deals.css',
+  'life-food.css','finance-experience.css'];
+const MENU_STYLE_HASHES=MENU_STYLES.map(name=>[name,createHash('sha256')
+  .update(fs.readFileSync(path.join(DIST,name))).digest('hex').slice(0,12)]);
+const versionMenuStyles=html=>{
+  for(const [name,hash] of MENU_STYLE_HASHES){
+    const prefix='<link rel="stylesheet" href="/'+name;
+    // Replace an old fixed version (or unversioned href), not add CSS.
+    const regexp=new RegExp('(<link rel="stylesheet" href="/'+
+      name.replaceAll('.','\\.')+')(?:\\?[^"]*)?(")','g');
+    html=html.replace(regexp,(_all,start,quote)=>start+'?v='+hash+quote);
+  }
+  return html;
+};
 const oldStyles=[
   '/life-modern.css','/life-compact.css','/life-global-nav.css',
   '/today-dashboard.css'
@@ -255,6 +270,7 @@ for(const absolute of walk(DIST).filter(file=>file.endsWith('.html'))){
     html=transformArticle(html,relative);articles++;
   }
   html=removeOldStyles(html);
+  html=versionMenuStyles(html);
   html=html.replace('class="life-modern ','class="life-modern life-editorial ');
   html=html.replace('</head>','<link rel="stylesheet" href="'+CSS_HREF+'"></head>');
   if(relative==='today/index.html'||relative==='finance/markets/index.html'){
