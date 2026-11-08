@@ -3,7 +3,7 @@
 .events-home-banner strong{font-size:18px;color:#19324d}
 .events-home-banner p{margin:4px 0 0;color:#586c81;font-size:13px;line-height:1.6}
 .events-home-banner a{flex-shrink:0;background:var(--brand);color:#fff;padding:10px 15px;min-height:44px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:14px;font-weight:750;text-decoration:none}
-.events-shell{width:min(calc(100% - 32px),1160px);margin:26px auto 50px;min-width:0;color:#23384e}
+.events-shell{width:min(calc(100% - 32px),1160px);margin:26px auto 50px;min-width:0;color:var(--ink)}
 .events-shell *{box-sizing:border-box}
 .events-intro h1,.events-detail-head h1{margin:10px 0 8px;font-size:var(--life-page-title-size);line-height:var(--life-heading-line);letter-spacing:var(--life-heading-tracking);overflow-wrap:anywhere;font-weight:var(--life-heading-weight);color:var(--life-heading-color);}
 .events-intro p{margin:0 0 19px;color:var(--life-muted-color);font-size:var(--life-lead-size)}
