@@ -131,11 +131,11 @@ check(!editorialStyle.includes('.life-editorial.life-modern-home .header-search,
 
 check(editorialStyle.includes('grid-template-columns:repeat(6,minmax(0,1fr))') &&
       editorialStyle.includes('width:30px;height:30px') &&
-      editorialStyle.includes('font-size:clamp(29px,2.5vw,34px)'),
-  'desktop single-row primary nav missing');
+      editorialStyle.includes('font-size:var(--life-page-title-size)'),
+  'desktop quick navigation and shared title scale missing');
 check(editorialStyle.includes('grid-auto-rows:minmax(83px,auto)') &&
-      editorialStyle.includes('font-size:26px;line-height:1.25'),
-  'mobile three-column primary menu sizing wrong');
+      editorialStyle.includes('--life-page-title-size:28px;--life-section-title-size:21px'),
+  'mobile quick menu and common title scale missing');
 check(editorialStyle.includes('grid-template-columns:1fr;gap:0') &&
   editorialStyle.includes('.life-home-tool-section') &&
   editorialStyle.includes('.life-home-spot-thumb img'),
