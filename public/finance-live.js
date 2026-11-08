@@ -2,6 +2,27 @@
 (function () {
   'use strict';
   const prefix = location.pathname.startsWith('/life/') ? '/life/' : '/';
+  const whenVisible=(node,load)=>{
+    if(!node)return;
+    let seen=false,started=false,observer=null;
+    const attempt=()=>{
+      if(started||!seen||document.visibilityState==='hidden')return;
+      started=true;
+      observer?.disconnect();
+      document.removeEventListener?.('visibilitychange',attempt);
+      load();
+    };
+    document.addEventListener?.('visibilitychange',attempt);
+    if(typeof IntersectionObserver==='function'){
+      observer=new IntersectionObserver(entries=>{
+        if(entries.some(entry=>entry.isIntersecting)){seen=true;attempt();}
+      },{rootMargin:'0px',threshold:0});
+      observer.observe(node);
+    }else{
+      seen=true;
+      attempt();
+    }
+  };
   const esc = value => String(value == null ? '' : value).replace(/[&<>"']/g, c => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }[c]));
@@ -88,33 +109,56 @@
     const more=products.querySelector('.finance-mobile-rates-more');
     if(more)more.addEventListener('click',()=>{mobileLimit+=12;renderProducts(false);});
   }
+  // Cache only FSS public results in this page's memory; no KV/D1 or
+  // persistent browser storage. Users switching back to a category do not
+  // pay another Functions request.
+  const productsMemo=new Map();
+  const productFlights=new Map();
+  let selectedRequest=0;
+  function fetchProducts(kind,group){
+    const key=kind+'|'+group;
+    if(productsMemo.has(key))return Promise.resolve(productsMemo.get(key));
+    if(productFlights.has(key))return productFlights.get(key);
+    const pending=(async()=>{
+      const controller=new AbortController();
+      const timeout=setTimeout(()=>controller.abort(),18000);
+      try{
+        const response=await fetch(prefix+'finance/api/products?kind='+encodeURIComponent(kind)
+          +'&group='+encodeURIComponent(group),{signal:controller.signal});
+        const data=await response.json();
+        if(!response.ok||data.status!=='ok'||!Array.isArray(data.products)
+          ||!data.products.length)throw Error('Finance feed unavailable');
+        productsMemo.set(key,data);
+        return data;
+      }finally{clearTimeout(timeout);}
+    })();
+    productFlights.set(key,pending);
+    pending.finally(()=>{if(productFlights.get(key)===pending)productFlights.delete(key);})
+      .catch(()=>{});
+    return pending;
+  }
   async function loadProducts(){
     if(!products)return;
+    const id=++selectedRequest;
+    const kind=fields.kind.value,group=fields.group.value;
     if(criteria)criteria.textContent='';
-    products.replaceChildren();
-    const kind=fields.kind.value, group=fields.group.value;
-    const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),25000);
+    // Keep already verified rates visible until a new selection resolves.
     try{
-      const response=await fetch(prefix+'finance/api/products?kind='+encodeURIComponent(kind)
-        +'&group='+encodeURIComponent(group),{signal:controller.signal});
-      const data=await response.json();
-      if(!response.ok||data.status!=='ok')throw new Error('Finance feed unavailable');
-      allProducts=Array.isArray(data.products)?data.products:[];
-      if(!allProducts.length)throw new Error('Empty verified products');
+      const data=await fetchProducts(kind,group);
+      if(id!==selectedRequest)return;
+      allProducts=data.products;
       if(source)source.textContent='금융감독원 · '+time(data.retrievedAt);
       renderProducts();
       if(ratePanel)ratePanel.hidden=false;
       if(rateOfficial)rateOfficial.hidden=true;
     }catch(error){
-      // Unavailable backend is an internal concern, not an end-user notice.
-      // Retain the working official link instead of displaying empty data UI.
+      if(id!==selectedRequest)return;
       allProducts=[];
       if(ratePanel)ratePanel.hidden=true;
       if(rateOfficial)rateOfficial.hidden=false;
       if(source)source.textContent='';
       products.replaceChildren();
-    }finally{clearTimeout(timeout);}
+    }
   }
   if(products){
     fields.kind?.addEventListener('change',loadProducts);
@@ -128,12 +172,13 @@
         const initial=JSON.parse(embedded.textContent);
         if(!Array.isArray(initial.products)||!initial.products.length)throw new Error('empty');
         allProducts=initial.products;
+        productsMemo.set('deposit|bank',initial);
         renderProducts();
         if(source)source.textContent='금융감독원 · '+time(initial.retrievedAt);
         if(ratePanel)ratePanel.hidden=false;
         if(rateOfficial)rateOfficial.hidden=true;
-      }catch(error){loadProducts();}
-    }else{loadProducts();}
+      }catch(error){whenVisible(rateOfficial||ratePanel,loadProducts);}
+    }else{whenVisible(rateOfficial||ratePanel,loadProducts);}
   }
 
   async function loadRatePreview(){
@@ -142,7 +187,7 @@
     const timeout=setTimeout(()=>controller.abort(),25000);
     try {
       const response=await fetch(prefix+'finance/api/products?kind=deposit&group=bank',
-        {signal:controller.signal,cache:'no-store'});
+        {signal:controller.signal});
       const data=await response.json();
       if(!response.ok||data.status!=='ok'||!Array.isArray(data.products)||!data.products.length)
         throw new Error('No verified bank products');
@@ -167,7 +212,8 @@
       console.warn('[finance] Could not load verified preview:',error?.name||'unavailable');
     }finally {clearTimeout(timeout);}
   }
-  if(preview && preview.dataset.preloaded!=='true')loadRatePreview();
+  if(preview && preview.dataset.preloaded!=='true')
+    whenVisible(rateOfficial||preview,loadRatePreview);
 
   const issuesEl=document.getElementById('finance-issues');
   const issuePanel=document.getElementById('finance-issues-panel');
@@ -190,20 +236,23 @@
   }
   if(issuesEl){
     issuesType?.addEventListener('change',showIssues);
-    const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),13000);
-    fetch(prefix+'finance/api/issues',{signal:controller.signal}).then(async response=>{
-      const data=await response.json();
-      if(!response.ok||data.status!=='ok')throw new Error('Official updates unavailable');
-      allIssues=Array.isArray(data.items)?data.items:[];
-      if(!allIssues.length)throw new Error('No verified updates');
-      showIssues();
-      if(issuePanel)issuePanel.hidden=false;
-      if(issueOfficial)issueOfficial.hidden=true;
-    }).catch(()=>{
-      if(issuePanel)issuePanel.hidden=true;
-      if(issueOfficial)issueOfficial.hidden=false;
-      issuesEl.replaceChildren();
-    }).finally(()=>clearTimeout(timeout));
+    // Official links stay visible until the user reaches this section.
+    whenVisible(issueOfficial||issuesEl,()=>{
+      const controller=new AbortController();
+      const timeout=setTimeout(()=>controller.abort(),13000);
+      fetch(prefix+'finance/api/issues',{signal:controller.signal}).then(async response=>{
+        const data=await response.json();
+        if(!response.ok||data.status!=='ok')throw Error('Official updates unavailable');
+        allIssues=Array.isArray(data.items)?data.items:[];
+        if(!allIssues.length)throw Error('No verified updates');
+        showIssues();
+        if(issuePanel)issuePanel.hidden=false;
+        if(issueOfficial)issueOfficial.hidden=true;
+      }).catch(()=>{
+        if(issuePanel)issuePanel.hidden=true;
+        if(issueOfficial)issueOfficial.hidden=false;
+        issuesEl.replaceChildren();
+      }).finally(()=>clearTimeout(timeout));
+    });
   }
 }());
