@@ -105,11 +105,10 @@ const transformHome=html=>{
   const heroMatch=html.match(/<section class="hero portal-home-hero editorial-hero">[\s\S]*?<\/section>/)?.[0];
   check(heroMatch,'hero markup missing');
   html=html.replace(heroMatch,heroMatch.replace('</section>',grid+'</section>'));
-  const searchIcon='<a class="life-home-header-search" href="#life-home-search" aria-label="검색창 열기" title="검색">'
-    +'<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.5"/><path d="m16 16 5 5"/></svg></a>';
-  const headerEnd='</div><nav class="main-nav"';
-  check(html.includes(headerEnd),'home header anchor missing');
-  html=html.replace(headerEnd,searchIcon+headerEnd);
+  // The global navigation pass already placed the same mobile search control
+  // on every page. Keep the original local home search panel as its target.
+  check(html.includes('class="life-header-search-toggle" href="#life-home-search"'),
+    'homepage must retain the same global mobile search control');
 
   // Existing six editorial destinations are retained in an expandable area,
   // instead of repeating another 6-card menu above the editorial feed.
