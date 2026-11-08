@@ -1,5 +1,5 @@
 /* Reference-matched real-estate content ONLY. No shared LIFE selectors or global redesign. */
-.life-editorial .re-shell{max-width:1160px;width:calc(100% - 72px);margin:0 auto;padding:25px 0 60px;color:#0c1d3c;font-family:inherit}
+.life-editorial .re-shell{max-width:1160px;width:calc(100% - 72px);margin:0 auto;padding:25px 0 60px;color:var(--ink);font-family:inherit}
 .life-editorial .re-shell *{box-sizing:border-box}
 .life-editorial .re-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(290px,31%);gap:27px;align-items:start}
 .life-editorial .re-left{min-width:0}
