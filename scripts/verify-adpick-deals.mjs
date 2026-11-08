@@ -1,15 +1,18 @@
 import fs from "node:fs";
 import path from "node:path";
+import {createHash} from "node:crypto";
 import {onRequestGet} from "../functions/deals/api.js";
 
 const DIST=path.resolve("dist");
 const read=p=>fs.readFileSync(path.join(DIST,p),"utf8");
 const check=(value,label)=>{if(!value)throw Error("[adpick-qa] "+label);};
 const home=read("index.html"),page=read("deals/index.html");
+const cssVersion=createHash('sha256').update(read('adpick-deals.css')).digest('hex').slice(0,12);
+const dealsCssUrl='/adpick-deals.css?v='+cssVersion;
 const origin=read("life-editorial-20261105.css");
 check(home.includes('class="life-home-service-card" href="/deals/"'),'homepage shortcut missing');
 check(home.includes('href="/deals/"'),'homepage route missing');
-check(home.includes('href="/adpick-deals.css?v=20261106e"'),'homepage shortcut style missing');
+check(home.includes('href="'+dealsCssUrl+'"'),'homepage shortcut style missing');
 check(page.includes('<h1>오늘의 핫딜</h1>'),'standalone deals H1 missing');
 check(page.includes('class="adpick-page-heading"'),'shopping heading layout missing');
 check(page.includes('class="adpick-hero"'),'shopping hero section missing');
@@ -35,8 +38,8 @@ check(!client.includes('["commission"'),"commission category displayed in tabs")
 check(page.includes("제휴 링크가 포함되어 있으며")&&page.includes("수수료가 지급될 수 있습니다"),"affiliate disclosure lost");
 check(page.includes('name="robots" content="noindex,follow"'),'affiliate-only route must noindex');
 check(page.includes('data-deals-list')&&page.includes('data-deals-search'),'live deals and search controls missing');
-check(page.includes('href="/adpick-deals.css?v=20261106e"')&&page.includes('src="/adpick-deals.js?v=20261106e"'),'deals versioned assets missing');
-check(home.includes('href="/adpick-deals.css?v=20261106e"'),'homepage versioned CSS missing');
+check(page.includes('href="'+dealsCssUrl+'"')&&page.includes('src="/adpick-deals.js?v=20261106e"'),'deals versioned assets missing');
+check(home.includes('href="'+dealsCssUrl+'"'),'homepage versioned CSS missing');
 const headers=fs.readFileSync(path.resolve("dist/_headers"),"utf8");
 check(headers.includes('/deals/')&&headers.includes('/adpick-deals.js')&&headers.includes('no-store'),'hotdeal cache control missing');
 check(page.includes('href="https://pagero.kr/life/deals/"'),'wrong canonical');
