@@ -42,7 +42,8 @@ try{
     page.on('pageerror',error=>errors.push(viewport.width+': '+error.message));
     await routeFixture(page,true);
     await page.goto(root+'/finance/savings/',{waitUntil:'domcontentloaded'});
-    await page.locator('#finance-rates-official').scrollIntoViewIfNeeded();
+    if(await page.locator('#finance-rates-official').isVisible())
+      await page.locator('#finance-rates-official').scrollIntoViewIfNeeded();
     await page.locator('#finance-rate-panel').waitFor({state:'visible',timeout:12000});
     const mobile=viewport.width<=820;
     const rowSelector=mobile?'.finance-mobile-rate-card':'#finance-products tbody tr';
@@ -65,7 +66,7 @@ try{
     await page.locator('#finance-term').selectOption('all');
     await page.locator(rowSelector).first().waitFor({state:'visible'});
     await page.goto(root+'/finance/',{waitUntil:'domcontentloaded'});
-    await page.locator('#finance-rates-official').scrollIntoViewIfNeeded();
+    await page.locator('.finance-preview-section').scrollIntoViewIfNeeded();
     await page.locator('#finance-rate-preview').waitFor({state:'visible',timeout:12000});
     const cards=await page.locator('.finance-preview-card').count();
     if(cards!==3)fail('Hub fails to show 3 real-rate cards: '+cards);
