@@ -73,6 +73,8 @@ const steps = [
   ['node', ['scripts/verify-food-hub.mjs']],
   ['node', ['scripts/verify-food-guides.mjs']],
   ['node', ['scripts/verify-events.mjs']],
+  ['node', ['scripts/write-function-routes.mjs']],
+  ['node', ['scripts/verify-function-routes.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);
