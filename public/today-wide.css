@@ -20,11 +20,11 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   margin:0 0 21px
 }
 .life-editorial .today-wide-content .today-page-head h1{
-  margin:0;font-size:clamp(30px,3vw,39px);font-weight:800;line-height:1.3;
-  letter-spacing:-.052em;color:#1b242d
+  margin:0;font-size:var(--life-page-title-size);font-weight:var(--life-heading-weight);line-height:var(--life-heading-line);
+  letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color)
 }
 .life-editorial .today-wide-content .today-page-intro{
-  margin:0;font-size:14px;line-height:1.5;color:#79848d
+  margin:0;font-size:var(--life-lead-size);line-height:1.5;color:var(--life-muted-color)
 }
 /* Two readable information zones up front. No second navigation strip or
    oversized full-width weather panel that pushes everything below the fold. */
@@ -50,8 +50,8 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   gap:8px 12px;min-height:33px;margin:0 0 12px
 }
 .life-editorial .today-wide-content .today-widget-heading h3{
-  margin:0;color:#202a34;font-size:21px;line-height:1.35;
-  letter-spacing:-.04em;font-weight:790
+  margin:0;color:var(--life-heading-color);font-size:var(--life-section-title-size);line-height:1.35;
+  letter-spacing:var(--life-heading-tracking);font-weight:var(--life-section-weight)
 }
 .life-editorial .today-wide-content .today-widget-heading>a{
   color:#687580;font-size:12px;font-weight:650;text-decoration:none
@@ -104,8 +104,8 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
 }
 .life-editorial .today-wide-content .today-news-list li:last-child{border-bottom:0}
 .life-editorial .today-wide-content .today-news-title{
-  display:block;color:#26303a;font-size:16px;line-height:1.45;
-  font-weight:690;letter-spacing:-.025em;overflow-wrap:break-word
+  display:block;color:#26303a;font-size:var(--life-card-title-size);line-height:1.45;
+  font-weight:var(--life-card-weight);letter-spacing:-.025em;overflow-wrap:break-word
 }
 .life-editorial .today-wide-content .today-news-meta{
   display:block;margin:0;text-align:left;color:#87939d;
@@ -186,7 +186,7 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   margin:31px 0 0;padding:23px 0 0;border-top:1px solid #e5e8eb
 }
 .life-editorial .today-wide-content .today-source-guidance h2{
-  margin:0 0 10px;color:#27323a;font-size:17px;font-weight:740
+  margin:0 0 10px;color:#27323a;font-size:var(--life-subsection-title-size);font-weight:740
 }
 .life-editorial .today-wide-content .today-source-guidance p{
   margin:9px 0;color:#6e7b85;font-size:12px;line-height:1.75
@@ -222,11 +222,11 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   .life-editorial .today-wide-content .portal-breadcrumbs{margin:0 0 8px}
   .life-editorial .today-wide-content .today-page-head{margin:0 0 13px;gap:3px}
   .life-editorial .today-wide-content .today-page-head h1{
-    font-size:28px;line-height:1.3
-  }
+    font-size:var(--life-page-title-size);line-height:var(--life-heading-line)
+  ;font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
   .life-editorial .today-wide-content .today-page-intro{
-    flex:0 0 100%;font-size:12px;line-height:1.45
-  }
+    flex:0 0 100%;font-size:var(--life-lead-size);line-height:1.45
+  ;color:var(--life-muted-color);}
   .life-editorial .today-wide-content .today-dashboard-grid{row-gap:10px}
   .life-editorial .today-wide-content .today-dashboard-grid>.today-widget{
     padding:16px 14px;border-radius:9px
@@ -237,7 +237,7 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   .life-editorial .today-wide-content .today-widget-heading{
     flex-wrap:wrap;gap:7px 9px;margin:0 0 9px
   }
-  .life-editorial .today-wide-content .today-widget-heading h3{font-size:19px}
+  .life-editorial .today-wide-content .today-widget-heading h3{font-size:var(--life-section-title-size);font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
   .life-editorial .today-wide-content .today-widget-heading select{
     min-height:40px;max-width:115px;font-size:13px
   }
@@ -248,7 +248,7 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   .life-editorial .today-wide-content .today-fx{min-height:52px;padding:9px 0}
   .life-editorial .today-wide-content .today-fx-name{font-size:14px}
   .life-editorial .today-wide-content .today-fx-value{font-size:15px}
-  .life-editorial .today-wide-content .today-news-title{font-size:15px}
+  .life-editorial .today-wide-content .today-news-title{font-size:var(--life-card-title-size);font-weight:var(--life-card-weight);}
   .life-editorial .today-wide-content .today-news-list li{padding:11px 0}
   .life-editorial .today-wide-content .today-fx,
   .life-editorial .today-wide-content .today-coin{
