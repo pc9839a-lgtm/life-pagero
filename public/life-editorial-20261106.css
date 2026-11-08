@@ -18,18 +18,22 @@ body.life-editorial{
 .life-editorial .site-header{position:relative;top:auto;z-index:10;background:#fff;box-shadow:none;border-bottom:1px solid var(--line);backdrop-filter:none}
 .life-editorial .header-inner,.life-editorial .nav-inner,.life-editorial .site-shell,.life-editorial .footer-inner,
 .life-editorial .top-strip-inner{width:calc(100% - 72px);max-width:1560px;margin-left:auto;margin-right:auto}
-.life-editorial .header-inner{display:flex;min-height:76px;align-items:center;justify-content:space-between;gap:28px;padding:10px 0}
+.life-editorial .header-inner,.life-editorial .nav-inner{max-width:1160px}
+.life-editorial .header-inner{display:flex;min-height:70px;align-items:center;justify-content:space-between;gap:20px;padding:10px 0}
 .life-editorial .brand{display:inline-flex;align-items:center;gap:12px;flex-shrink:0}
-.life-editorial .brand-mark{width:35px;height:35px;display:grid;place-items:center;color:#fff;background:var(--brand);border-radius:7px;font-size:16px;font-weight:850}
-.life-editorial .brand-copy strong{display:block;color:#18202a;font-size:23px;line-height:1.15;font-weight:850;letter-spacing:-.07em}
+.life-editorial .brand-mark{display:none}
+.life-editorial .brand-copy strong{display:block;color:#18202a;font-size:24px;line-height:1.15;font-weight:820;letter-spacing:-.045em}
 .life-editorial .header-search{display:flex;max-width:350px;width:min(38vw,350px);height:39px;margin-left:auto}
 .life-editorial .header-search input{min-width:0;width:100%;padding:9px 13px;border:1px solid #e4e6e8;border-right:0;border-radius:5px 0 0 5px;background:#fafafa;font-size:13px}
 .life-editorial .header-search button{padding:0 15px;border:1px solid #e4e6e8;border-left:0;border-radius:0 5px 5px 0;background:#fafafa;color:var(--brand-dark);font-size:12px;font-weight:780}
-.life-editorial .main-nav{background:#fff;border:0;border-top:1px solid #f1f1f1;border-bottom:1px solid #e9eaec}
-.life-editorial .nav-inner{display:flex;align-items:center;gap:26px;overflow-x:auto;scrollbar-width:none;justify-content:flex-start;padding:0}
-.life-editorial .nav-inner::-webkit-scrollbar{display:none}
-.life-editorial .nav-inner a{display:inline-flex;flex:none;align-items:center;justify-content:center;min-height:45px;padding:10px 2px 9px;color:#65707c;font-size:13px;font-weight:660;border:0;border-bottom:2px solid transparent;white-space:nowrap;line-height:1.2}
+/* One canonical sitewide navigation. Never hide or scroll it on specific routes. */
+.life-editorial .main-nav{display:block;background:#fff;border:0;border-top:1px solid #eff0f1;border-bottom:1px solid #e6e8eb}
+.life-editorial .nav-inner{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));align-items:stretch;gap:0;overflow:visible;padding:0}
+.life-editorial .nav-inner a{display:flex;min-width:0;align-items:center;justify-content:center;min-height:47px;padding:11px 5px 9px;color:#56616d;font-size:14px;font-weight:670;border:0;border-bottom:2px solid transparent;white-space:nowrap;line-height:1.25;text-align:center}
 .life-editorial .nav-inner a:hover,.life-editorial .nav-inner a[aria-current="page"]{color:var(--brand);border-bottom-color:var(--brand)}
+.life-editorial .nav-inner a[aria-current="page"]{font-weight:800}
+.life-editorial .life-header-search-toggle{display:none;flex:none;align-items:center;justify-content:center;width:42px;height:42px;margin-left:auto;color:#26313a;border-radius:6px}
+.life-editorial .life-header-search-toggle:hover{color:var(--brand);background:#f6f7f8}
 .life-editorial #main-content{min-width:0}
 .life-editorial .site-shell{padding:28px 0 56px}
 .life-editorial .content-grid{display:block}
@@ -53,14 +57,10 @@ body.life-editorial{
 
 /* Homepage: align to the supplied reference with a 4 x 3 icon matrix,
    restrained typographic scale and one continuous editorial content width. */
-.life-editorial.life-modern-home .site-header{position:relative;margin:0 auto;width:calc(100% - 64px);max-width:1160px;background:#fff;border:0;border-bottom:1px solid #eff0f1;box-shadow:none}
-.life-editorial.life-modern-home .header-inner{width:100%;max-width:none;min-height:65px;padding:13px 6px;gap:12px}
-.life-editorial.life-modern-home .brand{gap:0}
-.life-editorial.life-modern-home .brand-mark{display:none}
-.life-editorial.life-modern-home .brand-copy strong{font-size:25px;font-weight:820;letter-spacing:-.045em;color:#171b20}
-.life-editorial.life-modern-home .header-search,.life-editorial.life-modern-home .main-nav{display:none}
-.life-editorial.life-modern-home .life-home-header-search{display:grid;place-items:center;flex:none;margin-left:auto;width:41px;height:41px;color:#242a31;border-radius:50%}
-.life-editorial.life-modern-home .life-home-header-search:hover{background:#f5f5f5;color:var(--brand)}
+/* The home page uses the same full-width header, logo and navigation. */
+.life-editorial.life-modern-home .site-header{width:100%;max-width:none;margin:0;background:#fff}
+.life-editorial.life-modern-home .header-inner{max-width:1160px}
+.life-editorial.life-modern-home .main-nav{display:block}
 .life-editorial.life-modern-home .home-shell{width:calc(100% - 64px);max-width:1160px;padding:0 6px 60px}
 .life-editorial.life-modern-home .home-grid{display:block}
 .life-editorial.life-modern-home .home-grid>.main-column{padding:0;border:0;background:transparent}
@@ -381,8 +381,7 @@ body.life-editorial{
 .life-editorial.life-modern-category .sidebar{margin-top:28px}
 
 
-/* Four top-level destinations; secondary categories stay inside their hubs. */
-.life-editorial .main-nav .nav-inner{justify-content:flex-start}
+/* Eight shared destinations are always in the same order on every page. */
 .life-editorial .topics-page{width:100%;max-width:none;margin:0;padding:12px 0 40px;border:0;border-radius:0;background:#fff}
 .life-editorial .topics-page h1{margin:0 0 25px;font-size:clamp(30px,3.2vw,43px);font-weight:830;color:#202832;letter-spacing:-.065em}
 .life-editorial .topics-hub-list{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:none;margin:0;padding:0;border-top:2px solid #252c34}
@@ -392,7 +391,7 @@ body.life-editorial{
 .life-editorial .topics-hub-link span:not(.topics-chevron){color:#7b848d;font-size:13px}
 .life-editorial .topics-chevron{text-align:right;color:var(--brand);font-size:21px}
 @media(max-width:700px){
-  .life-editorial .nav-inner a{min-height:43px;font-size:13px}
+  .life-editorial .nav-inner a{min-height:43px;font-size:12px}
   .life-editorial .topics-page{padding-top:6px}
   .life-editorial .topics-page h1{font-size:30px;margin-bottom:18px}
   .life-editorial .topics-hub-link{grid-template-columns:minmax(0,1fr) 14px;gap:5px 12px;padding:14px 3px;min-height:60px}
@@ -633,7 +632,7 @@ body.life-editorial{
 /* Responsive editorial surfaces. */
 @media(max-width:1024px){
   .life-editorial .header-inner,.life-editorial .nav-inner,.life-editorial .site-shell,.life-editorial .footer-inner{width:calc(100% - 36px)}
-  .life-editorial.life-modern-home .site-header,.life-editorial.life-modern-home .home-shell{width:calc(100% - 36px)}
+  .life-editorial.life-modern-home .home-shell{width:calc(100% - 36px)}
   .life-editorial.life-modern-home .life-home-service-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
   .life-editorial .today-news-list li{grid-template-columns:minmax(0,1fr);gap:5px}
   .life-editorial .today-news-meta{grid-column:1;text-align:left}
@@ -644,22 +643,16 @@ body.life-editorial{
   .life-editorial.life-modern-home .home-shell{width:calc(100% - 24px)}
   .life-editorial .header-inner{min-height:62px;gap:10px;padding:8px 0}
   .life-editorial .brand{gap:7px}
-  .life-editorial .brand-mark{width:31px;height:31px;font-size:14px;border-radius:6px}
-  .life-editorial .brand-copy strong{font-size:19px}
-  .life-editorial .header-search{flex:1;max-width:210px;height:37px}
-  .life-editorial .header-search input{padding:7px 9px;font-size:12px}
-  .life-editorial .header-search button{padding:0 9px;font-size:12px}
-  .life-editorial .nav-inner{display:flex;flex-wrap:nowrap;gap:19px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;touch-action:pan-x;scroll-padding-inline:12px}
-  .life-editorial .nav-inner a{flex:none;min-width:0;min-height:44px;padding:13px 1px 10px;font-size:13px;line-height:1.25;letter-spacing:-.025em;white-space:nowrap}
-  .life-editorial .nav-inner a:nth-child(n+6){border-top:0}
+  .life-editorial .brand-copy strong{font-size:20px}
+  .life-editorial .header-search{display:none}
+  .life-editorial .life-header-search-toggle{display:flex}
+  .life-editorial .nav-inner{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(43px,auto);gap:0;overflow:visible}
+  .life-editorial .nav-inner a{min-width:0;min-height:43px;padding:10px 2px 8px;font-size:12px;letter-spacing:-.025em;white-space:nowrap;line-height:1.25}
+  .life-editorial .nav-inner a:nth-child(n+5){border-top:1px solid #f1f2f3}
   body.life-editorial{overflow-x:clip}
-  .life-editorial .nav-inner::-webkit-scrollbar{display:none}
   .life-editorial #main-content img{max-width:100%}
   .life-editorial .site-shell{padding:17px 0 35px}
-  .life-editorial.life-modern-home .site-header,.life-editorial.life-modern-home .home-shell{width:calc(100% - 24px)}
-  .life-editorial.life-modern-home .header-inner{min-height:62px;padding:8px 4px}
-  .life-editorial.life-modern-home .brand-copy strong{font-size:21px}
-  .life-editorial.life-modern-home .life-home-header-search{width:44px;height:44px}
+  .life-editorial.life-modern-home .home-shell{width:calc(100% - 24px)}
   .life-editorial.life-modern-home .hero.portal-home-hero{padding:20px 4px 12px;margin:0}
   .life-editorial.life-modern-home .portal-home-hero h1{font-size:26px;line-height:1.25;letter-spacing:-.04em;margin:0}
   .life-editorial.life-modern-home .life-home-intro{font-size:14px}
@@ -748,7 +741,7 @@ body.life-editorial{
 }
 /* 320–370px: prevent four-column icon labels or post previews from overflowing. */
 @media(max-width:370px){
-  .life-editorial.life-modern-home .home-shell,.life-editorial.life-modern-home .site-header{width:calc(100% - 18px)}
+  .life-editorial.life-modern-home .home-shell{width:calc(100% - 18px)}
   .life-editorial.life-modern-home .portal-home-hero h1{font-size:24px}
   .life-editorial.life-modern-home .life-home-service-grid{column-gap:0}
   .life-editorial.life-modern-home .life-home-service-card{padding-inline:0}
@@ -756,8 +749,7 @@ body.life-editorial{
   .life-editorial.life-modern-home .life-home-spot-thumb{width:68px;height:68px}
   .life-editorial.life-modern-home .life-home-spot-copy strong{font-size:14px}
   .life-editorial.life-modern-home .compact-popular li a{gap:10px}
-  .life-editorial .header-search{max-width:150px}
-  .life-editorial .nav-inner a{font-size:11px}
+  .life-editorial .nav-inner a{font-size:11px;padding-left:0;padding-right:0}
 }
 @media(prefers-reduced-motion:reduce){
   .life-editorial *, .life-editorial *::before,.life-editorial *::after{scroll-behavior:auto;transition:none!important}
