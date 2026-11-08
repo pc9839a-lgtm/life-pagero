@@ -42,8 +42,8 @@ try{
     page.on('pageerror',error=>errors.push(viewport.width+': '+error.message));
     await routeFixture(page,true);
     await page.goto(root+'/finance/savings/',{waitUntil:'domcontentloaded'});
-    if(await page.locator('#finance-rates-official').isVisible())
-      await page.locator('#finance-rates-official').scrollIntoViewIfNeeded();
+    // Savings data is above the fold. Do not target the transient official
+    // fallback link, which disappears as soon as the verified data loads.
     await page.locator('#finance-rate-panel').waitFor({state:'visible',timeout:12000});
     const mobile=viewport.width<=820;
     const rowSelector=mobile?'.finance-mobile-rate-card':'#finance-products tbody tr';
