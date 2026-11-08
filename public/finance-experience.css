@@ -1,23 +1,23 @@
 /* Finance portal v2: calm information density, one accent, clear source states. */
 .finance-page{max-width:1100px;padding:28px 32px 38px;border-color:#dce4ec}
-.finance-page h1{font-size:clamp(26px,3vw,36px)}
-.finance-page-intro{max-width:850px;font-size:15px;color:#50647a;line-height:1.8;margin:7px 0 25px}
+.finance-page h1{font-size:var(--life-page-title-size);font-weight:var(--life-heading-weight);line-height:var(--life-heading-line);letter-spacing:var(--life-heading-tracking);}
+.finance-page-intro{max-width:850px;font-size:var(--life-lead-size);color:var(--life-muted-color);line-height:1.8;margin:7px 0 25px}
 .finance-hub-grid,.finance-market-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 26px}
 .finance-hub-card{display:flex;flex-direction:column;gap:5px;background:#fff;border:1px solid #dce4ec;border-radius:7px;min-width:0;padding:17px 18px;color:#1d3349}
-.finance-hub-card:hover{border-color:#92b9e7;background:#f9fbfe;color:#1454a0}
+.finance-hub-card:hover{border-color:#92b9e7;background:#f9fbfe;color:var(--brand)}
 .finance-hub-card strong{font-size:17px;font-weight:800;line-height:1.4}
 .finance-hub-card span{font-size:13px;color:#6c7b8f;line-height:1.55}
 .finance-home-shortcuts{margin:0;padding:26px 30px 10px;border-bottom:1px solid #e5eaf0}
 .finance-home-shortcuts .finance-hub-grid{margin-bottom:11px}
 .finance-data-section{border-top:1px solid #e4eaf0;padding-top:26px;margin-top:25px}
 .finance-section-title{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;margin:0 0 15px}
-.finance-section-title h2{font-size:22px;color:#182d42;letter-spacing:-.04em;line-height:1.4;margin:0 0 4px}
+.finance-section-title h2{font-size:var(--life-section-title-size);color:#182d42;letter-spacing:-.04em;line-height:1.4;margin:0 0 4px;font-weight:var(--life-section-weight);}
 .finance-section-title p{font-size:13px;color:#687b8e;margin:0}
-.finance-section-title>a{font-size:13px;font-weight:800;white-space:nowrap;color:#1769e0}
+.finance-section-title>a{font-size:13px;font-weight:800;white-space:nowrap;color:var(--brand)}
 .finance-filter-bar{display:grid;grid-template-columns:1fr 1fr 1fr 1.2fr;gap:10px;padding:16px;border:1px solid #e2e8ef;border-radius:7px;background:#f8fafc}
 .finance-filter-bar label,.finance-issue-filters label{font-weight:700;color:#344a61;font-size:12px;min-width:0;line-height:1.4}
 .finance-filter-bar select,.finance-filter-bar input,.finance-issue-filters select{margin-top:6px;width:100%;height:43px;border:1px solid #c8d3df;border-radius:5px;color:#223e55;background:#fff;padding:9px 10px;font-size:14px;min-width:0}
-.finance-filter-bar select:focus,.finance-filter-bar input:focus,.finance-issue-filters select:focus,.loan-tool input:focus{outline:2px solid #1769e0;outline-offset:1px}
+.finance-filter-bar select:focus,.finance-filter-bar input:focus,.finance-issue-filters select:focus,.loan-tool input:focus{outline:2px solid var(--brand);outline-offset:1px}
 .finance-filter-query{grid-column:1/-1}
 .finance-data-status{font-size:13px;color:#536b84;line-height:1.6;margin:13px 0 6px}
 .finance-source-bar{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:5px 16px;color:#738196;font-size:12px;margin:7px 0 10px}
@@ -45,11 +45,11 @@
 .finance-issue-list{list-style:none;padding:0;margin:0;border-top:1px solid #e5eaf0}
 .finance-issue-list li{border-bottom:1px solid #e9edf2}
 .finance-issue-list a{display:block;padding:13px 3px;color:#243d56}
-.finance-issue-list a:hover strong{color:#1769e0}
+.finance-issue-list a:hover strong{color:var(--brand)}
 .finance-issue-list strong{font-size:14px;line-height:1.6;font-weight:730;display:block;overflow-wrap:anywhere}
 .finance-issue-list span{display:block;font-size:12px;color:#8190a0;margin-top:4px}
 .finance-plain-guide{border-top:1px solid #e5eaf0;padding-top:23px;margin-top:26px}
-.finance-plain-guide h2{font-size:20px;line-height:1.4;margin:20px 0 9px}
+.finance-plain-guide h2{font-size:var(--life-section-title-size);line-height:1.4;margin:20px 0 9px}
 .finance-plain-guide h2:first-child{margin-top:0}
 .finance-plain-guide p,.finance-plain-guide li{font-size:14px;line-height:1.85;color:#425970}
 .finance-plain-guide ul{padding-left:19px}
@@ -60,9 +60,9 @@
 .loan-methods legend{font-size:14px;font-weight:800;color:#29445c;margin-bottom:10px}
 .loan-method-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .loan-method-option{display:flex;flex-direction:column;gap:4px;padding:14px 13px;cursor:pointer;background:#fff;border:1px solid #cad5df;border-radius:6px;min-height:90px;position:relative}
-.loan-method-option.is-active{border-color:#1769e0;background:#f2f7fe;box-shadow:inset 0 0 0 1px #1769e0}
-.loan-method-option:focus-within{outline:2px solid #1769e0;outline-offset:2px}
-.loan-method-option input{position:absolute;right:11px;top:12px;accent-color:#1769e0}
+.loan-method-option.is-active{border-color:var(--brand);background:#fff8f5;box-shadow:inset 0 0 0 1px var(--brand)}
+.loan-method-option:focus-within{outline:2px solid var(--brand);outline-offset:2px}
+.loan-method-option input{position:absolute;right:11px;top:12px;accent-color:var(--brand)}
 .loan-method-option strong{font-size:15px;line-height:1.45;padding-right:15px;color:#213b55}
 .loan-method-option span{font-size:12px;color:#728399;line-height:1.45}
 .loan-entry-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
@@ -74,11 +74,11 @@
 .loan-quick-values button{background:#fff;color:#28618f;border:1px solid #d1dce7;border-radius:4px;padding:5px 11px;font-size:12px;font-weight:700;cursor:pointer;min-height:31px}
 .loan-quick-values button:hover{border-color:#8fb8e0}
 .loan-input-note{margin-top:6px;font-size:11px;line-height:1.5;color:#8291a1}
-.loan-calc-button{display:inline-flex;margin-top:19px;border:0;background:#1769e0;color:#fff;border-radius:5px;font-size:14px;font-weight:800;padding:12px 24px;min-height:46px;cursor:pointer}
+.loan-calc-button{display:inline-flex;margin-top:19px;border:0;background:var(--brand);color:#fff;border-radius:5px;font-size:14px;font-weight:800;padding:12px 24px;min-height:46px;cursor:pointer}
 .loan-calc-button:hover{background:#1257b9}
 .loan-result-area{margin-top:16px;padding:22px;border:1px solid #bfd5e9;border-radius:7px;background:#f6faff}
 .loan-result-heading{display:flex;justify-content:space-between;align-items:baseline;gap:8px 15px;flex-wrap:wrap}
-.loan-result-heading h2{font-size:19px;margin:0;color:#223d5a}
+.loan-result-heading h2{font-size:var(--life-subsection-title-size);margin:0;color:#223d5a}
 .loan-result-heading span{font-size:12px;color:#637e96}
 .loan-result-primary{padding:12px 0 16px;border-bottom:1px solid #d9e4ef}
 .loan-result-primary span,.loan-result-grid span{display:block;color:#577189;font-size:12px;line-height:1.6}
@@ -87,7 +87,7 @@
 .loan-result-grid strong{display:block;font-size:16px;color:#2c455c;line-height:1.6;margin-top:5px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .loan-result-note{font-size:12px!important;color:#6e8297!important;margin:10px 0 0!important;line-height:1.75!important}
 .loan-result-details{margin-top:27px}
-.loan-result-details>h2{margin:0 0 4px;font-size:20px}
+.loan-result-details>h2{margin:0 0 4px;font-size:var(--life-subsection-title-size)}
 .loan-result-details>p{margin:5px 0 13px;color:#758596;font-size:13px;line-height:1.6}
 .loan-result-details .finance-section-title button{border:1px solid #c5d6e8;background:#fff;color:#18568e;padding:8px 13px;font-weight:750;border-radius:5px;cursor:pointer;min-height:38px}
 .loan-result-details .finance-section-title button:disabled{opacity:.45;cursor:default}
@@ -103,14 +103,14 @@
 }
 @media(max-width:690px){
  .finance-page{padding:21px 14px}
- .finance-page-intro{font-size:14px}
+ .finance-page-intro{font-size:var(--life-lead-size);color:var(--life-muted-color);}
  .finance-hub-grid,.finance-market-links{grid-template-columns:1fr 1fr;gap:8px}
  .finance-hub-card{padding:13px}
  .finance-hub-card strong{font-size:14px}
  .finance-hub-card span{font-size:12px}
  .finance-home-shortcuts{padding:20px 14px 10px}
  .finance-section-title{align-items:flex-start;flex-direction:column}
- .finance-section-title h2{font-size:20px}
+ .finance-section-title h2{font-size:var(--life-section-title-size);font-weight:var(--life-section-weight);}
  .finance-filter-bar{gap:8px;padding:11px}
  .finance-filter-bar select,.finance-filter-bar input{font-size:13px}
  .finance-rate-table th,.finance-rate-table td{padding:10px 11px}
@@ -166,7 +166,7 @@
   text-align:right;
   font-size:13px;
   font-weight:650;
-  color:#2563eb;
+  color:var(--brand);
 }
 .life-modern .finance-data-section[hidden],
 .life-modern .finance-official-shortcut[hidden]{display:none!important}
@@ -180,21 +180,21 @@
 /* Actual published rate preview. Three numbers only, with a direct full-table link. */
 .life-modern .finance-preview-section{margin:18px 0 25px;padding:23px 23px 19px;border:1px solid #e3eaf2;border-radius:15px;background:#fff}
 .life-modern .finance-preview-section .finance-section-title{margin-bottom:14px;align-items:center}
-.life-modern .finance-preview-section .finance-section-title h2{font-size:19px;margin:0}
-.life-modern .finance-preview-section .finance-section-title>a{color:#2563eb;font-size:13px;font-weight:710}
+.life-modern .finance-preview-section .finance-section-title h2{font-size:var(--life-section-title-size);margin:0;font-weight:var(--life-section-weight);}
+.life-modern .finance-preview-section .finance-section-title>a{color:var(--brand);font-size:13px;font-weight:710}
 .life-modern .finance-rate-preview[hidden]{display:none!important}
 .life-modern .finance-preview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .life-modern .finance-preview-card{display:flex;flex-direction:column;align-items:flex-start;min-width:0;gap:5px;padding:16px;border:1px solid #e5eaf2;border-radius:12px;background:#fafcff;color:#25364a;text-decoration:none}
 .life-modern .finance-preview-card:hover{color:#1d4ed8;border-color:#b5cdfa;background:#f3f7ff}
 .life-modern .finance-preview-bank{font-size:12px;color:#64748b;font-weight:650}
-.life-modern .finance-preview-rate{font-size:27px;color:#2563eb;font-weight:800;letter-spacing:-.05em;line-height:1.3;font-variant-numeric:tabular-nums}
+.life-modern .finance-preview-rate{font-size:27px;color:var(--brand);font-weight:800;letter-spacing:-.05em;line-height:1.3;font-variant-numeric:tabular-nums}
 .life-modern .finance-preview-product{font-size:13px;font-weight:690;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .life-modern .finance-preview-term{font-size:11px;color:#718096}
-.life-modern .finance-preview-more{display:inline-block;font-size:13px;font-weight:720;color:#2563eb;margin-top:13px}
+.life-modern .finance-preview-more{display:inline-block;font-size:13px;font-weight:720;color:var(--brand);margin-top:13px}
 .life-modern .finance-preview-section .finance-official-shortcut{margin:0}
 @media(max-width:700px){
  .life-modern .finance-preview-section{padding:16px 13px;margin:12px 0 18px}
- .life-modern .finance-preview-section .finance-section-title h2{font-size:17px}
+ .life-modern .finance-preview-section .finance-section-title h2{font-size:var(--life-section-title-size);font-weight:var(--life-section-weight);}
  .life-modern .finance-preview-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
  .life-modern .finance-preview-card{padding:12px 9px;border-radius:10px}
  .life-modern .finance-preview-bank{font-size:11px}
