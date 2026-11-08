@@ -1,7 +1,6 @@
 name: Food shopping live API smoke
+# Production API smoke is explicitly invoked to avoid paid calls on routine PRs.
 on:
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read

@@ -95,7 +95,7 @@ for(const guide of dataset.guides){
   const shopping='<section class="food-guide-shop" id="food-shopping" aria-labelledby="food-guide-shop-heading" '
     +'data-food-guide-products="'+esc(shopQuery)+'">'
     +'<div class="food-shop-heading"><h2 id="food-guide-shop-heading">관련 상품</h2></div>'
-    +'<p class="food-shop-status" data-food-shop-status role="status">상품 조회 중</p>'
+    +'<p class="food-shop-status" data-food-shop-status role="status">관련 상품 영역에 도착하면 상품을 불러옵니다.</p>'
     +'<div class="food-shop-list" data-food-shop-results aria-live="polite"></div>'
     +'<div class="food-shop-actions">'
     +'<a class="food-shop-search-link" href="/deals/?q='+encodeURIComponent(shopQuery)+'&amp;src=food">상품 더 찾아보기</a>'

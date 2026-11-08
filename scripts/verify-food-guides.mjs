@@ -24,6 +24,12 @@ const photoManifest=JSON.parse(read('food-images/manifest.json'));
 const shopHash=createHash('sha256').update(shopJs).digest('hex').slice(0,12);
 check(shopJs.includes('preciseSearch')&&shopJs.includes('searchQuery')&&
   shopJs.includes('9000'),'one-shot fast food affiliate search missing');
+check(shopJs.includes('new IntersectionObserver(')&&
+  shopJs.includes('observer.observe(host)')&&
+  shopJs.includes('intersectionRatio>=0.15')&&
+  shopJs.includes('if(inFlight)return;')&&
+  !shopJs.endsWith('load();\n})();\n'),
+  'offscreen Adpick requests must be deferred and duplicate loads coalesced');
 check(shopJs.includes('prefix+"deals/api?"')&&shopJs.includes('src:"food"'),
   'food products must use server-side ADPICK search with food attribution');
 check(shopJs.includes('sponsored noopener noreferrer')&&shopJs.includes('cache:"no-store"'),
@@ -65,6 +71,8 @@ for(const guide of model.guides){
   check(html.includes('data-food-shop-results')&&html.includes('data-food-shop-status')
     &&html.includes('data-food-shop-retry'),
     'live affiliate product placeholders and manual reload missing '+guide.slug);
+  check(html.includes('관련 상품 영역에 도착하면 상품을 불러옵니다.'),
+    'food guide must not show a fake loading state before viewport exposure '+guide.slug);
   check(html.includes('id="food-shopping"')&&
     html.includes('href="#food-shopping"'),
     'shopping section should be reachable from the article table of contents '+guide.slug);

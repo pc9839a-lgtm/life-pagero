@@ -2,8 +2,8 @@ import {spawnSync} from 'node:child_process';
 import {isRelevantFoodProduct} from '../functions/deals/api.js';
 
 // Live diagnostics must cover every published /food/ article, not only the
-// first two. This is observational on PRs because the production deployment
-// can legitimately lag a proposed change.
+// first two. Run manually when needed; production requests must not be
+// generated automatically by every unrelated pull request.
 const catalog=[
   ['scallops-clean-steam-storage','가리비','가리비'],
   ['sweet-potato-storage-guide','고구마','고구마'],
