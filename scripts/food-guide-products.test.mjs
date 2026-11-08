@@ -19,7 +19,8 @@ function domElement(tag='div'){
   };
 }
 async function render({query='가리비',pathname='/life/food/scallops-clean-steam-storage/',
-  response={ok:true,json:async()=>({status:'ok',items:[product('생가리비 1kg')]})}}={}){
+  response={ok:true,json:async()=>({status:'ok',items:[product('생가리비 1kg')]})},
+  visible=true,observerSupported=true,visibilityState='visible'}={}){
   const results=domElement();
   const status=domElement();
   const retry=domElement('button');
@@ -31,19 +32,42 @@ async function render({query='가리비',pathname='/life/food/scallops-clean-ste
       selector==='[data-food-shop-retry]'?retry:null
   };
   const fetches=[];
+  const listeners={};
+  let observer;
+  let disconnected=false;
+  class FakeIntersectionObserver{
+    constructor(callback,options){observer={callback,options};}
+    observe(element){assert.equal(element,root);}
+    disconnect(){disconnected=true;}
+  }
+  const document={
+    querySelector:selector=>selector==='[data-food-guide-products]'?root:null,
+    createElement:tag=>domElement(tag),
+    visibilityState,
+    addEventListener(type,callback){listeners[type]=callback}
+  };
   const ctx={
-    document:{
-      querySelector:selector=>selector==='[data-food-guide-products]'?root:null,
-      createElement:tag=>domElement(tag)
-    },
-    location:{pathname},
+    document,location:{pathname},
     URL,URLSearchParams,Intl,AbortController,
+    IntersectionObserver:observerSupported?FakeIntersectionObserver:undefined,
     setTimeout,clearTimeout,
     fetch:async(...args)=>{fetches.push(args);if(response instanceof Error)throw response;return response}
   };
   vm.runInNewContext(source,ctx);
+  const trigger=(ratio=1)=>{
+    if(observer&&!disconnected)
+      observer.callback([{isIntersecting:ratio>0,intersectionRatio:ratio}]);
+  };
+  if(visible)trigger();
   await new Promise(resolve=>setTimeout(resolve,15));
-  return {results,status,fetches,retry};
+  return {
+    results,status,fetches,retry,trigger,
+    getObserver:()=>observer,
+    setVisibilityState(state){
+      document.visibilityState=state;
+      listeners.visibilitychange?.();
+    }
+  };
 }
 test('food guide loads server-side ADPICK search using food attribution and current proxy prefix',async()=>{
   const r=await render();
@@ -131,4 +155,58 @@ test('failed live shop exposes manual reload without showing fake product cards'
   await new Promise(resolve=>setTimeout(resolve,15));
   assert.equal(r.fetches.length,2);
   assert.equal(r.retry.hidden,false);
+});
+
+test('article entry and offscreen scrolling never invoke Cloudflare Functions',async()=>{
+  const r=await render({visible:false});
+  assert.equal(r.fetches.length,0,'no request on opening the article');
+  assert.equal(r.results.children.length,0);
+  assert.match(r.status.textContent,/상품 영역/);
+  assert.equal(r.retry.hidden,true);
+  r.trigger(0);
+  r.trigger(0.14);
+  await new Promise(resolve=>setTimeout(resolve,10));
+  assert.equal(r.fetches.length,0,'offscreen/less than threshold must stay free');
+  assert.equal(r.getObserver().options.rootMargin,'0px');
+  assert.equal(r.getObserver().options.threshold,0.15);
+  r.trigger(0.25);
+  await new Promise(resolve=>setTimeout(resolve,10));
+  assert.equal(r.fetches.length,1,'one paid request only on visible content');
+  r.trigger(1);
+  await new Promise(resolve=>setTimeout(resolve,10));
+  assert.equal(r.fetches.length,1,'repeat intersection must not make paid requests');
+});
+test('background tabs never call the API before they become visible',async()=>{
+  const r=await render({visible:true,visibilityState:'hidden'});
+  assert.equal(r.fetches.length,0);
+  r.setVisibilityState('visible');
+  await new Promise(resolve=>setTimeout(resolve,15));
+  assert.equal(r.fetches.length,1);
+  r.setVisibilityState('hidden');
+  r.setVisibilityState('visible');
+  assert.equal(r.fetches.length,1);
+});
+test('no IntersectionObserver falls back to explicit user-triggered loading',async()=>{
+  const r=await render({observerSupported:false,visible:false});
+  assert.equal(r.fetches.length,0);
+  assert.equal(r.retry.hidden,false);
+  assert.equal(r.retry.textContent,'상품 불러오기');
+  r.retry.events.click();
+  await new Promise(resolve=>setTimeout(resolve,15));
+  assert.equal(r.fetches.length,1);
+  assert.equal(r.results.children.length,1);
+});
+test('loading state coalesces multiple manual taps into only one API request',async()=>{
+  let finish;
+  const response={ok:true,json:()=>new Promise(resolve=>{finish=resolve})};
+  const r=await render({visible:false,response});
+  r.trigger(1);
+  assert.equal(r.fetches.length,1);
+  r.retry.events.click();
+  r.retry.events.click();
+  assert.equal(r.fetches.length,1);
+  finish({status:'ok',items:[product('생가리비 1kg')]});
+  await new Promise(resolve=>setTimeout(resolve,15));
+  assert.equal(r.results.children.length,1);
+  assert.equal(r.fetches.length,1);
 });
