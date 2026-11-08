@@ -48,6 +48,10 @@ for(const absolute of walk(DIST).filter(p=>p.endsWith('.html'))){
   const normalized=nav.replace(/ aria-current="page"/g,'');
   if(baseline===null)baseline=normalized;
   else if(baseline!==normalized)fail('menu differs between page templates',relative);
+  const searchLinks=[...html.matchAll(/class="life-header-search-toggle" href="([^"]+)" aria-label="검색"/g)];
+  if(searchLinks.length!==1)fail('one shared mobile search action required',relative);
+  if(searchLinks[0][1]!== (pathname==='/'?'#life-home-search':'/search/'))
+    fail('shared search destination incorrect',relative);
   if((html.match(/href="\/life-global-nav\.css"/g)||[]).length!==1)
     fail('navigation style should be loaded once',relative);
   if((html.match(/<link rel="canonical"/g)||[]).length!==1)
@@ -86,4 +90,4 @@ if(!read('sitemap.xml').includes('<loc>https://pagero.kr/life/topics/</loc>')) {
 if(!JSON.parse(read('search-index.json')).some(e=>e.url==='/topics/')) {
   fail('Topics missing from local search index','search-index.json');
 }
-console.log('[nav-qa] '+checked+' HTML documents share an identical eight-link menu, correct active state, one stylesheet and working links.');
+console.log('[nav-qa] '+checked+' HTML documents share the same eight-link menu and one mobile search control, with correct current page state.');
