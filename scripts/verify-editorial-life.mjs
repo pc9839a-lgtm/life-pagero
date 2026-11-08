@@ -144,9 +144,10 @@ check(editorialStyle.includes('max-width:430px') &&
   editorialStyle.includes('grid-template-columns:repeat(3,minmax(0,1fr))') &&
   editorialStyle.includes('font-size:13px'),
   'mobile three-column quick navigation not optimized');
-check(editorialStyle.includes('overflow-x:auto;overflow-y:hidden;scrollbar-width:none') &&
-  editorialStyle.includes('min-height:44px;padding:13px 1px 10px'),
-  'sitewide 7-item navigation is not accessible on mobile');
+check(editorialStyle.includes('grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(43px,auto)') &&
+  editorialStyle.includes('.life-editorial .nav-inner a:nth-child(n+5){border-top:1px solid #f1f2f3}') &&
+  !editorialStyle.includes('overflow-x:auto;overflow-y:hidden;scrollbar-width:none'),
+  'sitewide 8-link navigation must be visible as 4x2 rows on mobile');
 check(editorialStyle.includes('.life-home-tool-list{display:grid;grid-template-columns:1fr;gap:0}') &&
   editorialStyle.includes('.life-home-tool-link{min-height:77px'),
   'mobile calculators must be touch-friendly, single-column links');
