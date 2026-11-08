@@ -55,7 +55,7 @@
       const controller=new AbortController();
       const id=setTimeout(()=>controller.abort(),11500);
       try{
-        const response=await fetch(prefix+url.replace(/^\\//,''),{signal:controller.signal});
+        const response=await fetch(prefix+(url.startsWith('/')?url.slice(1):url),{signal:controller.signal});
         const payload=await response.json();
         if(!response.ok || payload.status!=='ok')
           throw new Error(payload.message||'응답 오류');
