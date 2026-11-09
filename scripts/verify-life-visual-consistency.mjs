@@ -114,6 +114,47 @@ for(const file of [
     'sitewide theme should appear once '+file);
   assert.ok(html.includes('aria-label="전체 메뉴"'),'nav missing '+file);
 }
+// The shell, card and form-control scale must be shared, not locally
+// reintroduced on only the homepage or in one menu's late stylesheet.
+for(const token of [
+  '--life-control-height:44px',
+  '--life-control-radius:8px',
+  '--life-control-border:#dfe3e7',
+  '--life-card-border:var(--line)',
+  '--life-row-hover:#fff8f5'
+])assert.ok(css.theme.includes(token),'missing control/card design token '+token);
+for(const [sheet,marker] of [
+  ['theme','.life-editorial.life-modern-article .site-shell{max-width:1160px}'],
+  ['theme','.life-editorial .portal-page.finance-page h1{font-size:var(--life-page-title-size)}'],
+  ['today','width:100%;max-width:var(--content);min-width:0'],
+  ['events','.events-shell{width:calc(100% - 72px);max-width:var(--content)'],
+  ['estate','.life-editorial .re-shell{max-width:var(--content);width:calc(100% - 72px)'],
+  ['finance','.finance-page{max-width:var(--content)'],
+  ['deals','max-width:var(--content)'],
+  ['food','.life-editorial .food-hub{width:100%;max-width:var(--content)'],
+  ['events','.events-shell,.events-home-banner{width:calc(100% - 24px)'],
+  ['estate','.life-editorial .re-shell{width:calc(100% - 24px)']
+])assert.ok(css[sheet].includes(marker),'inconsistent page shell '+sheet+': '+marker);
+for(const [sheet,marker] of [
+  ['theme','.life-editorial .sidebar-card{min-width:0;padding:18px;border:1px solid var(--life-card-border);border-radius:var(--life-card-radius)'],
+  ['today','border:1px solid var(--life-card-border);border-radius:var(--life-card-radius)'],
+  ['events','.events-card{display:flex;flex-direction:column;justify-content:space-between;min-width:0;padding:19px;background:#fff;border:1px solid var(--life-card-border);border-radius:var(--life-card-radius)'],
+  ['estate','border:1px solid var(--life-card-border);border-radius:var(--life-card-radius);min-height:190px'],
+  ['deals','border:1px solid var(--life-card-border);border-radius:var(--life-card-radius)'],
+  ['finance','.finance-hub-card{display:flex;flex-direction:column;gap:5px;background:#fff;border:1px solid var(--life-card-border);border-radius:var(--life-card-radius)']
+])assert.ok(css[sheet].includes(marker),'inconsistent card style '+sheet+': '+marker);
+for(const [sheet,marker] of [
+  ['theme','.life-editorial .today-widget-heading select{min-height:var(--life-control-height)'],
+  ['today','min-height:var(--life-control-height);max-width:115px'],
+  ['events','min-height:var(--life-control-height);padding:9px 15px'],
+  ['estate','.life-editorial .re-tab{min-height:var(--life-control-height)'],
+  ['estate','.life-editorial .re-select select{height:var(--life-control-height)'],
+  ['finance','height:var(--life-control-height);border:1px solid var(--life-control-border)'],
+  ['deals','min-height:var(--life-control-height);padding:8px 13px'],
+  ['food','#food-month{min-height:var(--life-control-height)'],
+  ['food','#food-servings{min-height:var(--life-control-height)']
+])assert.ok(css[sheet].includes(marker),'inconsistent control style '+sheet+': '+marker);
+
 // CSS version changes whenever its content changes. Otherwise an updated
 // menu can still appear with the previous typography from the browser cache.
 const versionedStyles=['events-ui.css','real-estate.css','adpick-deals.css',
@@ -136,4 +177,4 @@ for(const file of filesIn(ROOT).filter(file=>file.endsWith('.html'))){
 }
 assert.ok(checkedLinks>=5,'expected versioned menu styles on the public pages');
 
-console.log('[visual-consistency] PASS: one Pretendard face and desktop/mobile H1/H2/card/body/lead scales across ten menus and seven stylesheets');
+console.log('[visual-consistency] PASS: one Pretendard face and desktop/mobile H1/H2/card/body/lead scales plus shells/cards/controls across ten menus and seven stylesheets');
