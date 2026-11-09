@@ -38,7 +38,8 @@ check(!client.includes('["commission"'),"commission category displayed in tabs")
 check(page.includes("제휴 링크가 포함되어 있으며")&&page.includes("수수료가 지급될 수 있습니다"),"affiliate disclosure lost");
 check(page.includes('name="robots" content="noindex,follow"'),'affiliate-only route must noindex');
 check(page.includes('data-deals-list')&&page.includes('data-deals-search'),'live deals and search controls missing');
-check(page.includes('href="'+dealsCssUrl+'"')&&page.includes('src="/adpick-deals.js?v=20261106e"'),'deals versioned assets missing');
+check(page.includes('상품 영역이 보이면 상품을 불러옵니다.'),'initial shopping status must not claim a server fetch');
+check(page.includes('href="'+dealsCssUrl+'"')&&page.includes('src="/adpick-deals.js?v=20261109a"'),'deals versioned assets missing');
 check(home.includes('href="'+dealsCssUrl+'"'),'homepage versioned CSS missing');
 const headers=fs.readFileSync(path.resolve("dist/_headers"),"utf8");
 check(headers.includes('/deals/')&&headers.includes('/adpick-deals.js')&&headers.includes('no-store'),'hotdeal cache control missing');
