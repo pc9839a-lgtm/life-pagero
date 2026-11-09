@@ -127,3 +127,14 @@ test('invalid duplicate interactions do not spend another request',async()=>{
   await s.settle(200);
   assert.equal(s.fetches.length,1);
 });
+
+test('switching back to already displayed cards cancels a queued category for free',async()=>{
+  const s=await setup({visible:true});
+  assert.equal(s.fetches.length,1);
+  s.tab('popular');
+  s.tab('today');
+  await s.settle(230);
+  assert.equal(s.fetches.length,1,'already rendered deals should not fetch again');
+  assert.equal(s.target.childElementCount,1);
+  assert.equal(s.status.textContent,'1개 상품');
+});
