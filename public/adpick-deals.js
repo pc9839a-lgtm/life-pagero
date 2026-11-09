@@ -19,7 +19,7 @@ const https=value=>{
 };
 const keyOf=params=>params.mode+":"+(params.mode==="best"?params.area:params.q);
 let active="today",requestId=0,activeController=null;
-let queuedTimer=null,queuedKey=null,loadingKey=null,lastSuccessfulKey=null;
+let queuedTimer=null,queuedKey=null,loadingKey=null,lastSuccessfulKey=null,lastSuccessfulStatus='';
 let initialTriggered=false,observedWhileHidden=false;
 const srcFood=new URLSearchParams(location.search).get("src")==="food";
 function selectButtons(){
@@ -109,8 +109,9 @@ async function load(params,force=false){
     const data=await response.json();
     if(id!==requestId)return;
     if(data.status!=="ok"||!Array.isArray(data.items))throw Error("INVALID_RESPONSE");
-    lastSuccessfulKey=key;
     render(data.items,params);
+    lastSuccessfulKey=key;
+    lastSuccessfulStatus=status.textContent;
   }catch{
     if(id!==requestId)return;
     lastSuccessfulKey=null;
@@ -125,6 +126,14 @@ function enqueue(params){
   const key=keyOf(params);
   if(queuedKey===key||loadingKey===key)return;
   initialTriggered=true;
+  if(key===lastSuccessfulKey&&!activeController&&target.childElementCount){
+    // User switched away then immediately back before the new category ran.
+    // Existing cards are still on screen; cancel the pending fetch for free.
+    cancelPending();
+    requestId++;
+    status.textContent=lastSuccessfulStatus;
+    return;
+  }
   cancelPending();
   // Quick switching between categories invokes only the final selection.
   requestId++;
