@@ -18,7 +18,7 @@ const https=value=>{
   catch{return null;}
 };
 const keyOf=params=>params.mode+":"+(params.mode==="best"?params.area:params.q);
-let active="today",requestId=0,activeController=null,timeout=null;
+let active="today",requestId=0,activeController=null;
 let queuedTimer=null,queuedKey=null,loadingKey=null,lastSuccessfulKey=null;
 let initialTriggered=false,observedWhileHidden=false;
 const srcFood=new URLSearchParams(location.search).get("src")==="food";
@@ -89,7 +89,7 @@ function cancelPending(){
 }
 async function load(params,force=false){
   const key=keyOf(params);
-  if(!force&&(loadingKey===key||lastSuccessfulKey===key))return;
+  if(!force&&loadingKey===key)return;
   initialTriggered=true;
   cancelPending();
   const id=++requestId;
@@ -101,7 +101,6 @@ async function load(params,force=false){
   const query=new URLSearchParams(params);
   if(params.mode==="search"&&srcFood)query.set("src","food");
   const abortTimer=setTimeout(()=>controller.abort(),9500);
-  timeout=abortTimer;
   try{
     const response=await fetch(prefix+"deals/api?"+query,{
       headers:{Accept:"application/json"},cache:"no-store",signal:controller.signal
@@ -114,16 +113,17 @@ async function load(params,force=false){
     render(data.items,params);
   }catch{
     if(id!==requestId)return;
+    lastSuccessfulKey=null;
     status.textContent="조회 실패";
     showEmpty("상품 정보를 불러오지 못했습니다.",params);
   }finally{
     clearTimeout(abortTimer);
-    if(id===requestId){activeController=null;loadingKey=null;timeout=null;}
+    if(id===requestId){activeController=null;loadingKey=null;}
   }
 }
 function enqueue(params){
   const key=keyOf(params);
-  if(queuedKey===key||loadingKey===key||lastSuccessfulKey===key)return;
+  if(queuedKey===key||loadingKey===key)return;
   initialTriggered=true;
   cancelPending();
   // Quick switching between categories invokes only the final selection.
