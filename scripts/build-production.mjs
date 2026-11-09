@@ -72,6 +72,7 @@ const steps = [
   ['node', ['scripts/verify-savings-calculator.mjs']],
   ['node', ['scripts/verify-car-mortgage-calculators.mjs']],
   ['node', ['scripts/verify-adpick-deals.mjs']],
+  ['node', ['--test', 'scripts/adpick-deals-lazy.test.mjs']],
   ['node', ['scripts/verify-food-hub.mjs']],
   ['node', ['scripts/verify-food-guides.mjs']],
   ['node', ['scripts/verify-events.mjs']],
