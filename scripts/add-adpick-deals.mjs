@@ -21,7 +21,7 @@ const content=`<div class="site-shell"><article class="adpick-deals">
 <section class="adpick-products" aria-labelledby="adpick-products-heading">
 <div class="adpick-section-head"><h2 id="adpick-products-heading">상품 모아보기</h2></div>
 <div class="adpick-filters" data-deals-filters role="group" aria-label="상품 분류"></div>
-<div class="adpick-feed-row"><p class="adpick-meta" data-deals-status role="status">상품을 확인하고 있습니다.</p></div>
+<div class="adpick-feed-row"><p class="adpick-meta" data-deals-status role="status">상품 영역이 보이면 상품을 불러옵니다.</p></div>
 <div class="adpick-grid" data-deals-list aria-live="polite"></div>
 </section>
 <p class="adpick-disclosure">이 페이지에는 제휴 링크가 포함되어 있으며, 구매 시 운영자에게 수수료가 지급될 수 있습니다.</p>
@@ -36,7 +36,7 @@ for(const [re,value,label] of [
 [/<meta property="og:description"[^>]*>/,'<meta property="og:description" content="인기 쇼핑 상품을 한곳에서 확인하세요.">',"ogdescription"],
 [/<meta property="og:url"[^>]*>/,'<meta property="og:url" content="'+SITE+'/deals/">',"ogurl"],
 [/<main id="main-content">[\s\S]*?<\/main>/,'<main id="main-content">'+content+'</main>',"main"],
-[/<\/head>/,'<link rel="stylesheet" href="/adpick-deals.css?v=20261106e"><script defer src="/adpick-deals.js?v=20261106e"></script></head>',"head"]
+[/<\/head>/,'<link rel="stylesheet" href="/adpick-deals.css?v=20261109a"><script defer src="/adpick-deals.js?v=20261109a"></script></head>',"head"]
 ])html=replace(html,re,value,label);
 write("deals/index.html",html);
 
@@ -53,6 +53,6 @@ const entry='<section class="adpick-home-entry" aria-label="핫딜 바로가기"
 +'<a href="/deals/" class="adpick-home-link">핫딜 보러가기</a></section>';
 home=home.slice(0,insertAt)+entry+home.slice(insertAt);
 if(!home.includes('href="/adpick-deals.css"'))
-  home=home.replace('</head>','<link rel="stylesheet" href="/adpick-deals.css?v=20261106e"></head>');
+  home=home.replace('</head>','<link rel="stylesheet" href="/adpick-deals.css?v=20261109a"></head>');
 write("index.html",home);
 console.log("[adpick-biz] /deals/ live affiliate widget added, no product data stored.");
