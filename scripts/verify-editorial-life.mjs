@@ -203,7 +203,7 @@ for(const filename of ['today/index.html','finance/markets/index.html']){
     'Current client-side quote renderer must be cache-busted: '+filename);
 }
 const wideDashboard=read('today-wide.css');
-check(wideDashboard.includes('max-width:1360px') &&
+check(wideDashboard.includes('max-width:var(--content)') &&
   wideDashboard.includes('grid-template-areas:"weather news" "fx news" "crypto crypto"') &&
   wideDashboard.includes('grid-template-areas:"weather" "news" "fx" "crypto"'),
   'Today desktop and mobile layouts must have separate information priorities');

@@ -73,7 +73,7 @@ for(const id of ['weather','news','fx','crypto']){
 yes(!today.includes('class="today-section-nav"') &&
   today.includes('class="today-page-head"'),
   'remove the redundant anchor tab row to expose live information');
-yes(wideCss.includes('max-width:1360px') &&
+yes(wideCss.includes('max-width:var(--content)') &&
   wideCss.includes('grid-template-areas:"weather news" "fx news" "crypto crypto"') &&
   wideCss.includes('@media(max-width:350px)') &&
   wideCss.includes('grid-template-areas:"weather" "news" "fx" "crypto"'),

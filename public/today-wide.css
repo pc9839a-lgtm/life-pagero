@@ -9,7 +9,7 @@ body.life-modern #main-content>.today-viewport{
 }
 body.life-editorial #main-content>.today-viewport>.today-wide-content,
 body.life-modern #main-content>.today-viewport>.today-wide-content{
-  display:block;box-sizing:border-box;width:100%;max-width:1360px;min-width:0;
+  display:block;box-sizing:border-box;width:100%;max-width:var(--content);min-width:0;
   margin:0 auto;padding:0;border:0;border-radius:0;background:#fff;box-shadow:none
 }
 .life-editorial .today-wide-content .portal-breadcrumbs{
@@ -36,7 +36,7 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
 }
 .life-editorial .today-wide-content .today-dashboard-grid>.today-widget{
   box-sizing:border-box;min-width:0;width:100%;max-width:none;height:auto;min-height:0;
-  margin:0;padding:19px 22px;border:1px solid #e5e9ec;border-radius:10px;
+  margin:0;padding:19px 22px;border:1px solid var(--life-card-border);border-radius:var(--life-card-radius);
   background:#fff;box-shadow:none;align-self:start;overflow:visible
 }
 .life-editorial .today-wide-content .today-dashboard-grid>[data-today-weather]{
@@ -229,7 +229,7 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   ;color:var(--life-muted-color);}
   .life-editorial .today-wide-content .today-dashboard-grid{row-gap:10px}
   .life-editorial .today-wide-content .today-dashboard-grid>.today-widget{
-    padding:16px 14px;border-radius:9px
+    padding:16px 14px;border-radius:var(--life-card-radius)
   }
   .life-editorial .today-wide-content .today-dashboard-grid>[data-today-weather]{
     padding:18px 16px
@@ -239,7 +239,7 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   }
   .life-editorial .today-wide-content .today-widget-heading h3{font-size:var(--life-section-title-size);font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
   .life-editorial .today-wide-content .today-widget-heading select{
-    min-height:40px;max-width:115px;font-size:13px
+    min-height:var(--life-control-height);max-width:115px;font-size:13px
   }
   .life-editorial .today-wide-content .today-weather-temp{font-size:49px}
   .life-editorial .today-wide-content .today-weather-condition{font-size:14px}
