@@ -20,6 +20,6 @@
 
 페이지 특화 자산 `public/today-wide.css`, `public/finance-experience.css`, `public/events-ui.css`, `public/real-estate.css`, `public/adpick-deals.css`, `public/life-food.css`는 현재 사용합니다. 공통 폰트·테두리·크기는 `00-foundation.css`의 토큰을 사용하고, 페이지에서 중복 선언하지 않는 것이 원칙입니다.
 
-`public/styles.css`, `public/portal-ux.css`, `public/life-editorial-20261022.css`는 기존 화면의 기초 레이아웃/콘텐츠를 유지하는 레이어이므로 아직 삭제하면 안 됩니다. `life-modern.css`, `life-compact.css`, `life-global-nav.css`, `today-dashboard.css`는 중간 빌드 단계에서만 참조하며 최종 HTML에서 제거됩니다. 최종 빌드의 `scripts/finish-css-assets.mjs`가 해당 구버전 배포 자산을 제거합니다.
+`public/styles.css`, `public/portal-ux.css`, `public/life-editorial-20261022.css`는 기존 화면의 기초 레이아웃/콘텐츠를 유지하는 레이어이므로 아직 삭제하면 안 됩니다. `life-modern.css`, `life-compact.css`, `life-global-nav.css`, `today-dashboard.css`는 중간 빌드 단계에서만 `assets/styles/legacy/`에서 `dist`로 임시 복사하며 최종 HTML에서 제거됩니다. 최종 빌드의 `scripts/finish-css-assets.mjs`가 해당 구버전 배포 자산을 제거합니다.
 
 **주의:** CSS 분리 자체는 UI 변경이 아닙니다. 새 기능을 추가할 때는 공통 토큰을 우선 사용하고, CSS 파일을 추가해 마지막에 덮어씌우는 식의 임시 수정을 피합니다.
