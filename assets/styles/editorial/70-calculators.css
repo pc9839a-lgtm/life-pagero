@@ -1,0 +1,328 @@
+/* Calculator edition, 2026-11-06. This is the single authoritative
+   calculator stylesheet inside LIFE's single shared editorial CSS. */
+.life-editorial .savings-calc-page,
+.life-editorial .lifestyle-calc-page{
+  width:100%;max-width:none;margin:0;padding:18px 0 54px;
+  border:0;border-radius:0;background:#fff;box-shadow:none;
+}
+.life-editorial .savings-page-head,
+.life-editorial .lifestyle-calc-page>h1{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:14px;margin:0 0 25px;padding:0 0 15px;
+  border:0;border-bottom:1px solid #dce0e4;color:#1c252d;
+}
+.life-editorial .savings-page-head h1,
+.life-editorial .lifestyle-calc-page>h1{
+  font-size:var(--life-page-title-size);line-height:var(--life-heading-line);
+  letter-spacing:var(--life-heading-tracking);font-weight:var(--life-heading-weight);margin:0;
+color:var(--life-heading-color);}
+.life-editorial .savings-page-links{
+  display:flex;align-items:center;flex-wrap:wrap;gap:7px 14px;justify-content:flex-end;
+}
+.life-editorial .savings-page-links a{
+  color:var(--brand);font-weight:750;font-size:13px;white-space:nowrap;
+}
+.life-editorial .calculator-workspace{
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);
+  gap:clamp(18px,2.4vw,35px);align-items:start;
+  width:100%;max-width:none;margin:0 0 30px;
+}
+.life-editorial .calculator-workspace>form{
+  width:100%;min-width:0;margin:0;
+  padding:clamp(19px,2.3vw,30px);
+  background:#f8f9fa;border:1px solid #e6e9ed;
+  border-radius:12px;box-shadow:none;
+}
+.life-editorial .calculator-form-header{
+  display:flex;align-items:baseline;justify-content:space-between;
+  flex-wrap:wrap;gap:6px 10px;
+  padding:0 0 18px;margin:0 0 19px;
+  border-bottom:1px solid #e1e4e8;
+}
+.life-editorial .calculator-form-header strong{
+  color:#1c2730;font-size:18px;font-weight:820;letter-spacing:-.045em;
+}
+.life-editorial .calculator-form-header>span{
+  color:#79848f;font-size:12px;
+}
+.life-editorial .savings-calc-fields,
+.life-editorial .cost-field-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:17px 14px;margin:0;padding:0;
+}
+.life-editorial .savings-field,
+.life-editorial .calc-field{
+  display:flex;flex-direction:column;gap:8px;min-width:0;
+}
+.life-editorial .savings-field>span:first-child,
+.life-editorial .calc-field>span:first-child{
+  color:#3b4855;font-size:13px;line-height:1.35;font-weight:740;
+}
+.life-editorial .savings-input-unit{
+  display:flex;align-items:center;gap:0;
+  height:52px;width:100%;min-width:0;
+  background:#fff;border:1px solid #d8dfe6;border-radius:7px;
+}
+.life-editorial .savings-input-unit>input{
+  min-width:0;flex:1;width:100%;height:100%;
+  padding:9px 12px 9px 14px;background:transparent;
+  border:0;border-radius:7px;outline:0;color:#1c2936;
+  font-size:17px;font-weight:760;font-variant-numeric:tabular-nums;
+}
+.life-editorial .savings-input-unit>span{
+  flex-shrink:0;padding:0 14px 0 4px;
+  color:#8a949e;font-size:13px;
+}
+.life-editorial .savings-field>select,
+.life-editorial .calc-field input[type=number],
+.life-editorial .calc-field select{
+  display:block;min-height:52px;height:52px;width:100%;min-width:0;
+  padding:10px 13px;border:1px solid #d8dfe6;border-radius:7px;
+  background:#fff;color:#27313b;box-shadow:none;
+  font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;
+}
+.life-editorial .savings-input-unit:focus-within,
+.life-editorial .savings-field>select:focus,
+.life-editorial .calc-field input[type=number]:focus,
+.life-editorial .calc-field select:focus{
+  border-color:var(--brand);
+  outline:2px solid #f9d9cf;outline-offset:1px;
+}
+.life-editorial .savings-calc-shortcuts{
+  display:flex;flex-direction:column;gap:9px;
+  padding:15px 0 0;margin:0;
+}
+.life-editorial .savings-preset-row{
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+}
+.life-editorial .savings-preset-row>span{
+  min-width:54px;color:#6f7c87;font-size:12px;
+}
+.life-editorial .savings-preset-row button{
+  min-height:33px;padding:7px 12px;
+  border:1px solid #dce2e7;border-radius:100px;
+  background:#fff;color:#52606c;font-size:12px;font-weight:650;
+  cursor:pointer;
+}
+.life-editorial .savings-preset-row button[aria-pressed=true]{
+  border-color:var(--brand);background:#fff2ec;color:var(--brand-dark);
+  font-weight:800;
+}
+.life-editorial .savings-calc-submit,
+.life-editorial .cost-submit{
+  display:flex;justify-content:center;align-items:center;
+  width:100%;min-height:47px;margin:19px 0 0;padding:11px 20px;
+  border:1px solid #252f38;border-radius:7px;
+  background:#252f38;color:#fff;font-size:14px;font-weight:790;
+  cursor:pointer;box-shadow:none;
+}
+.life-editorial .savings-calc-submit:hover,
+.life-editorial .cost-submit:hover{
+  background:var(--brand);border-color:var(--brand);color:#fff;
+}
+.life-editorial #savings-error,.life-editorial .cost-error{
+  color:#b33929;font-size:13px;line-height:1.5;margin:12px 0 0;
+}
+.life-editorial .calculator-workspace>.savings-calc-results,
+.life-editorial .calculator-workspace>.cost-result{
+  position:sticky;top:20px;min-width:0;width:100%;
+  margin:0;padding:clamp(22px,2.5vw,34px);
+  background:#fff8f4;border:1px solid #f0ded5;
+  border-radius:12px;box-shadow:none;
+}
+.life-editorial .savings-calc-result-top,
+.life-editorial .cost-result{
+  text-align:left;
+}
+.life-editorial .savings-calc-result-top>span:first-child,
+.life-editorial .cost-result-kicker{
+  display:block;font-size:13px;font-weight:800;color:#64564e;
+}
+.life-editorial #savings-maturity,
+.life-editorial .cost-result-primary{
+  display:block;margin:8px 0 5px;padding:0;
+  font-size:clamp(29px,3.1vw,43px);line-height:1.2;
+  letter-spacing:-.055em;color:#d94f30;font-weight:860;
+  font-variant-numeric:tabular-nums;overflow-wrap:anywhere;
+}
+.life-editorial #savings-summary-terms,
+.life-editorial .cost-result-reason{
+  display:block;margin:4px 0 0;color:#938078;font-size:12px;
+}
+.life-editorial .savings-calc-metrics,
+.life-editorial .cost-result-metrics{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:0;margin:24px 0 0;padding:9px 0 0;border-top:1px solid #ecdcd4;
+}
+.life-editorial .savings-calc-metrics>div,
+.life-editorial .cost-result-metrics>div{
+  min-width:0;margin:0;padding:16px 10px 15px 0;
+  border-right:0;border-bottom:1px solid #eedfd7;
+}
+.life-editorial .savings-calc-metrics>div:nth-child(even),
+.life-editorial .cost-result-metrics>div:nth-child(even){padding-left:11px}
+.life-editorial .savings-calc-metrics>div:nth-last-child(-n+2),
+.life-editorial .cost-result-metrics>div:nth-last-child(-n+2){border-bottom:0}
+.life-editorial .savings-calc-metrics dt,
+.life-editorial .cost-result-metrics>div span{
+  display:block;margin:0 0 7px;color:#82746c;
+  font-size:12px;font-weight:610;line-height:1.45;
+}
+.life-editorial .savings-calc-metrics dd,
+.life-editorial .cost-result-metrics>div strong{
+  display:block;margin:0;color:#27323d;line-height:1.35;
+  font-size:16px;font-weight:790;font-variant-numeric:tabular-nums;
+  overflow-wrap:anywhere;
+}
+.life-editorial .savings-copy{
+  padding:12px 0 0;margin:0;border:0;background:transparent;
+  color:var(--brand);font-size:12px;font-weight:750;cursor:pointer;
+}
+.life-editorial .savings-calc-note,.life-editorial .cost-note,
+.life-editorial .cost-examples{
+  margin:12px 0 0;max-width:1000px;
+  color:#74808a;font-size:12px;line-height:1.8;
+}
+.life-editorial .savings-calc-note a,.life-editorial .cost-note a{
+  color:var(--brand);text-decoration:underline;text-underline-offset:3px;
+}
+.life-editorial .cost-advanced{
+  margin:18px 0 0;border-top:1px solid #e0e5e9;
+  border-bottom:1px solid #e0e5e9;
+}
+.life-editorial .cost-advanced>summary{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;min-height:49px;padding:11px 2px;
+  list-style:none;cursor:pointer;color:#34404b;font-size:13px;font-weight:770;
+}
+.life-editorial .cost-advanced>summary::-webkit-details-marker,
+.life-editorial .cost-breakdown>summary::-webkit-details-marker,
+.life-editorial .savings-calc-details>summary::-webkit-details-marker{display:none}
+.life-editorial .cost-advanced>summary::after,
+.life-editorial .cost-breakdown>summary::after,
+.life-editorial .savings-calc-details>summary::after{
+  content:"+";color:var(--brand);font-size:22px;font-weight:550;
+}
+.life-editorial .cost-advanced[open]>summary::after,
+.life-editorial .cost-breakdown[open]>summary::after,
+.life-editorial .savings-calc-details[open]>summary::after{content:"−"}
+.life-editorial .cost-advanced .cost-extra-fields{
+  margin:0;padding:14px 0 19px;border-top:1px solid #e5e8eb;
+}
+.life-editorial .calc-field .cost-checkbox{
+  display:flex;align-items:center;gap:8px;
+  min-height:52px;padding:12px 13px;
+  background:#fff;border:1px solid #d8dfe6;border-radius:7px;
+  font-weight:700;font-size:14px;color:#34404b;
+}
+.life-editorial .calc-field input[type=checkbox]{
+  width:18px;height:18px;accent-color:var(--brand);
+}
+.life-editorial .cost-breakdown,
+.life-editorial .savings-calc-details{
+  display:block;margin:26px 0 24px;padding:0;
+  border:0;border-top:1px solid #dfe4e8;
+  border-bottom:1px solid #dfe4e8;background:#fff;
+}
+.life-editorial .cost-breakdown>summary,
+.life-editorial .savings-calc-details>summary{
+  display:flex;align-items:center;justify-content:space-between;
+  min-height:53px;padding:12px 2px;
+  color:#273440;font-size:15px;font-weight:780;cursor:pointer;list-style:none;
+}
+.life-editorial .cost-table-scroll,.life-editorial .savings-table-wrap{
+  width:100%;max-width:100%;overflow-x:auto;
+  margin:4px 0 19px;
+}
+.life-editorial .cost-table-scroll table,
+.life-editorial .savings-table-wrap table{
+  border-collapse:collapse;width:100%;min-width:440px;font-size:13px;
+}
+.life-editorial .cost-table-scroll th,
+.life-editorial .cost-table-scroll td,
+.life-editorial .savings-table-wrap th,
+.life-editorial .savings-table-wrap td{
+  padding:12px;border-bottom:1px solid #ebeff2;
+  font-variant-numeric:tabular-nums;
+}
+.life-editorial .cost-table-scroll thead th,
+.life-editorial .savings-table-wrap thead th{
+  color:#64717c;font-size:12px;font-weight:750;background:#f7f8fa;
+}
+.life-editorial .cost-table-scroll th:first-child,
+.life-editorial .savings-table-wrap th:first-child,
+.life-editorial .cost-table-scroll td:first-child,
+.life-editorial .savings-table-wrap td:first-child{text-align:left}
+.life-editorial .cost-table-scroll td,
+.life-editorial .savings-table-wrap td,
+.life-editorial .cost-table-scroll th:not(:first-child),
+.life-editorial .savings-table-wrap th:not(:first-child){text-align:right}
+.life-editorial .mortgage-limit-rows{display:block;padding:0 0 15px}
+.life-editorial .mortgage-limit-rows>div{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:15px;min-height:46px;padding:8px 3px;border-bottom:1px solid #edf0f2;
+}
+.life-editorial .mortgage-limit-rows>div span{
+  color:#6f7c88;font-size:13px;
+}
+.life-editorial .mortgage-limit-rows>div strong{
+  color:#263340;font-size:14px;font-weight:760;
+  white-space:nowrap;font-variant-numeric:tabular-nums;
+}
+.life-editorial .car-cost-category-link,
+.life-editorial .savings-calc-shortcut{
+  display:inline-flex;align-items:center;min-height:35px;
+  margin:12px 0;padding:5px 0;color:var(--brand);
+  font-weight:760;font-size:13px;
+}
+@media(max-width:980px){
+  .life-editorial .calculator-workspace{grid-template-columns:1fr;gap:16px}
+  .life-editorial .calculator-workspace>.savings-calc-results,
+  .life-editorial .calculator-workspace>.cost-result{position:static}
+}
+@media(max-width:700px){
+  .life-editorial .savings-calc-page,
+  .life-editorial .lifestyle-calc-page{padding:7px 0 36px}
+  .life-editorial .savings-page-head,.life-editorial .lifestyle-calc-page>h1{
+    padding:0 0 13px;margin:0 0 15px;
+  }
+  .life-editorial .savings-page-head h1,
+  .life-editorial .lifestyle-calc-page>h1{font-size:var(--life-page-title-size);line-height:var(--life-heading-line);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
+  .life-editorial .savings-page-head>a{font-size:11px}
+  .life-editorial .calculator-workspace{gap:12px;margin-bottom:18px}
+  .life-editorial .calculator-workspace>form{padding:18px 15px;border-radius:10px}
+  .life-editorial .calculator-form-header{margin-bottom:15px;padding-bottom:13px}
+  .life-editorial .calculator-form-header strong{font-size:17px}
+  .life-editorial .calculator-form-header>span{font-size:11px}
+  .life-editorial .savings-calc-fields,
+  .life-editorial .cost-field-grid{gap:12px 10px}
+  .life-editorial .savings-field>span:first-child,
+  .life-editorial .calc-field>span:first-child{font-size:12px}
+  .life-editorial .savings-field>select,
+  .life-editorial .calc-field input[type=number],
+  .life-editorial .calc-field select,
+  .life-editorial .savings-input-unit{height:47px;min-height:47px}
+  .life-editorial .savings-input-unit>input{font-size:16px;padding-left:10px}
+  .life-editorial .calc-field input[type=number],
+  .life-editorial .calc-field select{font-size:14px;padding:8px}
+  .life-editorial .savings-preset-row>span{min-width:54px}
+  .life-editorial .savings-preset-row button{padding:6px 9px;font-size:11px;min-height:32px}
+  .life-editorial .savings-calc-shortcuts{gap:7px}
+  .life-editorial .savings-calc-submit,
+  .life-editorial .cost-submit{margin-top:14px}
+  .life-editorial .calculator-workspace>.savings-calc-results,
+  .life-editorial .calculator-workspace>.cost-result{padding:23px 20px}
+  .life-editorial #savings-maturity,
+  .life-editorial .cost-result-primary{font-size:34px}
+  .life-editorial .savings-calc-metrics dd,
+  .life-editorial .cost-result-metrics>div strong{font-size:15px}
+}
+@media(max-width:355px){
+  .life-editorial .savings-calc-fields,
+  .life-editorial .cost-field-grid{grid-template-columns:1fr}
+  .life-editorial .savings-page-head{align-items:flex-start}
+}
+
+
+
