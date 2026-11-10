@@ -24,6 +24,7 @@ const reveal=document.getElementById('food-show-recipe'),basket=document.getElem
 const count=document.getElementById('food-shopping-count'),copy=document.getElementById('food-copy');
 const clearDone=document.getElementById('food-clear-done'),clearAll=document.getElementById('food-clear-all');
 if(!month||!servingsSelect||!heading||!list||!result||!picker||!reveal||!basket||!count||!copy||!clearDone||!clearAll)return;
+const prefix=location.pathname.startsWith('/life/')?'/life/':'/';
 const storageKey='life_food_grocery_v1';
 const el=(tag,cls,value)=>{const x=document.createElement(tag);if(cls)x.className=cls;if(value!==undefined)x.textContent=value;return x;};
 const format=n=>String(Number(n.toFixed(2)));
@@ -63,7 +64,7 @@ function card(row,index){
   save();drawBasket();put.textContent='담았습니다';
  });
  details.append(put);article.append(details);
- const buy=el('a','food-buy','관련 상품 검색 ↗');buy.href='/deals/?q='+encodeURIComponent(query)+'&src=food';
+ const buy=el('a','food-buy','관련 상품 검색 ↗');buy.href=prefix+'deals/?q='+encodeURIComponent(query)+'&src=food';
  article.append(buy);return article;
 }
 function drawBasket(){
@@ -76,7 +77,7 @@ function drawBasket(){
   cb.addEventListener('change',()=>{x.checked=cb.checked;save();drawBasket();});
   label.append(cb,el('span',x.checked?'food-checked':'',x.name+' '+format(x.qty)+x.unit));
   const search=el('a','food-shopping-search','상품 검색');
-  search.href='/deals/?q='+encodeURIComponent(x.name)+'&src=food';
+  search.href=prefix+'deals/?q='+encodeURIComponent(x.name)+'&src=food';
   const remove=el('button','food-shopping-remove','삭제');remove.type='button';
   remove.setAttribute('aria-label',x.name+' 삭제');
   remove.addEventListener('click',()=>{groceries.splice(index,1);save();drawBasket();});
