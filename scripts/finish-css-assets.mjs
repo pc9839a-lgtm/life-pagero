@@ -32,9 +32,11 @@ const legacy=[
 ];
 for(const name of legacy){
  // Reject pruning if any page still requests the old asset.
- const rx=new RegExp('(?:href|src)=["\\'](?:/|https?://[^"\\']*/)' +
-   name.replaceAll('.','\\.')+'(?:[?"\\'])');
- if(rx.test(html))throw Error('[css-finish] Legacy stylesheet is still linked: '+name);
+ const linked=html.includes('href="/'+name+'"')||
+   html.includes('href="/'+name+'?')||
+   html.includes('src="/'+name+'"')||
+   html.includes('src="/'+name+'?');
+ if(linked)throw Error('[css-finish] Legacy stylesheet is still linked: '+name);
  const asset=path.join(dist,name);
  if(fs.existsSync(asset))fs.unlinkSync(asset);
 }
