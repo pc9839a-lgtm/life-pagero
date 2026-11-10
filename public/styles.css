@@ -28,23 +28,18 @@
 
 
 /* Sponsored auto-offer: clearly separated from independent editorial guidance. */
-
 .life-affiliate{color:#1f2937;}
-
 .life-affiliate-title{margin:0 0 16px;font-size:18px;line-height:1.5;font-weight:650;letter-spacing:-.03em}
 .life-affiliate-action{gap:8px;text-align:center}
-
 .life-affiliate-notice{margin:0;padding:0 18px 15px;font-size:12px;line-height:1.55;color:#748092}
 .article-content .life-affiliate{margin:28px 0 12px}
 .article-content .life-affiliate-title,.article-content .life-affiliate-notice{margin-bottom:0}
 @media(max-width:680px){.life-affiliate-image{margin:10px 12px 0}.life-affiliate-copy{padding:14px 12px 8px}.life-affiliate-title{font-size:16px}.life-affiliate-label,.life-affiliate-notice{padding-left:12px;padding-right:12px}}
 
 /* Sponsor-layout defaults retained for the final full-width presentation. */
-
 .life-sponsor-grid{align-items:stretch}
 .life-sponsor-grid .life-affiliate{min-width:0;flex-direction:column}
 .life-sponsor-grid .life-affiliate-image{align-items:center;justify-content:center}
-
 .life-sponsor-grid .life-affiliate-copy{flex:1;flex-direction:column;}
 .life-sponsor-grid .life-affiliate-title{flex:1}
 
