@@ -27,6 +27,7 @@ const steps = [
   ['node', ['--test', 'scripts/events.test.mjs']],
   [npm, ['run', 'validate:content']],
   ['node', ['scripts/build.mjs']],
+  ['node', ['scripts/build-editorial-css.mjs']],
   ['node', ['scripts/build-series.mjs']],
   ['node', ['scripts/polish-listings.mjs']],
   ['node', ['scripts/seo-finalize.mjs']],
@@ -78,6 +79,7 @@ const steps = [
   ['node', ['scripts/verify-events.mjs']],
   ['node', ['scripts/write-function-routes.mjs']],
   ['node', ['scripts/verify-function-routes.mjs']],
+  ['node', ['scripts/finish-css-assets.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);
