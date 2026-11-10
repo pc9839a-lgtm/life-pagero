@@ -1,0 +1,354 @@
+/* Life 2026.11: mobile-first information design, intentionally without in-article subheadings.
+   Loaded after all legacy portal and ad styles; no generated copy or editorial facts are changed. */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css");
+
+.life-modern {
+  --brand:#2563eb;
+  --brand-dark:#1d4ed8;
+  --brand-soft:#eff5ff;
+  --ink:#192334;
+  --muted:#657386;
+  --line:#e7ebf1;
+  --surface:#fff;
+  --bg:#fafbfc;
+  --radius:16px;
+  --shadow:none;
+  --content:1200px;
+  background:#fafbfc;
+  color:#192334;
+  font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;
+  font-size:16px;
+  line-height:1.68;
+  word-break:keep-all;
+  overflow-wrap:break-word;
+}
+.life-modern a {color:inherit;text-decoration:none}
+.life-modern a:hover {color:var(--brand)}
+.life-modern :focus-visible {outline:3px solid #2563eb;outline-offset:3px}
+.life-modern button,.life-modern input {font:inherit}
+.life-modern button {cursor:pointer}
+.life-modern .top-strip {display:none}
+.life-modern .site-header {position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97);border:0;border-bottom:1px solid #e8ebef;box-shadow:none;backdrop-filter:blur(14px)}
+.life-modern .header-inner,.life-modern .nav-inner,.life-modern .site-shell,.life-modern .footer-inner,
+.life-modern .top-strip-inner {width:min(calc(100% - 48px),1200px)}
+.life-modern .header-inner {min-height:72px;gap:32px}
+.life-modern .brand {gap:11px;flex-shrink:0}
+.life-modern .brand-mark {width:37px;height:37px;border-radius:12px;background:#2563eb;font-size:18px;font-weight:800;letter-spacing:-.05em}
+.life-modern .brand-copy strong {font-size:22px;font-weight:800;line-height:1.1;letter-spacing:-.06em}
+.life-modern .header-search {width:min(370px,40vw);height:42px;margin-left:auto}
+.life-modern .header-search input {border:1px solid #e4e8ee;border-right:0;background:#f6f8fb;border-radius:11px 0 0 11px;padding:9px 14px;font-size:13px;outline-offset:1px}
+.life-modern .header-search input::placeholder {color:#8590a0}
+.life-modern .header-search button {background:#eff4ff;color:#1d4ed8;border:1px solid #e1e9ff;border-left:0;border-radius:0 11px 11px 0;padding:0 17px;font-size:13px;font-weight:740}
+.life-modern .main-nav {background:transparent;border:0}
+.life-modern .nav-inner {gap:26px;overflow-x:auto;scrollbar-width:none}
+.life-modern .nav-inner::-webkit-scrollbar {display:none}
+.life-modern .nav-inner a {padding:0 0 13px;color:#667386;font-size:14px;font-weight:650;border:0;border-bottom:2px solid transparent;transition:color .15s}
+.life-modern .nav-inner a:hover,.life-modern .nav-inner a[aria-current="page"] {color:#1d4ed8;border-bottom-color:#2563eb}
+.life-modern .site-shell {padding-top:28px;padding-bottom:68px}
+.life-modern .content-grid {grid-template-columns:minmax(0,1fr) 294px;gap:28px}
+.life-modern .main-column,.life-modern .sidebar-card,.life-modern .page-box,.life-modern .article-shell {border:1px solid #e9edf2;box-shadow:none;min-width:0}
+.life-modern .sidebar-card {border-radius:16px;padding:22px;background:#fff}
+.life-modern .sidebar-card h2 {font-size:16px;font-weight:780;padding:0 0 15px;border-bottom:1px solid #e8edf3}
+.life-modern .sidebar-list a {font-size:14px;line-height:1.55;padding:12px 0}
+.life-modern .sidebar-list li+li {border-top:1px solid #eef1f5}
+
+/* Homepage: content first, no persistent right-hand column. */
+.life-modern-home .home-shell {width:min(calc(100% - 48px),1120px)}
+.life-modern-home .home-grid {display:block}
+.life-modern-home .home-grid>.main-column {background:transparent;border:0;box-shadow:none}
+.life-modern-home .portal-home-hero {padding:68px 40px 56px;border:1px solid #e7ecf3;border-radius:24px;background:#fff;text-align:center;color:#1b2736;box-shadow:0 14px 38px rgba(24,40,74,.035)}
+.life-modern .modern-eyebrow {display:inline-flex;align-items:center;gap:8px;margin-bottom:18px;color:#1d4ed8;font-size:13px;font-weight:770;letter-spacing:-.015em}
+.life-modern .modern-eyebrow::before {content:"";width:7px;height:7px;background:#2563eb;border-radius:50%}
+.life-modern-home .portal-home-hero h1 {margin:0 auto;font-size:clamp(30px,4.3vw,48px);font-weight:830;letter-spacing:-.07em;line-height:1.23;max-width:790px}
+.life-modern-home .portal-home-hero>p {margin:17px auto 30px;font-size:16px;max-width:690px;line-height:1.72;color:#68778a}
+.life-modern-home .portal-home-search {position:relative;max-width:690px;min-height:66px;gap:8px;padding:6px;border:1px solid #dfe6f0;border-radius:17px;background:#fff;box-shadow:0 6px 24px rgba(28,52,93,.07)}
+.life-modern-home .portal-home-search::before {content:"";width:18px;height:18px;position:absolute;left:23px;top:50%;transform:translateY(-50%);border:2px solid #8a9bb2;border-radius:50%;box-sizing:border-box;pointer-events:none}
+.life-modern-home .portal-home-search::after {content:"";position:absolute;left:39px;top:37px;width:7px;height:2px;background:#8a9bb2;transform:rotate(46deg);border-radius:2px;pointer-events:none}
+.life-modern-home .portal-home-search input {padding:13px 12px 13px 47px;border:0;background:transparent;min-width:0;font-size:16px;box-shadow:none;outline-offset:1px}
+.life-modern-home .portal-home-search input::placeholder {color:#97a0ae}
+.life-modern-home .portal-home-search button {min-width:99px;border-radius:12px;background:#2563eb;font-size:15px;font-weight:750;transition:background .15s}
+.life-modern-home .portal-home-search button:hover {background:#1d4ed8}
+.life-modern-home .portal-search-suggestions {display:flex;align-items:center;justify-content:center;gap:8px;margin-top:19px}
+.life-modern-home .portal-search-suggestions a {padding:7px 13px;font-size:13px;font-weight:620;border:1px solid #e6ebf3;border-radius:999px;background:#f7f9fc;color:#536477;white-space:nowrap}
+.life-modern-home .portal-search-suggestions a:hover {border-color:#c3d6ff;background:#eef4ff;color:#1d4ed8}
+
+/* Six subjects are actionable, readable category destinations. */
+.life-modern-home .portal-home-section {padding:0;margin-top:56px;border:0}
+.life-modern-home .portal-section-heading {margin:0 0 22px;align-items:end}
+.life-modern-home .portal-section-heading h2,.life-modern-home .modern-section-heading h2 {font-size:25px;line-height:1.32;letter-spacing:-.05em;font-weight:800;color:#1c2839;margin:0}
+.life-modern-home .portal-section-heading p,.life-modern-home .modern-section-heading p {font-size:14px;color:#758293;margin:7px 0 0}
+.life-modern-home .portal-topic-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.life-modern-home .portal-topic-card {position:relative;padding:23px 22px 20px;border:1px solid #e6eaf1;border-radius:19px;background:#fff;transition:transform .16s,border-color .16s,box-shadow .16s}
+.life-modern-home .portal-topic-card:hover {transform:translateY(-2px);border-color:#c9d9f3;box-shadow:0 14px 34px rgba(35,67,121,.06)}
+.life-modern .modern-topic-icon {display:grid;place-items:center;width:41px;height:41px;border-radius:13px;background:#f1f5ff;color:#2563eb;margin-bottom:16px}
+.life-modern .modern-topic-icon svg {width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.life-modern-home .portal-topic-card-head h3 {font-size:19px;line-height:1.4;letter-spacing:-.04em;margin:0}
+.life-modern-home .portal-topic-card-head h3 a {color:#1e2939;font-weight:760}
+.life-modern-home .portal-topic-card-head p {font-size:13px;margin:5px 0 15px;color:#7b8797;line-height:1.55}
+.life-modern-home .portal-topic-card ul {border-top:1px solid #eef1f5;margin:0;padding:10px 0 0;list-style:none}
+.life-modern-home .portal-topic-card li+li {border-top:0}
+.life-modern-home .portal-topic-card li a {position:relative;display:block;padding:6px 16px 6px 0;font-size:13px;line-height:1.48;color:#536477;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.life-modern-home .portal-topic-card li a::after {content:"›";position:absolute;right:1px;color:#b4bfd0}
+.life-modern-home .portal-topic-card li a:hover {color:#2563eb}
+.life-modern-home .portal-topic-card .portal-more {display:inline-block;margin-top:12px;font-size:13px;font-weight:760;color:#2563eb}
+
+/* Four illustrated practical paths; no fake eligibility widget. */
+.life-modern-home .life-pathways {padding:0;margin:58px 0 0}
+.life-modern .modern-section-heading {margin:0 0 20px}
+.life-modern-home .life-path-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.life-modern-home .life-path-card {border-radius:17px;border:1px solid #e6eaf1;background:#fff;padding:25px}
+.life-modern-home .life-path-card h3 {font-size:19px;font-weight:770;color:#202b3c;margin:0 0 14px}
+.life-modern-home .life-path-card ol {border-top:1px solid #edf0f4}
+.life-modern-home .life-path-card li {padding:12px 0;border-bottom:1px solid #eff2f5}
+.life-modern-home .life-path-card a {font-size:14px;font-weight:640;color:#495c70}
+.life-modern-home .life-path-card a:hover {color:#2563eb}
+
+/* Latest cards: visible images, uncluttered text, consistent touch targets. */
+.life-modern-home .main-column>.section {border:0;padding:0;margin-top:56px}
+.life-modern-home .main-column>.section .section-header {margin-bottom:22px}
+.life-modern .section-header h2 {font-size:25px;line-height:1.4;letter-spacing:-.05em;font-weight:800}
+.life-modern-home .main-column>.section .post-list,
+.life-modern-category .main-column .post-list {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.life-modern .post-card {min-width:0;display:grid;grid-template-columns:124px minmax(0,1fr);align-items:start;gap:17px;padding:16px;background:#fff;border:1px solid #e7ecf3;border-radius:17px;transition:border-color .15s,transform .15s;box-shadow:none}
+.life-modern .post-card:first-child {border-top:1px solid #e7ecf3;padding:16px}
+.life-modern .post-card:hover {border-color:#c4d5f2;transform:translateY(-1px)}
+.life-modern .post-thumb {display:block;position:relative;width:124px;height:111px;min-height:0;overflow:hidden;border:0;background:#f0f4f9;border-radius:12px;color:#2563eb}
+.life-modern .post-thumb img {width:100%;height:100%;object-fit:cover;aspect-ratio:auto}
+.life-modern .post-body {padding:0;min-width:0}
+.life-modern .post-meta {display:flex;gap:6px 8px;align-items:center;color:#94a0af;font-size:11px;line-height:1.35}
+.life-modern .badge {border-radius:5px;padding:3px 7px;background:#edf3ff;color:#2563eb;font-size:11px}
+.life-modern .badge.support {background:#eef8f4;color:#178363}
+.life-modern .post-card h3 {margin:7px 0;font-size:16px;line-height:1.48;letter-spacing:-.026em;font-weight:750}
+.life-modern .post-card h3 a {color:#253043}
+.life-modern .post-card p {margin:0;color:#748094;font-size:12px;line-height:1.55;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+
+/* Secondary update list is intentionally compact. */
+.life-modern-home .portal-updates {margin:36px 0 0;padding:23px 26px;background:#fff;border:1px solid #e8edf3;border-radius:18px}
+.life-modern-home .portal-updates .portal-section-heading h2 {font-size:18px}
+.life-modern-home .portal-update-list {border-top:1px solid #edf1f5}
+.life-modern-home .portal-update-list li {border-bottom:1px solid #f0f2f5}
+.life-modern-home .portal-update-list a {padding:11px 0}
+.life-modern-home .portal-update-list strong {font-size:13px;font-weight:660}
+.life-modern-home .portal-update-list span {font-size:11px;color:#8b98aa}
+
+/* All article titles remain findable but do not overload the initial viewport. */
+.life-modern-home .modern-all-articles {margin-top:36px;border:1px solid #e5eaf1;border-radius:17px;background:#fff;overflow:hidden}
+.life-modern-home .modern-all-articles>summary {list-style:none;position:relative;display:flex;align-items:center;justify-content:space-between;min-height:65px;cursor:pointer;padding:18px 24px;color:#24344b;font-size:16px;font-weight:760}
+.life-modern-home .modern-all-articles>summary::-webkit-details-marker {display:none}
+.life-modern-home .modern-all-articles>summary::after {content:"+";font-size:23px;font-weight:350;color:#64778f}
+.life-modern-home .modern-all-articles[open]>summary::after {content:"−"}
+.life-modern-home .life-archive {margin:0!important;padding:0 24px 26px!important;border-top:1px solid #eef1f5}
+.life-modern-home .life-archive-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:26px}
+.life-modern-home .life-archive-group h3 {font-size:16px;margin:20px 0 12px}
+.life-modern-home .life-archive-group li a {padding:10px 0;color:#53667a;font-size:13px}
+.life-modern-home .life-archive-title {font-weight:550;line-height:1.5}
+
+/* Homepage and listing rail moves below content (never interrupts the reading flow). */
+.life-modern-home .home-grid>.sidebar,
+.life-modern-category .content-grid>.sidebar {margin-top:38px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start;gap:20px}
+.life-modern-home .home-grid>.sidebar .sidebar-card,
+.life-modern-category .content-grid>.sidebar .sidebar-card {margin:0}
+.life-modern-home .home-grid>.sidebar>.life-coupang-placement--rail,
+.life-modern-category .content-grid>.sidebar>.life-coupang-placement--rail {width:100%;max-width:none}
+
+/* Category pages: a focused title, prominent local search and two-column cards. */
+.life-modern-category .content-grid {display:block}
+.life-modern-category .content-grid>div:first-child {min-width:0}
+.life-modern-category .category-hero {padding:42px 44px;background:#fff;border:1px solid #e7ecf2;border-radius:20px;margin:0 0 22px;box-shadow:none}
+.life-modern-category .category-hero h1 {font-size:clamp(30px,4vw,39px);font-weight:800;letter-spacing:-.06em;line-height:1.24;margin:0 0 10px}
+.life-modern-category .category-hero p {font-size:15px;color:#708095;margin:0}
+.life-modern-category .main-column.section {padding:27px;background:#fff;border:1px solid #e8edf3;border-radius:19px}
+.life-modern-category .portal-category-quick {border:0;border-bottom:1px solid #edf1f5;border-radius:0;padding:0 0 22px;background:transparent;margin:0 0 23px}
+.life-modern-category .portal-category-quick h2 {font-size:17px;font-weight:770;margin:0 0 11px}
+.life-modern-category .portal-category-quick ul {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 15px}
+.life-modern-category .portal-category-quick a {color:#4c607a;padding:7px 0;font-size:14px}
+.life-modern .modern-list-toolbar {display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin:0 0 19px}
+.life-modern .modern-list-toolbar .modern-count {font-size:14px;font-weight:760;color:#304057}
+.life-modern .modern-list-filter {width:min(340px,100%);height:45px;padding:10px 15px;border:1px solid #dee6ee;border-radius:11px;background:#f9fafc;color:#233447;font-size:14px}
+.life-modern .modern-empty {padding:26px 12px;margin:0;text-align:center;color:#788699;font-size:14px}
+
+/* Article: narrow readable measure, quiet blue highlights, minimal borders. */
+.life-modern-article .content-grid {grid-template-columns:minmax(0,800px) 294px;justify-content:center;align-items:start;gap:24px}
+.life-modern-article .article-shell {border:1px solid #e7ecf2;border-radius:20px;overflow:hidden;background:#fff}
+.life-modern-article .breadcrumbs {padding:30px 36px 0;margin:0;font-size:12px}
+.life-modern-article .breadcrumbs ol {gap:5px;color:#91a0ae}
+.life-modern-article .article-header {padding:19px 36px 25px;border:0}
+.life-modern-article .article-header h1 {font-size:clamp(29px,3.6vw,38px);line-height:1.33;font-weight:810;letter-spacing:-.055em;margin:13px 0 16px}
+.life-modern-article .article-meta {margin:10px 0 0;gap:12px;color:#8d99a8;font-size:12px}
+.life-modern-article .portal-article-brief {margin:0 35px 12px;padding:23px 24px;border:1px solid #e4eaf4;border-radius:15px;background:#f7faff}
+.life-modern-article .portal-brief-top h2 {font-size:17px;font-weight:760;color:#233d60}
+.life-modern-article .portal-brief-top span {font-size:11px}
+.life-modern-article .portal-article-brief ul {margin:11px 0;padding-left:19px}
+.life-modern-article .portal-article-brief li {font-size:14px;line-height:1.7;margin:6px 0}
+.life-modern-article .portal-brief-links a {border-radius:9px;min-height:40px}
+.life-modern-article .article-content {padding:24px 36px 42px;font-size:16px;line-height:1.94;color:#304054}
+.life-modern-article .article-content>p,
+.life-modern-article .series-full-part p {margin:0 0 1.45em}
+.life-modern-article .article-content ul,
+.life-modern-article .article-content ol {padding-left:1.4em;line-height:1.85}
+.life-modern-article .article-content li+li {margin-top:.5em}
+.life-modern-article .article-table-scroll {border-radius:12px;scrollbar-width:thin;border:1px solid #e2e8ef;margin:25px 0!important}
+.life-modern-article .article-data-table {min-width:530px!important;font-size:13px!important;line-height:1.6!important;margin:0!important}
+.life-modern-article .article-data-table th {background:#f4f7fb!important;color:#384b65}
+.life-modern-article .article-data-table th,
+.life-modern-article .article-data-table td {padding:12px 14px!important;border-color:#e8edf4}
+.life-modern-article .disclaimer {background:#f8f9fb;border:1px solid #edf0f3;border-radius:11px;color:#6d7887;font-size:12px;padding:14px 16px}
+.life-modern-article .source-box,.life-modern-article .faq-box {margin-top:33px;padding-top:25px;border-color:#ecf0f4}
+.life-modern-article .source-box h2,.life-modern-article .faq-box h2 {font-size:18px!important;font-weight:770;border:0;padding:0}
+.life-modern-article .faq-item {border:1px solid #e7edf3;border-radius:11px;overflow:hidden;margin:9px 0}
+.life-modern-article .faq-item summary {background:#fff;padding:14px 16px;font-size:14px;font-weight:680}
+.life-modern-article .faq-item[open] summary {background:#f8faff}
+.life-modern-article .article-actions {border-top:1px solid #edf0f5;margin-top:24px}
+.life-modern-article .wp-button,.life-modern-article .wp-button-secondary {border-radius:10px;box-shadow:none}
+.life-modern-article .wp-button {background:#2563eb;border-color:#2563eb}
+.life-modern-article .wp-button-secondary {border-color:#dfe7f0;color:#2563eb}
+.life-modern .series-full-part>.series-photo {margin-bottom:25px;border-radius:12px;border:1px solid #e6e9f0;overflow:hidden}
+
+/* Advertising remains visibly labelled, but never imitates editorial navigation. */
+.life-modern .life-sponsor-collection {margin-top:46px;padding:26px 24px;background:#fff;border:1px solid #e8ecf2;border-radius:17px}
+.life-modern .life-sponsor-grid {grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.life-modern .life-sponsor-grid .life-affiliate {display:flex;flex-direction:column;margin:0;overflow:hidden;border:1px solid #e7ebf2;border-radius:13px}
+.life-modern .life-sponsor-grid .life-affiliate-image {margin:8px 12px 0}
+.life-modern .life-sponsor-grid .life-affiliate-image img {max-height:160px;object-fit:contain}
+.life-modern .life-sponsor-grid .life-affiliate-copy {padding:12px 14px 9px}
+.life-modern .life-sponsor-grid .life-affiliate-title {font-size:14px;line-height:1.5;margin:0 0 12px}
+.life-modern .life-sponsor-grid .life-affiliate-action {min-height:42px;font-size:13px;border-radius:8px;padding:9px 12px}
+.life-modern .life-sponsor-grid .life-affiliate-label {font-size:11px;padding:11px 14px 0}
+.life-modern .life-affiliate-placement--top {padding:0;margin:38px auto 0;max-width:720px}
+.life-modern .life-affiliate-placement--top .life-affiliate {border-radius:15px}
+.life-modern .life-affiliate-placement--top .life-affiliate-image img {max-height:260px}
+.life-modern-article .life-article-sponsor .life-affiliate {border-radius:13px}
+.life-modern-article .life-article-sponsor .life-affiliate-image img {max-height:260px}
+.life-modern .life-affiliate-title {font-size:16px;line-height:1.52}
+.life-modern .life-affiliate-action {font-size:14px;min-height:46px;border-radius:8px;background:#2563eb}
+.life-modern .life-coupang-placement {background:#fafbfe;border:1px solid #edf0f4;border-radius:14px;padding:14px;margin:24px 0}
+.life-modern .life-coupang-label {font-size:11px;color:#8792a1}
+.life-modern .life-coupang-disclosure {font-size:11px;line-height:1.55}
+.life-modern .sidebar .life-coupang-placement--rail {max-width:100%}
+
+/* Utilities and legal pages follow the same clean content rhythm. */
+.life-modern .page-box,.life-modern .portal-page {max-width:890px;margin:auto;background:#fff;border:1px solid #e8ecf2;border-radius:19px;padding:39px 42px}
+.life-modern .page-box h1,.life-modern .portal-page h1 {font-size:clamp(28px,4vw,39px);letter-spacing:-.055em}
+.life-modern .portal-tool-callout {border:1px solid #e1e9f6;border-radius:14px;background:#f7faff}
+.life-modern .portal-tool-callout>a,.life-modern .portal-loan-form button {border-radius:10px;background:#2563eb}
+.life-modern .portal-loan-result {border-radius:14px;background:#f8faff}
+.life-modern .search-box {gap:8px}
+.life-modern .search-box input {border:1px solid #e0e6ef;border-radius:11px;background:#f8fafc}
+.life-modern .search-box button {border-radius:11px;background:#2563eb;min-height:48px}
+.life-modern .search-result {border-top:1px solid #edf1f5;padding:16px 2px}
+.life-modern .search-result h2 {font-size:18px;font-weight:710}
+
+/* Low-friction, restrained footer. */
+.life-modern .site-footer {background:#1e293b;color:#d3dce9}
+.life-modern .footer-inner {padding-block:42px;gap:26px}
+.life-modern .footer-inner h2 {font-size:19px}
+.life-modern .footer-inner h3 {font-size:13px;font-weight:740}
+.life-modern .footer-inner li+li {margin-top:9px}
+.life-modern .footer-inner a:hover {color:#fff}
+.life-modern .footer-bottom {border-top:1px solid #37455b}
+
+/* 900px: remove cramped right-rail while keeping ad disclosures and navigation. */
+@media(max-width:1050px){
+  .life-modern-article .content-grid {grid-template-columns:minmax(0,1fr)}
+  .life-modern-article .sidebar {display:grid;grid-template-columns:1fr 1fr}
+  .life-modern-home .portal-topic-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .life-modern-home .main-column>.section .post-list,.life-modern-category .post-list {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .life-modern .post-card {grid-template-columns:104px minmax(0,1fr);gap:13px;padding:13px}
+  .life-modern .post-thumb {width:104px;height:100px}
+}
+@media(max-width:700px){
+  .life-modern {font-size:15px;overflow-x:hidden}
+  .life-modern .header-inner,.life-modern .nav-inner,.life-modern .site-shell,.life-modern .footer-inner {width:min(calc(100% - 32px),1200px)}
+  .life-modern .header-inner {min-height:61px;gap:12px}
+  .life-modern .brand-mark {width:32px;height:32px;border-radius:10px;font-size:16px}
+  .life-modern .brand-copy strong {font-size:19px}
+  .life-modern .header-search {width:auto;flex:1;max-width:210px;height:38px}
+  .life-modern .header-search input {padding:8px 10px;font-size:12px}
+  .life-modern .header-search button {padding:0 10px;font-size:12px}
+  .life-modern .nav-inner {gap:24px}
+  .life-modern .nav-inner a {padding:0 0 11px;font-size:13px}
+  .life-modern .site-shell {padding-top:16px;padding-bottom:45px}
+  .life-modern-home .home-shell {width:min(calc(100% - 28px),1120px)}
+  .life-modern-home .portal-home-hero {padding:45px 18px 37px;border-radius:17px}
+  .life-modern-home .portal-home-hero h1 {font-size:31px;line-height:1.3;letter-spacing:-.055em}
+  .life-modern-home .portal-home-hero>p {margin:13px auto 25px;font-size:14px}
+  .life-modern-home .modern-eyebrow {margin-bottom:13px;font-size:12px}
+  .life-modern-home .portal-home-search {min-height:55px;border-radius:13px;padding:5px}
+  .life-modern-home .portal-home-search::before {left:17px;width:15px;height:15px}
+  .life-modern-home .portal-home-search::after {left:30px;top:31px;width:6px}
+  .life-modern-home .portal-home-search input {padding:11px 6px 11px 36px;font-size:13px}
+  .life-modern-home .portal-home-search button {min-width:66px;border-radius:9px;font-size:13px;padding:8px}
+  .life-modern-home .portal-search-suggestions {justify-content:center;gap:6px;margin-top:13px}
+  .life-modern-home .portal-search-suggestions a {font-size:12px;padding:5px 9px}
+  .life-modern-home .portal-home-section {margin-top:37px}
+  .life-modern-home .portal-section-heading h2,.life-modern-home .modern-section-heading h2 {font-size:22px}
+  .life-modern-home .portal-section-heading p {font-size:12px}
+  .life-modern-home .portal-topic-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .life-modern-home .portal-topic-card {padding:16px 13px 13px;border-radius:13px}
+  .life-modern .modern-topic-icon {width:35px;height:35px;border-radius:10px;margin-bottom:11px}
+  .life-modern .modern-topic-icon svg {width:19px;height:19px}
+  .life-modern-home .portal-topic-card-head h3 {font-size:16px}
+  .life-modern-home .portal-topic-card-head p {font-size:11px;margin:4px 0 9px}
+  .life-modern-home .portal-topic-card ul {padding-top:6px}
+  .life-modern-home .portal-topic-card li a {font-size:11px;padding:5px 12px 5px 0}
+  .life-modern-home .portal-topic-card .portal-more {font-size:12px;margin-top:9px}
+  .life-modern-home .life-pathways,.life-modern-home .main-column>.section {margin-top:38px}
+  .life-modern-home .life-path-grid {grid-template-columns:1fr;gap:9px}
+  .life-modern-home .life-path-card {padding:18px;border-radius:13px}
+  .life-modern-home .life-path-card h3 {font-size:17px;margin-bottom:8px}
+  .life-modern-home .life-path-card li {padding:9px 0}
+  .life-modern-home .life-path-card a {font-size:13px}
+  .life-modern-home .main-column>.section .post-list,
+  .life-modern-category .main-column .post-list {grid-template-columns:1fr;gap:10px}
+  .life-modern .post-card {grid-template-columns:105px minmax(0,1fr);gap:13px;padding:12px;border-radius:13px}
+  .life-modern .post-card:first-child {padding:12px}
+  .life-modern .post-thumb {width:105px;height:99px;border-radius:9px}
+  .life-modern .post-card h3 {font-size:15px;line-height:1.45;margin:6px 0}
+  .life-modern .post-meta {font-size:10px}
+  .life-modern .post-card p {font-size:12px;-webkit-line-clamp:1}
+  .life-modern-home .portal-updates {margin-top:28px;padding:18px 17px}
+  .life-modern-home .life-archive {padding:0 16px 18px!important}
+  .life-modern-home .life-archive-grid {grid-template-columns:1fr;gap:8px}
+  .life-modern-home .modern-all-articles>summary {font-size:14px;padding:15px 17px}
+  .life-modern-home .home-grid>.sidebar,.life-modern-category .content-grid>.sidebar {display:grid;grid-template-columns:1fr;gap:15px}
+  .life-modern-category .category-hero {padding:28px 24px;border-radius:15px}
+  .life-modern-category .category-hero h1 {font-size:29px}
+  .life-modern-category .main-column.section {padding:16px;border-radius:14px}
+  .life-modern-category .portal-category-quick ul {grid-template-columns:1fr}
+  .life-modern .modern-list-toolbar {align-items:stretch;flex-direction:column}
+  .life-modern .modern-list-filter {width:100%}
+  .life-modern-article .article-shell {border-radius:14px}
+  .life-modern-article .breadcrumbs {padding:21px 20px 0}
+  .life-modern-article .article-header {padding:15px 20px 22px}
+  .life-modern-article .article-header h1 {font-size:28px}
+  .life-modern-article .portal-article-brief {margin:0 15px 9px;padding:18px 17px}
+  .life-modern-article .article-content {padding:19px 20px 30px;font-size:15px;line-height:1.87}
+  .life-modern-article .article-data-table {min-width:500px!important;font-size:12px!important}
+  .life-modern-article .sidebar {grid-template-columns:1fr}
+  .life-modern .life-sponsor-grid {grid-template-columns:1fr;gap:10px}
+  .life-modern .life-sponsor-collection {padding:17px 13px}
+  .life-modern .life-affiliate-placement--top {padding:0}
+  .life-modern .page-box,.life-modern .portal-page {padding:28px 21px;border-radius:14px}
+  .life-modern .footer-inner {grid-template-columns:1fr 1fr;gap:25px 18px}
+}
+@media(max-width:390px){
+  .life-modern-home .portal-home-hero h1 {font-size:28px}
+  .life-modern-home .portal-topic-card {padding:14px 11px}
+  .life-modern .header-search {max-width:160px}
+  .life-modern .footer-inner {grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  .life-modern * {scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
+
+.life-modern .modern-sponsored-area {margin-top:52px;border-top:1px solid #e9edf3;padding-top:24px}
+.life-modern .modern-sponsored-area .modern-section-heading h2 {font-size:15px;color:#8490a0;font-weight:660;letter-spacing:-.02em}
+.life-modern .modern-sponsored-area>.life-coupang-placement {max-width:800px;margin:22px auto}
+.life-modern .modern-sponsored-area .life-sponsor-collection {margin:20px auto 0}
+.life-modern .modern-sponsored-area .life-affiliate-placement--top {margin:22px auto}
+.life-modern .modern-list-toolbar+.post-list>[hidden] {display:none!important}
+.life-modern [hidden] {display:none!important}
+@media(max-width:700px){
+  .life-modern .modern-sponsored-area {margin-top:34px;padding-top:20px}
+  .life-modern .modern-sponsored-area .modern-section-heading h2 {font-size:14px}
+}
