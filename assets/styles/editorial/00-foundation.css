@@ -1,0 +1,71 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css");
+
+/* One editorial design system. No shadows, gradient cards or boxed page canvas.
+   Single orange accent, original articles and sponsored disclosure untouched. */
+body.life-editorial{
+  --brand:#e95731;--brand-dark:#e95731;--brand-soft:#f5f6f7;
+  --ink:#1c232b;--muted:#707983;--line:#e6e7e8;
+  --surface:#fff;--bg:#fff;--radius:8px;--shadow:none;--content:1160px;
+  /* One typography and UI rhythm for home, all hubs and article templates. */
+  --life-page-title-size:36px;--life-section-title-size:24px;
+  --life-subsection-title-size:20px;--life-card-title-size:17px;
+  --life-body-size:16px;--life-lead-size:15px;--life-caption-size:12px;
+  --life-heading-color:#202832;--life-muted-color:#6c7782;
+  --life-heading-weight:800;--life-section-weight:780;--life-card-weight:750;
+  --life-heading-tracking:-.045em;--life-heading-line:1.3;--life-body-line:1.75;
+  --life-content-gap:24px;--life-card-radius:8px;
+  --life-control-height:44px;--life-control-radius:8px;
+  --life-control-border:#dfe3e7;--life-control-surface:#fff;
+  --life-card-border:var(--line);--life-row-hover:#fff8f5;
+  background:#fff;color:var(--ink);font-family:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Noto Sans KR",sans-serif;
+  font-size:var(--life-body-size);line-height:var(--life-body-line);letter-spacing:-.012em;word-break:keep-all;
+  overflow-wrap:break-word;-webkit-font-smoothing:antialiased;
+}
+.life-editorial a{color:inherit;text-decoration:none}
+.life-editorial a:hover{color:var(--brand)}
+.life-editorial button,.life-editorial input,.life-editorial select,.life-editorial textarea{font:inherit}
+/* All elements inherit the same Pretendard face (including form controls). */
+.life-editorial :is(input,button,select,textarea){font-family:inherit}
+.life-editorial :is(h1,h2,h3){font-family:inherit;letter-spacing:var(--life-heading-tracking)}
+.life-editorial :focus-visible{outline:2px solid var(--brand);outline-offset:3px}
+.life-editorial .top-strip{display:none}
+.life-editorial .site-header{position:relative;top:auto;z-index:10;background:#fff;box-shadow:none;border-bottom:1px solid var(--line);backdrop-filter:none}
+.life-editorial .header-inner,.life-editorial .nav-inner,.life-editorial .site-shell,.life-editorial .footer-inner,
+.life-editorial .top-strip-inner{width:calc(100% - 72px);max-width:1160px;margin-left:auto;margin-right:auto}
+.life-editorial .header-inner,.life-editorial .nav-inner,.life-editorial .site-shell,.life-editorial .footer-inner{max-width:1160px}
+.life-editorial .header-inner{display:flex;min-height:70px;align-items:center;justify-content:space-between;gap:20px;padding:10px 0}
+.life-editorial .brand{display:inline-flex;align-items:center;gap:12px;flex-shrink:0}
+.life-editorial .brand-mark{display:none}
+.life-editorial .brand-copy strong{display:block;color:#18202a;font-size:24px;line-height:1.15;font-weight:820;letter-spacing:-.045em}
+.life-editorial .header-search{display:flex;max-width:350px;width:min(38vw,350px);height:39px;margin-left:auto}
+.life-editorial .header-search input{min-width:0;width:100%;padding:9px 13px;border:1px solid #e4e6e8;border-right:0;border-radius:5px 0 0 5px;background:#fafafa;font-size:13px}
+.life-editorial .header-search button{padding:0 15px;border:1px solid #e4e6e8;border-left:0;border-radius:0 5px 5px 0;background:#fafafa;color:var(--brand-dark);font-size:12px;font-weight:780}
+/* One canonical sitewide navigation. Never hide or scroll it on specific routes. */
+.life-editorial .main-nav{display:block;background:#fff;border:0;border-top:1px solid #eff0f1;border-bottom:1px solid #e6e8eb}
+.life-editorial .nav-inner{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));align-items:stretch;gap:0;overflow:visible;padding:0}
+.life-editorial .nav-inner a{display:flex;min-width:0;align-items:center;justify-content:center;min-height:47px;padding:11px 5px 9px;color:#56616d;font-size:14px;font-weight:670;border:0;border-bottom:2px solid transparent;white-space:nowrap;line-height:1.25;text-align:center}
+.life-editorial .nav-inner a:hover,.life-editorial .nav-inner a[aria-current="page"]{color:var(--brand);border-bottom-color:var(--brand)}
+.life-editorial .nav-inner a[aria-current="page"]{font-weight:800}
+.life-editorial .life-header-search-toggle{display:none;flex:none;align-items:center;justify-content:center;width:42px;height:42px;margin-left:auto;color:#26313a;border-radius:6px}
+.life-editorial .life-header-search-toggle:hover{color:var(--brand);background:#f6f7f8}
+.life-editorial #main-content{min-width:0}
+.life-editorial .site-shell{padding:28px 0 56px}
+.life-editorial .content-grid{display:block}
+.life-editorial .main-column,.life-editorial .page-box,.life-editorial .article-shell,.life-editorial .portal-page{width:100%;max-width:none;min-width:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.life-editorial .main-column{padding:0}
+.life-editorial .sidebar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:34px 0 0;padding-top:22px;border-top:1px solid var(--line)}
+.life-editorial .sidebar-card{min-width:0;padding:18px;border:1px solid var(--life-card-border);border-radius:var(--life-card-radius);background:#fff;box-shadow:none}
+.life-editorial .sidebar-card h2{margin:0 0 10px;padding:0 0 10px;font-size:16px;font-weight:750;border-bottom:1px solid var(--line)}
+.life-editorial .sidebar-list a{padding:9px 0;color:#37414d;font-size:13px}
+.life-editorial .sidebar-list li+li{border-top:1px solid var(--line)}
+.life-editorial .sidebar-note{font-size:12px;color:#747d88}
+.life-editorial .life-coupang-placement,.life-editorial .life-affiliate-placement{max-width:100%}
+.life-editorial .modern-sponsored-area{margin-top:32px;padding-top:18px;border-top:1px solid var(--line)}
+.life-editorial .modern-sponsored-area .modern-section-heading h2{font-size:14px;font-weight:700;color:#777}
+.life-editorial .site-footer{border-top:1px solid var(--line);background:#fafafa;color:#5e6874}
+.life-editorial .footer-inner{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:30px;padding:34px 0}
+.life-editorial .footer-inner h2,.life-editorial .footer-inner h3{font-size:13px;letter-spacing:-.02em;margin:0 0 10px}
+.life-editorial .footer-inner p,.life-editorial .footer-inner li,.life-editorial .footer-inner a{font-size:12px;line-height:1.8;color:#717985}
+.life-editorial .footer-bottom{border-top:1px solid #ededed;background:#fafafa}
+.life-editorial .footer-bottom .top-strip-inner{padding:10px 0;font-size:11px;color:#888}
+
