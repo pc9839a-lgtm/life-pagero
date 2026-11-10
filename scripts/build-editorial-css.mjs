@@ -49,4 +49,17 @@ function balanced(content,label){
 pieces.forEach((piece,index)=>balanced(piece,editorialModules[index]));
 fs.mkdirSync(path.dirname(outputFile),{recursive:true});
 fs.writeFileSync(outputFile,compiled,'utf8');
-console.log('[css] Built '+editorialModules.length+' ordered modules → one editorial CSS ('+Buffer.byteLength(compiled)+' bytes)');
+
+// Transitional styles are used by intermediate build-time UI checks.
+// They never ship: finish-css-assets.mjs deletes them after the final pass.
+const legacyDir=path.resolve('assets/styles/legacy');
+const legacyFiles=[
+  'life-modern.css','life-compact.css',
+  'life-global-nav.css','today-dashboard.css'
+];
+for(const name of legacyFiles){
+  const sourceFile=path.join(legacyDir,name);
+  if(!fs.existsSync(sourceFile))throw Error('[css] Missing legacy build-only stylesheet '+name);
+  fs.copyFileSync(sourceFile,path.join(path.dirname(outputFile),name));
+}
+console.log('[css] Built '+editorialModules.length+' ordered modules → one editorial CSS ('+Buffer.byteLength(compiled)+' bytes; '+legacyFiles.length+' temporary build-only CSS assets)');
