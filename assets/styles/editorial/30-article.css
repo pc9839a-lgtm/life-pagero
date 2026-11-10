@@ -1,0 +1,23 @@
+/* Articles: full content visible, strong headline and readable measure. */
+.life-editorial.life-modern-article .site-shell{max-width:1160px}
+.life-editorial.life-modern-article .content-grid{display:block}
+.life-editorial.life-modern-article .article-shell{display:block;width:100%;max-width:none;padding:0;border:0}
+.life-editorial.life-modern-article .article-header{max-width:1060px;margin:0 auto;padding:12px 0 22px;border-bottom:2px solid #303841;background:#fff}
+.life-editorial.life-modern-article .article-header h1{font-size:var(--life-page-title-size);font-weight:var(--life-heading-weight);line-height:var(--life-heading-line);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color)}
+.life-editorial.life-modern-article .article-header p,.life-editorial.life-modern-article .article-header .article-meta{color:#78818b;font-size:13px}
+.life-editorial.life-modern-article .compact-answer{max-width:1060px;margin:24px auto 0;padding:19px 0 17px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:#fff}
+.life-editorial.life-modern-article .compact-answer-primary{margin:0;font-size:19px;line-height:1.7;font-weight:700;color:#26313c}
+.life-editorial.life-modern-article .compact-answer-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px}
+.life-editorial.life-modern-article .compact-answer-actions a{font-size:13px;color:var(--brand);font-weight:720}
+.life-editorial.life-modern-article .compact-more-answers>summary{font-size:13px;color:#686e77}
+.life-editorial.life-modern-article .compact-full-guide{display:block;max-width:1060px;margin:0 auto;padding:0;border:0;border-radius:0;background:#fff}
+.life-editorial.life-modern-article .compact-full-guide>summary{display:block;margin:0;padding:13px 0;border:0;font-size:12px;font-weight:630;color:#7c858f;cursor:pointer}
+.life-editorial.life-modern-article .article-content{padding:8px 0 28px;font-size:var(--life-body-size);line-height:var(--life-body-line);color:#2d3540}
+.life-editorial.life-modern-article .article-content p{margin:0 0 20px}
+.life-editorial.life-modern-article .article-content ul,.life-editorial.life-modern-article .article-content ol{padding-left:22px;margin:12px 0 24px}
+.life-editorial.life-modern-article .article-content li{padding:3px 0}
+.life-editorial.life-modern-article .article-content table{font-size:14px}
+.life-editorial.life-modern-article .article-content a{text-decoration:underline;text-decoration-color:#d9b1a3;text-underline-offset:3px}
+.life-editorial.life-modern-article .sidebar{max-width:1060px;margin-left:auto;margin-right:auto}
+.life-editorial.life-modern-article .disclaimer{font-size:12px;line-height:1.7;color:#7b848f}
+
