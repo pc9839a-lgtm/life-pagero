@@ -13,7 +13,7 @@
     font-size:var(--life-body-size)
   }
   .life-editorial .header-inner,.life-editorial .nav-inner,.life-editorial .site-shell,.life-editorial .footer-inner{width:calc(100% - 24px)}
-  .life-editorial.life-modern-home .home-shell{width:calc(100% - 24px)}
+  
   .life-editorial .header-inner{min-height:62px;gap:10px;padding:8px 0}
   .life-editorial .brand{gap:7px}
   .life-editorial .brand-copy strong{font-size:20px}
