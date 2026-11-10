@@ -7,6 +7,22 @@ const read=file=>fs.readFileSync(path.join(base,file),'utf8');
 const root=read('events/index.html');
 const data=JSON.parse(read('events-data.json'));
 const home=read('index.html');
+const browserScript=read('events-ui.js');
+const headers=read('_headers');
+assert.ok(browserScript.includes("location.pathname.startsWith('/life/')"),
+  'event browser must recognize canonical /life/ path');
+assert.ok(browserScript.includes("fetch(prefix+'events-data.json')"),
+  'event JSON must use /life/ prefix and browser-cacheable fetch');
+assert.ok(browserScript.includes("a.href=prefix+'events/'"),
+  'filtered event links must stay in canonical /life/events/ space');
+assert.ok(browserScript.includes("new URL(prefix+'events/'"),
+  'shared event links must stay in canonical /life/events/ space');
+assert.ok(!browserScript.includes("cache:'no-cache'") &&
+  !browserScript.includes("fetch('/events-data.json'"),
+  'event snapshot must not revalidate unnecessarily or fetch from wrong root');
+assert.match(headers,/\/events-data\.json\s+Cache-Control: public, max-age=300, s-maxage=900/,
+  'static event JSON must have a short browser+edge TTL');
+
 assert.match(root,/<h1>이번 주 축제·행사<\/h1>/);
 assert.match(root,/<link rel="canonical" href="https:\/\/pagero\.kr\/life\/events\/">/);
 assert.match(root,/data-region/);

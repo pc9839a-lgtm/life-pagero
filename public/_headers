@@ -35,3 +35,8 @@
 
 /adpick-deals.css
   Cache-Control: no-cache, max-age=0, must-revalidate
+
+# Static event snapshot is regenerated at deployment; browser caching avoids
+# repeated main PageRo proxy Functions on every event-filter page open.
+/events-data.json
+  Cache-Control: public, max-age=300, s-maxage=900

@@ -31,6 +31,12 @@ const js=read('life-food.js'), deals=read('adpick-deals.js'), css=read('life-foo
 for(let month=1;month<=12;month++)check(js.includes(month+':['),'missing season '+month);
 check(js.includes("timeZone:'Asia/Seoul'"),'KST automatic month missing');
 check(js.includes('encodeURIComponent(query)'),'shopping query not URL-safe');
+check(js.includes("location.pathname.startsWith('/life/')") &&
+  js.includes("buy.href=prefix+'deals/?q='") &&
+  js.includes("search.href=prefix+'deals/?q='") &&
+  !js.includes("href='/deals/?q='"),
+  'food shopping links must resolve under canonical /life/deals/');
+
 check(deals.includes('new URLSearchParams(location.search).get("q")'),'existing ADPICK page missing incoming search');
 check(deals.includes('rel="sponsored noopener noreferrer"')||deals.includes('a.rel="sponsored noopener noreferrer"'),'paid outbound link labeling lost');
 check(!js.includes('ADPICK_BIZ_API_KEY')&&!page.includes('ADPICK_BIZ_API_KEY'),'API key reference leaked');
