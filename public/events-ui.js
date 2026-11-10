@@ -16,6 +16,8 @@
   });
   const root=document.querySelector('.events-filters');
   if(!root)return;
+  // JS is proxied without rewriting. The canonical host needs /life/ paths.
+  const prefix=location.pathname.startsWith('/life/')?'/life/':'/';
   const el=selector=>document.querySelector(selector);
   const regions={all:'전국',seoul:'서울',busan:'부산',daegu:'대구',incheon:'인천',
     gwangju:'광주',daejeon:'대전',ulsan:'울산',sejong:'세종',gyeonggi:'경기',
@@ -72,7 +74,7 @@
     append(top,'span',fees[e.feeType]||'요금정보 없음','events-fee');
     const h=append(main,'h3',null);
     const a=append(h,'a',e.title);
-    a.href='/events/'+encodeURIComponent(e.slug)+'/';
+    a.href=prefix+'events/'+encodeURIComponent(e.slug)+'/';
     append(main,'p',e.startDate.replaceAll('-','.')+' ~ '+e.endDate.replaceAll('-','.'),'events-date');
     append(main,'p',(regions[e.region]||'지역 확인 필요')+(e.venue?' · '+e.venue:''),'events-place');
     const actions=append(c,'div',null,'events-card-actions');
@@ -164,11 +166,11 @@
   document.addEventListener('click',event=>{
     const button=event.target.closest('[data-event-share]');
     if(!button)return;
-    const url=new URL('/events/'+encodeURIComponent(button.dataset.eventShare)+'/',location.origin);
+    const url=new URL(prefix+'events/'+encodeURIComponent(button.dataset.eventShare)+'/',location.origin);
     share(url.href,button.dataset.title);
   });
   render();
-  fetch('/events-data.json',{cache:'no-cache'}).then(r=>{
+  fetch(prefix+'events-data.json').then(r=>{
     if(!r.ok)throw Error('HTTP '+r.status);
     return r.json();
   }).then(json=>{
