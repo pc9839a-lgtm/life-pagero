@@ -1,0 +1,48 @@
+/* Today: full-viewport newsroom, one vertical section per data source.
+   Headers, lists, weather values and fallback links stay actual live content. */
+.life-editorial #main-content>.today-viewport{display:block;width:100%;max-width:none;margin:0;padding:24px clamp(16px,3vw,56px) 50px}
+.life-editorial .today-wide-content{display:block;width:100%;max-width:none;margin:0;padding:0;border:0;background:#fff}
+.life-editorial .today-wide-content h1{font-size:var(--life-page-title-size);line-height:var(--life-heading-line);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);margin:8px 0 23px}
+.life-editorial .today-vertical-list{display:block;width:100%;max-width:none;margin:0;border-top:2px solid #252c35}
+.life-editorial .today-vertical-list>.today-widget{display:block;width:100%;max-width:none;height:auto;min-height:0;margin:0;padding:22px 0 23px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;box-shadow:none}
+.life-editorial .today-widget-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;min-height:30px;margin:0 0 12px}
+.life-editorial .today-widget-heading h3{font-size:var(--life-section-title-size);font-weight:var(--life-section-weight);line-height:1.35;color:var(--life-heading-color);letter-spacing:var(--life-heading-tracking);margin:0}
+.life-editorial .today-widget-heading a{font-size:12px;font-weight:720;color:var(--brand)}
+.life-editorial .today-widget-heading label{font-size:12px;color:#74808c}
+.life-editorial .today-widget-heading select{min-height:var(--life-control-height);border:1px solid var(--life-control-border);border-radius:var(--life-control-radius);padding:6px 9px;background:#fff;font-size:13px;color:#313b45}
+.life-editorial .today-news-list{list-style:none;margin:0;padding:0}
+.life-editorial .today-news-list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 20px;align-items:center;margin:0;padding:13px 0;border:0;border-bottom:1px solid #eceeef}
+.life-editorial .today-news-list li:last-child{border-bottom:0}
+.life-editorial .today-news-title{grid-column:1;font-size:var(--life-card-title-size);line-height:1.45;font-weight:var(--life-card-weight);color:var(--life-heading-color);letter-spacing:-.025em}
+.life-editorial .today-news-title:hover{color:var(--brand)}
+.life-editorial .today-news-meta{grid-column:2;font-size:12px;line-height:1.3;color:#87919c;text-align:right;white-space:nowrap}
+.life-editorial .today-widget-meta{display:block;margin:10px 0 0;font-size:11px;color:#8a949e;line-height:1.45}
+.life-editorial .today-widget-meta:empty{display:none}
+.life-editorial .today-empty{margin:0;padding:10px 0;color:#8a949e;font-size:13px}
+.life-editorial .today-official-link{display:inline-flex;align-items:center;padding:10px 0;font-weight:750;font-size:13px;color:var(--brand)}
+.life-editorial .today-weather-body{min-height:0}
+.life-editorial .today-weather-temp{font-size:38px;font-weight:800;line-height:1.2;color:#27323c}
+.life-editorial .today-weather-condition{font-size:15px;color:#54616e;margin-left:15px}
+.life-editorial .today-weather-details{font-size:13px;color:#6d7782;margin:5px 0 0}
+.life-editorial .today-coin-list,.life-editorial .today-stock-list{display:block;width:100%;margin:0}
+.life-editorial .today-coin,.life-editorial .today-stock{display:grid;grid-template-columns:minmax(0,1fr) 185px 100px;align-items:center;gap:15px;min-height:53px;padding:10px 2px;border:0;border-bottom:1px solid #eceeef;background:#fff;color:#26323d}
+.life-editorial .today-coin:last-child,.life-editorial .today-stock:last-child{border-bottom:0}
+.life-editorial .today-coin[hidden],.life-editorial .today-stock[hidden]{display:none!important}
+.life-editorial .today-coin-name,.life-editorial .today-stock-name{font-size:15px;font-weight:740;line-height:1.25}
+.life-editorial .today-coin-name small{display:block;font-size:11px;font-weight:500;color:#8b949d;margin-top:3px}
+.life-editorial .today-coin-price,.life-editorial .today-stock-value{text-align:right;font-size:15px;font-weight:760;font-variant-numeric:tabular-nums;white-space:nowrap}
+.life-editorial .today-coin-change,.life-editorial .today-stock-change{min-width:0;text-align:right;font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.life-editorial .today-coin-change.positive{color:#c24335}
+.life-editorial .today-coin-change.negative{color:#2765b9}
+.life-editorial .today-coin-change.neutral{color:#6f7984}
+.life-editorial .today-expand-button{display:block;width:100%;margin:10px 0 0;min-height:43px;padding:8px;border:1px solid var(--line);border-radius:4px;background:#fafafa;color:#333d47;font-weight:700;font-size:13px;cursor:pointer}
+.life-editorial .today-expand-button:hover{border-color:var(--brand);color:var(--brand)}
+.life-editorial .today-source-links{display:flex;flex-wrap:wrap;gap:10px 16px;margin:20px 0 0}
+.life-editorial .today-source-links a{font-size:12px;font-weight:690;color:#6b7681}
+.life-editorial .today-market-inserts{margin:20px 0}
+.life-editorial .today-two-grid{display:block}
+.life-editorial .today-market-inserts .today-widget{padding:15px 0;border:0;border-bottom:1px solid var(--line);border-radius:0}
+.life-editorial .today-market-inserts .today-widget+.today-widget{margin-top:16px}
+.life-editorial .today-market-inserts .today-widget-heading h3{font-size:var(--life-section-title-size);line-height:1.35;font-weight:var(--life-section-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
+
+/* Responsive editorial surfaces. */

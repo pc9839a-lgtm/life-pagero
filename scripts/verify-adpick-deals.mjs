@@ -9,7 +9,7 @@ const check=(value,label)=>{if(!value)throw Error("[adpick-qa] "+label);};
 const home=read("index.html"),page=read("deals/index.html");
 const cssVersion=createHash('sha256').update(read('adpick-deals.css')).digest('hex').slice(0,12);
 const dealsCssUrl='/adpick-deals.css?v='+cssVersion;
-const origin=read("life-editorial-20261105.css");
+const origin=read("life-editorial-20261106.css");
 check(home.includes('class="life-home-service-card" href="/deals/"'),'homepage shortcut missing');
 check(home.includes('href="/deals/"'),'homepage route missing');
 check(home.includes('href="'+dealsCssUrl+'"'),'homepage shortcut style missing');
@@ -44,7 +44,8 @@ check(home.includes('href="'+dealsCssUrl+'"'),'homepage versioned CSS missing');
 const headers=fs.readFileSync(path.resolve("dist/_headers"),"utf8");
 check(headers.includes('/deals/')&&headers.includes('/adpick-deals.js')&&headers.includes('no-store'),'hotdeal cache control missing');
 check(page.includes('href="https://pagero.kr/life/deals/"'),'wrong canonical');
-check(origin.includes('grid-template-columns:repeat(3,minmax(0,1fr))'),'mobile 6-item navigation grid missing');
+check(origin.includes('grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:minmax(43px,auto)'),
+  'shared eight-item 4x2 mobile navigation grid missing');
 check(fs.existsSync(path.join(DIST,"adpick-deals.js")),'deals frontend JS missing');
 check(fs.existsSync(path.join(DIST,"adpick-deals.css")),'deals CSS missing');
 for(const relative of ["index.html","today/index.html","finance/index.html","topics/index.html","deals/index.html","food/index.html","events/index.html"]){
