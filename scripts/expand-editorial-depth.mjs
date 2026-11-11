@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {publishedGuideCount,requiredScenarioCount} from './published-guide-count.mjs';
 
 const CONTENT = path.resolve('content/posts');
 const ROOT = path.resolve('content');
@@ -65,5 +66,5 @@ for(const file of files) {
 }
 const unexpected=Object.keys(cases).filter(k=>!seen.has(k));
 if(unexpected.length)console.log('[editorial-depth] Source-only or superseded entries not in published build: '+unexpected.join(','));
-if(seen.size!==46)throw Error('Expected 46 published guides, found '+seen.size);
+if(seen.size!==publishedGuideCount)throw Error('Expected '+publishedGuideCount+' published guides, found '+seen.size);
 console.log('[editorial-depth] Prepared '+seen.size+' published guides, '+inserted+' unique situation notes across '+touched+' changed files; '+short+' full source bodies remain below 5,000 characters.');
