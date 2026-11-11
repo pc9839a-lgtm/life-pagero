@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {publishedGuideCount,requiredScenarioCount} from './published-guide-count.mjs';
 
 const root=path.resolve('content');
 const dist=path.resolve('dist');
@@ -43,7 +44,7 @@ for(const file of files) {
  minLength=Math.min(minLength,len);
  count++;
 }
-if(count!==46||used.size!==138)throw Error('Unexpected coverage: '+count+' posts, '+used.size+' notes');
+if(count!==publishedGuideCount||used.size!==requiredScenarioCount)throw Error('Unexpected coverage: '+count+' posts, '+used.size+' notes');
 fs.mkdirSync('artifacts',{recursive:true});
 fs.writeFileSync('artifacts/editorial-depth-audit.json',JSON.stringify({articles:count,notes:used.size,continuationCasesChecked:continuations,minVisibleCharacters:minLength,avgVisibleCharacters:Math.round(totalLength/count),shortest:lengths.sort((a,b)=>a.bodyCharacters-b.bodyCharacters).slice(0,10)},null,2)+'\n');
 console.log('[editorial-depth] Visible HTML verified on '+count+' articles and '+continuations+' continuation pages; '+used.size+' unique case texts, min visible body '+minLength+' chars, average '+Math.round(totalLength/count)+' chars.');
