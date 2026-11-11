@@ -31,13 +31,21 @@ for(const token of ['id="finance-rates-official"','id="finance-issues-official"'
 if(finance.includes('id="finance-products"'))throw Error('Unconfigured product filters must not occupy finance hub');
 
 for(const token of [
-  'class="finance-index-hero"','class="finance-index-headline"',
-  'class="finance-index-section-label"','class="finance-index-tile-number"',
+  'class="finance-index-hero"','class="finance-index-lead"',
   'id="finance-index-services"',
   'class="finance-index-services"','class="finance-index-tools"',
   'class="finance-index-official-list"','class="finance-index-check-list"',
-  'href="/finance/savings-calculator/"','href="/finance/mortgage-calculator/"'
-])if(!finance.includes(token))throw Error('Finance landing redesign missing: '+token);
+  'href="/finance/savings/"','href="/finance/markets/"',
+  'href="/finance/savings-calculator/"','href="/finance/loan-payment/"',
+  'href="/finance/mortgage-calculator/"'
+])if(!finance.includes(token))throw Error('Finance directory missing a usable entry: '+token);
+for(const decorative of [
+  'LIFE FINANCE','금리는 비교하고, 대출은 계산하고.',
+  '필요한 숫자와 공식 자료를 한곳에서 찾으세요.',
+  'class="finance-index-headline"','class="finance-index-eyebrow"',
+  'class="finance-index-primary"','class="finance-index-section-label"',
+  'class="finance-index-tile-number"','SERVICE 01','TOOLS 02','SOURCES 03'
+])if(finance.includes(decorative))throw Error('Artificial marketing decoration returned: '+decorative);
 for(const [slug,expected] of [
   ['finance/savings/index.html','id="finance-rate-panel"'],
   ['finance/markets/index.html','id="finance-issues-panel"'],
@@ -47,11 +55,18 @@ const financeCss=url('life-editorial-20261106.css');
 for(const selector of [
   '.life-editorial .finance-index-hero',
   '.life-editorial .finance-index-services>.finance-index-tile:first-child',
-  '.life-editorial .finance-index-headline',
+  '.life-editorial .finance-index-lead',
   '.life-editorial .finance-index-services,.life-editorial .finance-index-tools',
   '.life-editorial .finance-index-official-list',
   '@media(max-width:600px)'
 ])if(!financeCss.includes(selector))throw Error('Finance index CSS missing: '+selector);
+const heroRule=financeCss.match(/\.life-editorial \.finance-index-hero\{([^}]+)\}/)?.[1]||'';
+for(const marker of ['min-height:0','text-align:left','background:transparent','border-bottom:1px solid']){
+  if(!heroRule.includes(marker))throw Error('Finance index hero must be editorial and compact: '+marker);
+}
+for(const disallowed of ['background:#202832','min-height:315px','border-top:4px solid var(--brand)']){
+  if(financeCss.includes(disallowed))throw Error('Oversized or synthetic finance hero styling returned: '+disallowed);
+}
 
 const savings=url('finance/savings/index.html');
 for(const token of ['id="finance-rates-official"','id="finance-rate-panel"','id="finance-products"']){
