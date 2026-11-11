@@ -43,9 +43,15 @@ for(const decorative of [
   'LIFE FINANCE','금리는 비교하고, 대출은 계산하고.',
   '필요한 숫자와 공식 자료를 한곳에서 찾으세요.',
   'class="finance-index-headline"','class="finance-index-eyebrow"',
-  'class="finance-index-primary"','class="finance-index-section-label"',
-  'class="finance-index-tile-number"','SERVICE 01','TOOLS 02','SOURCES 03'
+  'class="finance-index-section-label"','class="finance-index-tile-number"',
+  'SERVICE 01','TOOLS 02','SOURCES 03'
 ])if(finance.includes(decorative))throw Error('Artificial marketing decoration returned: '+decorative);
+if(!finance.includes('class="finance-index-primary" href="/finance/savings/"'))
+  throw Error('Visible first-action CTA not present');
+if((finance.match(/class="finance-index-icon"/g)||[]).length!==6)
+  throw Error('All six finance actions must have a recognizable inline icon');
+if((finance.match(/class="finance-index-tile-copy"/g)||[]).length!==6)
+  throw Error('All six finance actions need a title plus readable description');
 for(const [slug,expected] of [
   ['finance/savings/index.html','id="finance-rate-panel"'],
   ['finance/markets/index.html','id="finance-issues-panel"'],
@@ -61,9 +67,13 @@ for(const selector of [
   '@media(max-width:600px)'
 ])if(!financeCss.includes(selector))throw Error('Finance index CSS missing: '+selector);
 const heroRule=financeCss.match(/\.life-editorial \.finance-index-hero\{([^}]+)\}/)?.[1]||'';
-for(const marker of ['min-height:0','text-align:left','background:transparent','border-bottom:1px solid']){
-  if(!heroRule.includes(marker))throw Error('Finance index hero must be editorial and compact: '+marker);
+for(const marker of ['min-height:0','text-align:left','background:#f4f6f8','border:1px solid #e0e5e9']){
+  if(!heroRule.includes(marker))throw Error('Finance index hero must have a legible, calm highlight: '+marker);
 }
+if(!financeCss.includes('font-size:20px')||!financeCss.includes('border:1px solid #cfd6de'))
+  throw Error('Financial service cards lost visible labels or boundaries');
+if(!financeCss.includes('background:var(--brand);color:#fff'))
+  throw Error('Primary finance action lost contrast');
 for(const disallowed of ['background:#202832','min-height:315px','border-top:4px solid var(--brand)']){
   if(heroRule.includes(disallowed))throw Error('Oversized or synthetic finance hero styling returned: '+disallowed);
 }
