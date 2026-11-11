@@ -43,6 +43,22 @@ body.life-modern #main-content>.today-viewport>.today-wide-content{
   grid-area:weather;padding:21px 24px;background:#f7f8f9;border-color:#e8eaed
 }
 .life-editorial .today-wide-content .today-dashboard-grid>[data-today-news]{grid-area:news}
+/* On desktop, news occupies both weather and FX rows. Distribute the visible
+   headlines through the full card instead of leaving a short empty panel. */
+@media(min-width:901px){
+  .life-editorial .today-wide-content .today-dashboard-grid>[data-today-news]{
+    align-self:stretch;display:flex;flex-direction:column
+  }
+  .life-editorial .today-wide-content .today-dashboard-grid>[data-today-news] [data-news-items]{
+    display:flex;flex:1;flex-direction:column;min-height:0
+  }
+  .life-editorial .today-wide-content .today-dashboard-grid>[data-today-news] .today-news-list{
+    display:flex;flex:1;flex-direction:column;min-height:0
+  }
+  .life-editorial .today-wide-content .today-dashboard-grid>[data-today-news] .today-news-list li{
+    flex:1;align-content:center
+  }
+}
 .life-editorial .today-wide-content .today-dashboard-grid>[data-today-fx]{grid-area:fx}
 .life-editorial .today-wide-content .today-dashboard-grid>[data-today-crypto]{grid-area:crypto}
 .life-editorial .today-wide-content .today-widget-heading{
