@@ -29,6 +29,26 @@ for(const token of ['id="finance-rates-official"','id="finance-issues-official"'
  if(!finance.includes(token))throw Error('Finance hub missing a usable official destination: '+token);
 }
 if(finance.includes('id="finance-products"'))throw Error('Unconfigured product filters must not occupy finance hub');
+
+for(const token of [
+  'class="finance-index-hero"','id="finance-index-services"',
+  'class="finance-index-services"','class="finance-index-tools"',
+  'class="finance-index-official-list"','class="finance-index-check-list"',
+  'href="/finance/savings-calculator/"','href="/finance/mortgage-calculator/"'
+])if(!finance.includes(token))throw Error('Finance landing redesign missing: '+token);
+for(const [slug,expected] of [
+  ['finance/savings/index.html','id="finance-rate-panel"'],
+  ['finance/markets/index.html','id="finance-issues-panel"'],
+  ['finance/loan-payment/index.html','id="loan-method-comparison"']
+])if(!url(slug).includes(expected))throw Error('Finance subpage regression: '+slug);
+const financeCss=url('life-editorial-20261106.css');
+for(const selector of [
+  '.life-editorial .finance-index-hero',
+  '.life-editorial .finance-index-services,.life-editorial .finance-index-tools',
+  '.life-editorial .finance-index-official-list',
+  '@media(max-width:600px)'
+])if(!financeCss.includes(selector))throw Error('Finance index CSS missing: '+selector);
+
 const savings=url('finance/savings/index.html');
 for(const token of ['id="finance-rates-official"','id="finance-rate-panel"','id="finance-products"']){
  if(!savings.includes(token))throw Error('Savings product progressive enhancement missing: '+token);
