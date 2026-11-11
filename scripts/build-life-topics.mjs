@@ -35,7 +35,8 @@ const rows=items.map(([label,href,detail])=>
 ).join('');
 const inside='<div class="site-shell"><article class="portal-page topics-page">'
   +'<nav class="portal-breadcrumbs" aria-label="현재 위치"><a href="/">홈</a> / 생활정보</nav>'
-  +'<h1>생활정보</h1>'
+  +'<div class="topics-heading"><h1>생활정보</h1>'
+  +'<p class="topics-intro">분야를 선택하면 관련 정보와 확인 방법을 바로 찾을 수 있습니다.</p></div>'
   +'<nav class="topics-hub-list" aria-label="생활정보 분야별 바로가기">'+rows+'</nav>'
   +'</article></div>';
 let html=read('finance/index.html');
