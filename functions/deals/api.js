@@ -32,29 +32,80 @@ const NO_PREPARED_OYSTER=/(굴전|굴국|굴밥|굴죽|굴찜|굴튀김|굴라�
 const PERSIMMON_FRESH=/(단감|부유단감|태추단감|국내산|산지직송|생과|생과일|농산물|제철|햇과일|수확|과수원|신선)/i;
 const PERSIMMON_COUNT=/\d+\s*(?:개|과|입|팩|박스)/i;
 const NO_PREPARED_PERSIMMON=/(곶감|반건시|홍시|단감\s*말랭이|말린\s*단감|감\s*식초|감\s*잼|단감\s*청|단감\s*주스|단감\s*착즙|단감\s*칩|단감\s*샐러드|단감\s*퓨레)/i;
+// A food referral must never bypass relevance checks because its query is new.
+// This is pure in-request classification: no second API call, DB, cache, or AI call.
+const SHOP_QUANTITY=/\d+(?:[.,]\d+)?\s*(?:kg|g|킬로|키로|그램|개|과|입|팩|봉|봉지|묶음|병|상자|박스|l|ml)(?![a-z])/i;
+const FRESH_CONTEXT=/(국내산|국산|산지직송|산지|농장|유기농|친환경|수확|햇|신선|생물|생과|원물|무세척|냉장|냉동|손질|제철|노지|자연산|양식)/i;
+const NON_PRODUCT_CONTEXT=/(투어|tour|e[ -]?bike|여행|호텔|예약|체험|입장권|상품권|기프티콘|기프트카드|식당|레스토랑|식사권|코스요리|낚시|미끼|티켓|전자책|도서|책자|화장품|스킨케어|마스크팩|향수|쿠션|모양|장식|공예|인형|의류|케이스|휴대폰|키링|목걸이|귀걸이|모종|씨앗|비료|농약|사료|영양제|완구|장난감)/i;
+const NO_PREPARED_GENERIC=/(말랭이|말린|건조분말|과자|스낵|라떼|청(?:\s|$)|시럽|잼|주스|쥬스|젤리|캔디|아이스크림|요거트|케이크|우유|스무디|맛\s*과자|향\s*음료|밀키트|조리완료|레토르트|도시락|김치|절임|피클|깍두기|동치미|통조림|분말|추출물|즙)/i;
+const PANTRY_TOPICS=new Set(["쌀","소금","다진 마늘","참기름","들기름","식용유","올리브유","국간장","간장","된장","고추장","고춧가루","액젓","식초","매실청"]);
+const RAW_CHICKEN=/(생닭|생육|원육|비가열|생고기|원물|손질\s*닭|닭가슴살\s*생)/i;
+const NO_READY_CHICKEN=/(훈제|수비드|스테이크|슬라이스|소시지|큐브|볼|양념|조리완료|조리된|익힌|구운|가공식품|밀키트|즉석|완제품)/i;
+const PEAR_ITEM=/(신고배|원황배|화산배|나주배|국산\s*배|햇배|(?:^|[\s\[(])배(?=$|[\s\])\d]))/i;
 export function isRelevantFoodProduct(topic,title){
-  if(typeof title!=="string"||!title.trim())return false;
+  if(typeof title!=="string"||!title.trim()||typeof topic!=="string"||!topic.trim())return false;
   const text=title.normalize("NFKC").toLowerCase().replace(/\s+/g," ").trim();
+  const requested=topic.normalize("NFKC").toLowerCase().replace(/\s+/g," ").trim();
+  if(NON_PRODUCT_CONTEXT.test(text))return false;
+  // Two editorial searches are intentionally different from raw seasonal produce.
+  if(requested==="밥 소분용기")
+    return /(밥|라이스|rice)/i.test(text)
+      &&/(소분용기|냉동밥용기|밥.*(?:용기|보관통|밀폐통|소분통)|(?:용기|보관통|밀폐통|소분통).*밥)/i.test(text)
+      &&!/(밥솥|즉석밥|볶음밥|도시락)/i.test(text);
+  if(requested==="닭가슴살")
+    return /닭가슴살/.test(text)&&RAW_CHICKEN.test(text)
+      &&!NO_READY_CHICKEN.test(text)
+      &&(FRESH_UNIT.test(text)||/냉장|냉동/.test(text));
+  // Shelf-stable recipe ingredients are groceries, not raw produce.
+  if(PANTRY_TOPICS.has(requested))
+    return text.includes(requested)&&SHOP_QUANTITY.test(text)
+      &&!/(요리책|레시피북|과자|스낵|크림|조리도구|국자|수저|완제품|도시락|밀키트)/i.test(text);
   if(NO_INGREDIENT.test(text)||PROCESSED_OR_TOOLS.test(text))return false;
-  if(topic==="가리비")
+  if(requested==="가리비")
     return /가리비/.test(text)&&(FRESH_UNIT.test(text)||SCALLOP_FRESH.test(text));
-  if(topic==="고구마")
+  if(requested==="고구마")
     return /고구마/.test(text)&&(FRESH_UNIT.test(text)||POTATO_FRESH.test(text));
-  if(topic==="삼치")
+  if(requested==="삼치")
     return /삼치/.test(text)&&!NO_PROCESSED_SAMCHI.test(text)
       &&(FRESH_UNIT.test(text)||SAMCHI_FRESH.test(text));
-  if(topic==="무")
+  if(requested==="무")
     return RADISH_ITEM.test(text)&&!NO_PROCESSED_RADISH.test(text)
       &&(FRESH_UNIT.test(text)||RADISH_FRESH.test(text));
-  if(topic==="굴")
+  if(requested==="굴")
     return /굴(?!비)|석화/.test(text)&&!NO_PREPARED_OYSTER.test(text)
       &&(FRESH_UNIT.test(text)||OYSTER_FRESH.test(text));
-  if(topic==="단감")
+  if(requested==="단감")
     return /단감/.test(text)&&!NO_PREPARED_PERSIMMON.test(text)
       &&(FRESH_UNIT.test(text)||PERSIMMON_COUNT.test(text)||PERSIMMON_FRESH.test(text));
-  return false;
+  // Avoid broad substring matches for "배" (e.g. 배추, 배터리).
+  if(requested==="배")
+    return PEAR_ITEM.test(text)&&!NO_PREPARED_GENERIC.test(text)
+      &&(SHOP_QUANTITY.test(text)||FRESH_CONTEXT.test(text));
+  // Monthly foods and grocery-list keywords have to be present in the item
+  // itself and carry evidence of an actual grocery package or fresh produce.
+  // Unknown searches fail closed rather than showing all provider hits.
+  return requested.length>=2&&text.includes(requested)
+    &&!NO_PREPARED_GENERIC.test(text)
+    &&(SHOP_QUANTITY.test(text)||FRESH_CONTEXT.test(text));
 }
-const FOOD_TOPIC=Object.freeze({"가리비":"가리비","홍가리비":"가리비","고구마":"고구마","꿀고구마":"고구마","삼치":"삼치","손질삼치":"삼치","가을무":"무","국산 무":"무","생굴":"굴","굴":"굴","단감":"단감"});
+const FOOD_TOPIC=Object.freeze({
+  "가리비":"가리비","홍가리비":"가리비",
+  "고구마":"고구마","꿀고구마":"고구마",
+  "삼치":"삼치","손질삼치":"삼치",
+  "가을무":"무","국산 무":"무","무":"무",
+  "생굴":"굴","굴":"굴","단감":"단감",
+  "감귤":"귤","귤":"귤","신고배":"배","배":"배",
+  "밥 소분용기":"밥 소분용기","냉동 닭가슴살":"닭가슴살",
+  "시금치":"시금치","봄동":"봄동","딸기":"딸기",
+  "냉이":"냉이","달래":"달래","쑥":"쑥",
+  "두릅":"두릅","취나물":"취나물","주꾸미":"주꾸미",
+  "오이":"오이","완두콩":"완두콩","참외":"참외",
+  "감자":"감자","매실":"매실","옥수수":"옥수수",
+  "토마토":"토마토","가지":"가지","복숭아":"복숭아",
+  "포도":"포도","표고버섯":"표고버섯","사과":"사과",
+  "배추":"배추"
+});
+const WIDE_FOOD_TOPICS=new Set(["가리비","고구마","삼치","무","굴","단감"]);
 export async function onRequestGet({request,env}){
   const key=String(env?.ADPICK_BIZ_API_KEY||"").trim();
   if(!key)return reply({status:"unconfigured",items:[]},503);
@@ -64,13 +115,14 @@ export async function onRequestGet({request,env}){
   if(mode==="search"&&(rawQuery.length<2||rawQuery.length>40))
     return reply({status:"invalid_query",items:[]},400);
   const isFoodSearch=mode==="search"&&params.get("src")==="food";
-  const foodTopic=isFoodSearch&&Object.hasOwn(FOOD_TOPIC,rawQuery)?FOOD_TOPIC[rawQuery]:null;
+  const foodTopic=isFoodSearch?(FOOD_TOPIC[rawQuery]||rawQuery):null;
+  const wideFoodSearch=isFoodSearch&&WIDE_FOOD_TOPICS.has(foodTopic);
   const area=params.get("area")||"today";
   if(mode==="best"&&!BEST_AREAS.has(area))
     return reply({status:"invalid_request",items:[]},400);
   const fetchProducts=async term=>{
     const endpoint=new URL(PROVIDER+"/"+encodeURIComponent(key)+"/"+mode);
-    endpoint.searchParams.set("limit",foodTopic?"20":"10");
+    endpoint.searchParams.set("limit",wideFoodSearch?"20":"10");
     if(mode==="best"){
       endpoint.searchParams.set("area",area);
       endpoint.searchParams.set("p_data","life_deals_"+area);
@@ -80,7 +132,7 @@ export async function onRequestGet({request,env}){
     }
     const response=await fetch(endpoint.href,{
       headers:{Accept:"application/json"},
-      signal:AbortSignal.timeout(foodTopic?7000:8000)
+      signal:AbortSignal.timeout(isFoodSearch?7000:8000)
     });
     if(!response.ok)throw new Error("UPSTREAM_"+response.status);
     const data=await response.json();
@@ -89,7 +141,7 @@ export async function onRequestGet({request,env}){
     if(!Array.isArray(source))throw new Error("MALFORMED_RESPONSE");
     // Preserve provider names, prices, images and affiliate links unchanged.
     // Only reject invalid HTTPS links and mismatched ingredient results.
-    return source.slice(0,foodTopic?20:10).filter(row=>row&&typeof row==="object")
+    return source.slice(0,wideFoodSearch?20:10).filter(row=>row&&typeof row==="object")
       .filter(row=>safeLink(row.commissionlink)&&typeof row.title==="string")
       .filter(row=>!foodTopic||isRelevantFoodProduct(foodTopic,row.title))
       .map(row=>({
