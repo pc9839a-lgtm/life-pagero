@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {publishedGuideCount,requiredScenarioCount} from './published-guide-count.mjs';
 const DIST=path.resolve('dist');
 const read=relative=>fs.readFileSync(path.join(DIST,relative),'utf8');
 const assert=(condition,message)=>{if(!condition)throw Error('[modern-qa] '+message)};
@@ -31,11 +32,11 @@ for(const category of ['car','support']){
   assert(html.indexOf('class="modern-sponsored-area"')>html.indexOf('id="modern-article-list"'),'category ads placed before articles: '+category);
   cardCount+=posts;
 }
-assert(cardCount===46,'published category article count changed: '+cardCount);
+assert(cardCount===publishedGuideCount,'published category article count changed: '+cardCount);
 const posts=['car','support'].flatMap(category=>fs.readdirSync(path.join(DIST,category),{withFileTypes:true})
   .filter(entry=>entry.isDirectory()&&fs.existsSync(path.join(DIST,category,entry.name,'index.html')))
   .map(entry=>category+'/'+entry.name+'/index.html'));
-assert(posts.length===46,'expected all 46 editorial pages, got '+posts.length);
+assert(posts.length===publishedGuideCount,'expected all '+publishedGuideCount+' editorial pages, got '+posts.length);
 for(const file of posts){
   const html=read(file);
   assert(html.includes('class="life-modern life-modern-article"'),'article visual redesign missing: '+file);
@@ -56,4 +57,4 @@ for(const file of walk(DIST).filter(x=>x.endsWith('.html'))){
   pages++;
 }
 assert(pages>=140,'sitewide modern theme coverage incomplete: '+pages);
-console.log('[modern-qa] '+pages+' pages, six categories, '+cardCount+' linked article cards, 46 untouched editorial bodies, mobile CSS, working search/filters, canonical and affiliate integrity verified.');
+console.log('[modern-qa] '+pages+' pages, six categories, '+cardCount+' linked article cards, '+publishedGuideCount+' untouched editorial bodies, mobile CSS, working search/filters, canonical and affiliate integrity verified.');
