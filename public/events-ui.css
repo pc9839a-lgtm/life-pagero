@@ -7,7 +7,6 @@
 .events-shell *{box-sizing:border-box}
 .events-intro h1,.events-detail-head h1{margin:10px 0 8px;font-size:var(--life-page-title-size);line-height:var(--life-heading-line);letter-spacing:var(--life-heading-tracking);overflow-wrap:anywhere;font-weight:var(--life-heading-weight);color:var(--life-heading-color);}
 .events-intro{padding:34px 26px;margin:0 0 22px;text-align:center;background:#f7f8f9;border:1px solid var(--life-card-border);border-radius:10px}
-.events-intro h1{margin:0 0 11px}
 .events-intro p{margin:0;color:var(--life-muted-color);font-size:var(--life-lead-size);line-height:1.65}
 .events-filters{padding:21px;background:#fff;border:1px solid var(--life-card-border);border-radius:var(--life-card-radius)}
 .events-periods{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;scrollbar-width:thin}
