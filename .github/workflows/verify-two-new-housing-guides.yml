@@ -1,0 +1,66 @@
+name: Verify two new LIFE housing guides on public website
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-two-new-housing-guides.yml'
+      - 'content/posts/support/tenant-movein-fixed-date-rent-report-2026.json'
+      - 'content/posts/support/monthly-rent-tax-credit-cash-receipt-2026.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  public-housing-guides:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Check canonical publication, both source-backed articles and continuations
+        shell: bash
+        run: |
+          python - <<'PY'
+          import time,re,urllib.request,urllib.error,html,xml.etree.ElementTree as ET
+          BASE='https://pagero.kr/life'
+          guides={
+            'tenant-movein-fixed-date-rent-report-2026':('전입신고','확정일자','임대차','보증금'),
+            'monthly-rent-tax-credit-cash-receipt-2026':('월세 세액공제','현금영수증','1,000만 원','17%')
+          }
+          def fetch(path):
+              req=urllib.request.Request(BASE+path,headers={'User-Agent':'Mozilla/5.0 (LIFE-CorrectNewGuideQA)','Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req,timeout=24) as r:
+                  return r.status,r.read(1900000).decode('utf-8','replace')
+          def audit():
+              status,sitemap=fetch('/sitemap.xml')
+              if status!=200:raise AssertionError('sitemap status '+str(status))
+              urls=[x.text or '' for x in ET.fromstring(sitemap).iter() if x.tag.rsplit('}',1)[-1]=='loc']
+              indexed=[url for url in urls if re.search(r'/life/(?:support|car)/[^/]+/$',url)]
+              if len(indexed)<48:raise AssertionError('Expected >=48 live articles, got '+str(len(indexed)))
+              for slug,terms in guides.items():
+                  uri='/support/'+slug+'/'
+                  if BASE+uri not in urls:raise AssertionError('Sitemap article absent '+slug)
+                  status,content=fetch(uri)
+                  if status!=200:raise AssertionError('HTTP '+str(status)+' '+slug)
+                  if '<link rel="canonical" href="'+BASE+uri+'"' not in content:
+                      raise AssertionError('Wrong canonical '+slug)
+                  if '<meta name="robots" content="index,follow' not in content:
+                      raise AssertionError('Article not indexable '+slug)
+                  if len(re.findall('<h1(?:\\s[^>]*)?>',content))!=1:raise AssertionError('Invalid H1 '+slug)
+                  plain=html.unescape(re.sub(r'<[^>]+>',' ',content))
+                  absent=[w for w in terms if w not in plain]
+                  if absent:raise AssertionError('Required answer terms not visible '+slug+': '+str(absent))
+                  if 'class="article-content"' not in content:raise AssertionError('Missing long-form article '+slug)
+                  for page in (2,3):
+                      state,continued=fetch(uri+str(page)+'/')
+                      if state!=200 or 'noindex,follow' not in continued:
+                          raise AssertionError('Continuation absent or indexable: '+slug+'/'+str(page))
+                      if len(continued)<3500:raise AssertionError('Continuation too short: '+slug+'/'+str(page))
+                  print('NEW_GUIDE_LIVE_VERIFIED',slug,'main_and_two_continuations',flush=True)
+              print('HOUSING_GUIDES_LIVE_48_PLUS',len(indexed),'SITEMAP_LISTED',flush=True)
+          for attempt in range(1,10):
+              try:
+                  audit()
+                  break
+              except Exception as error:
+                  print('NEW_GUIDES_LIVE_RETRY',attempt,str(error)[:240],flush=True)
+                  if attempt==9:raise
+                  time.sleep(12)
+          PY

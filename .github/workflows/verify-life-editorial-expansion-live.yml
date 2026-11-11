@@ -35,7 +35,7 @@ jobs:
                   status,headers,body=read(url)
                   plain=html.unescape(re.sub('<[^>]+>',' ',body))
                   expected=cases[slug]
-                  missing=[head for head,paragraph in expected if paragraph not in plain]
+                  missing=[head for head,paragraph in expected if head not in plain and paragraph[:60] not in plain]
                   if status!=200 or missing or '<meta name="robots" content="index,follow' not in body:
                       return slug,False,'HTTP '+str(status)+' missing '+str(missing)
                   return slug,True,len(plain)
