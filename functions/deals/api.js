@@ -41,7 +41,7 @@ const NO_PREPARED_GENERIC=/(말랭이|말린|건조분말|과자|스낵|라떼|�
 const PANTRY_TOPICS=new Set(["쌀","소금","다진 마늘","참기름","들기름","식용유","올리브유","국간장","간장","된장","고추장","고춧가루","액젓","식초","매실청"]);
 const RAW_CHICKEN=/(생닭|생육|원육|비가열|생고기|원물|손질\s*닭|닭가슴살\s*생)/i;
 const NO_READY_CHICKEN=/(훈제|수비드|스테이크|슬라이스|소시지|큐브|볼|양념|조리완료|조리된|익힌|구운|가공식품|밀키트|즉석|완제품)/i;
-const PEAR_ITEM=/(신고배|원황배|화산배|나주배|국산\s*배|햇배|(?:^|[\s\[(])배(?=$|[\s\])\d]))/i;
+const PEAR_ITEM=/(신고배|원황배|화산배|나주배|국산\s*배(?=$|[\s\])\d])|햇배(?=$|[\s\])\d])|(?:^|[\s\[(])배(?=$|[\s\])\d]))/i;
 export function isRelevantFoodProduct(topic,title){
   if(typeof title!=="string"||!title.trim()||typeof topic!=="string"||!topic.trim())return false;
   const text=title.normalize("NFKC").toLowerCase().replace(/\s+/g," ").trim();
@@ -77,6 +77,14 @@ export function isRelevantFoodProduct(topic,title){
   if(requested==="단감")
     return /단감/.test(text)&&!NO_PREPARED_PERSIMMON.test(text)
       &&(FRESH_UNIT.test(text)||PERSIMMON_COUNT.test(text)||PERSIMMON_FRESH.test(text));
+  if(requested==="귤")
+    return /(감귤|(?:^|[\s\[(])귤(?=$|[\s\])\d]))/i.test(text)
+      &&!NO_PREPARED_GENERIC.test(text)
+      &&(SHOP_QUANTITY.test(text)||FRESH_CONTEXT.test(text));
+  if(requested==="쑥")
+    return /(?:^|[\s\[(])쑥(?=$|[\s\])\d])/i.test(text)
+      &&!NO_PREPARED_GENERIC.test(text)
+      &&(SHOP_QUANTITY.test(text)||FRESH_CONTEXT.test(text));
   // Avoid broad substring matches for "배" (e.g. 배추, 배터리).
   if(requested==="배")
     return PEAR_ITEM.test(text)&&!NO_PREPARED_GENERIC.test(text)
