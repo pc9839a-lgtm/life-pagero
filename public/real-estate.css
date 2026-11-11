@@ -4,14 +4,14 @@
 .life-editorial .re-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(290px,31%);gap:27px;align-items:start}
 .life-editorial .re-left{min-width:0}
 .life-editorial .re-breadcrumb{display:flex;align-items:center;gap:12px;margin:4px 0 24px;font-size:12px;color:#697b94}
-.life-editorial .re-breadcrumb strong{font-weight:650;color:#162a50}
-.life-editorial .re-heading{margin:0 0 30px;padding:0;border:0;background:none}
+.life-editorial .re-breadcrumb strong{font-weight:650;color:var(--life-heading-color)}
+.life-editorial .re-heading{margin:0 0 22px;padding:30px 24px;border:1px solid var(--life-card-border);border-radius:10px;background:#f7f8f9}
 .life-editorial .re-heading .re-h1{display:flex;align-items:center;gap:16px}
 .life-editorial .re-h1>svg{width:40px;height:40px;color:var(--brand);flex:none}
 .life-editorial .re-h1 h1{margin:0;color:var(--life-heading-color);font-size:var(--life-page-title-size);font-weight:var(--life-heading-weight);line-height:var(--life-heading-line);letter-spacing:var(--life-heading-tracking)}
 .life-editorial .re-heading p{margin:8px 0 0;font-size:var(--life-lead-size);color:var(--life-muted-color);line-height:1.6}
-.life-editorial .re-tabs{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 30px}
-.life-editorial .re-tab{min-height:var(--life-control-height);padding:9px 16px;border:1px solid var(--life-control-border);border-radius:var(--life-control-radius);background:#fff;color:#122746;font-size:14px;font-weight:780;white-space:nowrap;cursor:pointer}
+.life-editorial .re-tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:0 0 17px}
+.life-editorial .re-tab{min-height:var(--life-control-height);padding:9px 16px;border:1px solid var(--life-control-border);border-radius:var(--life-control-radius);background:#fff;color:#35414d;font-size:14px;font-weight:750;white-space:nowrap;cursor:pointer}
 .life-editorial .re-tab span{font-weight:480;color:#5e6c7d}
 .life-editorial .re-tab[aria-pressed="true"]{background:var(--brand);color:#fff;border-color:var(--brand)}
 .life-editorial .re-tab[aria-pressed="true"] span{color:#fff4ef}
@@ -29,27 +29,27 @@
 .life-editorial .re-notice{font-size:12px;line-height:1.6;color:#8794a8;margin:12px 0 21px}
 .life-editorial .re-results{display:flex;flex-direction:column;gap:13px}
 .life-editorial .re-card{min-width:0;display:grid;grid-template-columns:minmax(190px,34%) minmax(0,1fr);gap:18px;padding:13px 16px;background:#fff;border:1px solid var(--life-card-border);border-radius:var(--life-card-radius);min-height:190px}
-.life-editorial .re-card.re-featured{border-color:#f4b720;background:#fffdf7}
+.life-editorial .re-card.re-featured{border-color:#e9b3a3;background:#fffaf8}
 .life-editorial .re-card[hidden],.life-editorial .re-empty[hidden]{display:none}
 .life-editorial .re-photo{position:relative;display:block;min-height:160px;overflow:hidden;border-radius:7px;background:#e9eff5}
 .life-editorial .re-image{display:block;width:100%;height:100%}
-.life-editorial .re-recommend{position:absolute;top:0;left:0;padding:8px 11px;border-radius:6px 0 6px 0;background:#ffdc00;color:#0d1c32;font-size:12px;font-weight:850}
+.life-editorial .re-recommend{position:absolute;top:0;left:0;padding:8px 11px;border-radius:6px 0 6px 0;background:var(--brand);color:#fff;font-size:12px;font-weight:800}
 .life-editorial .re-card-body{min-width:0;display:flex;flex-direction:column;align-items:start;padding:2px 1px;position:relative}
 .life-editorial .re-tags{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .life-editorial .re-tag{padding:3px 8px;border-radius:5px;font-size:12px;font-weight:760;line-height:1.45}
 .life-editorial .re-type{background:#fff4ef;color:var(--brand)}
-.life-editorial .re-ongoing{background:#ffe8ed;color:#f12443}
+.life-editorial .re-ongoing{background:#fff4ef;color:var(--brand)}
 .life-editorial .re-upcoming{background:#fff4ef;color:var(--brand)}
 .life-editorial .re-fiction{background:#eef0f5;color:#606d82}
 .life-editorial .re-card h2{margin:10px 0 4px;font-size:var(--life-card-title-size);line-height:1.3;font-weight:var(--life-card-weight);letter-spacing:-.025em;color:var(--life-heading-color)}
 .life-editorial .re-card h2 a{color:inherit}
-.life-editorial .re-description{margin:0 0 10px;color:#52627c;font-size:13px;line-height:1.45}
-.life-editorial .re-facts{display:flex;flex-direction:column;gap:5px;margin:0 0 2px;color:#273a55;font-size:12px;line-height:1.35}
+.life-editorial .re-description{margin:0 0 10px;color:#626f7b;font-size:13px;line-height:1.55}
+.life-editorial .re-facts{display:flex;flex-direction:column;gap:6px;margin:0 0 2px;color:#394958;font-size:12px;line-height:1.5}
 .life-editorial .re-facts span{display:flex;gap:7px;align-items:center}
 .life-editorial .re-facts svg{flex:none;width:15px;height:15px;color:#4d5c72}
-.life-editorial .re-more{position:absolute;right:2px;bottom:2px;display:inline-flex;padding:9px 13px;color:#14263e;background:#fff;border:1px solid #ccd6e2;border-radius:6px;font-size:12px;font-weight:800}
+.life-editorial .re-more{position:absolute;right:2px;bottom:2px;display:inline-flex;padding:9px 13px;color:var(--brand);background:#fff;border:1px solid var(--life-control-border);border-radius:6px;font-size:12px;font-weight:750}
 .life-editorial .re-more:hover{background:var(--brand);color:white;border-color:var(--brand)}
-.life-editorial .re-empty{padding:34px 15px;text-align:center;color:#7c899c;background:#fafbfe;border:1px dashed #dce2eb;border-radius:7px}
+.life-editorial .re-empty{padding:34px 15px;text-align:center;color:#68737f;background:#fafbfc;border:1px solid var(--life-card-border);border-radius:8px}
 .life-editorial .re-ad-rail{position:sticky;top:20px;display:flex;flex-direction:column;gap:15px;min-width:0}
 .life-editorial .re-ad{display:block;position:relative;min-width:0;width:100%;padding:0;overflow:hidden;text-decoration:none;background:#dce5f3;line-height:0;border:1px solid #e0e5ec;border-radius:0}
 .life-editorial .re-ad-main{aspect-ratio:3/4}
@@ -84,7 +84,7 @@
 @media(max-width:620px){
  .life-editorial .re-shell{width:calc(100% - 24px);padding-top:18px}
  .life-editorial .re-breadcrumb{margin-bottom:18px}
- .life-editorial .re-heading{margin-bottom:19px}
+ .life-editorial .re-heading{margin-bottom:17px;padding:24px 16px}
  .life-editorial .re-h1 h1{font-size:var(--life-page-title-size);font-weight:var(--life-heading-weight);line-height:var(--life-heading-line);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
  .life-editorial .re-h1>svg{width:30px;height:30px}
  .life-editorial .re-heading p{font-size:var(--life-lead-size);color:var(--life-muted-color);line-height:1.6;}
