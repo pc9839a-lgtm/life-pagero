@@ -6,9 +6,11 @@
 .events-shell{width:calc(100% - 72px);max-width:var(--content);margin:26px auto 50px;min-width:0;color:var(--ink)}
 .events-shell *{box-sizing:border-box}
 .events-intro h1,.events-detail-head h1{margin:10px 0 8px;font-size:var(--life-page-title-size);line-height:var(--life-heading-line);letter-spacing:var(--life-heading-tracking);overflow-wrap:anywhere;font-weight:var(--life-heading-weight);color:var(--life-heading-color);}
-.events-intro p{margin:0 0 19px;color:var(--life-muted-color);font-size:var(--life-lead-size)}
-.events-filters{padding:18px;background:#fff;border:1px solid var(--life-card-border);border-radius:var(--life-card-radius)}
-.events-periods{display:flex;gap:7px;overflow-x:auto;padding-bottom:5px;scrollbar-width:thin}
+.events-intro{padding:34px 26px;margin:0 0 22px;text-align:center;background:#f7f8f9;border:1px solid var(--life-card-border);border-radius:10px}
+.events-intro h1{margin:0 0 11px}
+.events-intro p{margin:0;color:var(--life-muted-color);font-size:var(--life-lead-size);line-height:1.65}
+.events-filters{padding:21px;background:#fff;border:1px solid var(--life-card-border);border-radius:var(--life-card-radius)}
+.events-periods{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;scrollbar-width:thin}
 .events-periods button{border:1px solid var(--life-control-border);border-radius:var(--life-control-radius);color:#334960;background:#fff;cursor:pointer;flex:none;min-height:var(--life-control-height);padding:9px 15px;font-size:13px;font-weight:700}
 .events-periods button[aria-pressed="true"]{border-color:var(--brand);background:var(--brand);color:#fff}
 .events-custom-dates{display:flex;gap:10px;margin-top:13px}
@@ -21,7 +23,7 @@
 .events-toolbar p{margin:0;font-size:13px;font-weight:700;color:#50667c;line-height:1.5}
 .events-toolbar button,.events-card-actions button,.events-card-actions a,.events-detail-actions button,.events-detail-actions a,.events-more{background:#fff;color:var(--brand);border:1px solid var(--life-control-border);border-radius:var(--life-control-radius);min-height:var(--life-control-height);padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
 .events-filters :is(button,select,input):focus-visible,.events-results :is(a,button):focus-visible,.events-detail :is(a,button):focus-visible{outline:2px solid var(--brand);outline-offset:2px}
-.events-results{margin-top:18px}
+.events-results{margin-top:23px}
 .events-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;align-items:stretch}
 .events-card{display:flex;flex-direction:column;justify-content:space-between;min-width:0;padding:19px;background:#fff;border:1px solid var(--life-card-border);border-radius:var(--life-card-radius)}
 .events-card-top{display:flex;gap:8px;justify-content:space-between;align-items:center;min-width:0}
@@ -36,7 +38,7 @@
 .events-card-actions button{flex:0 0 72px}
 .events-more{margin:18px auto 0;display:flex;padding:11px 24px}
 .events-more[hidden]{display:none}
-.events-empty{grid-column:1/-1;text-align:center;border:1px dashed #c9d7e6;background:#f9fbfd;border-radius:9px;padding:50px 20px}
+.events-empty{grid-column:1/-1;text-align:center;border:1px solid var(--life-card-border);background:#fafbfc;border-radius:var(--life-card-radius);padding:54px 20px}
 .events-empty h2{margin:0 0 8px;font-size:var(--life-section-title-size);font-weight:var(--life-section-weight);}
 .events-empty p{margin:0 auto;color:#64788b;line-height:1.7;font-size:14px;max-width:540px}
 .events-notice{margin:25px 0 10px;color:#65788a;font-size:13px;line-height:1.75}
@@ -59,6 +61,7 @@
  .events-home-banner a{padding:9px 10px;font-size:12px}
  .events-shell,.events-home-banner{width:calc(100% - 24px);max-width:var(--content)}
  .events-shell{margin:18px auto 34px}
+ .events-intro{padding:28px 17px;margin-bottom:14px;border-radius:8px}
  .events-intro h1{font-size:var(--life-page-title-size);font-weight:var(--life-heading-weight);}
  .events-filters{padding:12px;border-radius:8px}
  .events-periods button{padding:9px 12px}
