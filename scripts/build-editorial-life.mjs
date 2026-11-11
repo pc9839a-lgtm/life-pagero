@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {publishedGuideCount,requiredScenarioCount} from './published-guide-count.mjs';
 import {createHash} from 'node:crypto';
 
 // The sole final presentation pass. Older incremental theme stylesheets are
@@ -296,5 +297,5 @@ for(const absolute of walk(DIST).filter(file=>file.endsWith('.html'))){
   pages++;
 }
 check(pages>=150,'site page coverage unexpectedly low '+pages);
-check(articles===46,'must keep all 46 original article pages '+articles);
+check(articles===publishedGuideCount,'must keep all '+publishedGuideCount+' original article pages '+articles);
 console.log('[editorial-ui] '+pages+' pages rebuilt with one style system; '+articles+' full articles expanded, newsroom + directory preserved.');
