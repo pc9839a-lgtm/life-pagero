@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {publishedGuideCount,requiredScenarioCount} from './published-guide-count.mjs';
 const root=path.resolve('dist');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const assert=(v,m)=>{if(!v)throw Error('[compact-qa] '+m)};
@@ -27,7 +28,7 @@ for(const category of ['car','support']){
  assert(html.includes('id="modern-list-filter"'),'filter missing: '+category);
  cards+=count(html,/<article class="post-card">/g);
 }
-assert(cards===46,'all 46 category articles must remain visible in listings: '+cards);
+assert(cards===publishedGuideCount,'all '+publishedGuideCount+' category articles must remain visible in listings: '+cards);
 let guides=0;
 for(const category of ['car','support']){
  const dir=path.join(root,category);
@@ -46,7 +47,7 @@ for(const category of ['car','support']){
    guides++;
  }
 }
-assert(guides===46,'expected 46 primary articles: '+guides);
+assert(guides===publishedGuideCount,'expected '+publishedGuideCount+' primary articles: '+guides);
 assert(read('life-compact.css').includes('.compact-topic-link'),'new dense-free stylesheet not published');
 assert(read('life-compact.js').includes('guide.open = true'),'full-guide open behavior missing');
 const findFiles=d=>fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?findFiles(path.join(d,e.name)):[path.join(d,e.name)]);
@@ -59,4 +60,4 @@ for(const f of findFiles(root).filter(x=>x.endsWith('.html'))){
  themed++;
 }
 assert(themed>=140,'missing compact theme coverage: '+themed);
-console.log('[compact-qa] '+themed+' responsive pages; 6 icon-only categories; 3 popular links; 46 searchable article links, 46 intact collapsed guides, ads and canonical links preserved.');
+console.log('[compact-qa] '+themed+' responsive pages; 6 icon-only categories; 3 popular links; '+publishedGuideCount+' searchable article links, '+publishedGuideCount+' intact collapsed guides, ads and canonical links preserved.');
