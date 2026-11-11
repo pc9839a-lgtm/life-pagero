@@ -20,6 +20,7 @@ const root='http://127.0.0.1:'+server.address().port;
 fs.mkdirSync(OUT,{recursive:true});
 const browser=await chromium.launch({executablePath:process.env.CHROME_BIN||'/usr/bin/google-chrome',headless:true,args:['--no-sandbox']});
 const routes=[
+  {slug:'finance',path:'/finance/',main:'.finance-index-services',item:'.finance-index-tile'},
   {slug:'topics',path:'/topics/',main:'.topics-hub-list',item:'.topics-hub-link'},
   {slug:'car',path:'/car/',main:'.modern-list-toolbar',item:'.post-list .post-card'},
   {slug:'support',path:'/support/',main:'.modern-list-toolbar',item:'.post-list .post-card'},
@@ -44,7 +45,18 @@ try{
    if(route.slug==='topics'){
     expect(await page.locator('.topics-hub-link').count()===7,'six directories plus the car calculator required');
     const columns=await page.locator('.topics-hub-list').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length);
-    expect(columns===(viewport.width>900?3:1),'directory grid columns '+columns+' at '+viewport.width);
+    expect(columns===(viewport.width>900?4:1),'directory grid columns '+columns+' at '+viewport.width);
+    expect(await page.locator('.topics-quick a').count()===3,'quick information links missing');
+    const featured=await page.locator('.topics-hub-link').first().evaluate(el=>getComputedStyle(el).backgroundColor);
+    expect(featured==='rgb(32, 40, 50)','featured lifestyle category lacks distinct contrast: '+featured);
+   }
+   if(route.slug==='finance'){
+    expect(await page.locator('.finance-index-tile').count()===6,'finance destinations changed');
+    const grid=await page.locator('.finance-index-services').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length);
+    expect(grid===(viewport.width>860?4:1),'finance grid columns '+grid+' at '+viewport.width);
+    const hero=await page.locator('.finance-index-hero').evaluate(el=>getComputedStyle(el).backgroundColor);
+    expect(hero==='rgb(32, 40, 50)','finance hero contrast missing: '+hero);
+    expect(await page.locator('.finance-index-primary').getAttribute('href')==='/finance/savings/','primary finance action broken');
    }
    if(route.slug==='food')
     expect(await page.locator('.food-card').first().evaluate(e=>getComputedStyle(e).borderTopStyle)!=='none','food cards missing defined boundary');
@@ -55,7 +67,7 @@ try{
   }
   await page.close();
  }
- console.log('[menu-visual] PASS '+verified+' desktop and mobile screens; visible nav, headings, content, no horizontal overflow and screenshots');
+ console.log('[menu-visual] PASS '+verified+' desktop and mobile screens; hierarchy, quick actions, visible nav, content, no horizontal overflow and screenshots');
 }finally{
  await browser.close();
  await new Promise(done=>server.close(done));
