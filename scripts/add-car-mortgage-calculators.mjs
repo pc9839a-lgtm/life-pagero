@@ -185,12 +185,16 @@ makePage({url:mortgageUrl,title:mortgageTitle,description:mortgageDesc,
 
 // Add genuine navigation: finance hub, car category and lifestyle hub.
 let finance=read('finance/index.html');
-const financeAnchor='<a class="finance-hub-card" href="/finance/loan-payment/"';
-ok(finance.includes(financeAnchor),'finance links insertion anchor missing');
-finance=finance.replace(financeAnchor,
-  '<a class="finance-hub-card" href="'+mortgageUrl+'"><strong>주택담보대출 한도 계산기</strong></a>'
-  +financeAnchor);
-save('finance/index.html',finance);
+// The redesigned finance landing links to this calculator directly.
+// Insert into the old-style list only when that route is not already present.
+if(!finance.includes('href="'+mortgageUrl+'"')){
+  const financeAnchor='<a class="finance-hub-card" href="/finance/loan-payment/"';
+  ok(finance.includes(financeAnchor),'finance links insertion anchor missing');
+  finance=finance.replace(financeAnchor,
+    '<a class="finance-hub-card" href="'+mortgageUrl+'"><strong>주택담보대출 한도 계산기</strong></a>'
+    +financeAnchor);
+  save('finance/index.html',finance);
+}
 
 let topics=read('topics/index.html');
 const ending='</nav></article></div>';
