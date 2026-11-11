@@ -53,10 +53,19 @@ try{
    if(route.slug==='finance'){
     expect(await page.locator('.finance-index-tile').count()===6,'finance destinations changed');
     const grid=await page.locator('.finance-index-services').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length);
-    expect(grid===(viewport.width>860?4:1),'finance grid columns '+grid+' at '+viewport.width);
-    const hero=await page.locator('.finance-index-hero').evaluate(el=>getComputedStyle(el).backgroundColor);
-    expect(hero==='rgb(32, 40, 50)','finance hero contrast missing: '+hero);
-    expect(await page.locator('.finance-index-primary').getAttribute('href')==='/finance/savings/','primary finance action broken');
+    expect(grid===(viewport.width>860?3:1),'finance directory must use three columns on desktop and one on mobile: '+grid+' at '+viewport.width);
+    const hero=await page.locator('.finance-index-hero').evaluate(el=>{
+      const style=getComputedStyle(el),bounds=el.getBoundingClientRect();
+      return {height:bounds.height,background:style.backgroundColor,alignment:style.textAlign,borderTop:style.borderTopWidth};
+    });
+    expect(hero.alignment==='left','finance introduction must be left aligned');
+    expect(hero.background==='rgba(0, 0, 0, 0)','finance introduction must have no dark splash background: '+hero.background);
+    expect(hero.borderTop==='0px','finance introduction must have no decorative top stripe');
+    expect(hero.height<185,'finance hero should not push the actual tools below the fold: '+hero.height);
+    expect(await page.locator('.finance-index-primary, .finance-index-tile-number, .finance-index-eyebrow').count()===0,
+      'marketing-only finance decoration returned');
+    expect(await page.locator('.finance-index-services .finance-index-tile').first().getAttribute('href')==='/finance/savings/',
+      'first finance destination broken');
    }
    if(route.slug==='food')
     expect(await page.locator('.food-card').first().evaluate(e=>getComputedStyle(e).borderTopStyle)!=='none','food cards missing defined boundary');
