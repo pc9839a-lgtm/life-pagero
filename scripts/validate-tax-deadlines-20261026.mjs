@@ -8,10 +8,11 @@ const annual=read('car-tax-annual-payment-2026');
 const second=read('car-tax-second-half-2026');
 
 for(const p of [annual,second]){
-  assert.equal(p.updatedAt,date,p.slug+' corrected content should have a genuine updatedAt');
-  assert.equal(p.reviewedAt,date,p.slug+' sources were rechecked on 2026-10-26');
+  const verifiedDate=p.slug==='car-tax-second-half-2026'?'2026-11-11':date;
+  assert.equal(p.updatedAt,verifiedDate,p.slug+' corrected content should have a genuine updatedAt');
+  assert.equal(p.reviewedAt,verifiedDate,p.slug+' sources rechecked at article-specific review date');
   assert.equal(p.publishedAt === date,false,'Do not disguise corrections as new publication dates');
-  assert(p.sources.some(s=>s.checkedAt===date&&new URL(s.url).hostname.endsWith('.go.kr')),p.slug+' needs direct date-reviewed government source');
+  assert(p.sources.some(s=>s.checkedAt===verifiedDate&&new URL(s.url).hostname.endsWith('.go.kr')),p.slug+' needs directly date-reviewed government source');
 }
 const renderedAnnual=annual.series.parts.map(p=>p.body).join('\n');
 const renderedSecond=second.series.parts.map(p=>p.body).join('\n');
@@ -31,10 +32,19 @@ for(const outdated of [
 assert(renderedAnnual.includes('2026년 10월 26일 현재 연납 신청은'));
 assert(renderedAnnual.includes('12월 제2기분 고지'));
 assert(renderedAnnual.includes('2027년 공식'));
-assert(renderedSecond.includes('2026년 10월 26일 현재'));
+assert(renderedSecond.includes('11월 11일 현재'));
+assert(renderedSecond.includes('12월 1일'));
+assert(renderedSecond.includes('10만 원 이하'));
+assert(renderedSecond.includes('증빙된 양도일'));
+assert(renderedSecond.includes('연세액 납부승계'));
+assert(second.faqs.some(item=>item.question.includes('고지서가 안')));
+assert(second.sources.some(item=>item.url.includes('lsLawLinkInfo.do')&&item.checkedAt==='2026-11-11'));
+assert(!renderedSecond.includes('2026년 10월 26일 현재'));
+assert(second.title.includes('12월 자동차세'));
+assert(second.body.length>=5000);
 assert(renderedSecond.includes('12월 16~31일'));
 assert(annual.faqs.some(x=>x.question.includes('2026년 10월')));
 assert(!renderedSecond.includes('2026년 9월 현재'));
 assert(annual.series.parts[0].title.includes('마감'));
 assert(annual.series.parts[2].title.includes('환급'));
-console.log('PASS: 2 historically discovered-not-indexed LIFE tax guides now have current, source-backed deadlines in rendered series, legacy body, summaries and FAQs.');
+console.log('PASS: car tax annual guide remains valid and November 2026 second-half long-tail guide has date-specific, source-backed FAQs and transfer exceptions.');

@@ -362,23 +362,26 @@ if (!sitemap.includes('<loc>'+SITE_URL+'/editorial-standards/</loc><lastmod>2026
   throw new Error('Editorial policy sitemap lastmod must reflect the genuine editorial date');
 }
 
-// Editorial freshness gate: both updated, indexable car-tax documents must
-// actually contain the corrected October 2026 guidance in the HTML users read.
-for (const [slug, phrases] of [
-  ['car-tax-annual-payment-2026', ['2026년 10월 26일 현재 연납 신청은', '2027년 공식']],
-  ['car-tax-second-half-2026', ['2026년 10월 26일 현재', '12월 16~31일']],
+// Editorial freshness gate: preserve the distinct *real* review dates of
+// the annual guide and the November update to the second-half car-tax guide.
+// Avoid pinning both documents to an obsolete October modification date.
+for (const [slug, reviewed, phrases] of [
+  ['car-tax-annual-payment-2026', '2026-10-26',
+    ['2026년 10월 26일 현재 연납 신청은', '2027년 공식']],
+  ['car-tax-second-half-2026', '2026-11-11',
+    ['11월 11일 현재', '12월 16~31일', '10만 원 이하', '증빙된 양도일', '연세액 납부승계']],
 ]) {
   const permalink = '/car/' + slug + '/';
   const html = fs.readFileSync(pageFile(permalink), 'utf8');
   for (const phrase of phrases) {
-    if (!html.includes(phrase)) throw new Error(slug + ': corrected editorial information is absent from real built HTML: ' + phrase);
+    if (!html.includes(phrase)) throw new Error(slug + ': verified guidance missing from indexable HTML: ' + phrase);
   }
-  if (!html.includes('"dateModified":"2026-10-26"')) {
-    throw new Error(slug + ': article schema must reflect the verified editorial change date');
+  if (!html.includes('"dateModified":"' + reviewed + '"')) {
+    throw new Error(slug + ': article schema must reflect its actual editorial review date '+reviewed);
   }
   const expected = SITE_URL + permalink;
-  if (!sitemap.includes('<loc>' + expected + '</loc><lastmod>2026-10-26</lastmod>')) {
-    throw new Error(slug + ': sitemap lastmod must show 2026-10-26 content modification');
+  if (!sitemap.includes('<loc>' + expected + '</loc><lastmod>' + reviewed + '</lastmod>')) {
+    throw new Error(slug + ': sitemap lastmod must show content modification '+reviewed);
   }
 }
 
