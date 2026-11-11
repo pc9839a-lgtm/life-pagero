@@ -1,0 +1,92 @@
+name: Verify new food guides and images on live LIFE website
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-new-food-guides-live.yml'
+      - 'content/food-guides.json'
+      - 'scripts/add-food-guides.mjs'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  live-food:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Verify public eight-guide hub, both new guides, real photos and canonical
+        shell: bash
+        run: |
+          python - <<'PY'
+          import html,json,re,time,urllib.error,urllib.request,xml.etree.ElementTree as ET
+          BASE='https://pagero.kr/life'
+          new=['cooked-rice-cool-reheat-storage','chicken-thaw-safe-cook-storage']
+          def get(path):
+            req=urllib.request.Request(BASE+path,headers={
+              'User-Agent':'Mozilla/5.0 (LIFE-RealFoodPublicAudit)',
+              'Cache-Control':'no-cache',
+              'Pragma':'no-cache'
+            })
+            with urllib.request.urlopen(req,timeout=20) as res:
+              return res.status,res.headers, res.read(1650000)
+          def clean(s):
+            return html.unescape(re.sub(r'<[^>]+>',' ',s))
+          def verify():
+            status,_,raw=get('/food/')
+            if status!=200:raise AssertionError('Food hub HTTP '+str(status))
+            hub=raw.decode('utf-8','replace')
+            count=hub.count('class="food-guide-index-link"')
+            if count!=8:raise AssertionError('Food index expected 8 article cards, got '+str(count))
+            for slug in new:
+              if '/food/'+slug+'/' not in hub:raise AssertionError('New food guide not linked '+slug)
+            rank=[hub.index('/food/'+slug+'/') for slug in new]
+            old=hub.index('/food/scallops-clean-steam-storage/')
+            if not all(p<old for p in rank):raise AssertionError('New guides buried after old seasonal posts')
+            if '/deals/' not in hub or 'food-shopping-list' not in hub:
+              raise AssertionError('Original shopping functions lost')
+            status,_,xml=get('/sitemap.xml')
+            if status!=200:raise AssertionError('sitemap not HTTP 200')
+            urls=[x.text or '' for x in ET.fromstring(xml).iter() if x.tag.rsplit('}',1)[-1]=='loc']
+            for slug in new:
+              path='/food/'+slug+'/'
+              if BASE+path not in urls:raise AssertionError('Sitemap missing '+slug)
+              status,_,raw=get(path)
+              if status!=200:raise AssertionError('Guide not HTTP 200: '+slug)
+              page=raw.decode('utf-8','replace')
+              if '<link rel="canonical" href="'+BASE+path+'">' not in page:
+                raise AssertionError('Wrong canonical '+slug)
+              if '<meta name="robots" content="index,follow">' not in page:
+                raise AssertionError('Guide not indexable '+slug)
+              if '<time datetime="2026-11-11">' not in page:
+                raise AssertionError('Guide publication day wrong '+slug)
+              if 'class="food-guide-photo food-guide-photo-hero"' not in page:
+                raise AssertionError('Real food hero photo missing '+slug)
+              if page.count('class="food-guide-photo')!=2:
+                raise AssertionError('Expected 2 credited food photos '+slug)
+              if 'Pexels License' not in page or '식품안전나라' not in page:
+                raise AssertionError('Licensed photo/official citations missing '+slug)
+              if 'data-food-guide-products="' not in page:
+                raise AssertionError('ADPICK shopping search missing '+slug)
+              if '"@type":"Article"' not in page:
+                raise AssertionError('Article structured data missing '+slug)
+              if re.search(r'(?:인증키|API 미연결|데이터가 없습니다)',clean(page)):
+                raise AssertionError('Technical error text leaked '+slug)
+              image_names=[
+                slug+'-hero.jpg',slug+'-detail.jpg'
+              ]
+              for image in image_names:
+                status,headers,blob=get('/food-images/'+image)
+                if status!=200 or len(blob)<8000 or blob[:2]!=bytes([0xff,0xd8]):
+                  raise AssertionError('Food photo broken '+image)
+              print('LIVE_FOOD_GUIDE_PASSED',slug,'2_real_photos',
+                    'correct_2026_11_11_date','indexable',flush=True)
+            print('LIVE_EIGHT_FOOD_GUIDES_PUBLISHED',count,
+                  'NEW_FOOD_PHOTOS',4,'SHOPPING_STILL_PRESENT',flush=True)
+          for attempt in range(1,13):
+            try:
+              verify(); break
+            except Exception as exc:
+              print('FOOD_LIVE_RETRY',attempt,type(exc).__name__,str(exc)[:230],flush=True)
+              if attempt==12:raise
+              time.sleep(12)
+          PY
