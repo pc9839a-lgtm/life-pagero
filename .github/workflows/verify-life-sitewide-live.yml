@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 9
     steps:
-      - name: Crawl homepage, sitemap, 46 guides, source widgets, links and assets
+      - name: Crawl homepage, sitemap, published guides, source widgets, links and assets
         run: |
           python - <<'PY'
           import concurrent.futures,datetime,html,json,re,time,urllib.error,urllib.parse,urllib.request,xml.etree.ElementTree as ET
@@ -35,7 +35,7 @@ jobs:
                 paths.append(url[len(ROOT):])
             if len(set(paths))<55:raise AssertionError('Sitemap listing incomplete: '+str(len(set(paths))))
             article_paths=[p for p in paths if re.fullmatch('/(?:car|support)/[^/]+/',p)]
-            if len(article_paths)!=46:raise AssertionError('46 canonical guide URLs expected, got '+str(len(article_paths)))
+            if len(article_paths)<48:raise AssertionError('At least 48 canonical guide URLs expected, got '+str(len(article_paths)))
             allpaths=list(dict.fromkeys(paths+[p+str(part)+'/' for p in article_paths for part in [2,3]]))
             def check_page(p):
               try:
@@ -77,8 +77,10 @@ jobs:
               if not any(a in bodies[p] for a in ['https://finlife.fss.or.kr/','https://dart.fss.or.kr/']):
                 raise AssertionError('Finance source missing '+p)
             for p in ['/finance/savings/']:
-              if 'id="finance-rate-panel" aria-labelledby="bank-rates-heading" hidden' not in bodies[p]:
-                raise AssertionError('Unverified rate selector leaked')
+              if 'id="finance-rate-panel" aria-labelledby="bank-rates-heading"' not in bodies[p]:
+                raise AssertionError('Rate comparison panel missing')
+              if 'id="finance-rate-panel" aria-labelledby="bank-rates-heading" hidden' not in bodies[p] and 'class="finance-rate-table"' not in bodies[p]:
+                raise AssertionError('Rate panel visible without source-verified rows')
             for asset in ['/life-compact.css','/life-compact.js','/life-modern.css',
               '/finance-live.js','/today-dashboard.js','/today-dashboard.css']:
               status,body=get(asset)

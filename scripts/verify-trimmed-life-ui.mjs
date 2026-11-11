@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {publishedGuideCount,requiredScenarioCount} from './published-guide-count.mjs';
 
 const root=path.resolve('dist');
 const get=p=>fs.readFileSync(path.join(root,p),'utf8');
@@ -62,5 +63,5 @@ for(const category of ['car','support']){
     articles++;
   }
 }
-must(articles===46,'expected 46 preserved editorial guides, got '+articles);
-console.log('[concise-qa] Removed AI-like guide prose and 46 duplicate labels; kept core tools, original source URLs, ads and article SEO.');
+must(articles===publishedGuideCount,'expected '+publishedGuideCount+' preserved editorial guides, got '+articles);
+console.log('[concise-qa] Removed AI-like guide prose and '+publishedGuideCount+' duplicate labels; kept core tools, original source URLs, ads and article SEO.');

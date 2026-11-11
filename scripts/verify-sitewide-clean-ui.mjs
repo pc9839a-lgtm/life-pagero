@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {publishedGuideCount,requiredScenarioCount} from './published-guide-count.mjs';
 
 const dist=path.resolve('dist');
 const check=(truth,label)=>{if(!truth)throw Error('[sitewide-audit] '+label)};
@@ -27,7 +28,7 @@ for(const area of ['car','support']) {
     if(fs.existsSync(path.join(dist,article)))actualArticles.push(article);
   }
 }
-check(actualArticles.length===46,'46 article pages must be preserved: '+actualArticles.length);
+check(actualArticles.length===publishedGuideCount,''+publishedGuideCount+' article pages must be preserved: '+actualArticles.length);
 
 const technical=[
  '실시간 공시 데이터 사용 불가','최신 공시 미확인',
@@ -99,4 +100,4 @@ check(missing.size===0,'Unresolved local links/assets: '+[...missing].slice(0,25
 check(fs.existsSync(path.join(dist,'life-compact.css')),'Minimal mobile stylesheet missing');
 check(fs.existsSync(path.join(dist,'today-dashboard.js')),'Today dashboard asset missing');
 console.log('[sitewide-audit] PASS '+filenames.length+' HTML, '+canonical+' canonical/H1, '+assets+
- ' internal resources, 46 complete article guides, six home topics, three popular links; zero technical error banners or broken local files.');
+ ' internal resources, '+publishedGuideCount+' complete article guides, six home topics, three popular links; zero technical error banners or broken local files.');

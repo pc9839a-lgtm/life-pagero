@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {publishedGuideCount} from './published-guide-count.mjs';
 
 /* Final presentation-only pass. No source post, ad identifier, destination or canonical is rewritten.
    Put no more than six categories and three links in the initial home information area. */
@@ -128,6 +129,6 @@ for(const absolute of walk(DIST).filter(f=>f.endsWith('.html'))){
   requireTrue((html.match(/<link rel="canonical"/g)||[]).length===1,'canonical damaged: '+file);
   write(file,html);count++;
 }
-requireTrue(articles===46,'must retain all 46 article summaries: '+articles);
+requireTrue(articles===publishedGuideCount,'must retain all '+publishedGuideCount+' article summaries: '+articles);
 requireTrue(count>=140,'expected 140+ rendered pages: '+count);
-console.log('[compact-ui] '+count+' pages, six one-tap topics, three popular links, expandable extras, 46 first-answer article summaries.');
+console.log('[compact-ui] '+count+' pages, six one-tap topics, three popular links, expandable extras, '+publishedGuideCount+' first-answer article summaries.');
