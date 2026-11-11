@@ -94,6 +94,15 @@
   position:absolute;right:24px;bottom:19px;color:var(--brand);
   font-size:22px;line-height:1.15
 }
+/* The seventh item is an existing calculator, not a seventh article category.
+   Give the tool its own full-width concluding row on desktop and tablet. */
+.life-editorial .topics-hub-link:last-child:nth-child(7){
+  grid-column:1/-1;min-height:112px;justify-content:center;
+  padding-right:72px;background:#fafbfc
+}
+.life-editorial .topics-hub-link:last-child:nth-child(7) .topics-chevron{
+  right:28px;bottom:calc(50% - 12px)
+}
 @media(max-width:900px){
   .life-editorial .topics-hub-list{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
@@ -115,6 +124,9 @@
   }
   .life-editorial .topics-intro{font-size:14px}
   .life-editorial .topics-hub-list{grid-template-columns:1fr;gap:9px}
+  .life-editorial .topics-hub-link:last-child:nth-child(7){
+    min-height:114px;padding:19px 49px 18px 19px
+  }
   .life-editorial .topics-hub-link{min-height:114px;padding:19px 49px 18px 19px;gap:5px}
   .life-editorial .topics-hub-link strong{font-size:17px}
   .life-editorial .topics-hub-link span:not(.topics-chevron){font-size:13px}
