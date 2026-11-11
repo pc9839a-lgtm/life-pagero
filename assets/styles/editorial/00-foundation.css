@@ -64,7 +64,7 @@ body.life-editorial{
 .life-editorial .modern-sponsored-area .modern-section-heading h2{font-size:14px;font-weight:700;color:#777}
 .life-editorial .site-footer{border-top:1px solid var(--line);background:#fafafa;color:#5e6874}
 .life-editorial .footer-inner{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:30px;padding:34px 0}
-.life-editorial .footer-inner h2,.life-editorial .footer-inner h3{font-size:13px;letter-spacing:-.02em;margin:0 0 10px}
+.life-editorial .footer-inner h2,.life-editorial .footer-inner h3{font-size:14px;font-weight:760;letter-spacing:-.02em;color:#26323d;margin:0 0 10px}
 .life-editorial .footer-inner p,.life-editorial .footer-inner li,.life-editorial .footer-inner a{font-size:12px;line-height:1.8;color:#717985}
 .life-editorial .footer-bottom{border-top:1px solid #ededed;background:#fafafa}
 .life-editorial .footer-bottom .top-strip-inner{padding:10px 0;font-size:11px;color:#888}
