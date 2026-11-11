@@ -49,8 +49,8 @@ for(const decorative of [
 ])if(finance.includes(decorative))throw Error('Promotional template decoration returned: '+decorative);
 if((finance.match(/class="finance-index-tile-copy"/g)||[]).length!==6)
   throw Error('Finance requires six distinct useful destinations');
-if((finance.match(/href="\/finance\/savings\/"/g)||[]).length!==1)
-  throw Error('The primary savings comparison action must not be duplicated');
+if(!finance.includes('class="finance-index-tile finance-index-tile--featured" href="/finance/savings/"'))
+  throw Error('Main savings comparison must be the single featured directory entry');
 if(!finance.includes('class="finance-index-tile finance-index-tile--featured"'))
   throw Error('Savings comparison must have one featured editorial row');
 for(const [slug,expected] of [
