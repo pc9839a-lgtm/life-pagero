@@ -61,18 +61,51 @@ function issuePanel() {
     +'<div id="finance-issues"></div></section>';
 }
 
+const financeIndexLink=(href,title,description,kind='service')=>
+  '<a class="finance-index-tile finance-index-tile--'+kind+'" href="'+href+'">'
+  +'<strong>'+esc(title)+'</strong><span>'+esc(description)+'</span>'
+  +'<span class="finance-index-tile-arrow" aria-hidden="true">↗</span></a>';
 const hub = breadcrumb()
+  +'<div class="finance-index">'
+  +'<header class="finance-index-hero">'
+  +'<p class="finance-index-eyebrow">생활비서 금융</p>'
   +'<h1>금융정보</h1>'
-  +'<p class="finance-page-intro">금리 비교, 공시 조회, 대출 계산을 선택하세요.</p>'
-  +'<div class="finance-hub-grid">'
-  +pageLink('/finance/savings/','예·적금 금리 확인','금융감독원 공식 비교공시')
-  +pageLink('/finance/markets/','주식·경제 이슈','기업 공시와 통화·금융정책 발표')
-  +pageLink('/finance/loan-payment/','대출 계산기','3가지 상환방식·월별 상환표')
-  +pageLink('/support/year-end-tax-precheck-2026/','세금·환급','연말정산 미리보기·세금정보')
-  +'</div>'
+  +'<p class="finance-index-lead">예·적금 금리부터 대출 계산, 기업 공시까지 필요한 금융정보를 바로 확인하세요.</p>'
+  +'<a class="finance-index-primary" href="#finance-index-services">금융 서비스 살펴보기 <span aria-hidden="true">↓</span></a>'
+  +'</header>'
+  +'<section class="finance-index-section" id="finance-index-services" aria-labelledby="finance-index-services-title">'
+  +'<div class="finance-index-section-heading"><h2 id="finance-index-services-title">필요한 금융정보 찾기</h2>'
+  +'<p>금리와 공시를 확인하고 생활에 필요한 세금 정보를 찾아보세요.</p></div>'
+  +'<div class="finance-index-services">'
+  +financeIndexLink('/finance/savings/','예·적금 금리 비교','기본금리·최고금리와 상품별 우대조건을 확인하세요.')
+  +financeIndexLink('/finance/markets/','주식·기업 공시','기업 공시와 한국은행의 금융시장 발표를 살펴보세요.')
+  +financeIndexLink('/support/year-end-tax-precheck-2026/','세금·환급 안내','연말정산 준비와 공제 항목을 확인하세요.')
+  +'</div></section>'
+  +'<section class="finance-index-section" aria-labelledby="finance-index-tools-title">'
+  +'<div class="finance-index-section-heading"><h2 id="finance-index-tools-title">금융 계산기</h2>'
+  +'<p>금액과 기간을 입력해 예상 이자와 상환액을 직접 계산할 수 있습니다.</p></div>'
+  +'<div class="finance-index-tools">'
+  +financeIndexLink('/finance/savings-calculator/','예·적금 이자 계산','목돈과 월 납입액에 따른 만기 이자를 계산합니다.','tool')
+  +financeIndexLink('/finance/loan-payment/','대출 월 상환액','원리금균등·원금균등·만기일시상환을 비교합니다.','tool')
+  +financeIndexLink('/finance/mortgage-calculator/','주택담보대출 계산','주택자금 대출의 월 납입액과 총이자를 확인합니다.','tool')
+  +'</div></section>'
+  +'<section class="finance-index-section finance-index-official" aria-labelledby="finance-index-official-title">'
+  +'<div class="finance-index-section-heading"><h2 id="finance-index-official-title">공식 자료 바로가기</h2>'
+  +'<p>금리와 공시는 금융회사 조건 및 발표 시점에 따라 달라집니다. 원문을 함께 확인하세요.</p></div>'
+  +'<div class="finance-index-official-list">'
   +bankPanel(true)
   +issuePanel()
-;
+  +'</div></section>'
+  +'<section class="finance-index-section finance-index-checks" aria-labelledby="finance-index-checks-title">'
+  +'<div class="finance-index-section-heading"><h2 id="finance-index-checks-title">비교 전에 확인하세요</h2>'
+  +'<p>금융정보를 판단할 때 놓치기 쉬운 기준입니다.</p></div>'
+  +'<dl class="finance-index-check-list">'
+  +'<div><dt>예·적금 금리</dt><dd>최고금리는 우대조건을 모두 충족해야 받을 수 있습니다. 가입기간·납입한도·중도해지 조건을 함께 비교하세요.</dd></div>'
+  +'<div><dt>대출 상환액</dt><dd>계산기의 예상 금액에는 실제 금융회사의 수수료, 변동금리 및 약정별 이자 계산 차이가 반영되지 않을 수 있습니다.</dd></div>'
+  +'<div><dt>시장·기업 공시</dt><dd>DART와 한국은행 발표의 공시일·기준일을 먼저 확인하세요. 발표 자료는 투자 수익을 보장하지 않습니다.</dd></div>'
+  +'</dl></section>'
+  +'</div>';
+
 const savingsPage = breadcrumb('예금·적금 비교')
   +'<h1>예·적금 금리 확인</h1>'
   +'<p class="finance-page-intro">은행별 기본금리와 최고금리를 비교해 보세요.</p>'

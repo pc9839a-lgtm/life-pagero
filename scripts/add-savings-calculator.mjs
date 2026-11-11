@@ -100,11 +100,15 @@ check((html.match(/data-life-coupang-kind="body"/g)||[]).length===1,
 write('finance/savings-calculator/index.html',html);
 
 let hub=read('finance/index.html');
-const anchor='<a class="finance-hub-card" href="/finance/loan-payment/"';
-check(hub.includes(anchor),'finance calculator shortcut insertion target missing');
-hub=hub.replace(anchor,
-  '<a class="finance-hub-card" href="'+URL+'"><strong>적금 계산기</strong></a>'+anchor);
-write('finance/index.html',hub);
+// New finance landing already provides this route as a first-class calculator
+// card. Keep insertion only for the older link-list template.
+if(!hub.includes('href="'+URL+'"')){
+  const anchor='<a class="finance-hub-card" href="/finance/loan-payment/"';
+  check(hub.includes(anchor),'finance calculator shortcut insertion target missing');
+  hub=hub.replace(anchor,
+    '<a class="finance-hub-card" href="'+URL+'"><strong>적금 계산기</strong></a>'+anchor);
+  write('finance/index.html',hub);
+}
 
 let savings=read('finance/savings/index.html');
 const title='<h1>예·적금 금리 확인</h1>';
