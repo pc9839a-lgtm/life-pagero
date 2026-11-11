@@ -100,8 +100,12 @@ yes(dashboardCss.includes('.today-vertical-list{display:flex;flex-direction:colu
   'Today page must stack full-width blocks on desktop and mobile');
 const dashboardJs=read('today-dashboard.js');
 yes(dashboardJs.includes('news more')===false&&dashboardJs.includes('today-expand-button') &&
-  dashboardJs.includes("const limit=node.dataset.mode==='compact'?5:4;"),
-  'Four concise headlines and expandable full list missing');
+  dashboardJs.includes("const limit=node.dataset.mode==='compact'?5:8;"),
+  'Today page must show eight headlines immediately, with expandable remaining list');
+yes(wideCss.includes('@media(min-width:901px)') &&
+  wideCss.includes('align-self:stretch;display:flex;flex-direction:column') &&
+  wideCss.includes('.today-news-list li{\n    flex:1;align-content:center'),
+  'Desktop news panel must stretch to the weather and FX column height');
 yes(dashboardJs.includes('today-source-prompt'),
   'API unavailable fallback must remain readable');
 yes(!dashboardJs.includes('attachRefresh(') &&
