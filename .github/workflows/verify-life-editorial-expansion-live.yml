@@ -1,4 +1,4 @@
-name: Verify live LIFE 46-guide editorial expansion
+name: Verify live LIFE editorial expansion across all published guides
 on:
   push:
     branches: [main]
@@ -35,7 +35,7 @@ jobs:
                   status,headers,body=read(url)
                   plain=html.unescape(re.sub('<[^>]+>',' ',body))
                   expected=cases[slug]
-                  missing=[head for head,_ in expected if head not in plain]
+                  missing=[head for head,paragraph in expected if paragraph not in plain]
                   if status!=200 or missing or '<meta name="robots" content="index,follow' not in body:
                       return slug,False,'HTTP '+str(status)+' missing '+str(missing)
                   return slug,True,len(plain)
@@ -51,8 +51,11 @@ jobs:
                       p=url.removeprefix(root).strip('/').split('/')
                       if len(p)==2 and p[0] in ('car','support'):
                           entries.append(tuple(p))
-                  if len(entries)!=46:
-                      raise ValueError('Expected 46 article URLs, got '+str(len(entries)))
+                  if len(entries)<48:
+                      raise ValueError('Expected at least 48 article URLs, got '+str(len(entries)))
+                  required={'tenant-movein-fixed-date-rent-report-2026','monthly-rent-tax-credit-cash-receipt-2026'}
+                  if not required.issubset({s for _,s in entries}):
+                      raise ValueError('New guides absent from public sitemap')
                   missing_data=[s for _,s in entries if s not in cases]
                   if missing_data:raise ValueError('Missing editorial data: '+str(missing_data))
                   with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
@@ -60,7 +63,7 @@ jobs:
                   failed=[r for r in results if not r[1]]
                   print('LIVE_EDITORIAL_DEPTH',attempt,'PASS',len(results)-len(failed),'FAIL',len(failed),'SAMPLE_FAILURES',failed[:5],flush=True)
                   if not failed:
-                      print('LIVE_46_ARTICLES_PASSED',len(results),'MIN_VISIBLE_CHARACTERS',min(r[2] for r in results),flush=True)
+                      print('LIVE_ARTICLES_PASSED',len(results),'MIN_VISIBLE_CHARACTERS',min(r[2] for r in results),flush=True)
                       for section in (2,3):
                           url=root+'car/car-inspection-period/'+str(section)+'/'
                           status,_,content=read(url)
@@ -71,6 +74,6 @@ jobs:
                       break
               except Exception as e:
                   print('LIVE_RETRY',attempt,type(e).__name__,str(e)[:180],flush=True)
-              if attempt==12:raise SystemExit('Public 46-guide editorial expansion not deployed or incomplete')
+              if attempt==12:raise SystemExit('Public editorial expansion not deployed or incomplete')
               time.sleep(15)
           PY
