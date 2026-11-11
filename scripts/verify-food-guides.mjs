@@ -150,12 +150,12 @@ for(const guide of model.guides){
     'shared food active navigation missing '+guide.slug);
   check((html.match(/<script type="application\/ld\+json">/g)||[]).length===2,
     'Article and Breadcrumb JSON-LD expected '+guide.slug);
+  const publication=guide.publishedAt||model.publishedAt;
+  const modification=guide.updatedAt||publication;
   check(html.includes('"datePublished":"'+publication+'"')&&html.includes('"dateModified":"'+modification+'"'),
     'article publication metadata wrong '+guide.slug);
   check(html.includes('"@type":"Article"')&&html.includes('"@type":"BreadcrumbList"'),
     'structured article/breadcrumb data missing '+guide.slug);
-  const publication=guide.publishedAt||model.publishedAt;
-  const modification=guide.updatedAt||publication;
   check(html.includes('<time datetime="'+publication+'">'),
     'publication date lost '+guide.slug);
   check(guide.sections.every(s=>html.includes('<h2>'+s.title+'</h2>')),
