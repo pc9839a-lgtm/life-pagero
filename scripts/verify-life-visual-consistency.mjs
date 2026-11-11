@@ -94,6 +94,8 @@ for(const [sheet,selector] of [
  ['finance','.finance-page-intro']
 ])expectRules(sheet,selector,'font-size','var(--life-lead-size)');
 
+assert.ok(css.theme.includes('.life-editorial .footer-inner h2,.life-editorial .footer-inner h3{font-size:14px;font-weight:760;letter-spacing:-.02em;color:#26323d'),
+  'footer heading must remain readable against the light footer background');
 assert.ok(!css.events.includes('#1769e0'),'blue events accent still active');
 assert.ok(!css.finance.includes('#1769e0'),'blue finance accent still active');
 assert.ok(!css.estate.includes('#1450ef'),'blue estate accent still active');
