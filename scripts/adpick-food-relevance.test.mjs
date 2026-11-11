@@ -231,7 +231,8 @@ test('seasonal food keywords require an actual matching grocery, including one-l
     ['쑥','쑥떡 완제품 500g'],['딸기','딸기라떼 500ml'],
     ['배추','배추 모종 10개'],['사과','사과 모양 방향제 300g'],
     ['포도','포도맛 스낵 300g'],['시금치','시금치 크림 100g'],
-    ['감자','감자 씨앗 5개'],['바나나','가리비 모양 쿠션 300g']
+    ['감자','감자 씨앗 5개'],['바나나','가리비 모양 쿠션 300g'],
+    ['바나나','바나나 사탕 2kg']
   ];
   for(const [topic,title] of wrong)
     assert.equal(isRelevantFoodProduct(topic,title),false,topic+' '+title);
