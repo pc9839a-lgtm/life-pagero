@@ -44,14 +44,15 @@ for(const decorative of [
   '필요한 숫자와 공식 자료를 한곳에서 찾으세요.',
   'class="finance-index-headline"','class="finance-index-eyebrow"',
   'class="finance-index-section-label"','class="finance-index-tile-number"',
+  'class="finance-index-primary"','class="finance-index-icon"',
   'SERVICE 01','TOOLS 02','SOURCES 03'
-])if(finance.includes(decorative))throw Error('Artificial marketing decoration returned: '+decorative);
-if(!finance.includes('class="finance-index-primary" href="/finance/savings/"'))
-  throw Error('Visible first-action CTA not present');
-if((finance.match(/class="finance-index-icon"/g)||[]).length!==6)
-  throw Error('All six finance actions must have a recognizable inline icon');
+])if(finance.includes(decorative))throw Error('Promotional template decoration returned: '+decorative);
 if((finance.match(/class="finance-index-tile-copy"/g)||[]).length!==6)
-  throw Error('All six finance actions need a title plus readable description');
+  throw Error('Finance requires six distinct useful destinations');
+if((finance.match(/href="\/finance\/savings\/"/g)||[]).length!==1)
+  throw Error('The primary savings comparison action must not be duplicated');
+if(!finance.includes('class="finance-index-tile finance-index-tile--featured"'))
+  throw Error('Savings comparison must have one featured editorial row');
 for(const [slug,expected] of [
   ['finance/savings/index.html','id="finance-rate-panel"'],
   ['finance/markets/index.html','id="finance-issues-panel"'],
@@ -62,22 +63,25 @@ for(const selector of [
   '.life-editorial .finance-index-hero',
   '.life-editorial .finance-index-services>.finance-index-tile:first-child',
   '.life-editorial .finance-index-lead',
-  '.life-editorial .finance-index-services,.life-editorial .finance-index-tools',
+  '.life-editorial .finance-index-services,',
   '.life-editorial .finance-index-official-list',
-  '@media(max-width:600px)'
-])if(!financeCss.includes(selector))throw Error('Finance index CSS missing: '+selector);
+  '@media(max-width:700px)'
+])if(!financeCss.includes(selector))throw Error('Finance editorial style missing: '+selector);
 const heroRule=financeCss.match(/\.life-editorial \.finance-index-hero\{([^}]+)\}/)?.[1]||'';
-for(const marker of ['min-height:0','text-align:left','background:#f4f6f8','border:1px solid #e0e5e9']){
-  if(!heroRule.includes(marker))throw Error('Finance index hero must have a legible, calm highlight: '+marker);
+for(const marker of ['min-height:0','text-align:left','background:transparent','border:0']){
+  if(!heroRule.includes(marker))throw Error('Finance heading must be unboxed: '+marker);
 }
-if(!financeCss.includes('font-size:20px')||!financeCss.includes('border:1px solid #cfd6de'))
-  throw Error('Financial service cards lost visible labels or boundaries');
-if(!financeCss.includes('background:var(--brand);color:#fff'))
-  throw Error('Primary finance action lost contrast');
-for(const disallowed of ['background:#202832','min-height:315px','border-top:4px solid var(--brand)']){
-  if(heroRule.includes(disallowed))throw Error('Oversized or synthetic finance hero styling returned: '+disallowed);
-}
-
+const tileRule=financeCss.match(/\.life-editorial \.finance-index-tile\{([^}]+)\}/)?.[1]||'';
+if(!tileRule.includes('border-bottom:1px solid #e5e8eb'))
+  throw Error('Quiet finance navigation lost its horizontal separators');
+const featureRule=financeCss.match(/\.life-editorial \.finance-index-services>\.finance-index-tile:first-child\{([^}]+)\}/)?.[1]||'';
+if(!featureRule.includes('background:#f5f6f5'))
+  throw Error('One featured finance destination is required');
+for(const forbidden of [
+ 'background:#202832','min-height:315px','border-top:4px solid var(--brand)',
+ 'background:#f4f6f8','finance-index-icon'
+])if(heroRule.includes(forbidden)||featureRule.includes(forbidden))
+  throw Error('Obsolete finance promotional design returned: '+forbidden);
 const savings=url('finance/savings/index.html');
 for(const token of ['id="finance-rates-official"','id="finance-rate-panel"','id="finance-products"']){
  if(!savings.includes(token))throw Error('Savings product progressive enhancement missing: '+token);
