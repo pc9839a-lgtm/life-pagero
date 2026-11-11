@@ -69,7 +69,7 @@ const renderSection=section=>{
     +(visual?figure(visual):'')+body+'</section>';
 };
 const cards=[];
-for(const guide of dataset.guides){
+for(const guide of [...dataset.guides].sort((a,b)=>(b.publishedAt||dataset.publishedAt).localeCompare(a.publishedAt||dataset.publishedAt))){
   check(/^[a-z0-9-]+$/.test(guide.slug),'unsafe slug '+guide.slug);
   check(guide.sections.length>=4 && guide.faq.length>=2 && guide.sources.length>=2,
     'missing detailed editorial sections '+guide.slug);
@@ -77,6 +77,9 @@ for(const guide of dataset.guides){
   check(typeof guide.shoppingQuery==='string' && guide.shoppingQuery.trim().length>=2
     && guide.shoppingQuery.length<=40,'invalid ADPICK query '+guide.slug);
   const url='/food/'+guide.slug+'/';
+  const publication=guide.publishedAt||dataset.publishedAt;
+  const modification=guide.updatedAt||publication;
+  check(/^20\d{2}-\d{2}-\d{2}$/.test(publication),'Invalid guide publish date '+guide.slug);
   const shopQuery=guide.shoppingQuery.trim();
   check(Array.isArray(guide.visuals)&&guide.visuals.length===2,
     'food guide must have 2 licensed photographs '+guide.slug);
@@ -114,7 +117,7 @@ for(const guide of dataset.guides){
     +'<header class="food-guide-header"><span class="food-guide-category">'+esc(guide.eyebrow)+'</span>'
     +'<h1 itemprop="headline">'+esc(guide.title)+'</h1>'
     +'<p class="food-guide-lead" itemprop="description">'+esc(guide.lead)+'</p>'
-    +'<time datetime="'+dataset.publishedAt+'">2026.11.06</time></header>'
+    +'<time datetime="'+publication+'">'+publication.replace(/-/g,'.')+'</time></header>'
     +figure(hero,true)+facts+takeaway+contents
     +'<div class="food-guide-content" itemprop="articleBody">'
     +guide.sections.map((section,i)=>renderSection(section)+(i===1?shopping:'')).join('')+faq
@@ -154,7 +157,7 @@ for(const guide of dataset.guides){
     '@context':'https://schema.org','@type':'Article',
     headline:guide.title,description:guide.description,
     image:[publicImageUrl(hero)],
-    datePublished:dataset.publishedAt,dateModified:dataset.publishedAt,
+    datePublished:publication,dateModified:modification,
     inLanguage:'ko',mainEntityOfPage:SITE+url,
     author:{'@type':'Organization',name:'생활비서',url:SITE+'/'},
     publisher:{'@type':'Organization',name:'생활비서',url:SITE+'/'}
@@ -183,7 +186,7 @@ const before='<section class="food-section food-choice"';
 let home=read('food/index.html');
 check(home.includes(before),'food hub choice section not found');
 const listing='<section class="food-section food-guides-index" aria-labelledby="food-guides-heading">'
-  +'<h2 id="food-guides-heading">제철 식재료 손질·보관</h2>'
+  +'<h2 id="food-guides-heading">먹거리 보관·손질·안전 조리</h2>'
   +'<div class="food-guides-index-list">'+cards.join('')+'</div></section>';
 home=home.replace(before,listing+before);
 write('food/index.html',home);
@@ -195,7 +198,7 @@ for(const guide of dataset.guides){
   const loc='<loc>'+SITE+pathname+'</loc>';
   check(!sitemap.includes(loc),'duplicated sitemap entry '+pathname);
   sitemap=sitemap.replace('</urlset>',
-    '<url>'+loc+'<lastmod>'+dataset.publishedAt+'</lastmod></url></urlset>');
+    '<url>'+loc+'<lastmod>'+(guide.updatedAt||guide.publishedAt||dataset.publishedAt)+'</lastmod></url></urlset>');
   check(!index.some(item=>item.url===pathname),'duplicate search entry '+pathname);
   index.push({url:pathname,title:guide.seoTitle,description:guide.description,
     keywords:[guide.title,...guide.faq.map(([question])=>question),guide.eyebrow]});

@@ -7,7 +7,9 @@ const SITE='https://pagero.kr/life';
 const model=JSON.parse(fs.readFileSync('content/food-guides.json','utf8'));
 const read=file=>fs.readFileSync(path.join(DIST,file),'utf8');
 const check=(ok,message)=>{if(!ok)throw Error('[food-guides-qa] '+message)};
-check(model.guides.length>=6,'published food guide catalog must include six original articles');
+check(model.guides.length>=8,'published food guide catalog must include eight original articles');
+for(const slug of ['cooked-rice-cool-reheat-storage','chicken-thaw-safe-cook-storage'])
+  check(model.guides.some(g=>g.slug===slug),'new source-backed food guide missing '+slug);
 check(model.guides.every(g=>g.visuals.length===2),'each guide must have 2 photos');
 for(const slug of ['samchi-grill-clean-freeze','autumn-radish-storage-beef-soup','oyster-clean-cook-storage','sweet-persimmon-storage-salad'])
   check(model.guides.some(g=>g.slug===slug),'new seasonal food guide missing '+slug);
@@ -60,6 +62,16 @@ for(const marker of ['grid-template-columns:180px minmax(0,1fr)',
   check(css.includes(marker),'readable large shopping cards CSS missing '+marker);
 }
 const slugs=new Set(model.guides.map(g=>g.slug));
+check(slugs.size===model.guides.length,'duplicate published food guide slug');
+const images=model.guides.flatMap(g=>g.visuals.map(photo=>photo.filename));
+check(new Set(images).size===images.length,'repeated editorial food photo');
+for(const slug of ['cooked-rice-cool-reheat-storage','chicken-thaw-safe-cook-storage']) {
+ const guide=model.guides.find(g=>g.slug===slug);
+ check(guide.sources.length>=3 && guide.sections.length>=6 && guide.faq.length>=4,
+  'new food guide must contain researched multi-section answers '+slug);
+ check(guide.publishedAt==='2026-11-11','incorrect new guide date '+slug);
+}
+
 for(const guide of model.guides){
   const pathname='/food/'+guide.slug+'/';
   const html=read('food/'+guide.slug+'/index.html');
@@ -138,29 +150,34 @@ for(const guide of model.guides){
     'shared food active navigation missing '+guide.slug);
   check((html.match(/<script type="application\/ld\+json">/g)||[]).length===2,
     'Article and Breadcrumb JSON-LD expected '+guide.slug);
+  const publication=guide.publishedAt||model.publishedAt;
+  const modification=guide.updatedAt||publication;
+  check(html.includes('"datePublished":"'+publication+'"')&&html.includes('"dateModified":"'+modification+'"'),
+    'article publication metadata wrong '+guide.slug);
   check(html.includes('"@type":"Article"')&&html.includes('"@type":"BreadcrumbList"'),
     'structured article/breadcrumb data missing '+guide.slug);
-  check(html.includes('<time datetime="'+model.publishedAt+'">'),
+  check(html.includes('<time datetime="'+publication+'">'),
     'publication date lost '+guide.slug);
   check(guide.sections.every(s=>html.includes('<h2>'+s.title+'</h2>')),
     'article sections lost '+guide.slug);
   check(html.includes('<h2>꿀팁</h2>')&&!html.includes('<h2>자주 묻는 질문</h2>'),
     'food guide tips section label not updated '+guide.slug);
-  check(guide.faq.every(([q,a])=>html.includes(q)&&html.includes(a)),
+  const escapedText=value=>String(value).replace(/[&<>\"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[char]));
+  check(guide.faq.every(([q,a])=>html.includes(escapedText(q))&&html.includes(escapedText(a))),
     'practical FAQ answers missing '+guide.slug);
   check(guide.sources.length>=2&&guide.sources.every(([label,url])=>
     url.startsWith('https://')&&html.includes(label)&&
     html.includes(new URL(url).hostname)),
     'unverified official citations missing '+guide.slug);
   check(guide.sources.every(([,url])=>
-    ['www.mof.go.kr','www.foodsafetykorea.go.kr','www.rda.go.kr','www.fda.gov','nongsaro.go.kr','www.korea.kr','m.korea.kr','www.nihhs.go.kr','english.visitkorea.or.kr'].includes(new URL(url).hostname)),
+    ['www.mof.go.kr','www.foodsafetykorea.go.kr','www.rda.go.kr','www.fda.gov','nongsaro.go.kr','www.korea.kr','m.korea.kr','www.nihhs.go.kr','english.visitkorea.or.kr','mfds.go.kr','www.mfds.go.kr'].includes(new URL(url).hostname)),
     'unexpected source domain '+guide.slug);
   check(html.includes('href="/food/'+guide.related+'/"')&&slugs.has(guide.related),
     'related food guide internal link broken '+guide.slug);
   check(food.includes('class="food-guide-index-link" href="'+pathname+'"'),
     'food hub lacks visible article link '+guide.slug);
   check(sitemap.includes('<loc>'+SITE+pathname+'</loc>')&&
-    sitemap.includes('<lastmod>'+model.publishedAt+'</lastmod>'),
+    sitemap.includes('<lastmod>'+(guide.updatedAt||publication)+'</lastmod>'),
     'article missing sitemap/lastmod '+guide.slug);
   check(index.some(x=>x.url===pathname&&x.title===guide.seoTitle),
     'article not searchable '+guide.slug);
