@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {publishedGuideCount,requiredScenarioCount} from './published-guide-count.mjs';
 import {createHash} from 'node:crypto';
 
 const DIST=path.resolve('dist');
@@ -48,7 +49,7 @@ for(const absolute of pages){
   checked++;
 }
 check(checked>=150,'not enough editorial pages: '+checked);
-check(articles===46,'all 46 articles must remain published: '+articles);
+check(articles===publishedGuideCount,'all '+publishedGuideCount+' articles must remain published: '+articles);
 const home=read('index.html');
 check(home.includes('<h1>오늘 필요한 정보</h1>'),'clear functional homepage headline missing');
 check(home.includes('class="hero portal-home-hero editorial-hero"'),
@@ -244,4 +245,4 @@ for(const marker of [
  '@media(max-width:700px)',
  'max-width:none'
 ])check(style.includes(marker),'editorial CSS missing critical rule: '+marker);
-console.log('[editorial-qa] PASS '+checked+' pages, 46 fully open articles, one stylesheet, 4 live info sources, original ads, finance/calculator and canonical links.');
+console.log('[editorial-qa] PASS '+checked+' pages, '+publishedGuideCount+' fully open articles, one stylesheet, 4 live info sources, original ads, finance/calculator and canonical links.');
