@@ -21,7 +21,8 @@ for(const filename of all){
   must(html.includes('data-life-coupang-banner="sitewide-v4"'),filename+' ad disclosure changed');
 }
 const finance=get('finance/index.html');
-must((finance.match(/class="finance-hub-card"/g)||[]).length===6,'finance tools lost');
+must((finance.match(/class="finance-index-tile finance-index-tile--(?:service|tool)"/g)||[]).length===6,
+  'finance index must retain three service and three calculator destinations');
 for(const href of ['/finance/savings/','/finance/markets/','/finance/loan-payment/',
   '/finance/savings-calculator/','/finance/mortgage-calculator/']){
   must(finance.includes('href="'+href+'"'),'finance navigation lost: '+href);
