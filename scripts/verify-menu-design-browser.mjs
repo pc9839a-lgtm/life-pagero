@@ -52,36 +52,46 @@ try{
    }
    if(route.slug==='finance'){
     expect(await page.locator('.finance-index-tile').count()===6,'finance destinations changed');
-    expect(await page.locator('.finance-index-icon svg').count()===6,'finance service icons missing');
-    const grid=await page.locator('.finance-index-services').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length);
-    expect(grid===(viewport.width>860?3:1),'finance grid columns '+grid+' at '+viewport.width);
+    expect(await page.locator('.finance-index-services .finance-index-tile').count()===3,'financial source links missing');
+    expect(await page.locator('.finance-index-tools .finance-index-tile').count()===3,'calculator links missing');
+    expect(await page.locator('.finance-index-icon,.finance-index-primary,.finance-index-tile-number').count()===0,
+      'generic marketing icons, duplicate CTA or numbered tiles returned');
     const hero=await page.locator('.finance-index-hero').evaluate(el=>{
-      const style=getComputedStyle(el),bounds=el.getBoundingClientRect();
-      return {height:bounds.height,background:style.backgroundColor,alignment:style.textAlign,borderTop:style.borderTopWidth};
+      const st=getComputedStyle(el),box=el.getBoundingClientRect();
+      return {height:box.height,background:st.backgroundColor,alignment:st.textAlign,title:el.querySelector('h1')?.textContent};
     });
-    expect(hero.alignment==='left','finance header must be left aligned');
-    expect(hero.background==='rgb(244, 246, 248)','finance header must be distinct from white body: '+hero.background);
-    expect(hero.borderTop==='1px','finance header requires a subtle bounding edge');
-    expect(hero.height<(viewport.width>600?280:250),'finance header must keep actions near first viewport: '+hero.height);
-    const cta=page.locator('.finance-index-primary');
-    expect(await cta.count()===1,'finance hero must contain one primary action');
-    expect(await cta.getAttribute('href')==='/finance/savings/','primary finance action broken');
-    const ctaStyle=await cta.evaluate(el=>({height:el.getBoundingClientRect().height,
-      color:getComputedStyle(el).color,background:getComputedStyle(el).backgroundColor}));
-    expect(ctaStyle.height>=44,'finance hero action too small');
-    expect(ctaStyle.color==='rgb(255, 255, 255)'&&ctaStyle.background==='rgb(233, 87, 49)',
-      'finance CTA must have readable white-on-accent contrast');
-    const firstCard=page.locator('.finance-index-services .finance-index-tile').first();
-    const firstCardStyle=await firstCard.evaluate(el=>({
-      top:el.getBoundingClientRect().top,border:getComputedStyle(el).borderTopWidth,
-      titleSize:parseFloat(getComputedStyle(el.querySelector('strong')).fontSize),
-      descriptionColor:getComputedStyle(el.querySelector('.finance-index-tile-detail')).color
+    expect(hero.title==='금융정보','finance page heading changed');
+    expect(hero.background==='rgba(0, 0, 0, 0)'&&hero.alignment==='left',
+      'finance page needs a plain left-aligned editorial title');
+    expect(hero.height<(viewport.width>700?135:118),
+      'finance intro is taller than its content requires: '+hero.height);
+    const rowStyle=await page.locator('.finance-index-services').evaluate(el=>({
+      columns:getComputedStyle(el).gridTemplateColumns,
+      display:getComputedStyle(el).display
     }));
-    expect(firstCardStyle.top<viewport.height-60,'first finance card must be visible without scrolling');
-    expect(firstCardStyle.border==='1px','finance card lost its visible border');
-    expect(firstCardStyle.titleSize>=(viewport.width>600?19:16),'finance card titles are too small');
-    expect(await page.locator('.finance-index-section-label,.finance-index-tile-number,.finance-index-eyebrow').count()===0,
-      'marketing-only decoration returned');
+    expect(rowStyle.display==='block','finance links must be a readable single-column directory');
+    const featured=page.locator('.finance-index-services>.finance-index-tile').first();
+    expect(await featured.getAttribute('href')==='/finance/savings/','featured savings destination broken');
+    const first=await featured.evaluate(el=>{
+      const style=getComputedStyle(el),box=el.getBoundingClientRect(),title=el.querySelector('strong');
+      return {top:box.top,height:box.height,background:style.backgroundColor,
+        borderBottom:style.borderBottomWidth,titleSize:parseFloat(getComputedStyle(title).fontSize),
+        arrowColor:getComputedStyle(el.querySelector('.finance-index-tile-arrow')).color};
+    });
+    expect(first.top<viewport.height-100,'first useful finance action is below viewport');
+    expect(first.height>=(viewport.width>700?115:105),'featured action lacks a clear tap target');
+    expect(first.background==='rgb(245, 246, 245)','featured action needs a subtle warm-neutral background');
+    expect(first.titleSize>=(viewport.width>700?26:22),'featured title must be prominently readable');
+    expect(first.borderBottom==='1px','featured action needs a quiet separator');
+    expect(first.arrowColor==='rgb(233, 87, 49)','only primary action should carry the accent');
+    const second=await page.locator('.finance-index-services>.finance-index-tile').nth(1).evaluate(el=>({
+      background:getComputedStyle(el).backgroundColor,
+      borderBottom:getComputedStyle(el).borderBottomWidth,
+      titleSize:parseFloat(getComputedStyle(el.querySelector('strong')).fontSize)
+    }));
+    expect(second.background==='rgb(255, 255, 255)'&&second.borderBottom==='1px',
+      'secondary action should be a clean editorial row, not a promotional card');
+    expect(second.titleSize>=(viewport.width>700?18:15),'secondary text too small');
    }
    if(route.slug==='food')
     expect(await page.locator('.food-card').first().evaluate(e=>getComputedStyle(e).borderTopStyle)!=='none','food cards missing defined boundary');
