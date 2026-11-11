@@ -42,7 +42,7 @@ try{
    const bodyWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
    expect(bodyWidth<=viewport.width+3,route.slug+' horizontal page overflow '+bodyWidth+' / '+viewport.width);
    if(route.slug==='topics'){
-    expect(await page.locator('.topics-hub-link').count()===6,'six directory categories required');
+    expect(await page.locator('.topics-hub-link').count()===7,'six directories plus the car calculator required');
     const columns=await page.locator('.topics-hub-list').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length);
     expect(columns===(viewport.width>900?3:1),'directory grid columns '+columns+' at '+viewport.width);
    }
