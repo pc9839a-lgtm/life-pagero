@@ -83,7 +83,7 @@ function renderCachedNews(html,data){
   if(!verifiedTimestamp(data)||!Array.isArray(data.items))return html;
   const items=data.items.filter(row=>row&&verifiedHeadline(row)).slice(0,30);
   if(!items.length)return html;
-  const lines=items.slice(0,4).map(row=>
+  const lines=items.slice(0,8).map(row=>
     '<li><a class="today-news-title" href="'+escapeHtml(row.url)+
     '" target="_blank" rel="noopener noreferrer">'+escapeHtml(row.title)+
     '</a><span class="today-news-meta">'+escapeHtml(row.source)+' · '+
