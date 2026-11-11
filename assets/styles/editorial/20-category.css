@@ -1,41 +1,122 @@
-/* Category: compact magazine rows, never large two-column cards. */
+/* Category listings and the lifestyle directory use the shared editorial scale. */
 .life-editorial.life-modern-category .content-grid{display:block}
 .life-editorial.life-modern-category .main-column.section{width:100%;margin:0;padding:0;border:0;border-radius:0;background:transparent}
-.life-editorial.life-modern-category .category-hero{padding:10px 0 20px;border:0;border-bottom:2px solid #28313a;background:transparent;border-radius:0}
-.life-editorial.life-modern-category .category-hero h1{font-size:var(--life-page-title-size);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);line-height:var(--life-heading-line);color:var(--life-heading-color);}
-.life-editorial.life-modern-category .category-hero p{color:var(--life-muted-color);font-size:var(--life-lead-size);line-height:1.6;}
-.life-editorial.life-modern-category .modern-list-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 0;border-bottom:1px solid var(--line)}
+.life-editorial.life-modern-category .category-hero{
+  margin:0 0 18px;padding:34px 30px 30px;
+  border:1px solid var(--life-card-border);border-radius:10px;
+  background:#f7f8f9;text-align:center
+}
+.life-editorial.life-modern-category .category-hero h1{
+  margin:0 0 9px;font-size:var(--life-page-title-size);font-weight:var(--life-heading-weight);
+  letter-spacing:var(--life-heading-tracking);line-height:var(--life-heading-line);color:var(--life-heading-color)
+}
+.life-editorial.life-modern-category .category-hero p{
+  max-width:650px;margin:0 auto;color:var(--life-muted-color);
+  font-size:var(--life-lead-size);line-height:1.6
+}
+.life-editorial.life-modern-category .modern-list-toolbar{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding:20px 0 16px;border-bottom:1px solid var(--line)
+}
 .life-editorial.life-modern-category .modern-count{font-size:13px;font-weight:700;color:#66717e}
-.life-editorial.life-modern-category .modern-list-filter{width:min(100%,330px);height:39px;padding:7px 13px;background:#fafafa;border:1px solid #e1e4e7;border-radius:5px;font-size:13px}
+.life-editorial.life-modern-category .modern-list-filter{
+  width:min(100%,360px);height:var(--life-control-height);padding:8px 14px;
+  background:#fff;border:1px solid var(--life-control-border);
+  border-radius:var(--life-control-radius);font-size:14px;color:var(--ink)
+}
+.life-editorial.life-modern-category .modern-list-filter:focus{border-color:var(--brand)}
 .life-editorial.life-modern-category .post-list{display:grid;grid-template-columns:1fr;gap:0}
-.life-editorial.life-modern-category .post-card{display:grid;grid-template-columns:150px minmax(0,1fr);align-items:start;gap:21px;padding:20px 0;margin:0;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;background:#fff}
-.life-editorial.life-modern-category .post-thumb{width:150px;min-height:110px;max-height:125px;overflow:hidden;border-radius:5px;object-fit:cover}
-.life-editorial.life-modern-category .post-body{padding:0}
-.life-editorial.life-modern-category .post-card h3{margin:4px 0 8px;font-size:var(--life-card-title-size);line-height:1.45;font-weight:var(--life-card-weight);letter-spacing:-.025em;color:var(--life-heading-color);}
+.life-editorial.life-modern-category .post-card{
+  display:grid;grid-template-columns:158px minmax(0,1fr);align-items:center;
+  gap:23px;padding:20px 10px;margin:0;border:0;
+  border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;background:#fff
+}
+.life-editorial.life-modern-category .post-card:hover{background:#fafbfc}
+.life-editorial.life-modern-category .post-thumb{
+  display:block;width:158px;height:108px;min-height:108px;max-height:108px;
+  overflow:hidden;border-radius:8px;object-fit:cover
+}
+.life-editorial.life-modern-category .post-body{min-width:0;padding:0}
+.life-editorial.life-modern-category .post-card h3{
+  margin:4px 0 8px;font-size:var(--life-card-title-size);
+  line-height:1.45;font-weight:var(--life-card-weight);
+  letter-spacing:-.025em;color:var(--life-heading-color)
+}
+.life-editorial.life-modern-category .post-card h3 a:hover{color:var(--brand)}
 .life-editorial.life-modern-category .post-card p{color:#68737f;font-size:13px;line-height:1.7;margin:4px 0}
-.life-editorial.life-modern-category .post-card .post-meta{font-size:12px;color:#8a929c}
-.life-editorial.life-modern-category .compact-explore{margin:12px 0;border:0;border-bottom:1px solid var(--line);background:#fff}
-.life-editorial.life-modern-category .compact-explore>summary{padding:10px 0;font-size:13px;font-weight:670}
+.life-editorial.life-modern-category .post-card .post-meta{font-size:12px;color:#7b8590}
+.life-editorial.life-modern-category .compact-explore{
+  margin:12px 0 16px;border:0;border-bottom:1px solid var(--line);background:#fff
+}
+.life-editorial.life-modern-category .compact-explore>summary{
+  padding:12px 2px;font-size:13px;font-weight:700;cursor:pointer
+}
 .life-editorial.life-modern-category .modern-sponsored-area{padding-top:18px;margin-top:35px}
 .life-editorial.life-modern-category .sidebar{margin-top:28px}
 
-
-/* Eight shared destinations are always in the same order on every page. */
-.life-editorial .topics-page{width:100%;max-width:none;margin:0;padding:12px 0 40px;border:0;border-radius:0;background:#fff}
-.life-editorial .topics-page h1{margin:0 0 25px;font-size:var(--life-page-title-size);font-weight:var(--life-heading-weight);color:var(--life-heading-color);letter-spacing:var(--life-heading-tracking);line-height:var(--life-heading-line);}
-.life-editorial .topics-hub-list{display:flex;flex-direction:column;align-items:stretch;width:100%;max-width:none;margin:0;padding:0;border-top:2px solid #252c34}
-.life-editorial .topics-hub-link{display:grid;grid-template-columns:minmax(145px,220px) minmax(0,1fr) 22px;gap:15px;align-items:center;min-height:68px;padding:15px 5px;border-bottom:1px solid #e6e7e8;color:#27313c}
-.life-editorial .topics-hub-link:hover{background:#fffaf8;color:var(--brand)}
-.life-editorial .topics-hub-link strong{font-size:17px;font-weight:750}
-.life-editorial .topics-hub-link span:not(.topics-chevron){color:#7b848d;font-size:13px}
-.life-editorial .topics-chevron{text-align:right;color:var(--brand);font-size:21px}
-@media(max-width:700px){
-  .life-editorial .nav-inner a{min-height:43px;font-size:12px}
-  .life-editorial .topics-page{padding-top:6px}
-  .life-editorial .topics-page h1{font-size:var(--life-page-title-size);margin-bottom:18px;line-height:var(--life-heading-line);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);color:var(--life-heading-color);}
-  .life-editorial .topics-hub-link{grid-template-columns:minmax(0,1fr) 14px;gap:5px 12px;padding:14px 3px;min-height:60px}
-  .life-editorial .topics-hub-link strong{font-size:15px}
-  .life-editorial .topics-hub-link span:not(.topics-chevron){grid-column:1;grid-row:2;font-size:12px}
-  .life-editorial .topics-chevron{grid-column:2;grid-row:1/3}
+/* Lifestyle landing: purpose-built directory rather than a plain link list. */
+.life-editorial .topics-page{
+  width:100%;max-width:none;margin:0;padding:16px 0 42px;
+  border:0;border-radius:0;background:#fff
 }
-
+.life-editorial .topics-heading{
+  padding:36px 24px 35px;margin:0 0 23px;
+  border:1px solid var(--life-card-border);border-radius:10px;
+  background:#f7f8f9;text-align:center
+}
+.life-editorial .topics-page h1{
+  margin:0 0 9px;font-size:var(--life-page-title-size);
+  font-weight:var(--life-heading-weight);color:var(--life-heading-color);
+  letter-spacing:var(--life-heading-tracking);line-height:var(--life-heading-line)
+}
+.life-editorial .topics-intro{
+  margin:0;color:var(--life-muted-color);font-size:var(--life-lead-size);line-height:1.65
+}
+.life-editorial .topics-hub-list{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;
+  width:100%;margin:0;padding:0;border:0
+}
+.life-editorial .topics-hub-link{
+  position:relative;display:flex;flex-direction:column;align-items:flex-start;
+  justify-content:flex-start;gap:9px;min-width:0;min-height:174px;
+  padding:27px 24px 24px;border:1px solid var(--life-card-border);
+  border-radius:9px;background:#fff;color:var(--life-heading-color);
+  transition:border-color .15s ease,background-color .15s ease
+}
+.life-editorial .topics-hub-link:hover{background:#fffaf8;border-color:var(--brand);color:var(--brand)}
+.life-editorial .topics-hub-link strong{
+  display:block;padding-right:15px;font-size:19px;font-weight:750;line-height:1.35
+}
+.life-editorial .topics-hub-link span:not(.topics-chevron){
+  display:block;padding-right:3px;color:#66727e;font-size:13px;line-height:1.65
+}
+.life-editorial .topics-chevron{
+  position:absolute;right:24px;bottom:19px;color:var(--brand);
+  font-size:22px;line-height:1.15
+}
+@media(max-width:900px){
+  .life-editorial .topics-hub-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:700px){
+  .life-editorial.life-modern-category .category-hero{
+    padding:26px 16px 24px;margin-bottom:10px;border-radius:8px
+  }
+  .life-editorial.life-modern-category .modern-list-toolbar{
+    flex-wrap:wrap;gap:10px;padding:13px 0
+  }
+  .life-editorial.life-modern-category .modern-list-filter{width:100%;max-width:none}
+  .life-editorial.life-modern-category .post-card{padding-inline:0}
+  .life-editorial .topics-page{padding:8px 0 30px}
+  .life-editorial .topics-heading{padding:28px 16px;margin-bottom:14px}
+  .life-editorial .topics-page h1{
+    font-size:var(--life-page-title-size);line-height:var(--life-heading-line);
+    font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);
+    color:var(--life-heading-color)
+  }
+  .life-editorial .topics-intro{font-size:14px}
+  .life-editorial .topics-hub-list{grid-template-columns:1fr;gap:9px}
+  .life-editorial .topics-hub-link{min-height:114px;padding:19px 49px 18px 19px;gap:5px}
+  .life-editorial .topics-hub-link strong{font-size:17px}
+  .life-editorial .topics-hub-link span:not(.topics-chevron){font-size:13px}
+  .life-editorial .topics-chevron{right:19px;bottom:calc(50% - 11px)}
+}
