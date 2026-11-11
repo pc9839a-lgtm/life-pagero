@@ -162,7 +162,8 @@ for(const guide of model.guides){
     'article sections lost '+guide.slug);
   check(html.includes('<h2>꿀팁</h2>')&&!html.includes('<h2>자주 묻는 질문</h2>'),
     'food guide tips section label not updated '+guide.slug);
-  check(guide.faq.every(([q,a])=>html.includes(q)&&html.includes(a)),
+  const escapedText=value=>String(value).replace(/[&<>\"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[char]));
+  check(guide.faq.every(([q,a])=>html.includes(escapedText(q))&&html.includes(escapedText(a))),
     'practical FAQ answers missing '+guide.slug);
   check(guide.sources.length>=2&&guide.sources.every(([label,url])=>
     url.startsWith('https://')&&html.includes(label)&&
