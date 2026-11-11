@@ -127,7 +127,7 @@ test('sweet potato page excludes snacks and only returns real sweet potatoes',as
     assert.equal(urls.length,1);
   });
 });
-test('general hot deals and other food searches preserve existing behavior',async()=>{
+test('general deals stay unchanged while unrelated food results fail closed',async()=>{
   await mockRequests(()=>[link('가리비 모양 쿠션',1)],async urls=>{
     const json=await(await onRequestGet(context(
       'https://life.example.com/deals/api?mode=search&q=%EA%B0%80%EB%A6%AC%EB%B9%84'
@@ -136,7 +136,7 @@ test('general hot deals and other food searches preserve existing behavior',asyn
     const other=await(await onRequestGet(context(
       'https://life.example.com/deals/api?mode=search&q='+encodeURIComponent('사과')+'&src=food'
     ))).json();
-    assert.equal(other.items.length,1,'unrelated food search behavior preserved');
+    assert.equal(other.items.length,0,'unrelated food recommendations now fail closed');
     assert.equal(urls.length,2);
   });
 });
@@ -208,4 +208,66 @@ test('new oyster and persimmon guide API queries use fresh-ingredient rules',asy
 test('actual Adpick hot deal tour must not appear in fresh sweet-potato shopping',()=>{
   assert.equal(isRelevantFoodProduct('고구마','카호쿠 고구마 수확 &amp; E-바이크 컨트리사이드 투어'),false);
   assert.equal(isRelevantFoodProduct('고구마','해남산 생고구마 3kg'),true);
+});
+
+test('seasonal food keywords require an actual matching grocery, including one-letter produce',()=>{
+  const matching=[
+    ['시금치','국내산 시금치 1kg'],['봄동','국산 봄동 2kg'],
+    ['귤','제주 감귤 5kg'],['쑥','냉장 쑥 500g'],
+    ['딸기','산지직송 딸기 500g'],['달래','국산 달래 200g'],
+    ['주꾸미','손질 주꾸미 1kg'],['오이','오이 3개'],
+    ['완두콩','국내산 완두콩 500g'],['참외','참외 2kg'],
+    ['감자','강원도 감자 5kg'],['매실','국내산 매실 3kg'],
+    ['옥수수','국산 옥수수 5개'],['토마토','토마토 2kg'],
+    ['가지','가지 3개'],['복숭아','복숭아 4개'],
+    ['포도','포도 2kg'],['표고버섯','표고버섯 1kg'],
+    ['사과','사과 3kg'],['배추','배추 3kg'],
+    ['배','나주배 3kg']
+  ];
+  for(const [topic,title] of matching)
+    assert.equal(isRelevantFoodProduct(topic,title),true,topic+' '+title);
+  const wrong=[
+    ['배','국산 배추 3kg'],['귤','귤맛 젤리 500g'],
+    ['쑥','쑥떡 완제품 500g'],['딸기','딸기라떼 500ml'],
+    ['배추','배추 모종 10개'],['사과','사과 모양 방향제 300g'],
+    ['포도','포도맛 스낵 300g'],['시금치','시금치 크림 100g'],
+    ['감자','감자 씨앗 5개'],['바나나','가리비 모양 쿠션 300g']
+  ];
+  for(const [topic,title] of wrong)
+    assert.equal(isRelevantFoodProduct(topic,title),false,topic+' '+title);
+});
+
+test('separate food intent: raw chicken, rice containers and recipe seasonings',()=>{
+  for(const title of ['냉동밥 보관용기 10개','전자레인지 밥 소분용기 4개'])
+    assert.equal(isRelevantFoodProduct('밥 소분용기',title),true,title);
+  for(const title of ['즉석밥 10개','밥솥 1개','밥그릇 5개','밥 보관용기 쇼핑몰 이용권'])
+    assert.equal(isRelevantFoodProduct('밥 소분용기',title),false,title);
+  assert.equal(isRelevantFoodProduct('닭가슴살','국내산 생닭가슴살 1kg 냉동'),true);
+  assert.equal(isRelevantFoodProduct('닭가슴살','수비드 닭가슴살 20팩'),false);
+  assert.equal(isRelevantFoodProduct('닭가슴살','닭가슴살 소시지 10팩'),false);
+  assert.equal(isRelevantFoodProduct('고춧가루','국산 고춧가루 1kg'),true);
+  assert.equal(isRelevantFoodProduct('참기름','참기름 500ml'),true);
+  assert.equal(isRelevantFoodProduct('고춧가루','고춧가루 모양 키링 5개'),false);
+});
+
+test('all food referrals use one provider call without broad fallback or caching',async()=>{
+  const scenarios=[
+    ['감귤',[link('제주 감귤 5kg',1),link('귤 모양 키링 2개',2)],['제주 감귤 5kg']],
+    ['밥 소분용기',[link('밥솥 1개',3),link('냉동밥 보관용기 4개',4)],['냉동밥 보관용기 4개']],
+    ['냉동 닭가슴살',[link('수비드 닭가슴살 20팩',5),link('생닭가슴살 1kg',6)],['생닭가슴살 1kg']],
+    ['바나나',[link('가리비 모양 쿠션 2개',7),link('바나나 2kg',8)],['바나나 2kg']]
+  ];
+  for(const [query,items,expected] of scenarios){
+    await mockRequests(()=>items,async urls=>{
+      const req=context('https://life.example.com/deals/api?mode=search&q='
+        +encodeURIComponent(query)+'&src=food');
+      const response=await onRequestGet(req);
+      const json=await response.json();
+      assert.equal(response.status,200,query);
+      assert.deepEqual(json.items.map(item=>item.title),expected,query);
+      assert.equal(urls.length,1,query+' must use only one upstream request');
+      assert.equal(new URL(urls[0]).searchParams.get('limit'),'10',query+' keeps bounded provider payload');
+      assert.match(response.headers.get('cache-control'),/no-store/);
+    });
+  }
 });
