@@ -8,6 +8,24 @@ const model=JSON.parse(fs.readFileSync('content/food-guides.json','utf8'));
 const read=file=>fs.readFileSync(path.join(DIST,file),'utf8');
 const check=(ok,message)=>{if(!ok)throw Error('[food-guides-qa] '+message)};
 check(model.guides.length>=8,'published food guide catalog must include eight original articles');
+const newlyPublished=[
+  'salted-cabbage-storage','tangerine-box-storage','kimjang-discounts-2026',
+  'kimjang-kimchi-fridge-storage','kimjang-seasoning-ratio-10kg',
+  'green-onion-refrigerate-freeze'
+];
+check(model.guides.length>=14,'six additional researched seasonal food guides missing');
+for(const slug of newlyPublished){
+  const guide=model.guides.find(item=>item.slug===slug);
+  check(Boolean(guide),'planned seasonal guide missing '+slug);
+  check(guide.publishedAt==='2026-11-11','incorrect newly published guide date '+slug);
+  check(guide.sections.length>=6&&guide.faq.length>=4&&guide.sources.length>=3,
+    'insufficient SEO depth or sources '+slug);
+  check(guide.summaryPoints.length===3&&guide.visuals.length===2,
+    'new SEO guide needs useful summary and two licensed photos '+slug);
+  check(!model.guides.some(item=>item.slug!==slug&&item.seoTitle===guide.seoTitle),
+    'duplicate SEO title '+slug);
+}
+
 for(const slug of ['cooked-rice-cool-reheat-storage','chicken-thaw-safe-cook-storage'])
   check(model.guides.some(g=>g.slug===slug),'new source-backed food guide missing '+slug);
 check(model.guides.every(g=>g.visuals.length===2),'each guide must have 2 photos');
@@ -170,7 +188,8 @@ for(const guide of model.guides){
     html.includes(new URL(url).hostname)),
     'unverified official citations missing '+guide.slug);
   check(guide.sources.every(([,url])=>
-    ['www.mof.go.kr','www.foodsafetykorea.go.kr','www.rda.go.kr','www.fda.gov','nongsaro.go.kr','www.korea.kr','m.korea.kr','www.nihhs.go.kr','english.visitkorea.or.kr','mfds.go.kr','www.mfds.go.kr'].includes(new URL(url).hostname)),
+    ['www.mof.go.kr','www.foodsafetykorea.go.kr','www.rda.go.kr','www.fda.gov',
+    'www.mafra.go.kr','impfood.mfds.go.kr','nongsaro.go.kr','www.korea.kr','m.korea.kr','www.nihhs.go.kr','english.visitkorea.or.kr','mfds.go.kr','www.mfds.go.kr'].includes(new URL(url).hostname)),
     'unexpected source domain '+guide.slug);
   check(html.includes('href="/food/'+guide.related+'/"')&&slugs.has(guide.related),
     'related food guide internal link broken '+guide.slug);
