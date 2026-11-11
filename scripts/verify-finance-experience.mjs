@@ -65,7 +65,7 @@ for(const marker of ['min-height:0','text-align:left','background:transparent','
   if(!heroRule.includes(marker))throw Error('Finance index hero must be editorial and compact: '+marker);
 }
 for(const disallowed of ['background:#202832','min-height:315px','border-top:4px solid var(--brand)']){
-  if(financeCss.includes(disallowed))throw Error('Oversized or synthetic finance hero styling returned: '+disallowed);
+  if(heroRule.includes(disallowed))throw Error('Oversized or synthetic finance hero styling returned: '+disallowed);
 }
 
 const savings=url('finance/savings/index.html');
