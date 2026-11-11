@@ -69,7 +69,7 @@ const renderSection=section=>{
     +(visual?figure(visual):'')+body+'</section>';
 };
 const cards=[];
-for(const guide of dataset.guides){
+for(const guide of [...dataset.guides].sort((a,b)=>(b.publishedAt||dataset.publishedAt).localeCompare(a.publishedAt||dataset.publishedAt))){
   check(/^[a-z0-9-]+$/.test(guide.slug),'unsafe slug '+guide.slug);
   check(guide.sections.length>=4 && guide.faq.length>=2 && guide.sources.length>=2,
     'missing detailed editorial sections '+guide.slug);
