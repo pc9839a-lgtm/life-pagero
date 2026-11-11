@@ -1,0 +1,42 @@
+name: Verify redesigned LIFE menus in desktop and mobile browsers
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/build-life-topics.mjs'
+      - 'scripts/add-food-hub.mjs'
+      - 'assets/styles/editorial/20-category.css'
+      - 'public/life-food.css'
+      - 'public/events-ui.css'
+      - 'public/adpick-deals.css'
+      - 'public/real-estate.css'
+      - 'scripts/verify-menu-design-browser.mjs'
+      - '.github/workflows/verify-menu-design-browser.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  visual-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Build and run existing regression checks
+        run: npm run build
+      - name: Install temporary browser driver
+        run: |
+          npm install --no-save --no-package-lock playwright-core@1.56.1
+          which google-chrome || which google-chrome-stable || which chromium
+      - name: Check seven main menus at desktop and mobile sizes
+        run: node scripts/verify-menu-design-browser.mjs
+      - name: Upload rendered screenshots for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: life-menu-design-screenshots
+          path: artifacts/menu-design/
+          if-no-files-found: warn
+          retention-days: 7

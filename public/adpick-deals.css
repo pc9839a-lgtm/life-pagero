@@ -10,13 +10,13 @@
 .life-editorial .adpick-deals .portal-breadcrumbs a{color:#687280;}
 .life-editorial .adpick-deals .portal-breadcrumbs a:hover{color:var(--brand,#e95731);}
 .life-editorial .adpick-hero{
-  margin:0 0 30px;padding:16px 0 26px;border-radius:0;border-bottom:1px solid var(--line);background:#fff;
+  margin:0 0 28px;padding:32px 26px;border:1px solid var(--life-card-border);border-bottom:1px solid var(--line);border-radius:10px;background:#f7f8f9;
 }
 .life-editorial .adpick-eyebrow{
   display:block;margin-bottom:11px;color:var(--brand);letter-spacing:.06em;
   font-size:11px;font-weight:850;
 }
-.life-editorial .adpick-page-heading{margin:0 0 25px;}
+.life-editorial .adpick-page-heading{margin:0 0 22px;}
 .life-editorial .adpick-page-heading h1{
   margin:0 0 9px;padding:0;border:0;color:var(--life-heading-color);
   font-size:var(--life-page-title-size);font-weight:var(--life-heading-weight);letter-spacing:var(--life-heading-tracking);line-height:var(--life-heading-line);
@@ -83,7 +83,7 @@
   margin:0;padding:0 0 11px;color:#6e7782;font-size:12px;font-weight:500;line-height:1.5;
 }
 .life-editorial .adpick-grid{
-  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px 15px;
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;
   min-width:0;align-items:stretch;
 }
 .life-editorial .adpick-card{
@@ -95,7 +95,7 @@
 /* Featured first product; the remaining products retain their original grid. */
 .life-editorial .adpick-card--featured{
   grid-column:span 2;display:grid;grid-template-columns:1fr 1fr;min-height:270px;
-  border-color:#dfe2e5;
+  border-color:#dfe2e5;background:#fafbfc;
 }
 .life-editorial .adpick-card--featured .adpick-card-photo{
   height:100%;min-height:270px;aspect-ratio:auto;
@@ -110,7 +110,7 @@
 .life-editorial .adpick-card--featured .adpick-price strong{font-size:27px;}
 .life-editorial .adpick-card--featured .adpick-mall{font-size:13px;}
 .life-editorial .adpick-card:hover,.life-editorial .adpick-card:focus-visible{
-  border-color:#d6a18f;color:#20262d;text-decoration:none;outline-offset:2px;
+  border-color:var(--brand);color:#20262d;text-decoration:none;outline-offset:2px;
 }
 .life-editorial .adpick-card-photo{
   display:flex;align-items:center;justify-content:center;position:relative;
