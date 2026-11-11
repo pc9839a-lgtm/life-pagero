@@ -31,7 +31,9 @@ for(const token of ['id="finance-rates-official"','id="finance-issues-official"'
 if(finance.includes('id="finance-products"'))throw Error('Unconfigured product filters must not occupy finance hub');
 
 for(const token of [
-  'class="finance-index-hero"','id="finance-index-services"',
+  'class="finance-index-hero"','class="finance-index-headline"',
+  'class="finance-index-section-label"','class="finance-index-tile-number"',
+  'id="finance-index-services"',
   'class="finance-index-services"','class="finance-index-tools"',
   'class="finance-index-official-list"','class="finance-index-check-list"',
   'href="/finance/savings-calculator/"','href="/finance/mortgage-calculator/"'
@@ -44,6 +46,8 @@ for(const [slug,expected] of [
 const financeCss=url('life-editorial-20261106.css');
 for(const selector of [
   '.life-editorial .finance-index-hero',
+  '.life-editorial .finance-index-services>.finance-index-tile:first-child',
+  '.life-editorial .finance-index-headline',
   '.life-editorial .finance-index-services,.life-editorial .finance-index-tools',
   '.life-editorial .finance-index-official-list',
   '@media(max-width:600px)'
