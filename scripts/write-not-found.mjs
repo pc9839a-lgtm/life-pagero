@@ -26,7 +26,7 @@ small{color:#64748b;font-weight:700}h1{font-size:27px;letter-spacing:-.04em;marg
 </head>
 <body><main><small>생활비서 · 페이지 오류</small><h1>페이지를 찾을 수 없습니다.</h1><p>주소가 변경되었거나 게시가 종료된 콘텐츠입니다. 필요한 정보는 생활비서에서 다시 찾아보세요.</p><a href="/life/">생활비서 홈으로</a></main></body>
 </html>`;
-if (/<script\\b|google-adsense-account|adsbygoogle/i.test(html)) {
+if (/<script\b|google-adsense-account|adsbygoogle/i.test(html)) {
   throw new Error('[404] A missing page must never load ads.');
 }
 fs.writeFileSync(target, html, 'utf8');
