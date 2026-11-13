@@ -89,7 +89,8 @@ try{
       columns:getComputedStyle(el).gridTemplateColumns,
       display:getComputedStyle(el).display
     }));
-    expect(rowStyle.display==='block','finance links must be a readable single-column directory');
+    expect(rowStyle.display===(viewport.width>700?'grid':'block'),
+      'finance services must use a compact desktop grid and mobile single column');
     const featured=page.locator('.finance-index-services>.finance-index-tile').first();
     const featuredHref=await featured.getAttribute('href');
     const targetUrl=new URL(featuredHref,page.url());
