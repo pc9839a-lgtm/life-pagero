@@ -112,7 +112,7 @@ for (const file of walk(DIST).filter(file => file.endsWith('.html'))) {
     html = insertAfter(html, /<section class="section"><div class="category-grid">[\s\S]*?<\/section>/g);
     html = insertBefore(html, '</div><aside class="sidebar">');
   } else if (/^(car|support)\/index\.html$/.test(relative)) {
-    html = insertAfter(html, /<article class="post-card">[\s\S]*?<\/article>/g, 6);
+    // Only one end-of-category affiliate widget, after the article cards.
     html = insertBefore(html, '</div></section></div><aside class="sidebar">');
   } else if (/^(car|support)\/[^/]+\/index\.html$/.test(relative)) {
     // Use factual article paragraphs for ad spacing; never reintroduce
@@ -130,8 +130,7 @@ for (const file of walk(DIST).filter(file => file.endsWith('.html'))) {
         : start + marker.length;
       return content.slice(0, index) + fragment + content.slice(index);
     }
-    html = inPart(html, 1, 2, block('middle'));
-    html = inPart(html, 3, 2, block('body'));
+    html = inPart(html, 2, 2, block('middle'));
   } else if (/^(car|support)\/[^/]+\/[23]\/index\.html$/.test(relative)) {
     html = insertBefore(html, '<section class="source-box">');
   } else {
@@ -141,14 +140,14 @@ for (const file of walk(DIST).filter(file => file.endsWith('.html'))) {
   if (html === previous) html = insertBefore(html, '</main>');
   if (html === previous) throw new Error('[coupang] No main placement in ' + relative);
   // Insert a tall desktop widget at the top of the existing right column.
-  html = insertSidebar(html);
+  // The desktop right sidebar stays editorial; only the homepage source build
+  // keeps its original rail as the editorial pass already removes it.
+  if(relative === 'index.html') html = insertSidebar(html);
 
   const bodyUnits = (html.match(/data-life-coupang-kind="(?:body|middle)"/g) || []).length;
   const railUnits = (html.match(/data-life-coupang-kind="rail"/g) || []).length;
-  const expectedBody = relative === 'index.html'
-    || /^(car|support)\/index\.html$/.test(relative)
-    || /^(car|support)\/[^/]+\/index\.html$/.test(relative) ? 2 : 1;
-  const expectedRail = previous.includes('<aside class="sidebar">') ? 1 : 0;
+  const expectedBody = relative === 'index.html' ? 2 : 1;
+  const expectedRail = relative === 'index.html' && previous.includes('<aside class="sidebar">') ? 1 : 0;
   if (bodyUnits !== expectedBody || railUnits !== expectedRail) {
     throw new Error('[coupang] Unexpected positions in ' + relative + ': body=' + bodyUnits + ' rail=' + railUnits);
   }
