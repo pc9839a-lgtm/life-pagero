@@ -15,6 +15,7 @@ const steps = [
   ['node', ['scripts/apply-content-updates.mjs']],
   ['node', ['scripts/curate-redundant-homepage-citations.mjs']],
   ['node', ['scripts/curate-published-primary-sources.mjs']],
+  ['node', ['scripts/retire-superseded-citations.mjs']],
   ['node', ['scripts/expand-editorial-depth.mjs']],
   ['node', ['scripts/apply-verified-rich-guides.mjs']],
   ['node', ['scripts/replace-duplicate-editorial-images.mjs']],
