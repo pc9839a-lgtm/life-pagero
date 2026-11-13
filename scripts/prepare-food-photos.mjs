@@ -20,7 +20,8 @@ const commonsUrl=(filename,size=960)=>{
   return size?base+'thumb/'+prefix+'/'+size+'px-'+encoded:base+prefix;
 };
 const verifiedImage=async url=>{
-  if(!['pagero.kr','life.pagero.kr','upload.wikimedia.org','images.pexels.com'].includes(new URL(url).hostname))
+  if(!['pagero.kr','life.pagero.kr','life-pagero.pages.dev',
+    'upload.wikimedia.org','images.pexels.com'].includes(new URL(url).hostname))
     throw Error('unexpected image host');
   const response=await fetch(url,{
     headers:{Accept:'image/jpeg','User-Agent':'LifePageroFoodGuide/1.0 (editorial image attribution retained)'},
@@ -38,7 +39,10 @@ const verifiedImage=async url=>{
 // An unchanged slug alone is not proof that the underlying licensed photo is
 // the same; a newly replaced photo must come from its own source URL.
 let publishedManifest={},publishedOrigin='';
+// The Cloudflare Pages upstream contains the full previously published set.
+// Prefer it over the public proxy; use the exact manifest mapping before reuse.
 const origins=[
+  'https://life-pagero.pages.dev/food-images',
   'https://pagero.kr/life/food-images',
   'https://life.pagero.kr/food-images'
 ];
@@ -72,12 +76,13 @@ for(const {guide,photo,name} of tasks){
     [commonsUrl(photo.filename,640),commonsUrl(photo.filename,800),
       commonsUrl(photo.filename,960),commonsUrl(photo.filename,0)];
   const urls=samePublishedPhoto?[published,...sourceUrls]:sourceUrls;
-  let last='unavailable';
+  let last='unavailable',usedPublished=false;
   for(let i=0;i<urls.length;i++){
     try{
       const bytes=await verifiedImage(urls[i]);
       fs.writeFileSync(target,bytes);
       manifest[photo.filename]='/food-images/'+name;
+      usedPublished=samePublishedPhoto && i===0;
       console.log('[food-photo] '+guide.slug+' '+photo.placement+' local '+bytes.length+' bytes');
       last='';
       break;
@@ -95,8 +100,9 @@ for(const {guide,photo,name} of tasks){
     failures.push(guide.slug+' / '+photo.filename+' ('+last+')');
     console.error('[food-photo] FAILED '+guide.slug+' / '+photo.filename+' ('+last+')');
   }
-  // Avoid exhausting Wikimedia's shared egress quota.
-  await delay(1800);
+  // Pace fresh third-party downloads; reusing our own static Pages assets
+  // should not incur a fixed 1.8-second delay for every existing photo.
+  if(!usedPublished)await delay(1800);
 }
 if(failures.length){
   console.error('[food-photo] Cannot publish '+failures.length+'/'+tasks.length+
