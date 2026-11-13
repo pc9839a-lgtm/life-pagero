@@ -66,46 +66,56 @@ function issuePanel() {
 // Finance is a directory, not a promotional landing page. The most useful
 // action appears once as a featured link, followed by quiet editorial rows.
 // No decorative badges, icon illustrations, second CTA or extra network calls.
-const financeIndexLink=(href,title,description,kind='service')=>
+const indexIconPaths={
+  bank:'<path d="M3 10h18M5 10v10m5-10v10m4-10v10m5-10v10M3 20h18M12 3l9 6H3l9-6Z"/>',
+  chart:'<path d="M4 19V5m0 14h16M7 15l4-4 3 2 5-6"/><path d="M16 7h3v3"/>',
+  receipt:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/>',
+  savings:'<rect x="4" y="6" width="16" height="15" rx="2"/><path d="M8 3v6M16 3v6M4 11h16M8 16h8"/>',
+  calculator:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M9 6h6M9 11h2m3 0h1M9 15h2m3 0h1M9 19h2m3 0h1"/>',
+  house:'<path d="m3 11 9-8 9 8v10H3V11Z"/><path d="M9 21v-7h6v7"/>'
+};
+const indexIcon=kind=>'<span class="finance-index-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" width="23" height="23" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none">'+indexIconPaths[kind]+'</svg></span>';
+const financeIndexLink=(href,title,description,kind='service',icon='chart')=>
   '<a class="finance-index-tile finance-index-tile--'+kind+'" href="'+href+'">'
+  +indexIcon(icon)
   +'<span class="finance-index-tile-copy"><strong>'+esc(title)+'</strong>'
   +'<span class="finance-index-tile-detail">'+esc(description)+'</span></span>'
-  +'<span class="finance-index-tile-arrow" aria-hidden="true">↗</span></a>';
+  +'<span class="finance-index-tile-arrow" aria-hidden="true">→</span></a>';
 
 const hub = breadcrumb()
   +'<div class="finance-index">'
   +'<header class="finance-index-hero">'
   +'<h1>금융정보</h1>'
-  +'<p class="finance-index-lead">은행 금리와 대출 상환액, 공식 공시를 확인하세요.</p>'
+  +'<p class="finance-index-lead">금리 비교, 공시 확인, 대출 계산까지 필요한 금융 서비스를 바로 이용하세요.</p>'
   +'</header>'
   +'<section class="finance-index-section" id="finance-index-services" aria-labelledby="finance-index-services-title">'
-  +'<div class="finance-index-section-heading"><h2 id="finance-index-services-title">금리·공시</h2></div>'
+  +'<div class="finance-index-section-heading"><h2 id="finance-index-services-title">금리·공시 확인</h2><p>먼저 확인할 금융정보를 선택하세요.</p></div>'
   +'<div class="finance-index-services">'
-  +financeIndexLink('/finance/savings/','예·적금 금리 비교','은행·저축은행의 공시 금리와 우대조건','featured')
-  +financeIndexLink('/finance/markets/','기업 공시 확인','DART 공시와 한국은행 발표')
-  +financeIndexLink('/support/year-end-tax-precheck-2026/','연말정산 미리보기','공제 항목과 준비사항')
+  +financeIndexLink('/finance/savings/','예·적금 금리 비교','은행·저축은행의 기본금리와 우대조건을 비교하세요.','featured','bank')
+  +financeIndexLink('/finance/markets/','기업 공시 확인','DART 공시·한국은행 자료','service','chart')
+  +financeIndexLink('/support/year-end-tax-precheck-2026/','연말정산 미리보기','공제 항목과 준비사항','service','receipt')
   +'</div></section>'
   +'<section class="finance-index-section" aria-labelledby="finance-index-tools-title">'
-  +'<div class="finance-index-section-heading"><h2 id="finance-index-tools-title">금융 계산기</h2></div>'
+  +'<div class="finance-index-section-heading"><h2 id="finance-index-tools-title">금융 계산기</h2><p>예상 금액을 직접 계산해 보세요.</p></div>'
   +'<div class="finance-index-tools">'
-  +financeIndexLink('/finance/savings-calculator/','예·적금 이자 계산','만기 이자·세후 수령액','tool')
-  +financeIndexLink('/finance/loan-payment/','대출 상환액 계산','월 납입액·상환방식별 총이자','tool')
-  +financeIndexLink('/finance/mortgage-calculator/','주택담보대출 계산','월 상환액·총이자','tool')
+  +financeIndexLink('/finance/savings-calculator/','예·적금 이자 계산','만기 이자·세후 수령액','tool','savings')
+  +financeIndexLink('/finance/loan-payment/','대출 상환액 계산','월 납입액·상환방식별 총이자','tool','calculator')
+  +financeIndexLink('/finance/mortgage-calculator/','주택담보대출 계산','월 상환액·총이자','tool','house')
   +'</div></section>'
   +'<section class="finance-index-section finance-index-official" aria-labelledby="finance-index-official-title">'
-  +'<div class="finance-index-section-heading"><h2 id="finance-index-official-title">공식 자료</h2>'
-  +'<p>실제 상품 조건과 발표일은 해당 기관에서 확인하세요.</p></div>'
+  +'<div class="finance-index-section-heading"><h2 id="finance-index-official-title">공식 금융자료</h2>'
+  +'<p>공시 금리와 기관 발표를 확인하고 원문에서 최종 조건을 검토하세요.</p></div>'
   +'<div class="finance-index-official-list">'
   +bankPanel(true)
   +issuePanel()
   +'</div></section>'
-  +'<section class="finance-index-section finance-index-checks" aria-labelledby="finance-index-checks-title">'
-  +'<div class="finance-index-section-heading"><h2 id="finance-index-checks-title">이용 전 확인</h2></div>'
+  +'<details class="finance-index-section finance-index-checks" id="finance-index-checks">'
+  +'<summary id="finance-index-checks-title">이용 전 확인 <span>금리·계산 결과에 관한 안내</span></summary>'
   +'<dl class="finance-index-check-list">'
   +'<div><dt>예·적금 금리</dt><dd>최고금리는 우대조건을 충족해야 적용됩니다. 가입기간·납입한도·중도해지 이율을 함께 확인하세요.</dd></div>'
   +'<div><dt>대출 상환액</dt><dd>계산 결과는 예상값입니다. 실제 금리 변경·수수료·상환 일정에 따라 금융회사 안내 금액과 다를 수 있습니다.</dd></div>'
   +'<div><dt>기업 공시</dt><dd>공시일과 기준일을 확인하세요. 공개된 자료가 투자 수익을 보장하지는 않습니다.</dd></div>'
-  +'</dl></section>'
+  +'</dl></details>'
   +'</div>';
 
 const savingsPage = breadcrumb('예금·적금 비교')
