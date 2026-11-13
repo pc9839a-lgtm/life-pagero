@@ -15,7 +15,7 @@ yes((home.match(/data-life-coupang-kind="(?:body|middle)"/g)||[]).length===2,
   'existing homepage body advertising count changed');
 yes((home.match(/data-life-coupang-kind="rail"/g)||[]).length===1,
   'sidebar advertising count changed');
-yes((home.match(/data-affiliate="tenping-/g)||[]).length===4,
+yes((home.match(/data-affiliate="tenping-/g)||[]).length===2,
   'existing affiliate card placement changed');
 yes(home.includes('class="modern-sponsored-area"'),
   'existing advertisements lost');
