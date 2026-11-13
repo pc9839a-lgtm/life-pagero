@@ -31,9 +31,12 @@ const routes=[
 ];
 let verified=0;
 try{
- for(const viewport of [{width:1280,height:820},{width:390,height:844}]){
+ for(const viewport of [{width:1280,height:820},{width:390,height:844},{width:320,height:720}]){
   const page=await browser.newPage({viewport,deviceScaleFactor:1});
   for(const route of routes){
+   // Include both landing pages on 320px devices without extending the audit
+   // of unrelated menus beyond the established desktop/mobile breakpoints.
+   if(viewport.width===320 && route.slug!=='topics' && route.slug!=='finance')continue;
    const response=await page.goto(root+route.path,{waitUntil:'domcontentloaded',timeout:30000});
    expect(response?.status()===200,route.slug+' returned '+response?.status());
    expect(await page.locator('h1').count()===1,route.slug+' should have one heading');
@@ -43,6 +46,10 @@ try{
    const bodyWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
    expect(bodyWidth<=viewport.width+3,route.slug+' horizontal page overflow '+bodyWidth+' / '+viewport.width);
    if(route.slug==='topics'){
+    expect(await page.locator('script[src*="finance-live.js"],link[href*="finance-experience.css"]').count()===0,
+      'lifestyle directory still downloads inherited finance-only assets');
+    const loadedFinance=await page.evaluate(()=>performance.getEntriesByType('resource').filter(x=>/finance-live\.js|finance-experience\.css/.test(x.name)).map(x=>x.name));
+    expect(loadedFinance.length===0,'lifestyle route has redundant finance network requests: '+loadedFinance);
     expect(await page.locator('.topics-hub-link').count()===7,'six directories plus the car calculator required');
     const columns=await page.locator('.topics-hub-list').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length);
     expect(columns===(viewport.width>900?4:1),'directory grid columns '+columns+' at '+viewport.width);
