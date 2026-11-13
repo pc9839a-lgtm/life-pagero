@@ -80,6 +80,8 @@ const steps = [
   ['node', ['scripts/write-function-routes.mjs']],
   ['node', ['scripts/verify-function-routes.mjs']],
   ['node', ['scripts/finish-css-assets.mjs']],
+  // Last: do not include the not-found page in published-article SEO checks.
+  ['node', ['scripts/write-not-found.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);
