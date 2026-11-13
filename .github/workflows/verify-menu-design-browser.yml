@@ -32,7 +32,7 @@ jobs:
         run: |
           npm install --no-save --no-package-lock playwright-core@1.56.1
           which google-chrome || which google-chrome-stable || which chromium
-      - name: Wait for the deployed editorial CSS version (not an old cached release)
+      - name: Wait for current editorial and finance CSS versions (avoid cached release)
         shell: bash
         run: |
           EXPECTED="$(node --input-type=module <<'NODE'
@@ -44,12 +44,14 @@ jobs:
           process.stdout.write(createHash('sha256').update(combined).digest('hex').slice(0,12));
           NODE
           )"
+          FINANCE_EXPECTED="$(sha256sum public/finance-experience.css | cut -c1-12)"
           echo "Expected editorial CSS version: $EXPECTED"
+          echo "Expected finance CSS version: $FINANCE_EXPECTED"
           for attempt in $(seq 1 15); do
             HTML="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' \
               "https://pagero.kr/life/finance/?visual_qa=${GITHUB_SHA:0:10}" || true)"
-            if [[ "$HTML" == *"life-editorial-20261106.css?v=$EXPECTED"* ]]; then
-              echo "Live CSS is current (attempt $attempt)"
+            if [[ "$HTML" == *"life-editorial-20261106.css?v=$EXPECTED"* && "$HTML" == *"finance-experience.css?v=$FINANCE_EXPECTED"* ]]; then
+              echo "Live editorial and finance CSS are current (attempt $attempt)"
               exit 0
             fi
             sleep 10
