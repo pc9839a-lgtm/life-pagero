@@ -51,7 +51,7 @@ function redesignHome(html){
   html=moveBlock(html,
     /<aside class="life-coupang-placement life-coupang-placement--(?:middle|body)"[\s\S]*?<\/aside>/g,
     sponsored);
-  check(sponsored.length===4,'expected 4 preserved home sponsored blocks; got '+sponsored.length);
+  check(sponsored.length===3,'expected two lower affiliate blocks and two original Coupang body units in three wrappers; got '+sponsored.length);
 
   const archiveStart=html.indexOf('<section class="section life-archive"');
   check(archiveStart>=0,'sitewide archive missing');
