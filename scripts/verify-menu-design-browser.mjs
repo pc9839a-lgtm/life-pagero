@@ -114,6 +114,28 @@ try{
     expect(first.color==='rgb(255, 255, 255)','featured title lacks white contrast');
     expect(await page.locator('#finance-index-checks summary').count()===1,
       'finance safety caveats must remain accessible through native details');
+    if(viewport.width<=700){
+      // Test CSS even when the external bank feed has no verified products.
+      const previewLayout=await page.evaluate(()=>{
+        const root=document.querySelector('.finance-index');
+        const probe=document.createElement('div');
+        probe.className='finance-preview-grid';
+        probe.style.cssText='position:absolute;visibility:hidden;width:300px;';
+        const card=document.createElement('a');
+        card.className='finance-preview-card';
+        probe.appendChild(card);
+        root.appendChild(probe);
+        const columns=getComputedStyle(probe).gridTemplateColumns.split(' ').filter(Boolean).length;
+        const cardDisplay=getComputedStyle(card).display;
+        const cardAreas=getComputedStyle(card).gridTemplateAreas;
+        probe.remove();
+        return {columns,cardDisplay,cardAreas};
+      });
+      expect(previewLayout.columns===1&&previewLayout.cardDisplay==='grid',
+        'mobile rate preview must be a single-column grid: '+JSON.stringify(previewLayout));
+      expect(previewLayout.cardAreas.includes('"bank rate"'),
+        'mobile rate card label/value areas missing: '+previewLayout.cardAreas);
+    }
    }
    if(route.slug==='food')
     expect(await page.locator('.food-card').first().evaluate(e=>getComputedStyle(e).borderTopStyle)!=='none','food cards missing defined boundary');
