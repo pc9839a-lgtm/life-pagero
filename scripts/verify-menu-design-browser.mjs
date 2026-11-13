@@ -48,6 +48,9 @@ try{
        nodes.map(n=>({label:n.querySelector('strong')?.textContent||'',href:n.href})));
      console.log('[menu-live] Lifestyle destination URLs:',JSON.stringify(links));
    }
+   // Always capture the page before assertions so a failed screen still has
+   // a screenshot attached to its workflow job.
+   await page.screenshot({path:path.join(OUT,route.slug+'-'+viewport.width+'.png'),fullPage:true});
    expect(response?.status()===200,route.slug+' returned '+response?.status());
    expect(await page.locator('h1').count()===1,route.slug+' should have one heading');
    expect(await page.locator('.main-nav a').count()===8,route.slug+' should have eight top-level routes');
@@ -88,7 +91,13 @@ try{
     }));
     expect(rowStyle.display==='block','finance links must be a readable single-column directory');
     const featured=page.locator('.finance-index-services>.finance-index-tile').first();
-    expect(await featured.getAttribute('href')==='/finance/savings/','featured savings destination broken');
+    const featuredHref=await featured.getAttribute('href');
+    const targetUrl=new URL(featuredHref,page.url());
+    const expectedPaths=liveBase
+      ? ['/life/finance/savings/','/finance/savings/']
+      : ['/finance/savings/'];
+    expect(targetUrl.origin===new URL(page.url()).origin&&expectedPaths.includes(targetUrl.pathname),
+      'featured savings destination broken: '+featuredHref);
     const first=await featured.evaluate(el=>{
       const style=getComputedStyle(el),box=el.getBoundingClientRect(),title=el.querySelector('strong');
       return {top:box.top,height:box.height,background:style.backgroundColor,
@@ -114,7 +123,6 @@ try{
     expect(await page.locator('.food-card').first().evaluate(e=>getComputedStyle(e).borderTopStyle)!=='none','food cards missing defined boundary');
    if(route.slug==='real-estate')
     expect(await page.locator('.re-card').count()===3,'real-estate samples unexpectedly changed');
-   await page.screenshot({path:path.join(OUT,route.slug+'-'+viewport.width+'.png'),fullPage:true});
    verified++;
   }
   await page.close();
