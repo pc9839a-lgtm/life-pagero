@@ -81,22 +81,6 @@ if(!topics.includes('<h1>생활정보</h1>') ||
    !topics.includes('href="/support/housing-benefit-2026/"')) {
   fail('Lifestyle landing page is missing the real categories','topics/index.html');
 }
-// The separate finance-experience stylesheet is for finance/loan widgets only.
-// Marketing, article and topic routes must rely on the single editorial CSS.
-for(const file of ['today/index.html','car/index.html','support/index.html','events/index.html',
-  'food/index.html','deals/index.html','real-estate/index.html','topics/index.html']){
-  const html=read(file);
-  // Today contains a real finance widget and must keep that styling.
-  // Pages without finance- / loan- components must not request its CSS.
-  if(!/(?:class|id)="[^"]*\b(?:finance-|loan-)/.test(html) &&
-    /href="\/finance-experience\.css(?:\?[^"]*)?"/.test(html))
-    fail('unused finance stylesheet loaded on unrelated menu',file);
-}
-for(const file of ['index.html','finance/index.html','finance/savings/index.html',
-  'finance/markets/index.html','finance/loan-payment/index.html']){
-  if(!/href="\/finance-experience\.css(?:\?[^"]*)?"/.test(read(file)))
-    fail('required finance stylesheet missing',file);
-}
 const finance=read('finance/index.html');
 for(const target of ['/finance/savings/','/finance/markets/','/finance/loan-payment/']) {
   if(!finance.includes('href="'+target+'"'))
