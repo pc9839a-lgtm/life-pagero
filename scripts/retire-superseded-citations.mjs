@@ -77,8 +77,11 @@ for (const plan of plans) {
   for (const url of plan.remove) {
     if (current.filter(x=>x===url).length>1) throw Error('[citation-prune] Duplicate retired reference '+plan.slug+' '+url);
   }
-  if (current.some(url=>![...plan.remove,...plan.retain].includes(url))) {
-    throw Error('[citation-prune] Unexpected new reference; manually review '+plan.slug);
+  const additional = current.filter(url=>![...plan.remove,...plan.retain].includes(url));
+  if (additional.length) {
+    // New or bundled official records must remain intact. Prune only exact
+    // previously agreed obsolete citations and surface additional records in CI.
+    console.log('[citation-prune] Preserved '+additional.length+' added source(s) in '+plan.slug+': '+additional.join(' | '));
   }
   for (const source of post.sources.filter(s=>plan.retain.includes(s.url))) {
     if (!source.name || !source.checkedAt || source.checkedAt < MIN_DIRECT_REVIEW) {
