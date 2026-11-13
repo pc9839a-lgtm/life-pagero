@@ -1,18 +1,13 @@
-name: Verify redesigned LIFE menus in desktop and mobile browsers
+name: Verify deployed LIFE menus in real desktop and mobile browsers
 on:
-  pull_request:
+  push:
     branches: [main]
     paths:
       - 'scripts/build-life-topics.mjs'
-      - 'scripts/build-editorial-life.mjs'
-      - 'scripts/prepare-food-photos.mjs'
-      - 'scripts/verify-global-navigation.mjs'
-      - 'scripts/verify-editorial-life.mjs'
       - 'scripts/enhance-finance.mjs'
-      - 'assets/styles/editorial/40-finance.css'
-      - 'scripts/verify-finance-experience.mjs'
-      - 'scripts/add-food-hub.mjs'
+      - 'scripts/build-editorial-life.mjs'
       - 'assets/styles/editorial/20-category.css'
+      - 'assets/styles/editorial/40-finance.css'
       - 'public/life-food.css'
       - 'public/events-ui.css'
       - 'public/adpick-deals.css'
@@ -31,19 +26,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Build and run existing regression checks
-        run: npm run build
-      - name: Install temporary browser driver
+      - name: Install browser test driver (no image builds or external asset downloads)
         run: |
           npm install --no-save --no-package-lock playwright-core@1.56.1
           which google-chrome || which google-chrome-stable || which chromium
-      - name: Check seven main menus at desktop and mobile sizes
+      - name: Capture and verify deployed menus at 1280, 390 and 320 pixels
+        env:
+          LIFE_VISUAL_BASE_URL: https://pagero.kr/life
         run: node scripts/verify-menu-design-browser.mjs
-      - name: Upload rendered screenshots for review
+      - name: Upload full-page screenshots for design inspection
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: life-menu-design-screenshots
+          name: life-live-menu-screenshots
           path: artifacts/menu-design/
           if-no-files-found: warn
           retention-days: 7
