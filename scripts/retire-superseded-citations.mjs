@@ -69,11 +69,16 @@ for (const plan of plans) {
   if (post.slug !== plan.slug) throw Error('[citation-prune] Unexpected article slug '+plan.path);
   if (!Array.isArray(post.sources)) throw Error('[citation-prune] Missing sources '+plan.slug);
   const current = post.sources.map(s=>s.url);
-  for (const url of [...plan.remove,...plan.retain]) {
-    if (current.filter(x=>x===url).length!==1) throw Error('[citation-prune] Expected exactly one known reference '+plan.slug+' '+url);
+  for (const url of plan.retain) {
+    if (current.filter(x=>x===url).length!==1) throw Error('[citation-prune] Missing reviewed direct reference '+plan.slug+' '+url);
   }
-  if (current.length !== plan.remove.length+plan.retain.length) {
-    throw Error('[citation-prune] Source list changed; review before pruning '+plan.slug);
+  // Earlier official-source curators may have already retired some of these
+  // homepage links; allow that one known cleanup, but never unknown records.
+  for (const url of plan.remove) {
+    if (current.filter(x=>x===url).length>1) throw Error('[citation-prune] Duplicate retired reference '+plan.slug+' '+url);
+  }
+  if (current.some(url=>![...plan.remove,...plan.retain].includes(url))) {
+    throw Error('[citation-prune] Unexpected new reference; manually review '+plan.slug);
   }
   for (const source of post.sources.filter(s=>plan.retain.includes(s.url))) {
     if (!source.name || !source.checkedAt || source.checkedAt < MIN_DIRECT_REVIEW) {
@@ -88,12 +93,13 @@ for (const plan of plans) {
   const oldSeries = JSON.stringify(post.series);
   const oldDate = post.updatedAt;
   const oldReviewed = post.reviewedAt;
+  const removed = post.sources.filter(s=>plan.remove.includes(s.url)).length;
   post.sources = post.sources.filter(s=>!plan.remove.includes(s.url));
   if (post.sources.length < 2 || post.body!==oldBody || JSON.stringify(post.series)!==oldSeries
       || post.updatedAt!==oldDate || post.reviewedAt!==oldReviewed) {
     throw Error('[citation-prune] Unexpected substantive content change '+plan.slug);
   }
   fs.writeFileSync(file,JSON.stringify(post,null,2)+'\n','utf8');
-  console.log('[citation-prune] '+plan.slug+': removed '+plan.remove.length+' outdated/generic duplicates; retained '+post.sources.length+' direct official records');
+  console.log('[citation-prune] '+plan.slug+': removed '+removed+' remaining redundant citations; retained '+post.sources.length+' direct official records');
 }
 console.log('[citation-prune] PASS: Four existing guides retain factual text, original review dates, and multiple direct records.');
