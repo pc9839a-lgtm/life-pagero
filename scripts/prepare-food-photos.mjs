@@ -34,6 +34,20 @@ const verifiedImage=async url=>{
     throw Error('invalid JPEG/size');
   return bytes;
 };
+// Match the published filename-to-path manifest before reusing any image.
+// An unchanged slug alone is not proof that the underlying licensed photo is
+// the same; a newly replaced photo must come from its own source URL.
+let publishedManifest={};
+try{
+  const response=await fetch('https://pagero.kr/life/food-images/manifest.json',{
+    headers:{Accept:'application/json'},signal:AbortSignal.timeout(8000)
+  });
+  if(response.ok){
+    const candidate=await response.json();
+    if(candidate&&typeof candidate==='object'&&!Array.isArray(candidate))
+      publishedManifest=candidate;
+  }
+}catch(_error){/* A fresh deployment can legitimately have no first-party copy. */}
 const manifest={};
 const failures=[];
 const tasks=DATA.guides.flatMap(guide=>guide.visuals.map((photo,i)=>({
@@ -43,12 +57,13 @@ if(tasks.length!==DATA.guides.length*2)throw Error('each guide must provide two 
 for(const {guide,photo,name} of tasks){
   const target=path.join(folder,name);
   const published='https://pagero.kr/life/food-images/'+encodeURIComponent(name);
-  // These routes have already been published on successful builds. If a guide
-  // is new or its image is unavailable, use its original credited source.
+  const samePublishedPhoto=publishedManifest[photo.filename]==='/food-images/'+name;
+  // Reuse only when the published manifest confirms the exact credited photo.
+  // Newly added or changed photos must still be obtained from their source.
   const sourceUrls=photo.downloadUrl?[photo.downloadUrl]:
     [commonsUrl(photo.filename,640),commonsUrl(photo.filename,800),
       commonsUrl(photo.filename,960),commonsUrl(photo.filename,0)];
-  const urls=[published,...sourceUrls];
+  const urls=samePublishedPhoto?[published,...sourceUrls]:sourceUrls;
   let last='unavailable';
   for(let i=0;i<urls.length;i++){
     try{
@@ -63,7 +78,7 @@ for(const {guide,photo,name} of tasks){
       if(i<urls.length-1){
         // A missing first-party copy is expected for newly published guides:
         // move directly to the licensed original, rather than retrying a 404.
-        const firstParty=i===0;
+        const firstParty=samePublishedPhoto&&i===0;
         if(!firstParty)await delay(last.includes('429')?8000:1600);
       }
     }
