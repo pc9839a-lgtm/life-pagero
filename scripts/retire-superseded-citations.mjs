@@ -17,7 +17,8 @@ const plans = [
     "remove": [
       "https://www.paju.go.kr/news/user/BD_newsView.do?newsSeq=1138&q_ctgCd=1001",
       "https://www.wetax.go.kr/",
-      "https://www.law.go.kr/법령/지방세법/제128조"
+      "https://www.law.go.kr/법령/지방세법/제128조",
+      "https://www.law.go.kr/lsInfoP.do?lsId=001649"
     ],
     "retain": [
       "https://www.110.go.kr/data/counselView.do?curPage=18&num=A01_660057&scCate1=&scCate2=&scIntt=&scText=&scType=",
@@ -30,7 +31,8 @@ const plans = [
     "slug": "ev-subsidy-search",
     "remove": [
       "https://ev.or.kr/",
-      "https://www.me.go.kr/"
+      "https://www.me.go.kr/",
+      "https://www.ev.or.kr/nportal/main.do"
     ],
     "retain": [
       "https://ev.or.kr/nportal/buySupprt/initSubsiGuideAction.do",
