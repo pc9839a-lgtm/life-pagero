@@ -60,7 +60,7 @@
   border:0;border-radius:0;background:#fff
 }
 .life-editorial .topics-heading{
-  padding:43px 26px 35px;margin:0 0 37px;
+  padding:35px 26px 28px;margin:0 0 28px;
   border:1px solid #f1d9d0;border-top:4px solid var(--brand);border-radius:10px;
   background:#fff7f3;text-align:center
 }
@@ -112,8 +112,8 @@
 }
 .life-editorial .topics-hub-link{
   position:relative;display:flex;flex-direction:column;align-items:flex-start;
-  justify-content:flex-start;gap:9px;min-width:0;min-height:212px;
-  padding:24px 21px 23px;border:1px solid var(--life-card-border);
+  justify-content:flex-start;gap:7px;min-width:0;min-height:180px;
+  padding:22px 21px 20px;border:1px solid var(--life-card-border);
   border-radius:9px;background:#fff;color:var(--life-heading-color);
   transition:border-color .15s ease,background-color .15s ease;
   counter-increment:topic-index
@@ -141,7 +141,7 @@
   color:var(--brand);font-size:19px;line-height:1
 }
 .life-editorial .topics-hub-link:first-child{
-  grid-column:span 2;min-height:212px;padding:27px 29px;
+  grid-column:span 2;min-height:180px;padding:24px 28px;
   background:#202832;border-color:#202832;color:#fff
 }
 .life-editorial .topics-hub-link:first-child::before{color:#ffad96;margin-bottom:auto}
@@ -167,7 +167,7 @@
   .life-editorial.life-modern-category .post-card{padding-inline:0}
   .life-editorial .topics-page{padding:8px 0 30px}
   .life-editorial .topics-heading{
-    padding:25px 16px 23px;margin-bottom:20px;border-radius:8px
+    padding:23px 16px 21px;margin-bottom:18px;border-radius:8px
   }
   .life-editorial .topics-kicker{font-size:10px;margin-bottom:10px}
   .life-editorial .topics-page h1{
@@ -181,7 +181,7 @@
   .life-editorial .topics-quick a{font-size:12px;min-height:39px;padding:7px 11px}
   .life-editorial .topics-section-head{align-items:center;margin-bottom:12px}
   .life-editorial .topics-section-head>span{font-size:12px}
-  .life-editorial .topics-hub-list{grid-template-columns:1fr;gap:9px}
+  .life-editorial .topics-hub-list{grid-template-columns:1fr;gap:8px}
   .life-editorial .topics-hub-link{
     min-height:108px;padding:15px 48px 15px 18px;gap:4px
   }
@@ -190,7 +190,7 @@
   .life-editorial .topics-hub-link span:not(.topics-chevron){font-size:13px}
   .life-editorial .topics-chevron{right:18px;bottom:calc(50% - 13px)}
   .life-editorial .topics-hub-link:first-child{
-    grid-column:auto;min-height:142px;padding:19px 20px
+    grid-column:auto;min-height:132px;padding:18px 20px
   }
   .life-editorial .topics-hub-link:first-child strong{font-size:23px}
   .life-editorial .topics-hub-link:first-child::before{margin-bottom:11px}
