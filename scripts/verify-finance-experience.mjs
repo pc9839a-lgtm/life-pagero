@@ -58,6 +58,13 @@ for(const [slug,expected] of [
   ['finance/markets/index.html','id="finance-issues-panel"'],
   ['finance/loan-payment/index.html','id="loan-method-comparison"']
 ])if(!url(slug).includes(expected))throw Error('Finance subpage regression: '+slug);
+const previewCss=url('finance-experience.css');
+for(const snippet of [
+  '.life-modern .finance-preview-grid{grid-template-columns:1fr;gap:8px}',
+  'grid-template-areas:"bank rate" "product rate" "term rate"',
+  'grid-area:product;min-width:0;font-size:13px'
+])if(!previewCss.includes(snippet))
+  throw Error('Mobile finance rate preview lost readable rows: '+snippet);
 const financeCss=url('life-editorial-20261106.css');
 for(const selector of [
   '.life-editorial .finance-index-hero',
