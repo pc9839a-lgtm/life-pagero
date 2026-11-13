@@ -52,7 +52,7 @@ if((finance.match(/class="finance-index-tile-copy"/g)||[]).length!==6)
 if(!finance.includes('class="finance-index-tile finance-index-tile--featured" href="/finance/savings/"'))
   throw Error('Main savings comparison must be the single featured directory entry');
 if(!finance.includes('class="finance-index-tile finance-index-tile--featured"'))
-  throw Error('Savings comparison must have one featured editorial row');
+  throw Error('Savings comparison must remain the single featured financial service');
 for(const [slug,expected] of [
   ['finance/savings/index.html','id="finance-rate-panel"'],
   ['finance/markets/index.html','id="finance-issues-panel"'],
@@ -61,27 +61,28 @@ for(const [slug,expected] of [
 const financeCss=url('life-editorial-20261106.css');
 for(const selector of [
   '.life-editorial .finance-index-hero',
-  '.life-editorial .finance-index-services>.finance-index-tile:first-child',
+  '.life-editorial .finance-index-services>.finance-index-tile--featured',
+  '.life-editorial .finance-index-symbol',
   '.life-editorial .finance-index-lead',
-  '.life-editorial .finance-index-services,',
+  '.life-editorial .finance-index-services{',
   '.life-editorial .finance-index-official-list',
+  '.life-editorial .finance-index-checks summary',
   '@media(max-width:700px)'
-])if(!financeCss.includes(selector))throw Error('Finance editorial style missing: '+selector);
+])if(!financeCss.includes(selector))throw Error('Finance service-dashboard style missing: '+selector);
 const heroRule=financeCss.match(/\.life-editorial \.finance-index-hero\{([^}]+)\}/)?.[1]||'';
-for(const marker of ['min-height:0','text-align:left','background:transparent','border:0']){
-  if(!heroRule.includes(marker))throw Error('Finance heading must be unboxed: '+marker);
-}
-const tileRule=financeCss.match(/\.life-editorial \.finance-index-tile\{([^}]+)\}/)?.[1]||'';
-if(!tileRule.includes('border-bottom:1px solid #e5e8eb'))
-  throw Error('Quiet finance navigation lost its horizontal separators');
-const featureRule=financeCss.match(/\.life-editorial \.finance-index-services>\.finance-index-tile:first-child\{([^}]+)\}/)?.[1]||'';
-if(!featureRule.includes('background:#f5f6f5'))
-  throw Error('One featured finance destination is required');
-for(const forbidden of [
- 'background:#202832','min-height:315px','border-top:4px solid var(--brand)',
- 'background:#f4f6f8','finance-index-icon'
-])if(heroRule.includes(forbidden)||featureRule.includes(forbidden))
-  throw Error('Obsolete finance promotional design returned: '+forbidden);
+for(const marker of ['text-align:left','background:transparent','border-bottom:1px solid'])
+  if(!heroRule.includes(marker))throw Error('Finance heading must stay compact: '+marker);
+const tilesRule=financeCss.match(/\.life-editorial \.finance-index-services\{([^}]+)\}/)?.[1]||'';
+if(!tilesRule.includes('grid-template-columns:repeat(2,minmax(0,1fr))'))
+  throw Error('Finance service grid should render as two supporting columns on desktop');
+const featureRule=financeCss.match(/\.life-editorial \.finance-index-services>\.finance-index-tile--featured\{([^}]+)\}/)?.[1]||'';
+for(const marker of ['grid-column:1/-1','background:#202c37','color:#fff'])
+  if(!featureRule.includes(marker))throw Error('Finance featured card lost its intended hierarchy: '+marker);
+if((finance.match(/class="finance-index-symbol"/g)||[]).length!==6)
+  throw Error('Finance destinations require six meaningful icons');
+if(!finance.includes('class="finance-index-check-list"'))
+  throw Error('Important official-source caveats must remain available');
+
 const savings=url('finance/savings/index.html');
 for(const token of ['id="finance-rates-official"','id="finance-rate-panel"','id="finance-products"']){
  if(!savings.includes(token))throw Error('Savings product progressive enhancement missing: '+token);
