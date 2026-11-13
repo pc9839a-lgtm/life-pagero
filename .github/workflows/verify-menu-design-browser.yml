@@ -8,6 +8,8 @@ on:
       - 'scripts/build-editorial-life.mjs'
       - 'assets/styles/editorial/20-category.css'
       - 'assets/styles/editorial/40-finance.css'
+      - 'public/finance-experience.css'
+      - 'scripts/verify-finance-experience.mjs'
       - 'public/life-food.css'
       - 'public/events-ui.css'
       - 'public/adpick-deals.css'
