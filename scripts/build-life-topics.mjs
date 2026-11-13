@@ -15,12 +15,12 @@ const pageTitle='생활정보 | 자동차·지원금·주거·세금 | 생활비
 const desc='자동차 검사·명의이전, 정부지원금, 주거·부동산, 취업·노동, 세금·생활정보를 분야별로 모았습니다.';
 const destination='/topics/';
 const items=[
-  ['자동차','/car/','자동차 검사기간·명의이전·차량 관련 정보'],
-  ['지원금·복지','/support/','정부지원금·복지제도'],
-  ['주거·부동산','/support/housing-benefit-2026/','주거급여·주거 관련 정보'],
-  ['세금·환급','/support/year-end-tax-precheck-2026/','연말정산·세금 정보'],
-  ['취업·노동','/support/','취업지원·노동 관련 정보'],
-  ['생활·건강','/support/','생활행정·건강 지원정보']
+  ['자동차','/car/','검사·명의이전·자동차세','car'],
+  ['지원금·복지','/support/','정부지원금·복지제도','support'],
+  ['주거·부동산','/support/housing-benefit-2026/','주거급여 신청과 대상','house'],
+  ['세금·환급','/support/year-end-tax-precheck-2026/','연말정산 공제·환급','receipt'],
+  ['취업·노동','/support/unemployment-benefit-eligibility-2026/','실업급여 수급 자격','work'],
+  ['생활·건강','/support/flu-vaccination-children-2026/','예방접종·생활지원','health']
 ];
 for(const [,href] of items){
   const target=href.slice(1)+'index.html';
@@ -29,23 +29,45 @@ for(const [,href] of items){
 const esc=value=>String(value).replace(/[&<>"']/g,c=>({
   '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
 }[c]));
-const rows=items.map(([label,href,detail])=>
-  '<a class="topics-hub-link" href="'+esc(href)+'"><strong>'+esc(label)+'</strong>'
-  +'<span>'+esc(detail)+'</span><span aria-hidden="true" class="topics-chevron">›</span></a>'
+const iconPaths={
+  car:'<path d="m5 11 2-5h10l2 5M5 11h14l2 3v5h-3v-2H6v2H3v-5l2-3Z"/><path d="M7 14h1m8 0h1"/>',
+  support:'<path d="M12 21s-8-5-8-11a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 6-8 11-8 11Z"/>',
+  house:'<path d="m3 11 9-8 9 8v10H3V11Z"/><path d="M9 21v-7h6v7"/>',
+  receipt:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6"/>',
+  work:'<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/>',
+  health:'<path d="M12 21S3 16 3 10a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 6-9 11-9 11Z"/><path d="M7 12h3l2-3 2 6 2-3h2"/>',
+  calculator:'<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M9 6h6M9 11h2m3 0h1M9 15h2m3 0h1M9 19h2m3 0h1"/>'
+};
+const topicIcon=key=>'<span class="topics-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round">'+iconPaths[key]+'</svg></span>';
+const rows=items.map(([label,href,detail,icon])=>
+  '<a class="topics-hub-link" href="'+esc(href)+'">'
+  +topicIcon(icon)+'<span class="topics-card-copy"><strong>'+esc(label)+'</strong>'
+  +'<span class="topics-card-desc">'+esc(detail)+'</span></span>'
+  +'<span aria-hidden="true" class="topics-chevron">→</span></a>'
 ).join('');
+const calculator='<a class="topics-hub-link topics-hub-link--calculator" href="/tools/car-cost/">'
+  +topicIcon('calculator')+'<span class="topics-card-copy"><strong>자동차 유지비 계산기</strong>'
+  +'<span class="topics-card-desc">보험·연료비·세금·정비비를 한 번에 계산</span></span>'
+  +'<span aria-hidden="true" class="topics-chevron">→</span></a>';
 const inside='<div class="site-shell"><article class="portal-page topics-page">'
   +'<nav class="portal-breadcrumbs" aria-label="현재 위치"><a href="/">홈</a> / 생활정보</nav>'
-  +'<div class="topics-heading">'
-  +'<span class="topics-kicker">LIFE DIRECTORY · 필요한 생활정보</span>'
+  +'<header class="topics-heading">'
   +'<h1>생활정보</h1>'
-  +'<p class="topics-intro">자동차·지원금·주거·세금까지.<br>생활에 필요한 정보를 분야별로 바로 찾아보세요.</p>'
-  +'<div class="topics-quick"><span class="topics-quick-label">바로 확인</span>'
-  +'<a href="/car/car-inspection-period/">자동차 검사기간 <span aria-hidden="true">↗</span></a>'
-  +'<a href="/support/housing-benefit-2026/">주거급여 <span aria-hidden="true">↗</span></a>'
-  +'<a href="/support/year-end-tax-precheck-2026/">연말정산 <span aria-hidden="true">↗</span></a></div></div>'
-  +'<div class="topics-section-head"><div><small>EXPLORE 01</small><h2>분야별로 찾기</h2></div>'
-  +'<span>관심 분야를 선택하세요</span></div>'
-  +'<nav class="topics-hub-list" aria-label="생활정보 분야별 바로가기">'+rows+'</nav>'
+  +'<p class="topics-intro">자동차, 지원금, 주거, 세금까지 생활에 필요한 내용을 빠르게 찾아보세요.</p>'
+  +'</header>'
+  +'<section class="topics-directory" aria-labelledby="topics-section-title">'
+  +'<div class="topics-section-head"><h2 id="topics-section-title">분야별 정보</h2>'
+  +'<p>원하는 분야를 선택하세요.</p></div>'
+  +'<nav class="topics-hub-list" aria-label="생활정보 분야별 바로가기">'+rows+calculator+'</nav>'
+  +'</section>'
+  +'<section class="topics-shortcuts" aria-labelledby="topics-shortcuts-title">'
+  +'<div class="topics-section-head"><h2 id="topics-shortcuts-title">자주 찾는 안내</h2>'
+  +'<p>바로 확인할 수 있는 정보입니다.</p></div>'
+  +'<div class="topics-quick">'
+  +'<a href="/car/car-inspection-period/"><strong>자동차 검사기간</strong><span aria-hidden="true">→</span></a>'
+  +'<a href="/support/housing-benefit-2026/"><strong>주거급여</strong><span aria-hidden="true">→</span></a>'
+  +'<a href="/support/year-end-tax-precheck-2026/"><strong>연말정산</strong><span aria-hidden="true">→</span></a>'
+  +'</div></section>'
   +'</article></div>';
 let html=read('finance/index.html');
 check(html.includes('<main id="main-content">'),'finance page template main missing');

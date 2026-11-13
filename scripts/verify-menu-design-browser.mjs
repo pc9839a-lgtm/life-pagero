@@ -63,62 +63,57 @@ try{
       'lifestyle directory still downloads inherited finance-only assets');
     const loadedFinance=await page.evaluate(()=>performance.getEntriesByType('resource').filter(x=>/finance-live\.js|finance-experience\.css/.test(x.name)).map(x=>x.name));
     expect(loadedFinance.length===0,'lifestyle route has redundant finance network requests: '+loadedFinance);
-    expect(await page.locator('.topics-hub-link').count()===7,'six directories plus the car calculator required');
+    expect(await page.locator('.topics-hub-link').count()===7,'six distinct categories and one calculator must remain');
+    expect(await page.locator('.topics-icon').count()===7,'topic icons missing');
     const columns=await page.locator('.topics-hub-list').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length);
-    expect(columns===(viewport.width>900?4:1),'directory grid columns '+columns+' at '+viewport.width);
-    expect(await page.locator('.topics-quick a').count()===3,'quick information links missing');
-    const featured=await page.locator('.topics-hub-link').first().evaluate(el=>getComputedStyle(el).backgroundColor);
-    expect(featured==='rgb(32, 40, 50)','featured lifestyle category lacks distinct contrast: '+featured);
+    const expectedColumns=viewport.width>900?3:viewport.width>360?2:1;
+    expect(columns===expectedColumns,'topics columns '+columns+' != '+expectedColumns);
+    expect(await page.locator('.topics-quick a').count()===3,'real quick links missing');
+    const hrefs=await page.locator('.topics-hub-link').evaluateAll(els=>els.map(x=>new URL(x.href).pathname));
+    expect(new Set(hrefs).size===7,'lifestyle categories must not send multiple topics to one list');
+    const tool=await page.locator('.topics-hub-link--calculator').evaluate(el=>({
+      background:getComputedStyle(el).backgroundColor,width:el.getBoundingClientRect().width
+    }));
+    expect(tool.background==='rgb(32, 44, 55)','calculator entry must be visually differentiated');
+    if(viewport.width>=390){
+      const listWidth=await page.locator('.topics-hub-list').evaluate(el=>el.getBoundingClientRect().width);
+      expect(Math.abs(tool.width-listWidth)<2,'calculator entry should occupy its own full row');
+    }
    }
    if(route.slug==='finance'){
     expect(await page.locator('.finance-index-tile').count()===6,'finance destinations changed');
     expect(await page.locator('.finance-index-services .finance-index-tile').count()===3,'financial source links missing');
     expect(await page.locator('.finance-index-tools .finance-index-tile').count()===3,'calculator links missing');
-    expect(await page.locator('.finance-index-icon,.finance-index-primary,.finance-index-tile-number').count()===0,
-      'generic marketing icons, duplicate CTA or numbered tiles returned');
+    expect(await page.locator('.finance-index-symbol').count()===6,'finance services should be visually identifiable');
     const hero=await page.locator('.finance-index-hero').evaluate(el=>{
       const st=getComputedStyle(el),box=el.getBoundingClientRect();
       return {height:box.height,background:st.backgroundColor,alignment:st.textAlign,title:el.querySelector('h1')?.textContent};
     });
     expect(hero.title==='금융정보','finance page heading changed');
     expect(hero.background==='rgba(0, 0, 0, 0)'&&hero.alignment==='left',
-      'finance page needs a plain left-aligned editorial title');
-    expect(hero.height<(viewport.width>700?135:118),
+      'finance intro should be an unboxed readable heading');
+    expect(hero.height<(viewport.width>700?145:120),
       'finance intro is taller than its content requires: '+hero.height);
-    const rowStyle=await page.locator('.finance-index-services').evaluate(el=>({
-      columns:getComputedStyle(el).gridTemplateColumns,
-      display:getComputedStyle(el).display
-    }));
-    expect(rowStyle.display===(viewport.width>700?'grid':'block'),
-      'finance services must use a compact desktop grid and mobile single column');
+    const display=await page.locator('.finance-index-services').evaluate(el=>getComputedStyle(el).display);
+    expect(display==='grid','finance service grid should not revert to a text-only column');
     const featured=page.locator('.finance-index-services>.finance-index-tile').first();
     const featuredHref=await featured.getAttribute('href');
     const targetUrl=new URL(featuredHref,page.url());
-    const expectedPaths=liveBase
-      ? ['/life/finance/savings/','/finance/savings/']
-      : ['/finance/savings/'];
+    const expectedPaths=liveBase?['/life/finance/savings/','/finance/savings/']:['/finance/savings/'];
     expect(targetUrl.origin===new URL(page.url()).origin&&expectedPaths.includes(targetUrl.pathname),
       'featured savings destination broken: '+featuredHref);
     const first=await featured.evaluate(el=>{
-      const style=getComputedStyle(el),box=el.getBoundingClientRect(),title=el.querySelector('strong');
-      return {top:box.top,height:box.height,background:style.backgroundColor,
-        borderBottom:style.borderBottomWidth,titleSize:parseFloat(getComputedStyle(title).fontSize),
-        arrowColor:getComputedStyle(el.querySelector('.finance-index-tile-arrow')).color};
+      const st=getComputedStyle(el),box=el.getBoundingClientRect(),title=el.querySelector('strong');
+      return {top:box.top,height:box.height,background:st.backgroundColor,
+        titleSize:parseFloat(getComputedStyle(title).fontSize),color:getComputedStyle(title).color};
     });
-    expect(first.top<viewport.height-100,'first useful finance action is below viewport');
-    expect(first.height>=(viewport.width>700?115:105),'featured action lacks a clear tap target');
-    expect(first.background==='rgb(245, 246, 245)','featured action needs a subtle warm-neutral background');
-    expect(first.titleSize>=(viewport.width>700?26:22),'featured title must be prominently readable');
-    expect(first.borderBottom==='1px','featured action needs a quiet separator');
-    expect(first.arrowColor==='rgb(233, 87, 49)','only primary action should carry the accent');
-    const second=await page.locator('.finance-index-services>.finance-index-tile').nth(1).evaluate(el=>({
-      background:getComputedStyle(el).backgroundColor,
-      borderBottom:getComputedStyle(el).borderBottomWidth,
-      titleSize:parseFloat(getComputedStyle(el.querySelector('strong')).fontSize)
-    }));
-    expect(second.background==='rgb(255, 255, 255)'&&second.borderBottom==='1px',
-      'secondary action should be a clean editorial row, not a promotional card');
-    expect(second.titleSize>=(viewport.width>700?18:15),'secondary text too small');
+    expect(first.top<viewport.height-85,'first useful finance action is below viewport');
+    expect(first.height>=(viewport.width>700?160:135),'featured action tap target too short');
+    expect(first.background==='rgb(32, 44, 55)','featured finance service lost its strong contrast');
+    expect(first.titleSize>=(viewport.width>700?27:21),'primary financial action title too small');
+    expect(first.color==='rgb(255, 255, 255)','featured title lacks white contrast');
+    expect(await page.locator('#finance-index-checks summary').count()===1,
+      'finance safety caveats must remain accessible through native details');
    }
    if(route.slug==='food')
     expect(await page.locator('.food-card').first().evaluate(e=>getComputedStyle(e).borderTopStyle)!=='none','food cards missing defined boundary');
