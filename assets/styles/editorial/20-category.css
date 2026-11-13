@@ -167,7 +167,7 @@
   .life-editorial.life-modern-category .post-card{padding-inline:0}
   .life-editorial .topics-page{padding:8px 0 30px}
   .life-editorial .topics-heading{
-    padding:31px 16px 25px;margin-bottom:26px;border-radius:8px
+    padding:25px 16px 23px;margin-bottom:20px;border-radius:8px
   }
   .life-editorial .topics-kicker{font-size:10px;margin-bottom:10px}
   .life-editorial .topics-page h1{
@@ -176,21 +176,21 @@
     color:var(--life-heading-color)
   }
   .life-editorial .topics-intro{font-size:14px}
-  .life-editorial .topics-quick{margin-top:18px;gap:7px}
+  .life-editorial .topics-quick{margin-top:16px;gap:7px}
   .life-editorial .topics-quick-label{width:100%;margin:0 0 1px}
   .life-editorial .topics-quick a{font-size:12px;min-height:39px;padding:7px 11px}
   .life-editorial .topics-section-head{align-items:center;margin-bottom:12px}
   .life-editorial .topics-section-head>span{font-size:12px}
   .life-editorial .topics-hub-list{grid-template-columns:1fr;gap:9px}
   .life-editorial .topics-hub-link{
-    min-height:126px;padding:18px 48px 18px 18px;gap:6px
+    min-height:108px;padding:15px 48px 15px 18px;gap:4px
   }
-  .life-editorial .topics-hub-link::before{margin:0 0 5px;font-size:11px}
+  .life-editorial .topics-hub-link::before{margin:0 0 3px;font-size:11px}
   .life-editorial .topics-hub-link strong{font-size:17px}
   .life-editorial .topics-hub-link span:not(.topics-chevron){font-size:13px}
   .life-editorial .topics-chevron{right:18px;bottom:calc(50% - 13px)}
   .life-editorial .topics-hub-link:first-child{
-    grid-column:auto;min-height:160px;padding:23px 20px
+    grid-column:auto;min-height:142px;padding:19px 20px
   }
   .life-editorial .topics-hub-link:first-child strong{font-size:23px}
   .life-editorial .topics-hub-link:first-child::before{margin-bottom:11px}

@@ -4,6 +4,10 @@ on:
     branches: [main]
     paths:
       - 'scripts/build-life-topics.mjs'
+      - 'scripts/build-editorial-life.mjs'
+      - 'scripts/prepare-food-photos.mjs'
+      - 'scripts/verify-global-navigation.mjs'
+      - 'scripts/verify-editorial-life.mjs'
       - 'scripts/enhance-finance.mjs'
       - 'assets/styles/editorial/40-finance.css'
       - 'scripts/verify-finance-experience.mjs'

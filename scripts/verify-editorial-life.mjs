@@ -50,6 +50,24 @@ for(const absolute of pages){
 }
 check(checked>=150,'not enough editorial pages: '+checked);
 check(articles===publishedGuideCount,'all '+publishedGuideCount+' articles must remain published: '+articles);
+// Runs after build-editorial-life.mjs, when unused finance CSS has been pruned.
+// The separate finance-experience stylesheet is for finance/loan widgets only.
+// Marketing, article and topic routes must rely on the single editorial CSS.
+for(const file of ['today/index.html','car/index.html','support/index.html','events/index.html',
+  'food/index.html','deals/index.html','real-estate/index.html','topics/index.html']){
+  const html=read(file);
+  // Today contains a real finance widget and must keep that styling.
+  // Pages without finance- / loan- components must not request its CSS.
+  if(!/(?:class|id)="[^"]*\b(?:finance-|loan-)/.test(html) &&
+    /href="\/finance-experience\.css(?:\?[^"]*)?"/.test(html))
+    check(false,'unused finance stylesheet loaded on unrelated menu: '+file);
+}
+for(const file of ['finance/index.html','finance/savings/index.html',
+  'finance/markets/index.html','finance/loan-payment/index.html']){
+  if(!/href="\/finance-experience\.css(?:\?[^"]*)?"/.test(read(file)))
+    check(false,'required finance stylesheet missing: '+file);
+}
+
 const home=read('index.html');
 check(home.includes('<h1>오늘 필요한 정보</h1>'),'clear functional homepage headline missing');
 check(home.includes('class="hero portal-home-hero editorial-hero"'),

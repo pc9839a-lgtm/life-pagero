@@ -73,6 +73,8 @@ for(const p of ['index.html','today/index.html','finance/index.html','finance/sa
 }
 
 const topics=read('topics/index.html');
+if(/(?:src|href)="\/finance-(?:live\.js|experience\.css)(?:\?[^"]*)?"/.test(topics))
+  fail('unused finance JavaScript or stylesheet leaked into lifestyle directory','topics/index.html');
 if(!topics.includes('<h1>생활정보</h1>') ||
    !topics.includes('href="/car/"') ||
    !topics.includes('href="/support/"') ||

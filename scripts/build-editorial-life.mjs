@@ -21,6 +21,13 @@ const MENU_STYLES=['events-ui.css','real-estate.css','adpick-deals.css',
   'life-food.css','finance-experience.css'];
 const MENU_STYLE_HASHES=MENU_STYLES.map(name=>[name,createHash('sha256')
   .update(fs.readFileSync(path.join(DIST,name))).digest('hex').slice(0,12)]);
+// finance-experience.css contains only finance-* and loan-* UI selectors.
+// It must not block rendering on unrelated article, events or shopping routes.
+const stripUnusedFinanceStyle=html=>{
+  const financeMarkup=/(?:class|id)="[^"]*\b(?:finance-|loan-)/.test(html);
+  if(financeMarkup)return html;
+  return html.replace(/<link\s+rel="stylesheet"\s+href="\/finance-experience\.css(?:\?[^"]*)?"\s*\/?>/g,'');
+};
 const versionMenuStyles=html=>{
   for(const [name,hash] of MENU_STYLE_HASHES){
     // Replace an old fixed version (or unversioned href), not add CSS.
@@ -256,7 +263,7 @@ const transformCategory=(html,relative)=>{
   check(html.includes('id="modern-list-filter"'),'category search missing '+relative);
   return html;
 };
-let pages=0,articles=0;
+let pages=0,articles=0,prunedFinancePages=0;
 for(const absolute of walk(DIST).filter(file=>file.endsWith('.html'))){
   const relative=path.relative(DIST,absolute).replaceAll(path.sep,'/');
   let html=fs.readFileSync(absolute,'utf8');
@@ -270,6 +277,9 @@ for(const absolute of walk(DIST).filter(file=>file.endsWith('.html'))){
     html=transformArticle(html,relative);articles++;
   }
   html=removeOldStyles(html);
+  if(html.includes('href="/finance-experience.css"') &&
+    !/(?:class|id)="[^"]*\b(?:finance-|loan-)/.test(html))prunedFinancePages++;
+  html=stripUnusedFinanceStyle(html);
   html=versionMenuStyles(html);
   html=html.replace('class="life-modern ','class="life-modern life-editorial ');
   html=html.replace('</head>','<link rel="stylesheet" href="'+CSS_HREF+'"></head>');
@@ -298,4 +308,4 @@ for(const absolute of walk(DIST).filter(file=>file.endsWith('.html'))){
 }
 check(pages>=150,'site page coverage unexpectedly low '+pages);
 check(articles===publishedGuideCount,'must keep all '+publishedGuideCount+' original article pages '+articles);
-console.log('[editorial-ui] '+pages+' pages rebuilt with one style system; '+articles+' full articles expanded, newsroom + directory preserved.');
+console.log('[editorial-ui] '+pages+' pages rebuilt with one style system; '+articles+' full articles expanded, '+prunedFinancePages+' unused finance stylesheets omitted, newsroom + directory preserved.');

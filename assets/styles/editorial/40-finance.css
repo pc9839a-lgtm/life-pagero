@@ -307,7 +307,7 @@
     margin:8px 0 0;font-size:14px;line-height:1.6
   }
   .life-editorial .finance-index-section{
-    margin-top:24px
+    margin-top:21px
   }
   .life-editorial .finance-index-section-heading{
     margin-bottom:11px
@@ -316,7 +316,7 @@
     font-size:18px
   }
   .life-editorial .finance-index-tile{
-    min-height:76px;gap:8px;padding:15px 3px;
+    min-height:76px;gap:7px;padding:13px 3px;
   }
   .life-editorial .finance-index-tile-copy{
     gap:3px
@@ -328,7 +328,7 @@
     font-size:12.5px;line-height:1.5
   }
   .life-editorial .finance-index-services>.finance-index-tile:first-child{
-    min-height:122px;padding:23px 18px 22px;
+    min-height:116px;padding:20px 18px 19px;
   }
   .life-editorial .finance-index-services>.finance-index-tile:first-child .finance-index-tile-copy strong{
     font-size:23px
