@@ -68,7 +68,13 @@ const schema={'@context':'https://schema.org','@type':'CollectionPage',
   isPartOf:{'@type':'WebSite',name:'생활비서',url:SITE+'/'}};
 html=html.replace('</head>','<script type="application/ld+json">'
   +JSON.stringify(schema)+'</script></head>');
-html=html.replace('<script defer src="/finance-live.js"></script>','');
+// Finance supplies the shared HTML shell only. The lifestyle directory has
+// no finance widgets, so remove the source page's versioned finance script and
+// finance-only stylesheet instead of fetching 27KB+ of unused assets.
+html=html.replace(/<script\b[^>]*\bsrc="\/finance-live\.js(?:\?[^"]*)?"[^>]*><\/script>/g,'');
+html=html.replace(/<link\b[^>]*\bhref="\/finance-experience\.css(?:\?[^"]*)?"[^>]*>/g,'');
+check(!/finance-live\.js|finance-experience\.css/.test(html),
+  'inherited finance assets must not ship on the lifestyle directory');
 check((html.match(/<h1(?:\s[^>]*)?>/g)||[]).length===1,
   'must have one H1');
 check((html.match(/<link rel="canonical"/g)||[]).length===1,
