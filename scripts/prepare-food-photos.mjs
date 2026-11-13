@@ -20,7 +20,7 @@ const commonsUrl=(filename,size=960)=>{
   return size?base+'thumb/'+prefix+'/'+size+'px-'+encoded:base+prefix;
 };
 const verifiedImage=async url=>{
-  if(!['pagero.kr','upload.wikimedia.org','images.pexels.com'].includes(new URL(url).hostname))
+  if(!['pagero.kr','life.pagero.kr','upload.wikimedia.org','images.pexels.com'].includes(new URL(url).hostname))
     throw Error('unexpected image host');
   const response=await fetch(url,{
     headers:{Accept:'image/jpeg','User-Agent':'LifePageroFoodGuide/1.0 (editorial image attribution retained)'},
@@ -37,17 +37,25 @@ const verifiedImage=async url=>{
 // Match the published filename-to-path manifest before reusing any image.
 // An unchanged slug alone is not proof that the underlying licensed photo is
 // the same; a newly replaced photo must come from its own source URL.
-let publishedManifest={};
-try{
-  const response=await fetch('https://pagero.kr/life/food-images/manifest.json',{
-    headers:{Accept:'application/json'},signal:AbortSignal.timeout(8000)
-  });
-  if(response.ok){
+let publishedManifest={},publishedOrigin='';
+const origins=[
+  'https://pagero.kr/life/food-images',
+  'https://life.pagero.kr/food-images'
+];
+for(const origin of origins){
+  try{
+    const response=await fetch(origin+'/manifest.json',{
+      headers:{Accept:'application/json'},signal:AbortSignal.timeout(8000)
+    });
+    if(!response.ok)continue;
     const candidate=await response.json();
-    if(candidate&&typeof candidate==='object'&&!Array.isArray(candidate))
+    if(candidate&&typeof candidate==='object'&&!Array.isArray(candidate)){
       publishedManifest=candidate;
-  }
-}catch(_error){/* A fresh deployment can legitimately have no first-party copy. */}
+      publishedOrigin=origin;
+      break;
+    }
+  }catch(_error){/* First-party cache is optional for a new deployment. */}
+}
 const manifest={};
 const failures=[];
 const tasks=DATA.guides.flatMap(guide=>guide.visuals.map((photo,i)=>({
@@ -56,7 +64,7 @@ const tasks=DATA.guides.flatMap(guide=>guide.visuals.map((photo,i)=>({
 if(tasks.length!==DATA.guides.length*2)throw Error('each guide must provide two image sources');
 for(const {guide,photo,name} of tasks){
   const target=path.join(folder,name);
-  const published='https://pagero.kr/life/food-images/'+encodeURIComponent(name);
+  const published=publishedOrigin+'/'+encodeURIComponent(name);
   const samePublishedPhoto=publishedManifest[photo.filename]==='/food-images/'+name;
   // Reuse only when the published manifest confirms the exact credited photo.
   // Newly added or changed photos must still be obtained from their source.
