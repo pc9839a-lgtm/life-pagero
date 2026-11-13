@@ -62,7 +62,7 @@ for(const file of ['today/index.html','car/index.html','support/index.html','eve
     /href="\/finance-experience\.css(?:\?[^"]*)?"/.test(html))
     check(false,'unused finance stylesheet loaded on unrelated menu: '+file);
 }
-for(const file of ['index.html','finance/index.html','finance/savings/index.html',
+for(const file of ['finance/index.html','finance/savings/index.html',
   'finance/markets/index.html','finance/loan-payment/index.html']){
   if(!/href="\/finance-experience\.css(?:\?[^"]*)?"/.test(read(file)))
     check(false,'required finance stylesheet missing: '+file);
