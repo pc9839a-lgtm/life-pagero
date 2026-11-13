@@ -197,13 +197,17 @@ if(!finance.includes('href="'+mortgageUrl+'"')){
 }
 
 let topics=read('topics/index.html');
-const ending='</nav></article></div>';
-ok(topics.includes(ending),'topics links insertion anchor missing');
-topics=topics.replace(ending,
-  '<a class="topics-hub-link" href="'+carUrl+'"><strong>자동차 유지비 계산기</strong>'
-  +'<span>주행거리·연료비·보험·세금·정비비 합산</span>'
-  +'<span aria-hidden="true" class="topics-chevron">›</span></a>'+ending);
-save('topics/index.html',topics);
+// The dedicated lifestyle directory already includes the calculator as a
+// distinct full-width entry. Keep legacy sites working without duplicating it.
+if(!topics.includes('href="'+carUrl+'"')){
+  const nav=/(<nav class="topics-hub-list"[^>]*>[\s\S]*?)(<\/nav>)/;
+  ok(nav.test(topics),'topics directory navigation missing');
+  topics=topics.replace(nav,(all,before,close)=>before
+    +'<a class="topics-hub-link topics-hub-link--calculator" href="'+carUrl+'">'
+    +'<strong>자동차 유지비 계산기</strong><span>주행거리·연료비·보험·세금·정비비 합산</span>'
+    +'<span aria-hidden="true" class="topics-chevron">→</span></a>'+close);
+  save('topics/index.html',topics);
+}
 
 let cars=read('car/index.html');
 const carAnchor='<div class="modern-list-toolbar">';
