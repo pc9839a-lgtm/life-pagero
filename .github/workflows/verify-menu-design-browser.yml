@@ -30,6 +30,30 @@ jobs:
         run: |
           npm install --no-save --no-package-lock playwright-core@1.56.1
           which google-chrome || which google-chrome-stable || which chromium
+      - name: Wait for the deployed editorial CSS version (not an old cached release)
+        shell: bash
+        run: |
+          EXPECTED="$(node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {createHash} from 'node:crypto';
+          const files=['00-foundation.css','10-home.css','20-category.css','30-article.css',
+            '40-finance.css','50-today.css','60-responsive.css','70-calculators.css','80-food-guides.css'];
+          const combined=files.map(file=>fs.readFileSync('assets/styles/editorial/'+file,'utf8')).join('');
+          process.stdout.write(createHash('sha256').update(combined).digest('hex').slice(0,12));
+          NODE
+          )"
+          echo "Expected editorial CSS version: $EXPECTED"
+          for attempt in $(seq 1 15); do
+            HTML="$(curl -fsSL --max-time 15 -H 'Cache-Control: no-cache' \
+              "https://pagero.kr/life/finance/?visual_qa=${GITHUB_SHA:0:10}" || true)"
+            if [[ "$HTML" == *"life-editorial-20261106.css?v=$EXPECTED"* ]]; then
+              echo "Live CSS is current (attempt $attempt)"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo 'Deployed site did not reach the current CSS version.'
+          exit 1
       - name: Capture and verify deployed menus at 1280, 390 and 320 pixels
         env:
           LIFE_VISUAL_BASE_URL: https://pagero.kr/life
