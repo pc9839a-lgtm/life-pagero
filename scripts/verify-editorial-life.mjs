@@ -182,8 +182,8 @@ check((home.match(/class="portal-topic-card compact-topic"/g)||[]).length===6,
   'six original topic links lost');
 check(home.includes('<details class="compact-explore compact-latest" open>'),
   'recently updated original articles still hidden');
-check((home.match(/data-affiliate="tenping-/g)||[]).length===4,
-  'original affiliate cards altered');
+check((home.match(/data-affiliate="tenping-/g)||[]).length===2,
+  'affiliate density must stay reduced on homepage');
 check((home.match(/data-life-coupang-banner="sitewide-v4"/g)||[]).length===1,
   'homepage must show exactly one Coupang banner');
 check((home.match(/data-life-coupang-kind="body"/g)||[]).length===1 &&
