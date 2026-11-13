@@ -4,8 +4,13 @@ import path from 'node:path';
 import {chromium} from 'playwright-core';
 
 const DIST=path.resolve('dist'),OUT=path.resolve('artifacts/menu-design');
+// Run against the deployed public site without rebuilding 28 Wikimedia-backed
+// images. Local mode remains available for source-branch visual checks.
+const liveBase=(process.env.LIFE_VISUAL_BASE_URL||'').trim().replace(/\/+$/,'');
+if(liveBase && !['https://pagero.kr/life','https://life.pagero.kr'].includes(liveBase))
+  throw Error('[menu-visual] Unsupported deployed site URL: '+liveBase);
 const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml','.json':'application/json'};
-const server=http.createServer((req,res)=>{
+const server=liveBase?null:http.createServer((req,res)=>{
   const pathname=new URL(req.url,'http://127.0.0.1').pathname;
   let file=path.resolve(DIST,'.'+pathname);
   if(file!==DIST&&!file.startsWith(DIST+path.sep)){res.writeHead(403).end();return;}
@@ -15,8 +20,8 @@ const server=http.createServer((req,res)=>{
   fs.createReadStream(file).pipe(res);
 });
 const expect=(condition,message)=>{if(!condition)throw Error('[menu-visual] '+message);};
-await new Promise(done=>server.listen(0,'127.0.0.1',done));
-const root='http://127.0.0.1:'+server.address().port;
+if(server)await new Promise(done=>server.listen(0,'127.0.0.1',done));
+const root=liveBase||('http://127.0.0.1:'+server.address().port);
 fs.mkdirSync(OUT,{recursive:true});
 const browser=await chromium.launch({executablePath:process.env.CHROME_BIN||'/usr/bin/google-chrome',headless:true,args:['--no-sandbox']});
 const routes=[
@@ -38,6 +43,11 @@ try{
    // of unrelated menus beyond the established desktop/mobile breakpoints.
    if(viewport.width===320 && route.slug!=='topics' && route.slug!=='finance')continue;
    const response=await page.goto(root+route.path,{waitUntil:'domcontentloaded',timeout:30000});
+   if(liveBase&&route.slug==='topics'){
+     const links=await page.locator('.topics-hub-list a').evaluateAll(nodes=>
+       nodes.map(n=>({label:n.querySelector('strong')?.textContent||'',href:n.href})));
+     console.log('[menu-live] Lifestyle destination URLs:',JSON.stringify(links));
+   }
    expect(response?.status()===200,route.slug+' returned '+response?.status());
    expect(await page.locator('h1').count()===1,route.slug+' should have one heading');
    expect(await page.locator('.main-nav a').count()===8,route.slug+' should have eight top-level routes');
@@ -109,8 +119,9 @@ try{
   }
   await page.close();
  }
- console.log('[menu-visual] PASS '+verified+' desktop and mobile screens; hierarchy, quick actions, visible nav, content, no horizontal overflow and screenshots');
+ console.log('[menu-visual] PASS '+verified+' '+(liveBase?'deployed production':'local build')+
+   ' desktop/mobile screens; hierarchy, network assets, navigation, no horizontal overflow and screenshots');
 }finally{
  await browser.close();
- await new Promise(done=>server.close(done));
+ if(server)await new Promise(done=>server.close(done));
 }
