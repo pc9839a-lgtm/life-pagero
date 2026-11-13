@@ -18,7 +18,7 @@ assert(home.includes('<details class="compact-explore compact-latest">'),'latest
 assert(home.includes('<details class="modern-all-articles">'),'full archive must be initially collapsed');
 assert(home.includes('href="/finance/savings/"')&&home.includes('href="/finance/markets/"'),'finance functions lost');
 assert(!home.includes('class="finance-home-shortcuts"'),'duplicate finance explanation tiles remain');
-assert(count(home,/data-affiliate="tenping-/g)===4,'homepage affiliate placements altered');
+assert(count(home,/data-affiliate="tenping-/g)===2,'homepage should retain exactly two labelled affiliate cards');
 assert(count(home,/data-life-coupang-kind="(?:middle|body)"/g)===2,'homepage advertising units altered');
 assert(home.indexOf('class="modern-sponsored-area"')>home.indexOf('class="compact-popular"'),'advertising precedes core content');
 let cards=0;

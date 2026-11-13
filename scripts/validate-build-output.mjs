@@ -238,11 +238,8 @@ for (const file of htmlFiles) {
   const html = fs.readFileSync(file, 'utf8');
   if (!html.includes('</main>')) continue;
 
-  const expectedBody = relative === 'index.html'
-    || /^(car|support)\/index\.html$/.test(relative)
-    || /^(car|support)\/[^/]+\/index\.html$/.test(relative)
-      ? 2 : 1;
-  const expectedRail = html.includes('<aside class="sidebar">') ? 1 : 0;
+  const expectedBody = relative === 'index.html' ? 2 : 1;
+  const expectedRail = relative === 'index.html' && html.includes('<aside class="sidebar">') ? 1 : 0;
   const actualBody = count(html, /data-life-coupang-kind="(?:body|middle)"/g);
   const actualRail = count(html, /data-life-coupang-kind="rail"/g);
   if (actualBody !== expectedBody || actualRail !== expectedRail) {

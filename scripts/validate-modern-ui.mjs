@@ -15,7 +15,7 @@ assert((home.match(/class="modern-topic-icon"/g)||[]).length===6,'six topic icon
 assert(home.includes('class="modern-all-articles"'),'archive must be collapsible, not lost');
 assert(home.includes('class="modern-section-heading"'),'situation-based exploration missing');
 assert(home.includes('href="/car/"')&&home.includes('href="/support/"')&&home.includes('href="/finance/"'),'core destinations missing');
-assert((home.match(/data-affiliate="tenping-/g)||[]).length===4,'homepage affiliate cards were changed or deleted');
+assert((home.match(/data-affiliate="tenping-/g)||[]).length===2,'homepage affiliate density must be limited to two cards');
 assert((home.match(/data-life-coupang-kind="(?:middle|body)"/g)||[]).length===2,'homepage body ads changed');
 assert((home.match(/data-life-coupang-kind="rail"/g)||[]).length===1,'homepage rail ad changed');
 assert(home.indexOf('class="modern-sponsored-area"')>home.indexOf('class="modern-all-articles"'),'ads must follow primary information on home');

@@ -81,18 +81,16 @@ function placeBefore(html, anchor, fragment, page) {
 const marker = '<span hidden data-life-affiliate-layout="wide-v2"></span>';
 let homeCount = 0;
 if (update('index.html', (html) => {
-  const heroNext = '<section class="section"><div class="category-grid">';
-  const top = '<div class="life-affiliate-placement life-affiliate-placement--top">' + card(campaigns.auto) + '</div>';
-  const lower = bannerSection([campaigns.device, campaigns.mbti, campaigns.education]);
-  const withTop = placeBefore(html, heroNext, top, 'homepage');
-  const withLower = placeBefore(withTop, '<section class="section life-archive"', lower + marker, 'homepage');
-  homeCount = 4;
+  // Keep commercial placements below editorial content, never above the first links.
+  const lower = bannerSection([campaigns.auto, campaigns.device]);
+  const withLower = placeBefore(html, '<section class="section life-archive"', lower + marker, 'homepage');
+  homeCount = 2;
   return withLower;
 })) {}
 
 for (const [category, offers] of [
-  ['car', [campaigns.auto, campaigns.device]],
-  ['support', [campaigns.education, campaigns.mbti]],
+  ['car', [campaigns.auto]],
+  ['support', [campaigns.education]],
 ]) {
   update(category + '/index.html', (html) => {
     const block = bannerSection(offers, '관련 제휴 광고', 'life-sponsor-category') + marker;
@@ -119,12 +117,9 @@ for (const filename of walk(CONTENT).filter(name => name.endsWith('.json'))) {
   const post = JSON.parse(fs.readFileSync(filename, 'utf8'));
   if (post.noindex) continue;
   const relative = post.category + '/' + post.slug + '/index.html';
-  const [primary, secondary] = chooseOffers(post);
+  const [primary] = chooseOffers(post);
   update(relative, html => {
-    const blocks = [
-      '<div class="life-article-sponsor life-article-sponsor--early">' + card(primary) + '</div>',
-      '<div class="life-article-sponsor life-article-sponsor--mid">' + card(secondary) + '</div>',
-    ];
+    const singleAd = '<div class="life-article-sponsor life-article-sponsor--mid">' + card(primary) + '</div>';
     // Anchor ads to actual article paragraphs rather than filler summaries.
     function insertAfterBodyParagraph(input, partNo, fragment) {
       const anchor = '<!-- life-body-part-' + partNo + ' -->';
@@ -141,15 +136,16 @@ for (const filename of walk(CONTENT).filter(name => name.endsWith('.json'))) {
       }
       return input.replace(anchor, anchor + fragment);
     }
-    html = insertAfterBodyParagraph(html, 2, blocks[1]);
-    html = insertAfterBodyParagraph(html, 1, blocks[0] + marker);
+    // One clearly labelled affiliate after substantive article copy, not two
+    // promotions before the reader reaches the main explanation.
+    html = insertAfterBodyParagraph(html, 2, singleAd + marker);
     return html;
   });
   articles++;
-  articleUnits += 2;
+  articleUnits += 1;
 }
 
-// Every first article page receives two distinct sponsored placements.
+// Every first article page receives one clearly labelled sponsored placement.
 // Continuation pages are deliberately left alone to avoid repetitive ads.
 // Verify campaign hrefs, disclosure, and wide layout markers in output.
 for (const relative of ['index.html', 'car/index.html', 'support/index.html']) {
@@ -157,10 +153,10 @@ for (const relative of ['index.html', 'car/index.html', 'support/index.html']) {
   if (!html.includes('data-life-affiliate-layout="wide-v2"')) throw new Error('Missing wide ad marker: ' + relative);
 }
 const homeHtml = fs.readFileSync(path.join(DIST, 'index.html'), 'utf8');
-for (const campaign of Object.values(campaigns)) {
+for (const campaign of [campaigns.auto, campaigns.device]) {
   if (!homeHtml.includes('data-affiliate="' + campaign.id + '"')
       || !homeHtml.includes('href="' + campaign.href + '"')) {
     throw new Error('Missing homepage campaign: ' + campaign.id);
   }
 }
-console.log('[affiliate] Wide banners: homepage ' + homeCount + ', category pages 2, articles ' + articles + ', article units ' + articleUnits);
+console.log('[affiliate] Wide banners: homepage ' + homeCount + ', category pages 1, articles ' + articles + ', article units ' + articleUnits);

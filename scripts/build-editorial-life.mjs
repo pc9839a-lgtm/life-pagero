@@ -207,7 +207,7 @@ const transformHome=html=>{
   const sponsorTarget='<details class="modern-all-articles">';
   check(html.includes(sponsorTarget),'cannot relocate preserved sponsors');
   html=html.replace(sponsorTarget,sponsorSection+sponsorTarget);
-  check((html.match(/data-affiliate="tenping-/g)||[]).length===4,'sponsored cards must not be lost');
+  check((html.match(/data-affiliate="tenping-/g)||[]).length===2,'homepage should retain exactly two labelled affiliate cards');
 
   const latest='<details class="compact-explore compact-latest">';
   check(html.includes(latest),'home recently updated posts missing');
