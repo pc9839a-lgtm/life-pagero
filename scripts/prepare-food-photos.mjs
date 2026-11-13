@@ -3,7 +3,9 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 
 // Every published article image must be locally available at build time.
-// An external fallback previously hid HTTP 429 and deployed broken pictures.
+// Reuse the exact previously published first-party JPEG before Wikimedia.
+// This avoids 28 repeated Commons downloads on routine rebuilds while still
+// requiring valid photo bytes and never deploying a broken external fallback.
 const DIST=path.resolve('dist');
 const DATA=JSON.parse(fs.readFileSync('content/food-guides.json','utf8'));
 const folder=path.join(DIST,'food-images');
@@ -18,7 +20,7 @@ const commonsUrl=(filename,size=960)=>{
   return size?base+'thumb/'+prefix+'/'+size+'px-'+encoded:base+prefix;
 };
 const verifiedImage=async url=>{
-  if(!['upload.wikimedia.org','images.pexels.com'].includes(new URL(url).hostname))
+  if(!['pagero.kr','upload.wikimedia.org','images.pexels.com'].includes(new URL(url).hostname))
     throw Error('unexpected image host');
   const response=await fetch(url,{
     headers:{Accept:'image/jpeg','User-Agent':'LifePageroFoodGuide/1.0 (editorial image attribution retained)'},
@@ -40,9 +42,13 @@ const tasks=DATA.guides.flatMap(guide=>guide.visuals.map((photo,i)=>({
 if(tasks.length!==DATA.guides.length*2)throw Error('each guide must provide two image sources');
 for(const {guide,photo,name} of tasks){
   const target=path.join(folder,name);
-  const urls=photo.downloadUrl?[photo.downloadUrl]:
+  const published='https://pagero.kr/life/food-images/'+encodeURIComponent(name);
+  // These routes have already been published on successful builds. If a guide
+  // is new or its image is unavailable, use its original credited source.
+  const sourceUrls=photo.downloadUrl?[photo.downloadUrl]:
     [commonsUrl(photo.filename,640),commonsUrl(photo.filename,800),
       commonsUrl(photo.filename,960),commonsUrl(photo.filename,0)];
+  const urls=[published,...sourceUrls];
   let last='unavailable';
   for(let i=0;i<urls.length;i++){
     try{
@@ -54,7 +60,12 @@ for(const {guide,photo,name} of tasks){
       break;
     }catch(error){
       last=String(error?.message||error);
-      if(i<urls.length-1)await delay(last.includes('429')?8000:1600);
+      if(i<urls.length-1){
+        // A missing first-party copy is expected for newly published guides:
+        // move directly to the licensed original, rather than retrying a 404.
+        const firstParty=i===0;
+        if(!firstParty)await delay(last.includes('429')?8000:1600);
+      }
     }
   }
   if(last){
