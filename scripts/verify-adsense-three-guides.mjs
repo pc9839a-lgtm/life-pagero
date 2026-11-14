@@ -32,5 +32,6 @@ assert(flu.body.includes('1회 접종 대상 시작일 | 2026년 9월 21일'),'U
 assert(flu.body.includes('2회 접종 대상 시작일 | 2026년 9월 21일'),'Updated two-dose Sep 21 start date missing');
 assert(flu.body.includes('최소 4주 간격'),'Two-dose minimum interval missing');
 assert(flu.body.includes('2026년 6월 30일까지 누적 1회'),'Prior-dose eligibility scenario missing');
-assert(fluPage.includes('2026-2027절기 무료접종 대상과 기간') && fluPage.includes('최소 4주 간격'),'Updated evidence not rendered on public article');
+assert(fluPage.includes('<table') && fluPage.includes('생후 6개월~9세 미만') && fluPage.includes('최소 4주 간격'),
+  'Updated flu schedule and dose interval not rendered on public article');
 console.log('PASS three published LIFE guides use first-party evidence; outdated vaccine start date corrected');
