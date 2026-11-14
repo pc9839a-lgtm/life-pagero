@@ -18,6 +18,8 @@ const steps = [
   ['node', ['scripts/retire-superseded-citations.mjs']],
   ['node', ['scripts/expand-editorial-depth.mjs']],
   ['node', ['scripts/apply-verified-rich-guides.mjs']],
+  // Refresh four remaining stale official-source guides only after bundle hydration.
+  ['node', ['scripts/refresh-four-official-guides.mjs']],
   ['node', ['scripts/replace-duplicate-editorial-images.mjs']],
   ['node', ['--check', 'scripts/sync-events.mjs']],
   ['node', ['--check', 'scripts/build-events.mjs']],
