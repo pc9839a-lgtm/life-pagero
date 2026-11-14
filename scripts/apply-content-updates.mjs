@@ -32,6 +32,7 @@ const PROTECTED_EDITORIAL_POSTS = new Set([
   'content/posts/support/child-support-advance-payment-2026.json',
   'content/posts/support/2026-september-parental-leave-changes.json',
   'content/posts/support/flu-vaccination-children-2026.json',
+  'content/posts/support/heating-energy-support-2026.json',
 ]);
 
 
