@@ -48,6 +48,17 @@ const plans=[
     ],
     note:'## 2026년 11월 2일 국세청 보도자료로 마감일 재확인\n\n국세청은 **2025년 귀속 근로·자녀장려금 기한 후 신청을 2026년 12월 1일까지** 받는다고 공식 안내했습니다. 이 신청은 2026년 귀속 상반기 반기신청과 구별해야 합니다. 기한 후 신청으로 산정된 장려금에는 5% 감액(산정액의 95% 지급)이 적용될 수 있으며 심사 결과에 따라 실제 지급액이 달라집니다. 2027년 적용 예정인 소득요건 개편안을 이번 2025년 귀속분에 소급 적용해서는 안 됩니다. [국세청 공식 보도자료](https://www.nts.go.kr/nts/na/ntt/selectNttInfo.do?bbsId=1028&mi=2201&nttSn=1355806) (2026-11-14 확인).',
   },
+  {
+    file:'car/car-joint-ownership-change.json',
+    slug:'car-joint-ownership-change',
+    formerDate:'2026-07-16',
+    sources:[
+      source('법제처 생활법령 자동차 이전등록 대상·매매·증여·상속 기한','https://www.easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=1&cciNo=2&cnpClsNo=3&csmSeq=675&popMenu=ov'),
+      source('자동차365 자동차 이전등록신청 대상과 공동명의·증여 예외','https://www.car365.go.kr/ccpt/cvlcpt/guid/detailGuidance.do?cvlcptCd=4'),
+      source('자동차365 자동차 이전등록 신청서·양도증명서 서식','https://www.car365.go.kr/ccpt/cvlcpt/guid/documentView.do'),
+    ],
+    note:'## 2026년 11월 공식 확인: 공동명의 이전등록 기한과 서류\n\n[법제처 생활법령 이전등록 안내](https://www.easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=1&cciNo=2&cnpClsNo=3&csmSeq=675&popMenu=ov)는 일반 매매 15일, 증여 20일, 상속은 **상속개시일이 속한 달의 말일부터 6개월 이내**를 안내합니다. 기존 글의 상속 기산점을 실제 공식 문구에 맞춰 정정했습니다. [자동차365 이전등록 안내](https://www.car365.go.kr/ccpt/cvlcpt/guid/detailGuidance.do?cvlcptCd=4)에서 공동명의·증여 등 신청유형별 인터넷 가능 범위를, [서식 다운로드](https://www.car365.go.kr/ccpt/cvlcpt/guid/documentView.do)에서 이전등록신청서·자동차양도증명서를 확인할 수 있습니다. 지분 이전 방식, 취득세와 부가비용은 해당 등록관청에 최종 확인해야 합니다. (2026-11-14 확인)',
+  },
 ];
 const feeOriginal='정부24 민원 안내에서 자동차등록증 재교부 수수료는 방문·우편 신청 700원, 인터넷 신청 600원으로 안내되는 민원입니다.';
 const feeUpdated='정부24 안내는 인터넷 신청 600원·방문 또는 우편 700원을 표시하지만, 자동차365 안내는 인터넷 발급·열람을 무료로 표시합니다. 어느 공식 채널에서 신청하는지 먼저 확인해야 합니다.';
@@ -86,6 +97,13 @@ for (const plan of plans){
       part.keyPoints=(part.keyPoints||[]).map(x=>x.replaceAll('공식 민원 안내 기준 수수료는 인터넷 600원, 방문·우편 700원입니다.',keyUpdated));
     }
     p.keyPoints=p.keyPoints.map(x=>x===keyOriginal?keyUpdated:x);
+  }
+  if(plan.slug==='car-joint-ownership-change'){
+    const oldRule='상속은 상속개시일부터 6개월 이내입니다.';
+    const newRule='상속은 상속개시일이 속한 달의 말일부터 6개월 이내입니다.';
+    if(!String(p.body||'').includes(oldRule))throw Error('[official-refresh] Car inheritance date baseline changed');
+    p.body=p.body.replaceAll(oldRule,newRule);
+    for(const part of p.series?.parts||[])part.body=String(part.body||'').replaceAll(oldRule,newRule);
   }
   if(plan.slug==='earned-income-tax-credit-late-2026'){
     p.body=replaceDeadline(p.body);
@@ -137,4 +155,4 @@ for (const plan of plans){
   fs.writeFileSync(file,JSON.stringify(p,null,2)+'\n','utf8');
   console.log('[official-refresh] PASS '+plan.slug+' source_count='+p.sources.length+' revised='+REVIEW);
 }
-console.log('[official-refresh] PASS four published guides; original CTA/URLs preserved, car fee conflict corrected.');
+console.log('[official-refresh] PASS five published guides; original CTA/URLs preserved, car fee and inheritance deadline corrected.');
