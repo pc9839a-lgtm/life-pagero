@@ -3,11 +3,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const cases=[
-  {slug:'emergency-welfare-livelihood-2026',marker:'상황별 긴급복지 생계지원 판단 비교'},
-  {slug:'flu-vaccination-children-2026',marker:'2026-2027절기 무료접종 대상과 기간',reviewDate:'2026-11-03'},
-  {slug:'disabled-child-allowance-2026',marker:'장애정도·급여유형별 실제 지원액 비교'},
+  {slug:'emergency-welfare-livelihood-2026',marker:'상황별 긴급복지 생계지원 판단 비교',tableMarker:'주소득자가 실직해 생활비가 끊긴 경우'},
+  {slug:'flu-vaccination-children-2026',marker:'2026-2027절기 무료접종 대상과 기간',tableMarker:'생후 6개월~9세 미만',reviewDate:'2026-11-03'},
+  {slug:'disabled-child-allowance-2026',marker:'장애정도·급여유형별 실제 지원액 비교',tableMarker:'생계·의료급여 수급 중증장애아동'},
 ];
-for(const {slug,marker,reviewDate='2026-10-22'} of cases){
+for(const {slug,marker,tableMarker,reviewDate='2026-10-22'} of cases){
   const doc=JSON.parse(fs.readFileSync('content/posts/support/'+slug+'.json','utf8'));
   assert.equal(doc.slug,slug,'Published article identity mismatch: '+slug);
   assert.equal(doc.updatedAt,reviewDate,'Current fact-check date missing: '+slug);
@@ -16,7 +16,10 @@ for(const {slug,marker,reviewDate='2026-10-22'} of cases){
   assert(/^\|\s*---/m.test(doc.body),'Practical comparison table missing: '+slug);
   assert(doc.series.parts[0].body.includes(marker),'First indexable article page must include the substantive comparison: '+slug);
   const html=fs.readFileSync(path.join('dist','support',slug,'index.html'),'utf8');
-  assert(html.includes(marker)&&html.includes('<table'),'Published first page missing comparison: '+slug);
+  // The current HTML renderer deliberately omits Markdown ## headings;
+  // verify the actual, user-visible decision table instead of hidden source headings.
+  assert(html.includes('<table') && html.includes(tableMarker),
+    'Published first page missing substantive comparison table: '+slug);
   assert(html.includes('공식 출처'),'Published article must display official sources');
   console.log('PASS official first-page comparison',slug,'source records',doc.sources.length);
 }
