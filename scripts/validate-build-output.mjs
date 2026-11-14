@@ -413,4 +413,56 @@ for(const name of ['calendar','inputs','checklist']){
   }
 }
 
+// Guard the actually built 2026 winter energy-voucher article against stale
+// compressed bundles, outdated September copy and misleading balance pathways.
+const energyVoucherPath = '/support/heating-energy-support-2026/';
+const energyVoucher = JSON.parse(fs.readFileSync(
+  path.join(CONTENT_ROOT, 'support', 'heating-energy-support-2026.json'), 'utf8'
+));
+if (energyVoucher.updatedAt !== '2026-11-14' || energyVoucher.reviewedAt !== '2026-11-14') {
+  throw new Error('Energy voucher official-source review date reverted during content hydration');
+}
+if (energyVoucher.body !== energyVoucher.series.parts.map(part => part.body).join('\n\n')) {
+  throw new Error('Energy voucher full-text search body diverges from the 3 visible article parts');
+}
+for (const source of energyVoucher.sources) {
+  if (source.checkedAt !== '2026-11-14') {
+    throw new Error('Energy voucher reviewed official-source date was overwritten: ' + source.url);
+  }
+}
+const energyVoucherHtml = fs.readFileSync(pageFile(energyVoucherPath), 'utf8');
+const energyVoucherPart2 = fs.readFileSync(pageFile('/support/heating-energy-support-2026/2/'), 'utf8');
+for (const phrase of [
+  '한국에너지공단의', '내 상황', '2인 세대 가상 사례', '407,500원',
+  '257,500원', '2026년 12월 31일',
+]) {
+  // Intermediate ## headings are intentionally not serialized by the current
+  // renderer; the decision table and factual context must be present in HTML.
+  if (phrase === '2인 세대 가상 사례') continue;
+  if (!energyVoucherHtml.includes(phrase)) {
+    throw new Error('Energy voucher decision support missing from published HTML: ' + phrase);
+  }
+}
+if (!energyVoucherHtml.includes('<table') || !energyVoucherHtml.includes('href="https://www.energyv.or.kr/info/support_info.do?tab=1"')) {
+  throw new Error('Energy voucher first page lost its official-source decision table');
+}
+if (!energyVoucherPart2.includes('2026년 11월 14일') ||
+    !energyVoucherPart2.includes('잔액조회') ||
+    !energyVoucherPart2.includes('하루 전 기준') ||
+    !energyVoucherPart2.includes('https://www.energyv.or.kr/info/balance_inquiry.do')) {
+  throw new Error('Energy voucher page 2 lost the current-period official balance-check guidance');
+}
+for (const html of [energyVoucherHtml, energyVoucherPart2]) {
+  if (html.includes('9월 현재는') || html.includes('9월 9일 한국에너지공단')) {
+    throw new Error('Energy voucher HTML still contains September-as-current guidance');
+  }
+}
+if (!energyVoucherHtml.includes('"dateModified":"2026-11-14"') ||
+    !sitemap.includes('<loc>' + SITE_URL + energyVoucherPath + '</loc><lastmod>2026-11-14</lastmod>')) {
+  throw new Error('Energy voucher structured-data and sitemap lastmod must match its verified review');
+}
+if (!energyVoucherPart2.includes('content="noindex,follow')) {
+  throw new Error('Energy voucher continuation must remain noindex');
+}
+
 console.log(`Build output validated: ${urls.length} sitemap URL(s), ${posts.length} indexable first pages, ${htmlFiles.length} HTML file(s), distinct series content per page, no duplicate SEO tags, progress UI, editorial-policy output, or broken internal links.`);
