@@ -149,14 +149,53 @@ await Promise.all(Array.from({ length: Math.min(CONCURRENCY, queue.length || 1) 
 
 const errors = [];
 const warnings = [];
+const warningsByCause = {
+  'network-unverifiable': 0,
+  'temporary-server-response': 0,
+  'unexpected-http-response': 0,
+  'image-content-type': 0,
+  'other': 0,
+};
+const warningDetails = [];
+const hardFailures = [];
+function warningCause(message) {
+  if (message.startsWith('network check unavailable')) return 'network-unverifiable';
+  if (message.startsWith('temporary server response')) return 'temporary-server-response';
+  if (message.startsWith('unexpected HTTP')) return 'unexpected-http-response';
+  if (message.startsWith('image URL returned')) return 'image-content-type';
+  return 'other';
+}
+
 
 for (const { record, result } of results) {
   const owners = [...record.owners].join(', ');
   const types = [...record.types].join(', ');
   const line = `${result.message} | ${types} | ${record.url} | ${owners}`;
-  if (result.level === 'error') errors.push(line);
-  else if (result.level === 'warning') warnings.push(line);
+  if (result.level === 'error') {
+    errors.push(line);
+    hardFailures.push({url:record.url, types:[...record.types], owners:[...record.owners], message:result.message});
+  } else if (result.level === 'warning') {
+    warnings.push(line);
+    const cause=warningCause(result.message);
+    warningsByCause[cause]+=1;
+    warningDetails.push({url:record.url, types:[...record.types], owners:[...record.owners], cause, message:result.message});
+  }
 }
+
+// A failed connection or anti-bot response does NOT prove that an editorial
+// source is dead. Keep all warnings visible and write machine-readable evidence
+// for targeted manual verification, without silently recategorizing them as OK.
+const report={
+  uniqueUrlsChecked:queue.length,
+  hardFailureCount:hardFailures.length,
+  warningCount:warningDetails.length,
+  warningCategories:warningsByCause,
+  hardFailures,
+  warnings:warningDetails,
+};
+fs.writeFileSync('external-validation-report.json',JSON.stringify(report,null,2)+'\n','utf8');
+console.log('External resource report written: external-validation-report.json');
+console.log('External warning categories: '+JSON.stringify(warningsByCause));
 
 if (warnings.length) {
   console.warn(`External resource warnings: ${warnings.length}`);
