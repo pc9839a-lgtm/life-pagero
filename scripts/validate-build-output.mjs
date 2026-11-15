@@ -756,4 +756,66 @@ if(sitemap.includes('<loc>'+SITE_URL+housingPath+'2/</loc>')||
   throw new Error('2026 housing benefit continuation leaked into sitemap');
 }
 
+// The production external-link test exposed four previously published 404
+// law.go.kr/LSW/lsSideInfoP.do?docCls=jo URLs. Guard both hydrated source
+// records and the final public pages so later bundles cannot resurrect them.
+const repairedLegalCitations=[
+  {
+    slug:'car/car-scrap-deregistration-tax-refund',
+    old:'https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=00&joNo=0031&lsiSeq=286481&urlMode=lsScJoRltInfoR',
+    url:'https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1033355687',
+    originalReview:'2026-07-19',
+  },
+  {
+    slug:'support/car-tax-relief-guide',
+    old:'https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=02&joNo=0022&lsiSeq=286607&urlMode=lsScJoRltInfoR',
+    url:'https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1032180475',
+    originalReview:'2026-10-21',
+  },
+  {
+    slug:'support/child-support-advance-payment-2026',
+    old:'https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=07&joNo=0021&lsiSeq=285711&urlMode=lsScJoRltInfoR',
+    url:'https://www.law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1033003359',
+    originalReview:'2026-11-03',
+  },
+  {
+    slug:'support/unemployment-benefit-eligibility-2026',
+    old:'https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=00&joNo=0050&lsiSeq=279807&urlMode=lsScJoRltInfoR',
+    url:'https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1034325293',
+    originalReview:'2026-07-20',
+  }
+];
+for(const entry of repairedLegalCitations) {
+  const post=JSON.parse(fs.readFileSync(path.join(CONTENT_ROOT,entry.slug+'.json'),'utf8'));
+  if(post.slug!==entry.slug.split('/')[1]||post.updatedAt!=='2026-11-15'
+     ||post.reviewedAt!==entry.originalReview) {
+    throw new Error('Legal-citation-only edit must preserve earlier factual review: '+entry.slug);
+  }
+  const refs=(post.sources||[]).filter(s=>s.url===entry.url && s.checkedAt==='2026-11-15');
+  if(refs.length!==1||(post.sources||[]).some(s=>s.url===entry.old)){
+    throw new Error('Broken official-law source citation reinstated after hydration: '+entry.slug);
+  }
+  for(const content of [post.body||'',...(post.series?.parts||[]).map(s=>s.body||'')]) {
+    if(content.includes(entry.old)){
+      throw new Error('Old 404 official-law hyperlink remains in article prose: '+entry.slug);
+    }
+  }
+  const first=pageFile('/'+entry.slug+'/');
+  if(!fs.existsSync(first))throw new Error('Legal citation article missing from built site: '+entry.slug);
+  const html=fs.readFileSync(first,'utf8');
+  if(html.includes(escapeHtml(entry.old))||html.includes(entry.old)
+     ||!html.includes(escapeHtml(entry.url))) {
+    throw new Error('Current official law hyperlink was not actually published: '+entry.slug);
+  }
+  for(const page of [2,3]) {
+    const next=pageFile('/'+entry.slug+'/'+page+'/');
+    if(fs.existsSync(next)){
+      const nextHtml=fs.readFileSync(next,'utf8');
+      if(nextHtml.includes(escapeHtml(entry.old))||nextHtml.includes(entry.old)) {
+        throw new Error('Old legal 404 citation survived on continuation: '+entry.slug+'/'+page);
+      }
+    }
+  }
+}
+
 console.log(`Build output validated: ${urls.length} sitemap URL(s), ${posts.length} indexable first pages, ${htmlFiles.length} HTML file(s), distinct series content per page, no duplicate SEO tags, progress UI, editorial-policy output, or broken internal links.`);
