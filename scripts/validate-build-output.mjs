@@ -545,6 +545,18 @@ for(const url of [
     throw new Error('2026 child allowance verified direct official source not preserved: '+url);
   }
 }
+// Old records were NOT reverified in November. Prevent false freshness
+// attribution when old source URLs survive the effective content hydration.
+for(const url of [
+  'https://www.bokjiro.go.kr/ssis-tbu/ssis-tbu/twataa/wlfareInfo/moveTWAT52011M.do?wlfareInfoId=WLF00001171',
+  'https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=14600000275&HighCtgCD=A05007&tp_seq=',
+  'https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=13520000073',
+]) {
+  const source=childAllowance.sources.find(s=>s.url===url);
+  if(!source||source.checkedAt!=='2026-07-22') {
+    throw new Error('Original child allowance source verification date must remain historical: '+url);
+  }
+}
 for(const phrase of [
   '2017년생은 2026년에 아홉 번째 생일이 지나도',
   '2017년생, 이미 9세 생일 경과',
