@@ -4,7 +4,7 @@
   "slug": "car-scrap-deregistration-tax-refund",
   "category": "car",
   "publishedAt": "2026-07-19",
-  "updatedAt": "2026-07-19",
+  "updatedAt": "2026-11-15",
   "reviewedAt": "2026-07-19",
   "author": "생활비서 편집팀",
   "featured": true,
@@ -38,9 +38,9 @@
       "checkedAt": "2026-07-19"
     },
     {
-      "name": "국가법령정보센터 자동차등록령 제31조",
-      "url": "https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=00&joNo=0031&lsiSeq=286481&urlMode=lsScJoRltInfoR",
-      "checkedAt": "2026-07-19"
+      "name": "국가법령정보센터 자동차등록령 제31조(말소등록 신청)",
+      "url": "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1033355687",
+      "checkedAt": "2026-11-15"
     },
     {
       "name": "위택스 지방세 환급 조회",
