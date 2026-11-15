@@ -36,6 +36,10 @@ const PROTECTED_EDITORIAL_POSTS = new Set([
   'content/posts/support/parental-benefit-2026.json',
   'content/posts/support/livelihood-benefit-2026.json',
   'content/posts/support/housing-benefit-2026.json',
+  // November link repairs must not be overwritten by older bundled posts.
+  'content/posts/car/car-scrap-deregistration-tax-refund.json',
+  'content/posts/support/car-tax-relief-guide.json',
+  'content/posts/support/unemployment-benefit-eligibility-2026.json',
 ]);
 
 
