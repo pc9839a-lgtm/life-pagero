@@ -681,4 +681,79 @@ for(const continuation of ['2/','3/']) {
   }
 }
 
+// November 2026 housing benefit editorial verification. Old bundled articles
+// are applied before final build; inspect effective data and generated HTML.
+const housingPath='/support/housing-benefit-2026/';
+const housing=JSON.parse(fs.readFileSync(
+  path.join(CONTENT_ROOT,'support','housing-benefit-2026.json'),'utf8'
+));
+if(housing.slug!=='housing-benefit-2026'
+  ||housing.updatedAt!=='2026-11-15'
+  ||housing.reviewedAt!=='2026-11-15') {
+  throw new Error('Housing benefit 2026 latest reviewed source identity/date reverted');
+}
+for(const url of [
+  'https://www.molit.go.kr/USR/I0204/m_45/dtl.jsp?gubun=4&idx=18653&lcmspage=1',
+  'https://www.myhome.go.kr/hws/portal/cont/selectHousingBenefitView.do',
+  'https://www.myhome.go.kr/hws/portal/cont/selectRentalHouseholdSupView.do',
+  'https://lh.or.kr/menu.es?mid=a10401050100',
+]) {
+  const verified=housing.sources.find(s=>s.url===url);
+  if(!verified||verified.checkedAt!=='2026-11-15') {
+    throw new Error('Current housing benefit primary sources were overwritten: '+url);
+  }
+}
+for(const url of [
+  'https://www.bokjiro.go.kr/ssis-tbu/twataa/wlfareInfo/moveTWAT52011M.do?wlfareInfoId=WLF00003201',
+  'https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=16130000040',
+]) {
+  const historical=housing.sources.find(s=>s.url===url);
+  if(!historical||historical.checkedAt!=='2026-07-21') {
+    throw new Error('Housing benefit historical source was falsely marked reverified: '+url);
+  }
+}
+for(const phrase of ['서울(1급지)','335,000원','275,000원','238,000원','699,000원']) {
+  if(!housing.series.parts[0].body.includes(phrase)) {
+    throw new Error('2026 official regional ceiling not preserved in housing source: '+phrase);
+  }
+}
+const housingFirst=fs.readFileSync(pageFile(housingPath),'utf8');
+const housingSecond=fs.readFileSync(pageFile('/support/housing-benefit-2026/2/'),'utf8');
+const housingThird=fs.readFileSync(pageFile('/support/housing-benefit-2026/3/'),'utf8');
+for(const phrase of ['<table','서울(1급지)','414,000원','335,000원','699,000원']) {
+  if(!housingFirst.includes(phrase)) {
+    throw new Error('Housing 2026 first-page rent ceiling missing in rendered HTML: '+phrase);
+  }
+}
+for(const phrase of [
+  '<table','200,000원 × 30% = 60,000원','월 275,000원',
+  '기준임대료의','5배','300,000원',
+]) {
+  if(!housingSecond.includes(phrase)) {
+    throw new Error('Housing benefit official deductible or calculation case missing: '+phrase);
+  }
+}
+for(const phrase of ['<table','590만원','1,095만원','1,601만원','90%','531만원']) {
+  if(!housingThird.includes(phrase)) {
+    throw new Error('Housing benefit actual homeowner repair support missing: '+phrase);
+  }
+}
+if(!housingThird.includes('href="https://pagero.kr/life/support/livelihood-benefit-2026/"')) {
+  throw new Error('Housing benefit must link to reviewed distinct livelihood-benefit source');
+}
+if(!housingFirst.includes('rel="canonical" href="'+SITE_URL+housingPath+'"')
+  ||!housingFirst.includes('"dateModified":"2026-11-15"')
+  ||!sitemap.includes('<loc>'+SITE_URL+housingPath+'</loc><lastmod>2026-11-15</lastmod>')) {
+  throw new Error('Housing benefit 2026 canonical, schema or sitemap review date out of sync');
+}
+for(const html of [housingSecond,housingThird]) {
+  if(!html.includes('content="noindex,follow')) {
+    throw new Error('2026 housing benefit follow-up page must remain noindex');
+  }
+}
+if(sitemap.includes('<loc>'+SITE_URL+housingPath+'2/</loc>')||
+   sitemap.includes('<loc>'+SITE_URL+housingPath+'3/</loc>')) {
+  throw new Error('2026 housing benefit continuation leaked into sitemap');
+}
+
 console.log(`Build output validated: ${urls.length} sitemap URL(s), ${posts.length} indexable first pages, ${htmlFiles.length} HTML file(s), distinct series content per page, no duplicate SEO tags, progress UI, editorial-policy output, or broken internal links.`);
