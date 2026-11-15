@@ -538,7 +538,7 @@ for(const url of [
   'https://www.mohw.go.kr/menu.es?mid=a10711030100',
   'https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=286729',
   'https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=289533',
-  'https://www.ep.go.kr/iframe/selectBbsNttView.do?bbsNo=42&key=51&nttNo=313956',
+  'https://www.ep.go.kr/dong/selectBbsNttView.do?bbsNo=42&key=4141&nttNo=313956',
 ]) {
   const source=childAllowance.sources.find(s=>s.url===url);
   if(!source||source.checkedAt!=='2026-11-15') {
@@ -815,6 +815,38 @@ for(const entry of repairedLegalCitations) {
         throw new Error('Old legal 404 citation survived on continuation: '+entry.slug+'/'+page);
       }
     }
+  }
+}
+
+// November 2026 police service review: avoid evergreen references whose
+// source verification date has exceeded the editorial 120-day quality gate.
+const policePath='/car/traffic-fine-check-payment/';
+const police=JSON.parse(fs.readFileSync(path.join(CONTENT_ROOT,'car','traffic-fine-check-payment.json'),'utf8'));
+if(police.slug!=='traffic-fine-check-payment'
+  ||police.updatedAt!=='2026-11-15'||police.reviewedAt!=='2026-11-15') {
+  throw new Error('Police service fact-review date or content identity reverted');
+}
+const policeOfficial='https://www.efine.go.kr/notification/help/helpPop.do?contentType=050103&contentUrl=civilAppealListConversion';
+if(!police.sources.find(s=>s.url===policeOfficial&&s.checkedAt==='2026-11-15')
+  ||police.sources.length<2||police.sources.some(s=>s.checkedAt!=='2026-11-15')) {
+  throw new Error('Police service recent official source detail missing');
+}
+const policeHtml=fs.readFileSync(pageFile(policePath),'utf8');
+if(!policeHtml.includes('2026년 11월 15일')
+  ||!policeHtml.includes('기존 과태료 계좌로 중복 납부하지 않도록')
+  ||!policeHtml.includes(escapeHtml(policeOfficial))
+  ||policeHtml.includes('2026년 7월 17일 확인 기준')) {
+  throw new Error('Police current payment/conversion guidance missing in published first page');
+}
+if(!policeHtml.includes('rel="canonical" href="'+SITE_URL+policePath+'"')
+  ||!policeHtml.includes('"dateModified":"2026-11-15"')
+  ||!sitemap.includes('<loc>'+SITE_URL+policePath+'</loc><lastmod>2026-11-15</lastmod>')) {
+  throw new Error('Police updated document canonical/date/sitemap mismatch');
+}
+for(const n of [2,3]) {
+  const html=fs.readFileSync(pageFile(policePath+n+'/'),'utf8');
+  if(!html.includes('content="noindex,follow')) {
+    throw new Error('Police guide continuation must stay nonindexable');
   }
 }
 

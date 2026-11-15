@@ -36,6 +36,7 @@ const PROTECTED_EDITORIAL_POSTS = new Set([
   'content/posts/support/parental-benefit-2026.json',
   'content/posts/support/livelihood-benefit-2026.json',
   'content/posts/support/housing-benefit-2026.json',
+  'content/posts/car/traffic-fine-check-payment.json',
   // November link repairs must not be overwritten by older bundled posts.
   'content/posts/car/car-scrap-deregistration-tax-refund.json',
   // car-tax-relief-guide is a legacy source stub: allow its full bundled series

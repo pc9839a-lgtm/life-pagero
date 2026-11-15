@@ -43,7 +43,7 @@ jobs:
           assert.equal(a.flagged,0,'Published guide source-quality warnings must be resolved');
           assert.equal(a.any_homepage_source,0,'Published articles must cite detailed official URLs');
           const cases=[
-            {slug:'heating-energy-support-2026',reviewed:'2026-10-22',marker:'2026년 10월 확인'},
+            {slug:'heating-energy-support-2026',reviewed:'2026-11-14',marker:'2026년 11월 14일'},
             {slug:'2026-september-parental-leave-changes',reviewed:'2026-11-03',marker:'2026년 9월 18일부터'},
             {slug:'low-income-diaper-formula-support-2026',reviewed:'2026-10-22',marker:'2026년 10월 확인'},
           ];
