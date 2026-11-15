@@ -65,6 +65,41 @@ const plans = [
   }
 ];
 
+// The tax-relief source file in git is a legacy stub (no series). The old
+// compressed bundle restores the complete 3-part guide before this stage.
+// Apply the official link repair to that hydrated guide, not to the stub.
+// Otherwise protecting the stub would make validate:content reject the build.
+{
+  const file=path.join(ROOT,'content/posts/support/car-tax-relief-guide.json');
+  const post=JSON.parse(fs.readFileSync(file,'utf8'));
+  const broken='https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=02&joNo=0022&lsiSeq=286607&urlMode=lsScJoRltInfoR';
+  const reviewed='https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1032180475';
+  if(post.slug!=='car-tax-relief-guide'||post.series?.parts?.length!==3){
+    throw Error('[legal-citation-fix] Expected hydrated tax-relief guide with three parts');
+  }
+  const oldCount=post.sources.filter(s=>s.url===broken).length;
+  const newCount=post.sources.filter(s=>s.url===reviewed).length;
+  if(oldCount+newCount!==1){
+    throw Error('[legal-citation-fix] Unexpected old/new tax-law citation count');
+  }
+  for(const source of post.sources){
+    if(source.url===broken||source.url===reviewed){
+      source.url=reviewed;
+      source.name='국가법령정보센터 지방세특례제한법 제22조의2(출산 및 양육 지원 감면)';
+      source.checkedAt='2026-11-15';
+    }
+  }
+  post.body=post.body.replaceAll(broken,reviewed);
+  for(const part of post.series.parts)part.body=part.body.replaceAll(broken,reviewed);
+  // Correcting a link is an update, not a new full factual article review.
+  post.updatedAt='2026-11-15';
+  if(JSON.stringify(post).includes(broken)){
+    throw Error('[legal-citation-fix] Original 404 tax-law reference remained');
+  }
+  fs.writeFileSync(file,JSON.stringify(post,null,2)+'\n','utf8');
+  console.log('[legal-citation-fix] Hydrated car-tax-relief-guide keeps three parts and links to reviewed law article');
+}
+
 for (const plan of plans) {
   const file = path.join(ROOT,plan.path);
   const post = JSON.parse(fs.readFileSync(file,'utf8'));
