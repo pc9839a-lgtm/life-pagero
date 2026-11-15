@@ -521,4 +521,90 @@ if(sitemap.includes('<loc>'+SITE_URL+parentalPath+'2/</loc>')||
   throw new Error('Parental benefit continuation leaked into sitemap');
 }
 
+// 2026 child allowance official-source revision: guard the live-effective
+// primary article after old compressed-bundle hydration and editorial modules.
+// The 2017 birth-year transition is a substantive legal exception, not a new
+// duplicate SEO page. Verify actual rendered text (## headings are omitted).
+const childAllowancePath='/support/child-allowance-2026/';
+const childAllowance=JSON.parse(fs.readFileSync(
+  path.join(CONTENT_ROOT,'support','child-allowance-2026.json'),'utf8'
+));
+if(childAllowance.slug!=='child-allowance-2026'
+   ||childAllowance.updatedAt!=='2026-11-15'
+   ||childAllowance.reviewedAt!=='2026-11-15') {
+  throw new Error('Child allowance legal-review date or article identity reverted');
+}
+for(const url of [
+  'https://www.mohw.go.kr/menu.es?mid=a10711030100',
+  'https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=286729',
+  'https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=289533',
+  'https://www.ep.go.kr/iframe/selectBbsNttView.do?bbsNo=42&key=51&nttNo=313956',
+]) {
+  const source=childAllowance.sources.find(s=>s.url===url);
+  if(!source||source.checkedAt!=='2026-11-15') {
+    throw new Error('2026 child allowance verified direct official source not preserved: '+url);
+  }
+}
+// Old records were NOT reverified in November. Prevent false freshness
+// attribution when old source URLs survive the effective content hydration.
+for(const url of [
+  'https://www.bokjiro.go.kr/ssis-tbu/ssis-tbu/twataa/wlfareInfo/moveTWAT52011M.do?wlfareInfoId=WLF00001171',
+  'https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=14600000275&HighCtgCD=A05007&tp_seq=',
+  'https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=13520000073',
+]) {
+  const source=childAllowance.sources.find(s=>s.url===url);
+  if(!source||source.checkedAt!=='2026-07-22') {
+    throw new Error('Original child allowance source verification date must remain historical: '+url);
+  }
+}
+for(const phrase of [
+  '2017년생은 2026년에 아홉 번째 생일이 지나도',
+  '2017년생, 이미 9세 생일 경과',
+  '인구감소 특별지역·지역사랑상품권',
+  '1,560,000원 상당',
+]) {
+  if(!childAllowance.series.parts[0].body.includes(phrase)) {
+    throw new Error('Child allowance 2017 transitional rule or regional comparison lost: '+phrase);
+  }
+}
+const childAllowanceHtml=fs.readFileSync(pageFile(childAllowancePath),'utf8');
+const childAllowancePart2=fs.readFileSync(pageFile('/support/child-allowance-2026/2/'),'utf8');
+const childAllowancePart3=fs.readFileSync(pageFile('/support/child-allowance-2026/3/'),'utf8');
+for(const text of [
+  '2017년생 경과규정',
+  '2017년생, 이미 9세 생일 경과',
+  '100,000원',
+  '105,000원',
+  '130,000원 상당',
+  '1,560,000원 상당',
+  '직권신청·소급지급 반영 여부',
+]) {
+  if(!childAllowanceHtml.includes(text)) {
+    throw new Error('2026 child allowance first-page decision guidance missing: '+text);
+  }
+}
+if(!childAllowanceHtml.includes('<table')||
+  !childAllowanceHtml.includes('href="https://pagero.kr/life/support/parental-benefit-2026/"')) {
+  throw new Error('2026 child allowance article lacks visible comparison table or separate parental-benefit pathway');
+}
+if(!childAllowancePart2.includes('2026년 1월부터 소급')||
+   !childAllowancePart3.includes('직권신청')||
+   !childAllowancePart3.includes('129')) {
+  throw new Error('Child allowance legacy-recipient process missing on continuation pages');
+}
+if(!childAllowanceHtml.includes('rel="canonical" href="'+SITE_URL+childAllowancePath+'"')
+  ||!childAllowanceHtml.includes('"dateModified":"2026-11-15"')
+  ||!sitemap.includes('<loc>'+SITE_URL+childAllowancePath+'</loc><lastmod>2026-11-15</lastmod>')) {
+  throw new Error('Child allowance 2026 canonical, structured-data date or sitemap update lost');
+}
+for(const html of [childAllowancePart2,childAllowancePart3]) {
+  if(!html.includes('content="noindex,follow')) {
+    throw new Error('Child allowance follow-up section must remain noindex');
+  }
+}
+if(sitemap.includes('<loc>'+SITE_URL+childAllowancePath+'2/</loc>')||
+   sitemap.includes('<loc>'+SITE_URL+childAllowancePath+'3/</loc>')) {
+  throw new Error('Child allowance second or third article segment leaked into sitemap');
+}
+
 console.log(`Build output validated: ${urls.length} sitemap URL(s), ${posts.length} indexable first pages, ${htmlFiles.length} HTML file(s), distinct series content per page, no duplicate SEO tags, progress UI, editorial-policy output, or broken internal links.`);
