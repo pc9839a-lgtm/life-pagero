@@ -538,7 +538,7 @@ for(const url of [
   'https://www.mohw.go.kr/menu.es?mid=a10711030100',
   'https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=286729',
   'https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=289533',
-  'https://www.ep.go.kr/iframe/selectBbsNttView.do?bbsNo=42&key=51&nttNo=313956',
+  'https://www.ep.go.kr/dong/selectBbsNttView.do?bbsNo=42&key=4141&nttNo=313956',
 ]) {
   const source=childAllowance.sources.find(s=>s.url===url);
   if(!source||source.checkedAt!=='2026-11-15') {
