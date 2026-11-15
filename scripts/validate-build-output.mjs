@@ -833,7 +833,7 @@ if(!police.sources.find(s=>s.url===policeOfficial&&s.checkedAt==='2026-11-15')
 }
 const policeHtml=fs.readFileSync(pageFile(policePath),'utf8');
 if(!policeHtml.includes('2026년 11월 15일')
-  ||!policeHtml.includes('범칙금 전환 전 체크')
+  ||!policeHtml.includes('기존 과태료 계좌로 중복 납부하지 않도록')
   ||!policeHtml.includes(escapeHtml(policeOfficial))
   ||policeHtml.includes('2026년 7월 17일 확인 기준')) {
   throw new Error('Police current payment/conversion guidance missing in published first page');
