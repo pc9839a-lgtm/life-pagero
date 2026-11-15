@@ -63,6 +63,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: external-validation-log
-          path: external.log
+          path: |
+            external.log
+            external-validation-report.json
           if-no-files-found: error
           retention-days: 1
