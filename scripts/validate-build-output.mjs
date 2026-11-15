@@ -468,4 +468,57 @@ if (!energyVoucherPart2.includes('content="noindex,follow')) {
   throw new Error('Energy voucher continuation must remain noindex');
 }
 
+// November 2026 editorial review: a single high-value parent benefit guide
+// resolves the childcare cash-difference question instead of publishing
+// another overlapping keyword page. Check effective HTML after bundle hydration.
+const parentalPath='/support/parental-benefit-2026/';
+const parental=JSON.parse(fs.readFileSync(
+  path.join(CONTENT_ROOT,'support','parental-benefit-2026.json'),'utf8'
+));
+if(parental.slug!=='parental-benefit-2026'||parental.updatedAt!=='2026-11-15'
+    ||parental.reviewedAt!=='2026-11-15') {
+  throw new Error('Parental benefit fact-check date or article identity reverted');
+}
+for(const official of [
+  'https://www.korea.kr/news/policyNewsView.do?newsId=148957936',
+  'https://www.childcare.go.kr/?BVIEWGB=2&bgb=1&bid=1895876&flag=Sl&menuno=326&searchType=1',
+  'https://www.easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=3&cciNo=1&cnpClsNo=1&csmSeq=2604&popMenu=ov',
+]) {
+  const ref=parental.sources.find(s=>s.url===official);
+  if(!ref||ref.checkedAt!=='2026-11-15') {
+    throw new Error('Parental benefit verified official source lost after hydration: '+official);
+  }
+}
+const parentalPage1=fs.readFileSync(pageFile(parentalPath),'utf8');
+const parentalPage2=fs.readFileSync(pageFile('/support/parental-benefit-2026/2/'),'utf8');
+const parentalPage3=fs.readFileSync(pageFile('/support/parental-benefit-2026/3/'),'utf8');
+const childGuide='https://pagero.kr/life/support/child-allowance-2026/';
+if(!parentalPage1.includes('아동수당을 받는다는 이유만으로')
+  ||!parentalPage1.includes('href="'+childGuide+'"')
+  ||!parentalPage1.includes('가정양육수당')) {
+  throw new Error('Parental benefit first indexable page lacks distinct child-allowance decision pathway');
+}
+for(const entry of ['<table','58만 4천원','41만 6천원','51만 5천원','48만 5천원','기본 차액 없음','가상 계산 사례']) {
+  if(!parentalPage2.includes(entry)) {
+    throw new Error('Parent benefit 2026 nursery-class comparison missing in final HTML: '+entry);
+  }
+}
+if(!parentalPage3.includes('다음 달 20일')||!parentalPage3.includes('매월 25일')) {
+  throw new Error('Parental benefit payout timelines absent on final follow-up page');
+}
+if(!parentalPage1.includes('rel="canonical" href="'+SITE_URL+parentalPath+'"')
+  ||!parentalPage1.includes('"dateModified":"2026-11-15"')
+  ||!sitemap.includes('<loc>'+SITE_URL+parentalPath+'</loc><lastmod>2026-11-15</lastmod>')) {
+  throw new Error('Parental benefit indexable canonical, schema or sitemap changed unexpectedly');
+}
+for(const page of [parentalPage2,parentalPage3]) {
+  if(!page.includes('content="noindex,follow')) {
+    throw new Error('Parental benefit follow-up page must not become indexable');
+  }
+}
+if(sitemap.includes('<loc>'+SITE_URL+parentalPath+'2/</loc>')||
+   sitemap.includes('<loc>'+SITE_URL+parentalPath+'3/</loc>')) {
+  throw new Error('Parental benefit continuation leaked into sitemap');
+}
+
 console.log(`Build output validated: ${urls.length} sitemap URL(s), ${posts.length} indexable first pages, ${htmlFiles.length} HTML file(s), distinct series content per page, no duplicate SEO tags, progress UI, editorial-policy output, or broken internal links.`);
