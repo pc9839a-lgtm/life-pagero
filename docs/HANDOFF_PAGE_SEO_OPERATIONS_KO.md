@@ -125,3 +125,12 @@ npm run validate:external
 - 첫 URL → `/2/` → `/3/` 이동 정상
 - `sitemap.xml`에는 첫 URL만 포함
 - 운영 소스에서 robots와 canonical이 각 1개
+
+## 9. 패치마다 실제 Cloudflare 배포까지 확인 (2026-11-15)
+
+- life-pagero 프로젝트는 GitHub main 브랜치 → Cloudflare Pages Git 연동으로 자동 재배포하도록 운영 문서에 설정되어 있다. GitHub 병합/CI 성공을 운영 배포 성공으로 단정하지 않는다.
+- npm run build 완료 시 dist/deployment.json에 비밀정보가 아닌 원본 저장소, 배포 브랜치, Cloudflare Pages가 제공한 CF_PAGES_COMMIT_SHA를 기록한다.
+- .github/workflows/verify-life-cloudflare-production.yml은 매 main 푸시 후 https://pagero.kr/life/deployment.json의 commit과 github.sha의 정확한 일치를 확인한다. 실제 아동수당·주거급여 본문도 대조한다.
+- Verify LIFE Cloudflare production deployment가 실패했으면 Cloudflare Pages 배포 실행/실패, life-pagero 프로젝트 Git 연동 상태, pagero.kr/life 프록시 경로와 캐시를 확인해야 한다. 직접 배포 권한이나 토큰이 없으면 이를 숨기지 않고 설명한다.
+- 외부 링크 경고는 external-validation-report.json에서 실제 404/410, 서버측 연결 실패, HTTP 기타 상태로 나눠 본다. 네트워크 실패를 억지로 정상 판정하거나 단순 삭제로 경고 0건을 만들지 않는다.
+- 해당 검증이 완료되기 전에는 사용자에게 운영 배포가 성공했다고 답하지 않는다.
