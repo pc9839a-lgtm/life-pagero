@@ -47,7 +47,7 @@ const plans = [
       "https://www.law.go.kr/법령/지방세특례제한법"
     ],
     "retain": [
-      "https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=02&joNo=0022&lsiSeq=286607&urlMode=lsScJoRltInfoR",
+      "https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1032180475",
       "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=13100000064&HighCtgCD=A09002"
     ]
   },
