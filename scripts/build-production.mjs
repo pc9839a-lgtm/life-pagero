@@ -1,4 +1,6 @@
 import { spawnSync } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const canonicalSiteUrl = 'https://pagero.kr/life';
 const configuredSiteUrl = (process.env.PUBLIC_SITE_URL || '').replace(/\/$/, '');
@@ -100,3 +102,20 @@ for (const [command, args] of steps) {
   if (result.error) throw result.error;
   if (result.status !== 0) process.exit(result.status ?? 1);
 }
+
+// Publish a non-sensitive provenance marker for Cloudflare Pages deployments.
+// Cloudflare injects CF_PAGES_COMMIT_SHA; GitHub CI uses GITHUB_SHA. Both are
+// the exact checked-out Git commit, NOT a build timestamp approximation.
+const deployedCommit=(env.CF_PAGES_COMMIT_SHA||env.GITHUB_SHA||'').trim();
+if(deployedCommit && !/^[0-9a-f]{40}$/i.test(deployedCommit)) {
+  throw new Error('Unexpected deployment commit SHA format');
+}
+const deploymentManifest={
+  repository:'pc9839a-lgtm/life-pagero',
+  commit:deployedCommit||null,
+  branch:(env.CF_PAGES_BRANCH||env.GITHUB_REF_NAME||'local').trim(),
+  environment:env.CF_PAGES==='1'?'cloudflare-pages':env.GITHUB_ACTIONS==='true'?'github-actions':'local',
+};
+const manifestPath=path.resolve('dist/deployment.json');
+fs.writeFileSync(manifestPath,JSON.stringify(deploymentManifest,null,2)+'\n','utf8');
+console.log('[build] Deployment provenance written: dist/deployment.json commit='+ (deploymentManifest.commit||'local'));
