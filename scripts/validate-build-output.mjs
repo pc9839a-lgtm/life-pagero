@@ -607,4 +607,78 @@ if(sitemap.includes('<loc>'+SITE_URL+childAllowancePath+'2/</loc>')||
   throw new Error('Child allowance second or third article segment leaked into sitemap');
 }
 
+// 2026 LIFE livelihood editorial correction. The production build hydrates
+// historical content bundles before rendering; test the EFFECTIVE article and
+// generated public pages rather than only its checked-in source JSON.
+const livelihoodPath='/support/livelihood-benefit-2026/';
+const livelihood=JSON.parse(fs.readFileSync(
+  path.join(CONTENT_ROOT,'support','livelihood-benefit-2026.json'),'utf8'
+));
+if(livelihood.slug!=='livelihood-benefit-2026'
+  ||livelihood.updatedAt!=='2026-11-15'
+  ||livelihood.reviewedAt!=='2026-11-15') {
+  throw new Error('2026 livelihood reviewed article identity or date reverted');
+}
+for(const url of [
+  'https://www.mohw.go.kr/menu.es?mid=a10708010300',
+  'https://www.mohw.go.kr/menu.es?mid=a10708010500',
+  'https://www.mohw.go.kr/menu.es?mid=a10708010200',
+]) {
+  const source=livelihood.sources.find(s=>s.url===url);
+  if(!source||source.checkedAt!=='2026-11-15') {
+    throw new Error('Verified 2026 livelihood primary source lost during content hydration: '+url);
+  }
+}
+for(const oldUrl of [
+  'https://www.mohw.go.kr/board.es?act=view&bid=0027&list_no=1487098&mid=a10503010100&nPage=1&tag=',
+  'https://www.gov.kr/portal/service/serviceInfo/WII000001410',
+]) {
+  const original=livelihood.sources.find(s=>s.url===oldUrl);
+  if(!original||original.checkedAt!=='2026-07-20') {
+    throw new Error('Historical livelihood source date was incorrectly promoted: '+oldUrl);
+  }
+}
+for(const phrase of ['520,556원','578,316원','2,015,660원','3,351,791원']) {
+  if(!livelihood.series.parts[0].body.includes(phrase)) {
+    throw new Error('2026 livelihood 1st-page income scenario not preserved: '+phrase);
+  }
+}
+if(!livelihood.series.parts[1].body.includes('1억 3천만원')
+  ||!livelihood.series.parts[1].body.includes('12억원')
+  ||!livelihood.series.parts[2].body.includes('90일 이의신청')) {
+  throw new Error('2026 livelihood household exclusion or 90-day appeal lost during hydration');
+}
+const livelihoodHtml=fs.readFileSync(pageFile(livelihoodPath),'utf8');
+const livelihoodPart2=fs.readFileSync(pageFile('/support/livelihood-benefit-2026/2/'),'utf8');
+const livelihoodPart3=fs.readFileSync(pageFile('/support/livelihood-benefit-2026/3/'),'utf8');
+for(const phrase of ['<table','820,556원','520,556원','578,316원','3,351,791원']) {
+  if(!livelihoodHtml.includes(phrase)) {
+    throw new Error('2026 livelihood indexable income comparison not rendered: '+phrase);
+  }
+}
+if(!livelihoodHtml.includes('href="https://pagero.kr/life/support/housing-benefit-2026/"')
+  ||!livelihoodPart2.includes('1억 3천만원')
+  ||!livelihoodPart2.includes('12억원')
+  ||!livelihoodPart2.includes('<table')
+  ||!livelihoodPart3.includes('90일 이의신청')
+  ||!livelihoodPart3.includes('https://www.mohw.go.kr/menu.es?mid=a10708010200')
+  ||!livelihoodPart3.includes('https://pagero.kr/life/support/emergency-welfare-livelihood-2026/')) {
+  throw new Error('2026 livelihood legal exception or appeal links absent in final visible HTML');
+}
+if(!livelihoodHtml.includes('rel="canonical" href="'+SITE_URL+livelihoodPath+'"')
+  ||!livelihoodHtml.includes('"dateModified":"2026-11-15"')
+  ||!sitemap.includes('<loc>'+SITE_URL+livelihoodPath+'</loc><lastmod>2026-11-15</lastmod>')) {
+  throw new Error('2026 livelihood published canonical, article date or sitemap lastmod out of sync');
+}
+for(const continuation of [livelihoodPart2,livelihoodPart3]) {
+  if(!continuation.includes('content="noindex,follow')) {
+    throw new Error('Livelihood continuation cannot become separately indexable');
+  }
+}
+for(const continuation of ['2/','3/']) {
+  if(sitemap.includes('<loc>'+SITE_URL+livelihoodPath+continuation+'</loc>')) {
+    throw new Error('Livelihood noindex continuation incorrectly included in sitemap');
+  }
+}
+
 console.log(`Build output validated: ${urls.length} sitemap URL(s), ${posts.length} indexable first pages, ${htmlFiles.length} HTML file(s), distinct series content per page, no duplicate SEO tags, progress UI, editorial-policy output, or broken internal links.`);
