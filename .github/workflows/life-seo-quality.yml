@@ -26,6 +26,14 @@ jobs:
         run: |
           npm run check
           npm run build
+      - name: Save original-source review and duplication triage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: life-editorial-quality-audit
+          path: editorial-quality-report.json
+          if-no-files-found: warn
+          retention-days: 14
 
   live-indexability:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
