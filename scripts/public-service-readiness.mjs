@@ -18,7 +18,7 @@ export function publicServiceReadiness({ root = process.cwd(), now = new Date() 
     && /^\d{4}-\d{2}-\d{2}$/.test(event.startDate || '')
     && /^\d{4}-\d{2}-\d{2}$/.test(event.endDate || '')
     && event.endDate >= today
-    && /^https:\/\//.test(event.officialUrl || ''));
+    && Boolean(event.source));
 
   const estate = readJson(path.join(root, 'content', 'real-estate.json'));
   const listings = Array.isArray(estate.listings) ? estate.listings : [];
