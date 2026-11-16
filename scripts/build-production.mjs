@@ -23,6 +23,9 @@ const steps = [
   // Refresh four remaining stale official-source guides only after bundle hydration.
   ['node', ['scripts/refresh-four-official-guides.mjs']],
   ['node', ['scripts/replace-duplicate-editorial-images.mjs']],
+  // Flag outdated citations and repeated paragraphs without pretending they were reverified.
+  ['node', ['scripts/editorial-quality-audit.mjs']],
+  ['node', ['--test', 'scripts/related-guides.test.mjs']],
   ['node', ['--check', 'scripts/sync-events.mjs']],
   ['node', ['--check', 'scripts/build-events.mjs']],
   ['node', ['--check', 'scripts/verify-events.mjs']],
@@ -85,6 +88,7 @@ const steps = [
   ['node', ['scripts/write-function-routes.mjs']],
   ['node', ['scripts/verify-function-routes.mjs']],
   ['node', ['scripts/finish-css-assets.mjs']],
+  ['node', ['scripts/verify-related-guides.mjs']],
   // Last: do not include the not-found page in published-article SEO checks.
   ['node', ['scripts/write-not-found.mjs']],
 ];
