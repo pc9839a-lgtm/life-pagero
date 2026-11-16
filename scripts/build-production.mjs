@@ -98,6 +98,9 @@ const steps = [
   // All page publishers have contributed URLs; assign only evidence-backed lastmod dates.
   ['node', ['scripts/finalize-sitemap-lastmod.mjs']],
   ['node', ['scripts/verify-sitemap-lastmod.mjs']],
+  // Final article inventory exists only after food content and SEO finalization.
+  ['node', ['scripts/build-published-rss.mjs']],
+  ['node', ['scripts/verify-published-rss.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);
