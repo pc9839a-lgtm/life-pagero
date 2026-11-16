@@ -25,7 +25,7 @@ test('host root policy, not nested /life/robots.txt, controls crawling',()=>{
   const blocked='User-agent: *\nDisallow: /life/\n'
     +'Sitemap: https://pagero.kr/life/sitemap.xml';
   assert.throws(()=>checkRootRobots(blocked),/robots disallows/);
-  assert.throws(()=>checkRootRobots('User-agent: *\nAllow: /\n'),/Sitemap/);
+  assert.throws(()=>checkRootRobots('User-agent: *\nAllow: /\n'),/sitemap/i);
 });
 
 test('allow override and Googlebot-specific user agent are evaluated',()=>{
