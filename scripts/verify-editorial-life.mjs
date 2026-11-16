@@ -2,8 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {publishedGuideCount,requiredScenarioCount} from './published-guide-count.mjs';
 import {createHash} from 'node:crypto';
+import {publicServiceReadiness} from './public-service-readiness.mjs';
 
 const DIST=path.resolve('dist');
+const readiness=publicServiceReadiness();
 const css='/life-editorial-20261106.css';
 const old=['/life-modern.css','/life-compact.css','/life-global-nav.css',
   '/today-dashboard.css'];
@@ -92,13 +94,21 @@ check(!home.includes('class="life-home-more-services"'),
 const other=home.match(/<section class="life-home-other-services"[\s\S]*?<\/section>/)?.[0]||'';
 check((other.match(/<a href=/g)||[]).length===6,
   'six additional links required in full directory');
-for(const route of ['/finance/markets/','/finance/mortgage-calculator/','/car/','/events/','/food/'])
+const secondaryRoutes=['/finance/markets/','/finance/mortgage-calculator/','/food/',
+  readiness.events?'/events/':'/car/car-inspection-period/',
+  readiness.realEstate?'/car/':'/support/basic-pension-2026/'];
+for(const route of secondaryRoutes)
   check(other.includes('href="'+route+'"'),'directory destination missing: '+route);
-for(const route of ['/today/','/finance/savings/','/finance/loan-payment/',
-  '/deals/','/support/','/real-estate/']) {
+const primaryRoutes=['/today/','/finance/savings/','/finance/loan-payment/',
+  '/deals/','/support/',readiness.realEstate?'/real-estate/':'/car/'];
+for(const route of primaryRoutes) {
   check(home.includes('class="life-home-service-card" href="'+route+'"'),
     'homepage portal shortcut missing: '+route);
 }
+if(!readiness.events)check(!home.includes('href="/events/"'),
+  'empty event directory must not be promoted from homepage');
+if(!readiness.realEstate)check(!home.includes('href="/real-estate/"'),
+  'unapproved real-estate samples must not be promoted from homepage');
 check(home.includes('class="life-home-service-grid"'),
   'compact primary grid missing');
 check(home.includes('aria-label="주요 서비스 바로가기"'),
