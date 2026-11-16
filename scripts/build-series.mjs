@@ -95,7 +95,10 @@ function markdownToHtml(markdown) {
     }
     if (heading) {
       flushParagraph(); closeList();
-      // Publisher explicitly chose an article style without visible subheadings.
+      // Preserve the editor's semantic H2-H4 headings for readable long-form guides.
+      // Markdown content is escaped by inlineMarkdown before insertion.
+      const level = heading[1].length;
+      output.push(`<h${level}>${inlineMarkdown(heading[2])}</h${level}>`);
       continue;
     }
     if (unordered || ordered) {
@@ -167,9 +170,13 @@ function articleShell(post, part, pageNumber, total) {
   // The canonical first URL must contain the COMPLETE guide. Optional
   // continuation URLs remain available for focused reading, but are noindex.
   const partsToRender = isBase ? post.series.parts : [part];
-  const partContent = partsToRender.map((section, sectionIndex) =>
-    `${`<!-- life-body-part-${isBase ? sectionIndex + 1 : pageNumber} -->`}${photo(section, isBase && sectionIndex === 0)}${sectionIndex === 0 ? ad('top') : ''}${markdownToHtml(section.body)}${((isBase && sectionIndex === 1) || pageNumber === 2) ? ad('mid') : ''}`
-  ).join('\n');
+  const partContent = partsToRender.map((section, sectionIndex) => {
+    // Some older articles have no Markdown heading. Keep a useful H2 section
+    // title in those guides rather than publishing a long unstructured wall.
+    const fallbackHeading = /^#{2,4}\s+.+$/m.test(section.body || '')
+      ? '' : `<h2>${escapeHtml(section.title)}</h2>`;
+    return `${`<!-- life-body-part-${isBase ? sectionIndex + 1 : pageNumber} -->`}${photo(section, isBase && sectionIndex === 0)}${fallbackHeading}${sectionIndex === 0 ? ad('top') : ''}${markdownToHtml(section.body)}${((isBase && sectionIndex === 1) || pageNumber === 2) ? ad('mid') : ''}`;
+  }).join('\n');
   const sourceBlock = sources(post, isBase || isLast);
   const faqBlock = isBase || isLast ? faqs(post) : '';
 

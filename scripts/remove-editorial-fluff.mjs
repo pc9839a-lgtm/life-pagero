@@ -110,9 +110,10 @@ for(const removed of [
 for(const file of walk(DIST).filter(f=>/\/(?:car|support)\/[^/]+\/index\.html$/.test(f))){
   const html=fs.readFileSync(file,'utf8');
   const article=html.match(/<div class="article-content">([\s\S]*?)<div class="disclaimer">/)?.[1] || '';
-  if(/<h[234](?:\s[^>]*)?>/.test(article) || article.includes('series-part-description')
-     || article.includes('class="key-summary"')){
-    throw new Error('[copy] Unwanted subheadings or redundant summary wrappers remain in '+path.relative(DIST,file));
+  // Semantic section headings are intentional. Only redundant summary wrappers
+  // and stale per-part publisher descriptions should be removed.
+  if(article.includes('series-part-description') || article.includes('class="key-summary"')){
+    throw new Error('[copy] Redundant editorial wrappers remain in '+path.relative(DIST,file));
   }
 }
 
