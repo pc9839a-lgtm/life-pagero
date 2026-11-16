@@ -164,8 +164,15 @@ for (const post of posts) {
     }
   }
   const articleSection = baseHtml.match(/<div class="article-content">([\s\S]*?)<div class="disclaimer">/)?.[1] || '';
-  if (baseHtml.includes('class="series-part-title"') || /<h[234](?:\s[^>]*)?>/.test(articleSection)) {
-    throw new Error(`Unwanted article subheadings remain: ${basePath}`);
+  if (baseHtml.includes('class="series-part-title"')) {
+    throw new Error(`Legacy article part-title wrapper remains: ${basePath}`);
+  }
+  // All authored Markdown section headings must survive article rendering.
+  const expectedHeadingCount = post.series.parts.reduce((total, part) =>
+    total + [...(part.body || '').matchAll(/^#{2,4}\s+.+$/gm)].length, 0);
+  const renderedHeadingCount = count(articleSection, /<h[234](?:\s[^>]*)?>/g);
+  if (renderedHeadingCount < expectedHeadingCount) {
+    throw new Error(`Markdown section headings lost: ${basePath} (${renderedHeadingCount}/${expectedHeadingCount})`);
   }
 
   const total = Array.isArray(post.series?.parts) ? post.series.parts.length : 1;
