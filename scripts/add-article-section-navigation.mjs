@@ -25,7 +25,7 @@ for(const file of walk(CONTENT).filter(name=>name.endsWith('.json'))){
   if(html.includes('class="life-guide-jumps"')||html.includes('href="'+css+'"'))
     throw Error('[guide-jumps] Duplicate pass '+post.slug);
   const answer=html.match(/<section class="compact-answer"[\s\S]*?<\/section>/);
-  if(!answer)throw Error('[guide-jumps] Reader's first answer absent '+post.slug);
+  if(!answer)throw Error("[guide-jumps] Reader first answer absent "+post.slug);
   if(!html.includes('<details id="compact-full-guide" class="compact-full-guide" open>'))
     throw Error('[guide-jumps] Article must remain expanded '+post.slug);
   const links=parts.map((part,index)=>{
