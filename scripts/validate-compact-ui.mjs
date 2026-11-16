@@ -42,7 +42,7 @@ for(const category of ['car','support']){
    assert(original.length>2000,'full editorial article disappeared: '+file);
    assert(count(html,/class="compact-answer-label"/g)===1,'one concise first answer required: '+file);
    assert(html.includes('data-compact-open="true"'),'one-click full reading not wired: '+file);
-   assert(!/<h[234](?:\s[^>]*)?>/.test(original),'publisher-removed in-body headings returned: '+file);
+   assert(/<h2(?:\s[^>]*)?>/.test(original),'semantic section headings missing: '+file);
    assert(count(html,/<link rel="canonical"/g)===1,'duplicate canonical on '+file);
    guides++;
  }
