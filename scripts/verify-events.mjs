@@ -32,7 +32,11 @@ assert.match(root,/data-category/);
 assert.match(root,/data-fee/);
 assert.match(root,/data-share-list/);
 if(readiness.events)assert.match(root,/href="\/events\/" aria-current="page"/);
-else assert.doesNotMatch(root,/<nav class="main-nav"[\s\S]*?href="\/events\/"/);
+else {
+  const globalNav=root.match(/<nav class="main-nav"[\s\S]*?<\/nav>/)?.[0]||'';
+  assert.ok(globalNav,'Global event-page navigation missing');
+  assert.doesNotMatch(globalNav,/href="\/events\/"/);
+}
 for(const p of ['today','tomorrow','weekend','this-week','next-week','custom'])
   assert.ok(root.includes('data-period="'+p+'"'),'missing date filter '+p);
 for(const p of ['events-ui.css','events-ui.js','events-data.json'])
@@ -44,8 +48,11 @@ for(const p of ['car/index.html','support/index.html','today/index.html','financ
   assert.ok(fs.existsSync(path.join(base,p)),'existing page missing '+p);
 const sitemap=read('sitemap.xml');
 const rows=data.events||[];
-assert.ok(rows.every(e=>e.endDate>=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date())),
-  'Expired event leaked into public JSON');
+const todayParts=Object.fromEntries(new Intl.DateTimeFormat('en-GB',{
+  timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'
+}).formatToParts(new Date()).map(part=>[part.type,part.value]));
+const today=[todayParts.year,todayParts.month,todayParts.day].join('-');
+assert.ok(rows.every(e=>e.endDate>=today), 'Expired event leaked into public JSON');
 if(rows.length===0){
   assert.match(root,/content="noindex,follow"/);
   assert.doesNotMatch(sitemap,/\/life\/events\//);
