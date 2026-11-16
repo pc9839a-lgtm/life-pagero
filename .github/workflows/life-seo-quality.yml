@@ -1,0 +1,47 @@
+name: LIFE SEO build and live indexability
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    - cron: '35 21 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate source and generated pages
+        run: |
+          npm run check
+          npm run build
+
+  live-indexability:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check public SEO (sitemap, canonical, noindex, redirects)
+        run: npm run seo:audit:live
+      - name: Save URL-level result, including on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: life-seo-runtime-audit
+          path: artifacts/seo-runtime-audit.json
+          if-no-files-found: warn
