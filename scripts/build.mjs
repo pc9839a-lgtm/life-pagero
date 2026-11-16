@@ -413,7 +413,7 @@ staticPage('/privacy-policy/', '개인정보처리방침', '생활비서의 개�
 <p>개인정보 및 사이트 운영 문의: <a href="mailto:${EMAIL}">${EMAIL}</a>. 공개된 처리 방식에 변경이 있으면 이 페이지의 내용을 갱신합니다.</p>`);
 staticPage('/contact/', '문의', '콘텐츠 오류와 운영 문의 방법입니다.', `<h1>문의</h1><p>내용 오류, 공식 출처 변경, 링크 오류에 관한 문의를 받습니다.</p><p><a class="wp-button" href="mailto:${EMAIL}">${EMAIL}</a></p><p>지원금 신청 대행, 민원 처리, 개별 자격 판정은 제공하지 않습니다.</p>`);
 
-const searchScript = `<script>let i=[];const q=document.querySelector('#page-search'),r=document.querySelector('#search-results'),e=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));fetch('/search-index.json').then(x=>x.json()).then(x=>{i=x;const v=new URLSearchParams(location.search).get('q')||'';q.value=v;if(v)go(v)});function go(v){v=v.trim().toLowerCase();const f=i.filter(p=>[p.title,p.description,...p.keywords].join(' ').toLowerCase().includes(v));r.innerHTML=f.length?f.map(p=>'<article class="search-result"><h2><a href="'+p.url+'">'+e(p.title)+'</a></h2><p>'+e(p.description)+'</p></article>').join(''):'<p>일치하는 글이 없습니다.</p>'}document.querySelector('#page-search-form').addEventListener('submit',x=>{x.preventDefault();go(q.value);history.replaceState(null,'','?q='+encodeURIComponent(q.value))});</script>`;
+const searchScript = '<script type="module" src="/life-search.js"></script>';
 write('/search/', page({
   pathname: '/search/',
   title: '사이트 검색',
