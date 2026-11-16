@@ -95,6 +95,9 @@ const steps = [
   ['node', ['scripts/verify-complete-search-index.mjs']],
   // Last: do not include the not-found page in published-article SEO checks.
   ['node', ['scripts/write-not-found.mjs']],
+  // All page publishers have contributed URLs; assign only evidence-backed lastmod dates.
+  ['node', ['scripts/finalize-sitemap-lastmod.mjs']],
+  ['node', ['scripts/verify-sitemap-lastmod.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);

@@ -117,22 +117,30 @@ for (const post of posts) {
   }
 }
 
-const latestDate = posts.reduce((latest, post) => {
-  const date = post.updatedAt || post.reviewedAt || post.publishedAt || latest;
-  return date > latest ? date : latest;
-}, '2026-07-13');
+// A sitemap lastmod belongs to the *specific URL*, not the newest post anywhere.
+// Car/support archives display their articles and can use their own latest update.
+// For home/legal/contact pages we do not have a verified significant-change date.
+const categoryLastmod = category => posts
+  .filter(post => post.category === category)
+  .map(post => post.updatedAt || post.reviewedAt || post.publishedAt)
+  .sort()
+  .at(-1) || null;
 const staticPaths = ['/', '/car/', '/support/', '/about/', '/privacy-policy/', '/contact/'];
 const entries = staticPaths
-  .filter((pathname) => fs.existsSync(pageFile(pathname)))
-  .map((pathname) => ({ pathname, lastmod: latestDate }));
+  .filter(pathname => fs.existsSync(pageFile(pathname)))
+  .map(pathname => ({
+    pathname,
+    lastmod: pathname === '/car/' ? categoryLastmod('car')
+      : pathname === '/support/' ? categoryLastmod('support') : null,
+  }));
 for (const post of posts) {
   entries.push({ pathname: pagePath(post, 1), lastmod: post.updatedAt || post.reviewedAt || post.publishedAt });
 }
 
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.map(({ pathname, lastmod }) => `  <url><loc>${escapeHtml(canonicalUrl(pathname))}</loc><lastmod>${escapeHtml(lastmod)}</lastmod></url>`).join('\n')}\n</urlset>\n`;
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${entries.map(({ pathname, lastmod }) => `  <url><loc>${escapeHtml(canonicalUrl(pathname))}</loc>${lastmod ? `<lastmod>${escapeHtml(lastmod)}</lastmod>` : ''}</url>`).join('\n')}\n</urlset>\n`;
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'), sitemap);
 
-const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap><loc>${SITE_URL}/sitemap.xml</loc><lastmod>${latestDate}</lastmod></sitemap>\n</sitemapindex>\n`;
+const sitemapIndex = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <sitemap><loc>${SITE_URL}/sitemap.xml</loc></sitemap>\n</sitemapindex>\n`;
 fs.writeFileSync(path.join(DIST, 'sitemap-index.xml'), sitemapIndex);
 
 console.log(`SEO finalized: ${posts.length} indexable article(s), ${entries.length} sitemap URL(s); complete base pages retain FAQ schema and continuations remain clean self-canonical noindex pages.`);

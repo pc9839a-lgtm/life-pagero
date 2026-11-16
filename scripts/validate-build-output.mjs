@@ -68,7 +68,11 @@ const lastmods = [...sitemap.matchAll(/<lastmod>(.*?)<\/lastmod>/g)].map((match)
 if (urls.length < 10) throw new Error(`Sitemap contains too few URLs: ${urls.length}`);
 if (urls.some((url) => !url.startsWith(`${SITE_URL}/`))) throw new Error(`Sitemap contains a URL outside ${SITE_URL}/`);
 if (new Set(urls).size !== urls.length) throw new Error('Sitemap contains duplicate URLs');
-if (lastmods.length !== urls.length) throw new Error(`Every sitemap URL must have lastmod (${urls.length} URLs, ${lastmods.length} lastmod values)`);
+// Last modification dates are optional for pages without a verified change date.
+// An invented date is worse than omitting it; article dates are checked separately.
+if (lastmods.length > urls.length) throw new Error('Sitemap has more dates than URLs');
+if (lastmods.some(date => !/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date)))
+  throw new Error('Invalid sitemap lastmod format');
 if (urls.some((url) => /\/(2|3)\/$/.test(url))) throw new Error('Continuation pages must not appear in sitemap.xml');
 if (sitemap.includes('/editorial-policy/')) throw new Error('Removed editorial-policy URL leaked into sitemap.xml');
 
