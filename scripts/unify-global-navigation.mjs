@@ -1,18 +1,24 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {publicServiceReadiness} from './public-service-readiness.mjs';
 
 // All site routes share one exact global navigation. Earlier build passes
 // may add route-specific links; replace their entire global <nav> here once.
 const DIST=path.resolve('dist');
 const CSS='/life-global-nav.css';
+const readiness=publicServiceReadiness();
 const ITEMS=[
   {href:'/',label:'홈',section:'home'},
   {href:'/today/',label:'오늘',section:'today'},
-  {href:'/events/',label:'축제·행사',section:'events'},
+  readiness.events
+    ? {href:'/events/',label:'축제·행사',section:'events'}
+    : {href:'/car/',label:'자동차',section:'car'},
   {href:'/food/',label:'먹거리',section:'food'},
   {href:'/deals/',label:'핫딜',section:'deals'},
   {href:'/finance/',label:'금융',section:'finance'},
-  {href:'/real-estate/',label:'분양정보',section:'real-estate'},
+  readiness.realEstate
+    ? {href:'/real-estate/',label:'분양정보',section:'real-estate'}
+    : {href:'/support/',label:'정부지원',section:'support'},
   {href:'/topics/',label:'생활정보',section:'topics'}
 ];
 const esc=str=>String(str).replace(/[&<>"']/g,c=>({
@@ -25,15 +31,15 @@ const files=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(ent=>{
 const section=pathname=>{
   if(pathname==='/')return 'home';
   if(pathname.startsWith('/today/'))return 'today';
-  if(pathname.startsWith('/events/'))return 'events';
+  if(pathname.startsWith('/events/'))return readiness.events?'events':'';
+  if(pathname.startsWith('/car/') || pathname.startsWith('/tools/car-cost/'))
+    return readiness.events?'topics':'car';
   if(pathname.startsWith('/deals/'))return 'deals';
   if(pathname.startsWith('/food/'))return 'food';
   if(pathname.startsWith('/finance/'))return 'finance';
-  if(pathname.startsWith('/real-estate/'))return 'real-estate';
-  if(pathname.startsWith('/topics/') ||
-     pathname.startsWith('/car/') ||
-     pathname.startsWith('/tools/car-cost/') ||
-     pathname.startsWith('/support/'))return 'topics';
+  if(pathname.startsWith('/real-estate/'))return readiness.realEstate?'real-estate':'';
+  if(pathname.startsWith('/support/'))return readiness.realEstate?'topics':'support';
+  if(pathname.startsWith('/topics/'))return 'topics';
   return '';
 };
 const render=active=>'<nav class="main-nav" aria-label="전체 메뉴"><div class="nav-inner">'
@@ -70,4 +76,4 @@ for(const file of files(DIST).filter(p=>p.endsWith('.html'))){
   changed++;
 }
 if(changed<140)throw Error('[nav] Too few navigation documents: '+changed);
-console.log('[nav] One identical 8-link menu and mobile search across '+changed+' pages; '+skipped+' non-site pages skipped.');
+console.log('[nav] Eight verified-service links across '+changed+' pages; '+skipped+' non-site pages skipped. readiness='+JSON.stringify(readiness));
