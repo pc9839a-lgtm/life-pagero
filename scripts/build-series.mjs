@@ -95,7 +95,10 @@ function markdownToHtml(markdown) {
     }
     if (heading) {
       flushParagraph(); closeList();
-      // Publisher explicitly chose an article style without visible subheadings.
+      // Preserve the editor's semantic H2-H4 headings for readable long-form guides.
+      // Markdown content is escaped by inlineMarkdown before insertion.
+      const level = heading[1].length;
+      output.push(`<h${level}>${inlineMarkdown(heading[2])}</h${level}>`);
       continue;
     }
     if (unordered || ordered) {
