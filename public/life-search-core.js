@@ -41,3 +41,15 @@ export function searchGuides(index, query, limit = 20) {
     a.record.url.localeCompare(b.record.url, 'en'));
   return scored.slice(0, Math.min(limit, 50)).map(item=>item.record);
 }
+
+// Search results are stored as site-root paths, but the canonical LIFE site
+// lives beneath /life/ on pagero.kr. Derive the public prefix from the actual
+// loaded search module, not location.origin or a hardcoded root path.
+export function searchResultHref(pathname, moduleUrl) {
+  if (typeof pathname !== 'string' || !/^\/(?:[a-z0-9-]+\/)*$/.test(pathname))
+    throw new Error('[search] Invalid indexed destination');
+  const module = new URL(moduleUrl);
+  if (!['http:', 'https:'].includes(module.protocol))
+    throw new Error('[search] Unsupported script origin');
+  return new URL('.' + pathname, module).href;
+}

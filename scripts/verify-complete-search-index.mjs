@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import {searchGuides} from '../public/life-search-core.js';
+import {searchGuides,searchResultHref} from '../public/life-search-core.js';
 
 const DIST=path.resolve('dist');
 const SITE='https://pagero.kr/life';
@@ -50,5 +50,19 @@ for(const [query,url] of assertions){
   if(!searchGuides(index,query,20).some(item=>item.url===url))
     fail('Task-based query does not find '+url+' for '+query);
 }
+// Search links are assembled in the client after the HTML proxy has already
+// rewritten markup. They MUST carry /life/ themselves; the proxy cannot fix JS.
+const browserSearchScript=read('life-search.js');
+if(!browserSearchScript.includes('anchor.href = searchResultHref(item.url, import.meta.url);'))
+  fail('Search result anchors bypass canonical module-base resolver');
+const canonicalModule='https://pagero.kr/life/life-search.js';
+for(const item of index){
+  const actual=searchResultHref(item.url,canonicalModule);
+  const expected='https://pagero.kr/life'+item.url;
+  if(actual!==expected)
+    fail('Clicked search result leaves the LIFE canonical prefix '+item.url+' -> '+actual);
+}
+console.log('[search-link-qa] '+index.length+
+  ' clickable results resolve to canonical /life/ routes, not root-level Pagero URLs.');
 console.log('[search-qa] '+index.length+' canonical searchable pages, '+assertions.length+
   ' essential journeys, page/module/noindex and sitemap coverage verified.');

@@ -1,4 +1,4 @@
-import { normalizeQuery, searchGuides } from './life-search-core.js';
+import { normalizeQuery, searchGuides, searchResultHref } from './life-search-core.js';
 
 const form = document.querySelector('#page-search-form');
 const input = document.querySelector('#page-search');
@@ -38,7 +38,7 @@ if (form && input && results) {
       article.className = 'search-result';
       const title = document.createElement('h2');
       const anchor = document.createElement('a');
-      anchor.href = item.url.startsWith('/') ? item.url : '/';
+      anchor.href = searchResultHref(item.url, import.meta.url);
       anchor.textContent = item.title;
       title.append(anchor);
       const description = document.createElement('p');

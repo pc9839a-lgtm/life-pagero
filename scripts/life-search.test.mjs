@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {normalizeQuery,searchGuides} from '../public/life-search-core.js';
+import {normalizeQuery,searchGuides,searchResultHref} from '../public/life-search-core.js';
 
 const items=[
   {url:'/car/car-inspection-period/',title:'2026 자동차 검사기간 조회',description:'차종별 검사 유효기간과 검사방법',keywords:['검사기간']},
@@ -49,4 +49,34 @@ test('result order and count are stable',()=>{
   const first=searchGuides(items,'검사',1);
   assert.equal(first.length,1);
   assert.deepEqual(first,searchGuides(items.slice().reverse(),'검사',1));
+});
+
+test('canonical /life/ search results never jump to the pagero.kr site root',()=>{
+  const asset='https://pagero.kr/life/life-search.js';
+  for (const article of items) {
+    const resolved=searchResultHref(article.url,asset);
+    assert.equal(resolved,'https://pagero.kr/life'+article.url);
+    assert.notEqual(resolved,'https://pagero.kr'+article.url);
+  }
+  assert.equal(searchResultHref('/finance/savings/',asset),
+    'https://pagero.kr/life/finance/savings/');
+  assert.equal(searchResultHref('/finance/savings/',asset+'?v=123'),
+    'https://pagero.kr/life/finance/savings/');
+});
+test('preview and legacy standalone roots use their own base directory',()=>{
+  assert.equal(searchResultHref('/support/housing-benefit-2026/',
+    'https://life-pagero.pages.dev/life-search.js'),
+    'https://life-pagero.pages.dev/support/housing-benefit-2026/');
+  assert.equal(searchResultHref('/support/housing-benefit-2026/',
+    'https://life.pagero.kr/life-search.js'),
+    'https://life.pagero.kr/support/housing-benefit-2026/');
+});
+test('search destination resolver fails closed on traversal, external and malformed values',()=>{
+  for(const candidate of [
+    'https://example.net/', '//example.net/', '/../../admin/', '/foo?bar=1',
+    'javascript:alert(1)', '/finance/loan-payment/#jump', null, '',
+  ]) assert.throws(()=>searchResultHref(candidate,
+    'https://pagero.kr/life/life-search.js'),/Invalid indexed destination/);
+  assert.throws(()=>searchResultHref('/finance/','file:///life-search.js'),
+    /Unsupported script origin/);
 });
