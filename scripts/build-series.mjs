@@ -180,7 +180,7 @@ function articleShell(post, part, pageNumber, total) {
   const sourceBlock = sources(post, isBase || isLast);
   const faqBlock = isBase || isLast ? faqs(post) : '';
 
-  return `<article class="article-shell">${breadcrumbs(post, pageNumber, part)}<header class="article-header"><span class="badge ${post.category}">${CATEGORY[post.category].short}</span><h1>${escapeHtml(post.title)}</h1><div class="article-meta"><span>작성 ${fmtDate(post.publishedAt)}</span><span>수정 ${fmtDate(post.updatedAt)}</span></div></header><div class="article-content">${partContent}<div class="disclaimer">정부기관이 아니며 신청 결과를 보장하지 않습니다.</div>${actions(post, part, pageNumber, total)}${sourceBlock}${faqBlock}</div></article>`;
+  return `<article class="article-shell">${breadcrumbs(post, pageNumber, part)}<header class="article-header"><span class="badge ${post.category}">${CATEGORY[post.category].short}</span><h1>${escapeHtml(post.title)}</h1><div class="article-meta"><span>작성 ${fmtDate(post.publishedAt)}</span><span>수정 ${fmtDate(post.updatedAt)}</span><time datetime="${escapeHtml(post.reviewedAt)}">내용 검토 ${fmtDate(post.reviewedAt)}</time></div></header><div class="article-content">${partContent}<div class="disclaimer">정부기관이 아니며 신청 결과를 보장하지 않습니다.</div>${actions(post, part, pageNumber, total)}${sourceBlock}${faqBlock}</div></article>`;
 }
 
 function replaceSingleTag(html, pattern, tag) {
