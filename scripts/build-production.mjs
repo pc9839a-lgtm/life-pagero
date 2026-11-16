@@ -74,6 +74,7 @@ const steps = [
   ['node', ['scripts/verify-global-navigation.mjs']],
   ['node', ['scripts/verify-sitewide-clean-ui.mjs']],
   ['node', ['scripts/build-editorial-life.mjs']],
+  ['node', ['scripts/add-article-section-navigation.mjs']],
   ['node', ['scripts/verify-editorial-life.mjs']],
   ['node', ['scripts/verify-life-visual-consistency.mjs']],
   ['node', ['scripts/verify-today-server-first.mjs']],
@@ -89,6 +90,7 @@ const steps = [
   ['node', ['scripts/verify-function-routes.mjs']],
   ['node', ['scripts/finish-css-assets.mjs']],
   ['node', ['scripts/verify-related-guides.mjs']],
+  ['node', ['scripts/verify-article-search-pages.mjs']],
   // Last: do not include the not-found page in published-article SEO checks.
   ['node', ['scripts/write-not-found.mjs']],
 ];
