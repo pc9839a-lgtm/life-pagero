@@ -71,7 +71,7 @@ if (new Set(urls).size !== urls.length) throw new Error('Sitemap contains duplic
 // Last modification dates are optional for pages without a verified change date.
 // An invented date is worse than omitting it; article dates are checked separately.
 if (lastmods.length > urls.length) throw new Error('Sitemap has more dates than URLs');
-if (lastmods.some(date => !/^\\d{4}-\\d{2}-\\d{2}$/.test(date)))
+if (lastmods.some(date => !/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date)))
   throw new Error('Invalid sitemap lastmod format');
 if (urls.some((url) => /\/(2|3)\/$/.test(url))) throw new Error('Continuation pages must not appear in sitemap.xml');
 if (sitemap.includes('/editorial-policy/')) throw new Error('Removed editorial-policy URL leaked into sitemap.xml');
