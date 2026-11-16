@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {relatedGuides} from './related-guides.mjs';
 
 const ROOT = process.cwd();
 const DIST = path.join(ROOT, 'dist');
@@ -232,9 +233,17 @@ function card(post) {
 }
 
 function side(current = '') {
-  return `<aside class="sidebar"><section class="sidebar-card"><h2>다른 글</h2><ul class="sidebar-list">${posts.filter((post) => post.slug !== current).slice(0, 6).map((post) => `<li><a href="/${post.category}/${post.slug}/">${esc(post.title)}</a></li>`).join('')}</ul></section></aside>`;
+  const origin = posts.find((post) => post.slug === current);
+  const items = origin ? relatedGuides(origin, posts, 4) : posts.slice(0, 6);
+  const links = items.map((post) => '<li><a href="/' + post.category + '/' + post.slug + '/">'
+    + esc(post.title) + '</a></li>').join('');
+  const fallback = origin && !items.length
+    ? '<li><a href="/' + origin.category + '/">' + esc(CAT[origin.category].label) + ' 전체 보기</a></li>'
+    : '';
+  const title = origin ? '관련 생활정보' : '다른 글';
+  return '<aside class="sidebar"><section class="sidebar-card"><h2>' + title
+    + '</h2><ul class="sidebar-list">' + links + fallback + '</ul></section></aside>';
 }
-
 function crumb(post) {
   return `<nav class="breadcrumbs"><ol><li><a href="/">홈</a></li><li><a href="/${post.category}/">${CAT[post.category].label}</a></li><li>${esc(post.title)}</li></ol></nav>`;
 }
