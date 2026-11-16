@@ -89,8 +89,10 @@ const steps = [
   ['node', ['scripts/write-function-routes.mjs']],
   ['node', ['scripts/verify-function-routes.mjs']],
   ['node', ['scripts/finish-css-assets.mjs']],
+  ['node', ['scripts/build-complete-search-index.mjs']],
   ['node', ['scripts/verify-related-guides.mjs']],
   ['node', ['scripts/verify-article-search-pages.mjs']],
+  ['node', ['scripts/verify-complete-search-index.mjs']],
   // Last: do not include the not-found page in published-article SEO checks.
   ['node', ['scripts/write-not-found.mjs']],
 ];
