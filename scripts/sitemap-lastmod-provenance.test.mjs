@@ -56,6 +56,7 @@ test('invalid source dates, missing content and duplicate sitemap paths fail',()
   bad[0].updatedAt='2026-02-31';
   assert.throws(()=>dateMapForSitemap(bad,foodGuides,policy),/Invalid source date/);
   assert.throws(()=>dateMapForSitemap(posts,foodGuides,''),/visible review date/);
-  assert.throws(()=>updateSitemapDates(raw.replace('</urlset>',routes.length+
-    '</urlset>'),dates),/Unexpected sitemap origin|Too few|Provenance|Duplicate|Missing/);
+  const duplicate=raw.replace('</urlset>',
+    '<url><loc>https://pagero.kr/life/</loc></url></urlset>');
+  assert.throws(()=>updateSitemapDates(duplicate,dates),/Duplicate sitemap URL/);
 });
