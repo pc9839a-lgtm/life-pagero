@@ -68,7 +68,7 @@ for(const relative of [
   '/support/child-allowance-2026/2/'
 ]){
   const url=PUBLIC+relative;
-  assert(!urls.includes(url),'Continuation URL must not be in sitemap: '+url);
+  if(urls.includes(url))fail(url,'Continuation URL leaked into public sitemap');
   await check('continuation-noindex',url,result=>ensureContinuationNoindex(result,url));
 }
 for(const relative of ['/','/car/car-inspection-period/','/support/child-allowance-2026/']){
