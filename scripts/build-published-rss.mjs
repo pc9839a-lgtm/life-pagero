@@ -45,7 +45,7 @@ for(const pathname of canonicalPaths){
   let html=fs.readFileSync(file,'utf8');
   if(!html.includes('<head>')||!html.includes('</head>'))
     throw Error('[rss-build] Document HEAD missing '+pathname);
-  const existing=[...html.matchAll(/<link\\b[^>]*\\btype=["']application\\/rss\\+xml["'][^>]*>/gi)];
+  const existing=[...html.matchAll(/<link\b[^>]*\btype=["']application\/rss\+xml["'][^>]*>/gi)];
   if(existing.length>1)
     throw Error('[rss-build] Duplicate legacy RSS discovery '+pathname);
   if(existing.length===1)html=html.replace(existing[0][0],discovery);
