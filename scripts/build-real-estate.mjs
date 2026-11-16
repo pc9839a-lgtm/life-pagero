@@ -32,8 +32,8 @@ const searchIcon='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke
 function listingCard(item){
  const target='/real-estate/'+esc(item.slug)+'/';
  return '<article class="re-card'+(item.featured?' re-featured':'')+'" data-re-card data-type="'+esc(item.type)+'" data-region="'+esc(item.region)+'" data-status="'+esc(item.status)+'" data-search="'+esc([item.title,item.address,item.category,item.description].join(' '))+'">'
-  +'<a class="re-photo" href="'+target+'">'+visual(item.graphic,'실제 현장과 무관한 '+item.title+' 가상 건축 이미지')+(item.featured?'<span class="re-recommend">♛ 추천</span>':'')+'</a>'
-  +'<div class="re-card-body"><div class="re-tags"><span class="re-tag re-type">'+esc(item.category)+'</span><span class="re-tag '+(item.status==='ongoing'?'re-ongoing':'re-upcoming')+'">'+esc(item.statusLabel)+'</span><span class="re-tag re-fiction">가상</span></div>'
+  +'<a class="re-photo" href="'+target+'">'+visual(item.graphic,'실제 현장과 무관한 '+item.title+' 가상 건축 이미지')+(item.featured&&!item.sample?'<span class="re-recommend">추천</span>':'')+'</a>'
+  +'<div class="re-card-body"><div class="re-tags"><span class="re-tag re-type">'+esc(item.category)+'</span><span class="re-tag '+(item.status==='ongoing'?'re-ongoing':'re-upcoming')+'">'+esc(item.sample?'디자인 시안':item.statusLabel)+'</span><span class="re-tag re-fiction">가상</span></div>'
   +'<h2><a href="'+target+'">'+esc(item.title)+'</a></h2>'
   +'<p class="re-description">'+esc(item.description)+'</p><div class="re-facts">'
   +'<span>'+pin+esc(item.address)+'</span>'
@@ -57,19 +57,19 @@ const selectors='<form class="re-filter-panel" id="re-search-form" role="search"
 const adRail='<aside class="re-ad-rail" aria-label="분양정보 광고">'
   +'<a class="re-ad re-ad-main" href="/real-estate/sample/" aria-label="가상 광고: 화성 동탄 프라임시티 상세페이지">'
   +'<div class="re-ad-art-main">'+visual('main','실제 분양 현장이 아닌 일반 고층 건물 참고 사진')+'<div class="re-banner-content">'
-  +'<div class="re-banner-kicker">동탄2신도시 핵심입지</div><h2>화성 동탄<br><em>프라임시티</em></h2>'
-  +'<p class="re-banner-supply">총 1,254세대 · 전용 59~114㎡ <small>(가상)</small></p>'
+  +'<div class="re-banner-kicker">분양광고 디자인 예시</div><h2>화성 동탄<br><em>프라임시티</em></h2>'
+  +'<p class="re-banner-supply">가상의 분양홍보 시안입니다. 실제 모집 공고가 아닙니다.</p>'
   +'<div class="re-banner-fill"></div>'
-  +'<div class="re-banner-benefits"><span>GTX-A<br>(예정)</span><span>대형<br>쇼핑시설</span><span>우수한<br>교육환경</span><span>쾌적한<br>공원환경</span></div>'
-  +'<div class="re-banner-cta"><strong>3월 분양(예시) │ 관심고객 등록중!</strong><b>분양정보 확인하기 ›</b></div>'
+  +'<div class="re-banner-benefits"><span>광고<br>시안</span><span>가상<br>정보</span><span>실제<br>현장 아님</span><span>모집<br>진행 안 함</span></div>'
+  +'<div class="re-banner-cta"><strong>실제 분양·상담을 진행하지 않습니다</strong><b>시안 보기 ›</b></div>'
   +'</div></div><span class="re-ad-label">광고</span><span class="re-ad-fiction">가상 광고</span></a>'
   +'<a class="re-ad re-ad-sub" href="/real-estate/sample-siheung/" aria-label="가상 광고: 시흥 배곧 더리버뷰 상세페이지">'
-  +'<div class="re-sub-content">'+visual('sub1','실제 현장이 아닌 건축물 참고 사진')+'<div><strong>시흥 배곧 더리버뷰</strong><p>바다와 공원이 만나는 프리미엄</p><span>자세히 보기 ›</span></div></div><span class="re-ad-fiction">가상 광고</span></a>'
+  +'<div class="re-sub-content">'+visual('sub1','실제 현장이 아닌 건축물 참고 사진')+'<div><strong>시흥 배곧 더리버뷰</strong><p>아파트 분양 광고 디자인 시안</p><span>자세히 보기 ›</span></div></div><span class="re-ad-fiction">가상 광고</span></a>'
   +'<a class="re-ad re-ad-sub" href="/real-estate/sample-suwon/" aria-label="가상 광고: 수원 광교 아울렛몰 상가 상세페이지">'
-  +'<div class="re-sub-content re-sub-violet">'+visual('sub2','실제 현장이 아닌 건축물 참고 사진')+'<div><strong>광교 아울렛몰 상가</strong><p>안정적 수익! 프리미엄 상권!</p><span>분양문의 ›</span></div></div><span class="re-ad-fiction">가상 광고</span></a>'
+  +'<div class="re-sub-content re-sub-violet">'+visual('sub2','실제 현장이 아닌 건축물 참고 사진')+'<div><strong>광교 아울렛몰 상가</strong><p>상가 분양 광고 디자인 시안</p><span>분양문의 ›</span></div></div><span class="re-ad-fiction">가상 광고</span></a>'
   +'<p class="re-ad-legal">모든 분양 홍보물은 디자인용 가상 광고이며 실제 분양·상담이 아닙니다.</p></aside>';
 const crumb='<nav class="re-breadcrumb" aria-label="현재 위치"><a href="/">⌂　홈</a><span>›</span><span>부동산</span><span>›</span><strong>분양정보</strong></nav>';
-const heading='<header class="re-heading"><div class="re-h1">'+building+'<h1>부동산 분양정보</h1></div><p>전국 아파트, 오피스텔, 상가 등 분양 소식을 한눈에 확인하세요.</p></header>';
+const heading='<header class="re-heading"><div class="re-h1">'+building+'<h1>부동산 분양정보 시안</h1></div><p>화면 구성 확인용 가상 샘플입니다. 실제 분양이나 청약 정보를 제공하지 않습니다.</p></header>';
 const intro=crumb+heading+tabs+selectors
   +'<p class="re-notice">화면 구성 확인용 가상 분양정보 3건입니다. 실제 현장·공급 규모·청약 일정이 아닙니다.</p>';
 const js='<script>(function(){'
@@ -119,4 +119,4 @@ function render(pathname,title,description,body){
 }
 render('/real-estate/','부동산 분양정보 | 생활비서','부동산 분양정보 배치 확인용 가상 샘플 3건입니다.',listMain);
 for(const item of listings)render('/real-estate/'+item.slug+'/','분양정보 시안 · '+item.title+' | 생활비서',item.title+' 가상 광고 상세 샘플.',detailPage(item));
-console.log('[real-estate] Built approved 3-listing content area + 3-ad sidebar; all samples noindex.');
+console.log('[real-estate] Built 3 unapproved, prominently marked demo listings; all samples noindex.');

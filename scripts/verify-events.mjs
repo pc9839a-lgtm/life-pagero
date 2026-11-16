@@ -1,11 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
+import {publicServiceReadiness} from './public-service-readiness.mjs';
 
 const base=path.resolve('dist');
 const read=file=>fs.readFileSync(path.join(base,file),'utf8');
 const root=read('events/index.html');
 const data=JSON.parse(read('events-data.json'));
+const readiness=publicServiceReadiness();
 const home=read('index.html');
 const browserScript=read('events-ui.js');
 const headers=read('_headers');
@@ -29,16 +31,28 @@ assert.match(root,/data-region/);
 assert.match(root,/data-category/);
 assert.match(root,/data-fee/);
 assert.match(root,/data-share-list/);
-assert.match(root,/href="\/events\/" aria-current="page"/);
+if(readiness.events)assert.match(root,/href="\/events\/" aria-current="page"/);
+else {
+  const globalNav=root.match(/<nav class="main-nav"[\s\S]*?<\/nav>/)?.[0]||'';
+  assert.ok(globalNav,'Global event-page navigation missing');
+  assert.doesNotMatch(globalNav,/href="\/events\/"/);
+}
 for(const p of ['today','tomorrow','weekend','this-week','next-week','custom'])
   assert.ok(root.includes('data-period="'+p+'"'),'missing date filter '+p);
 for(const p of ['events-ui.css','events-ui.js','events-data.json'])
   assert.ok(fs.existsSync(path.join(base,p)),'missing asset '+p);
-assert.match(home,/href="\/events\/"/);
+if(readiness.events)assert.match(home,/href="\/events\/"/);
+else assert.ok(home.includes('href="/car/car-inspection-period/"'),
+  'Empty event collection must be replaced with a published guide');
 for(const p of ['car/index.html','support/index.html','today/index.html','finance/index.html'])
   assert.ok(fs.existsSync(path.join(base,p)),'existing page missing '+p);
 const sitemap=read('sitemap.xml');
 const rows=data.events||[];
+const todayParts=Object.fromEntries(new Intl.DateTimeFormat('en-GB',{
+  timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'
+}).formatToParts(new Date()).map(part=>[part.type,part.value]));
+const today=[todayParts.year,todayParts.month,todayParts.day].join('-');
+assert.ok(rows.every(e=>e.endDate>=today), 'Expired event leaked into public JSON');
 if(rows.length===0){
   assert.match(root,/content="noindex,follow"/);
   assert.doesNotMatch(sitemap,/\/life\/events\//);

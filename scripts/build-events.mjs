@@ -5,7 +5,15 @@ import {kstToday,periodDates,matches,sortEvents,REGION_LABELS,CATEGORY_LABELS,FE
 const DIST=path.resolve('dist');
 const SITE='https://pagero.kr/life';
 const snapshot=JSON.parse(fs.readFileSync('content/events.json','utf8'));
-const events=Array.isArray(snapshot.events)?snapshot.events:[];
+const today=kstToday();
+// Expired or incomplete source records must not create event-detail pages,
+// search results or URLs in the public sitemap.
+const events=(Array.isArray(snapshot.events)?snapshot.events:[]).filter(event=>
+  event&&event.source&&event.slug&&event.title
+  && /^\d{4}-\d{2}-\d{2}$/.test(event.startDate||'')
+  && /^\d{4}-\d{2}-\d{2}$/.test(event.endDate||'')
+  && event.startDate<=event.endDate&&event.endDate>=today);
+const publishedSnapshot={...snapshot,events};
 const read=f=>fs.readFileSync(path.join(DIST,f),'utf8');
 const save=(f,html)=>{
   const filename=path.join(DIST,f);
@@ -62,7 +70,7 @@ function renderPage(pathname,title,description,body,{schema=null,noindex=false}=
   if((html.match(/<link rel="canonical"/g)||[]).length!==1)throw Error('[events] Canonical count '+pathname);
   save(pathname.slice(1)+'index.html',html);
 }
-const today=kstToday(),week=periodDates('this-week',today);
+const week=periodDates('this-week',today);
 const visible=sortEvents(events.filter(e=>matches(e,{...week,region:'all',category:'all',fee:'all',q:''})),today).slice(0,20);
 const intro='<div class="events-shell"><div class="events-intro">'
   +'<nav class="portal-breadcrumbs" aria-label="현재 위치"><a href="/">홈</a> / 축제·행사</nav>'
@@ -126,7 +134,7 @@ for(const event of events) {
     (event.venue?' · '+event.venue:'')+'. 일정과 요금은 주최 측에 확인하세요.';
   renderPage(href,pageTitle,description,detail,{schema});
 }
-save('events-data.json',JSON.stringify(snapshot));
+save('events-data.json',JSON.stringify(publishedSnapshot));
 let sitemap=read('sitemap.xml');
 const urls=events.length?['/events/',...events.map(e=>'/events/'+e.slug+'/')]:[];
 const lastmod=snapshot.generatedAt?.slice(0,10)||today;
@@ -154,4 +162,4 @@ if(!home.includes('href="/events/"')) {
   home=home.replace('</head>','<link rel="stylesheet" href="/events-ui.css"></head>');
   save('index.html',home);
 }
-console.log('[events] '+events.length+' verified event details, listing/filter UI, home entry and SEO generated.');
+console.log('[events] '+events.length+' active verified event details; '+((snapshot.events||[]).length-events.length)+' expired or incomplete records withheld.');

@@ -1,10 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {publicServiceReadiness} from './public-service-readiness.mjs';
 
 const DIST=path.resolve('dist');
+const readiness=publicServiceReadiness();
 const EXPECTED=[
-  ['/', '홈'], ['/today/','오늘'], ['/events/','축제·행사'], ['/food/','먹거리'], ['/deals/','핫딜'], ['/finance/','금융'],
-  ['/real-estate/','분양정보'], ['/topics/','생활정보']
+  ['/', '홈'], ['/today/','오늘'], readiness.events?['/events/','축제·행사']:['/car/','자동차'],
+  ['/food/','먹거리'], ['/deals/','핫딜'], ['/finance/','금융'],
+  readiness.realEstate?['/real-estate/','분양정보']:['/support/','정부지원'], ['/topics/','생활정보']
 ];
 const read=relative=>fs.readFileSync(path.join(DIST,relative),'utf8');
 const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(ent=>{
@@ -34,14 +37,14 @@ for(const absolute of walk(DIST).filter(p=>p.endsWith('.html'))){
   let want=-1;
   if(pathname==='/')want=0;
   else if(pathname.startsWith('/today/'))want=1;
-  else if(pathname.startsWith('/events/'))want=2;
+  else if(pathname.startsWith('/events/'))want=readiness.events?2:-1;
+  else if(pathname.startsWith('/car/')||pathname.startsWith('/tools/car-cost/'))want=readiness.events?7:2;
   else if(pathname.startsWith('/food/'))want=3;
   else if(pathname.startsWith('/deals/'))want=4;
   else if(pathname.startsWith('/finance/'))want=5;
-  else if(pathname.startsWith('/real-estate/'))want=6;
-  else if(pathname.startsWith('/topics/')||pathname.startsWith('/car/')||
-          pathname.startsWith('/tools/car-cost/')||
-          pathname.startsWith('/support/'))want=7;
+  else if(pathname.startsWith('/real-estate/'))want=readiness.realEstate?6:-1;
+  else if(pathname.startsWith('/support/'))want=readiness.realEstate?7:6;
+  else if(pathname.startsWith('/topics/'))want=7;
   const currentIndices=entries.flatMap((entry,i)=>entry[2]?[i]:[]);
   if(currentIndices.length!==(want<0?0:1) || (want>=0&&currentIndices[0]!==want))
     fail('active section selection',relative);
@@ -92,4 +95,4 @@ if(!read('sitemap.xml').includes('<loc>https://pagero.kr/life/topics/</loc>')) {
 if(!JSON.parse(read('search-index.json')).some(e=>e.url==='/topics/')) {
   fail('Topics missing from local search index','search-index.json');
 }
-console.log('[nav-qa] '+checked+' HTML documents share the same eight-link menu and one mobile search control, with correct current page state.');
+console.log('[nav-qa] '+checked+' pages share eight live-service links; readiness='+JSON.stringify(readiness));
