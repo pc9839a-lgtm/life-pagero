@@ -2,11 +2,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {publishedGuideCount,requiredScenarioCount} from './published-guide-count.mjs';
 import {createHash} from 'node:crypto';
+import {publicServiceReadiness} from './public-service-readiness.mjs';
 
 // The sole final presentation pass. Older incremental theme stylesheets are
 // disconnected from generated HTML; this stylesheet owns the whole visual
 // system. Keep original posts, prices, routes, links, sponsor markup and SEO.
 const DIST=path.resolve('dist');
+const readiness=publicServiceReadiness();
 const CSS='/life-editorial-20261106.css';
 // The actual CSS content hash changes when any style changes, preventing stale
 // Cloudflare/browser caching without creating another cascading stylesheet.
@@ -81,12 +83,16 @@ const transformHome=html=>{
     {href:'/finance/mortgage-calculator/',label:'주택대출',icon:'<path d="m3 10 9-7 9 7v10H3V10ZM9 20v-7h6v7"/>'},
     {href:'/car/',label:'자동차',icon:'<path d="m5 11 1.5-5h11L19 11M4 11h16v8H4zM4 16h16M7 15h2M15 15h2M6 19v2M18 19v2"/>'},
     {href:'/support/',label:'지원금',icon:'<rect x="3" y="6" width="18" height="15" rx="2"/><path d="M12 6v15M3 11h18M10 6c-6-1-6-6-3-6 2 0 5 4 5 6ZM14 6c6-1 6-6 3-6-2 0-5 4-5 6Z"/>'},
-    {href:'/events/',label:'축제·행사',icon:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18M8 15h3"/>'},
-    {href:'/real-estate/',label:'분양정보',icon:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'}
+    readiness.events
+      ? {href:'/events/',label:'축제·행사',icon:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18M8 15h3"/>'}
+      : {href:'/car/car-inspection-period/',label:'자동차검사',icon:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 2v6M17 2v6M3 10h18M8 15h3"/>'},
+    readiness.realEstate
+      ? {href:'/real-estate/',label:'분양정보',icon:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'}
+      : {href:'/support/basic-pension-2026/',label:'기초연금',icon:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>'}
   ];
   // Editorial first, navigation second: a single six-item discoverability row.
   // All other services remain linked in a lower page directory, not a nested drawer.
-  const primaryOrder=['날씨','금리비교','계산기','지원금','핫딜','분양정보'];
+  const primaryOrder=['날씨','금리비교','계산기','지원금','핫딜',readiness.realEstate?'분양정보':'자동차'];
   const primary=primaryOrder.map(label=>services.find(item=>item.label===label));
   const secondary=services.filter(item=>!primaryOrder.includes(item.label));
   check(primary.length===6&&primary.every(Boolean)&&secondary.length===6,
@@ -111,8 +117,8 @@ const transformHome=html=>{
 
   // The icon labels provide the navigation context; no redundant subtitle.
 
-  // Secondary campaign promos duplicated the actual destination grid and consumed
-  // the first screen. Their /events/ and /deals/ routes stay in the icon menu.
+  // Campaign banners stay hidden. The quick links only surface services with
+  // verified publishable records; unready routes remain directly accessible.
   html=html.replace(/<section class="events-home-banner"[^>]*>[\s\S]*?<\/section>/,'');
   html=html.replace(/<section class="adpick-home-entry"[^>]*>[\s\S]*?<\/section>/,'');
   check(!html.includes('class="events-home-banner"') &&
