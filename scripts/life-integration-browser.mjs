@@ -265,6 +265,43 @@ try{
     }
   }catch(error){fail('article-interaction',String(error.message||error));}
 
+
+  await open('/food/','food-shopping-interaction');
+  try{
+    const seoulMonth=String(Number(new Intl.DateTimeFormat('en-US',{
+      month:'numeric',timeZone:'Asia/Seoul'
+    }).format(new Date())));
+    expect(await page.locator('#food-month').inputValue()===seoulMonth,
+      'food-kst-current-month','Food picker selected a stale month');
+    expect((await page.locator('#food-month-heading').innerText()).startsWith(seoulMonth+'월'),
+      'food-visible-month','Visible month contradicts selected month');
+    await page.locator('#food-month').selectOption('12');
+    expect((await page.locator('#food-month-heading').innerText()).startsWith('12월'),
+      'food-month-switch','Seasonal heading failed to update');
+    expect((await page.locator('#food-list .food-card').first().innerText()).includes('굴'),
+      'food-month-recipes','December recipe list did not hydrate');
+    const productHref=await page.locator('#food-list .food-card .food-buy').first().getAttribute('href');
+    expect(productHref?.startsWith('/life/deals/?q=')&&productHref.includes('src=food'),
+      'food-affiliate-canonical','Shopping search escaped /life/: '+productHref);
+    await page.locator('#food-servings').selectOption('4');
+    await page.locator('#food-list .food-card').first().locator('summary').click();
+    const ingredient=await page.locator('#food-list .food-card').first()
+      .locator('.food-ingredients li').first().innerText();
+    expect(ingredient.includes('400g'),'food-four-person-portions',
+      'Four-serving oyster quantity incorrect: '+ingredient);
+    await page.locator('#food-list .food-card').first()
+      .locator('button.food-add-basket').click();
+    expect(await page.locator('#food-shopping-list .food-shopping-row').count()>0,
+      'food-basket-add','Adding recipe ingredients did not build a grocery list');
+    await page.reload({waitUntil:'domcontentloaded'});
+    await page.locator('#food-shopping-list .food-shopping-row').first().waitFor({timeout:12000});
+    expect(await page.locator('#food-shopping-list .food-shopping-row').count()>0,
+      'food-basket-persistence','Groceries were lost across reload');
+    await page.locator('#food-clear-all').click();
+    expect(await page.locator('#food-shopping-list .food-shopping-row').count()===0,
+      'food-basket-clear','Clear-all did not remove saved items');
+  }catch(error){fail('food-shopping-interaction',String(error.message||error));}
+
   expect(missingAssets.length===0,'static-asset-delivery',
     'Static 4xx responses: '+JSON.stringify(missingAssets.slice(0,10)));
   expect(browserErrors.length===0,'browser-uncaught-errors',

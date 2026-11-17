@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
+import {seoulMonth,monthlyInitialRows} from './food-seasonal-default.mjs';
 
 const DIST=path.resolve('dist');
 const read=file=>fs.readFileSync(path.join(DIST,file),'utf8');
@@ -28,6 +29,30 @@ check(nav.includes('<a href="/food/" aria-current="page">먹거리</a>'),'food a
 check(read('sitemap.xml').includes('<loc>https://pagero.kr/life/food/</loc>'),'sitemap missing');
 check(JSON.parse(read('search-index.json')).some(item=>item.url==='/food/'),'search index missing');
 const js=read('life-food.js'), deals=read('adpick-deals.js'), css=read('life-food.css');
+
+const publishedMonth=seoulMonth();
+const firstPaintRows=monthlyInitialRows(js,publishedMonth);
+check(page.includes('<h2 id="food-month-heading">'+publishedMonth+'월 제철 식재료</h2>'),
+  'Initial HTML month does not match Seoul build month');
+check(page.includes('<option value="'+publishedMonth+'" selected>'),
+  'Initial month selector differs from visible food heading');
+check(page.includes('오늘의 추천: '+firstPaintRows[0].recipe),
+  'The initial menu recommendation contradicts the selected month');
+// The food grid contains nested tags, so validate at the full page boundary
+// and count only the generated food cards within the initial food-list block.
+const foodRegion=page.split('<div class="food-grid" id="food-list"')[1]?.split('<p class="food-source">')[0]||'';
+check((foodRegion.match(/<article class="food-card">/g)||[]).length===firstPaintRows.length,
+  'Initial SEO/first-paint food cards disagree with the selected month');
+for(const row of firstPaintRows){
+  check(foodRegion.includes('<h3>'+row.name+'</h3>')&&
+    foodRegion.includes('추천 메뉴</strong> '+row.recipe),
+    'Server-rendered food list missing current-month item '+row.name);
+}
+check(publishedMonth===11
+    ?page.includes('id="food-november-source">')
+    :page.includes('id="food-november-source" hidden>'),
+  'November-specific cited reference incorrectly visible outside November');
+
 for(let month=1;month<=12;month++)check(js.includes(month+':['),'missing season '+month);
 check(js.includes("timeZone:'Asia/Seoul'"),'KST automatic month missing');
 check(js.includes('encodeURIComponent(query)'),'shopping query not URL-safe');
