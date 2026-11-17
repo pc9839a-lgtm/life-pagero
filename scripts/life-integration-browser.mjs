@@ -11,6 +11,7 @@ const OUTPUT=path.resolve('artifacts/life-browser');
 const MIME={
   '.html':'text/html; charset=utf-8',
   '.js':'application/javascript; charset=utf-8',
+  '.mjs':'application/javascript; charset=utf-8',
   '.css':'text/css; charset=utf-8',
   '.json':'application/json; charset=utf-8',
   '.webmanifest':'application/manifest+json; charset=utf-8',
@@ -122,10 +123,18 @@ try{
   page.on('response',response=>{
     const url=response.url();
     if(url.startsWith(base+'/') &&
-      /\.(?:js|css|json|svg|png|webp|jpg|woff2)(?:\?|$)/.test(url)
+      /\.(?:js|mjs|css|json|svg|png|webp|jpg|woff2)(?:\?|$)/.test(url)
       && response.status()>=400)
       missingAssets.push({url,status:response.status()});
   });
+  // A missing JS MIME mapping silently disables imported ESM without pageerror.
+  // Explicitly check the module imported by the full loan calculator.
+  const mathResponse=await page.request.get(base+'/finance-loan-math.mjs');
+  expect(mathResponse.status()===200,'loan-math-module-http',
+    'Loan calculation ESM returned '+mathResponse.status());
+  expect(/javascript|ecmascript/.test(mathResponse.headers()['content-type']||''),
+    'loan-math-module-mime',
+    'Loan calculation ESM served an unsafe MIME: '+mathResponse.headers()['content-type']);
   for(const width of [360,390,1280]){
     const viewport={width,height:width===1280?850:760};
     await page.setViewportSize(viewport);
