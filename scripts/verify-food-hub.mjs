@@ -31,6 +31,11 @@ check(JSON.parse(read('search-index.json')).some(item=>item.url==='/food/'),'sea
 const js=read('life-food.js'), deals=read('adpick-deals.js'), css=read('life-food.css');
 
 const publishedMonth=seoulMonth();
+const foodSearchRecord=JSON.parse(read('search-index.json')).find(record=>record.url==='/food/');
+check(Array.isArray(foodSearchRecord?.keywords) && foodSearchRecord.keywords.includes(publishedMonth+'월 제철음식'),
+  'Search index month keyword does not match current static food article');
+if(publishedMonth!==11)check(!foodSearchRecord.keywords.includes('11월 제철음식'),
+  'Stale November keyword left in post-November search catalog');
 const firstPaintRows=monthlyInitialRows(js,publishedMonth);
 check(page.includes('<h2 id="food-month-heading">'+publishedMonth+'월 제철 식재료</h2>'),
   'Initial HTML month does not match Seoul build month');
