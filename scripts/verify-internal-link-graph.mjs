@@ -11,7 +11,7 @@ const walk=dir=>fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>{
 });
 const pages=new Map();
 const duplicates=[];
-for(const file of walk(DIST).filter(x=>x.endsWith('/index.html'))){
+for(const file of walk(DIST).filter(x=>path.basename(x)==='index.html')){
   const relative=path.relative(DIST,file).replaceAll(path.sep,'/');
   const route='/'+relative.slice(0,-'index.html'.length);
   if(pages.has(route))duplicates.push(route);
