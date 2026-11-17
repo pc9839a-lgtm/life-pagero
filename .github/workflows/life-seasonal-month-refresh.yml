@@ -49,10 +49,10 @@ jobs:
       - name: Trigger full CI and real Cloudflare SHA/browser verification
         if: steps.month.outputs.changed == 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # GitHub suppresses push-triggered Actions workflows for a
           # GITHUB_TOKEN push. workflow_dispatch is explicitly exempt.
           gh workflow run life-seo-quality.yml --ref main -f seasonal_refresh=true
       - name: Record whether a rebuild was necessary
-        run: echo "KST month ${{ steps.month.outputs.month }; changed=${{ steps.month.outputs.changed }}"
+        run: echo "KST month ${{ steps.month.outputs.month }}; changed=${{ steps.month.outputs.changed }}"
