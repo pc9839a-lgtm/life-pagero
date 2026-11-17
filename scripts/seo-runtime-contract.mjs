@@ -5,6 +5,7 @@ import {
   ensureIndexable, ensureContinuationNoindex,
   ensurePreviewIsNotIndexable, ensureDeploymentManifest, robotsMeta
 } from './seo-runtime-rules.mjs';
+import {searchResultHref} from '../public/life-search-core.js';
 
 // Test real HTTP responses. The parent domain root /robots.txt controls /life/*.
 const PUBLIC=SITE;
@@ -54,6 +55,29 @@ await check('sitemap',sitemapUrl,({status,content})=>{
   assert(new Set(urls).size===urls.length,'Duplicate sitemap URLs');
   assert(urls.every(url=>url.startsWith(PUBLIC+'/')),'Noncanonical sitemap URL found');
   assert(urls.every(url=>!/(?:\/2\/|\/3\/)$/.test(url)),'Continuation URL leaked into sitemap');
+});
+
+// The Pagero reverse proxy rewrites JSON quoted paths to /life/*. Verify the
+// *actual public JSON payload*, not only local dist/search-index.json.
+// A previous client fix prefixed these already-rewritten values twice.
+let liveSearchItems=0, proxyPrefixedSearchItems=0;
+await check('search-json-canonical-targets',PUBLIC+'/search-index.json',({status,headers,content})=>{
+  assert(status===200,'Public search index HTTP '+status);
+  assert(/json/i.test(headers.get('content-type')||''),'Search index is not JSON');
+  const index=JSON.parse(content);
+  assert(Array.isArray(index)&&index.length>=60,'Unexpected search index size');
+  const sitemapUrls=new Set(urls);
+  const checkedTargets=new Set();
+  for(const item of index){
+    assert(typeof item?.url==='string','Search result missing URL');
+    const target=searchResultHref(item.url,PUBLIC+'/life-search.js');
+    assert(sitemapUrls.has(target),
+      'Search result navigates outside canonical sitemap: '+item.url+' => '+target);
+    assert(!checkedTargets.has(target),'Duplicate canonical search result '+target);
+    checkedTargets.add(target);
+    if(item.url.startsWith('/life/'))proxyPrefixedSearchItems++;
+  }
+  liveSearchItems=index.length;
 });
 let cursor=0;
 await Promise.all(Array.from({length:5},async()=>{
@@ -116,6 +140,8 @@ const report={
   expectedCommit:expectedCommit||null,
   deployedCommit,
   indexableUrls:urls.length,
+  liveSearchItems,
+  proxyPrefixedSearchItems,
   checked:checked.length,
   checkedUrls:checked,
   warnings,errors
@@ -123,6 +149,7 @@ const report={
 const reportPath=process.env.SEO_AUDIT_REPORT||'artifacts/seo-runtime-audit.json';
 fs.mkdirSync(path.dirname(reportPath),{recursive:true});
 fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
+console.log('[seo-runtime] searchTargets='+liveSearchItems+' proxyPrefixed='+proxyPrefixedSearchItems);
 console.log('[seo-runtime] checked='+checked.length+' sitemapURLs='+urls.length
   +' deployed='+ (deployedCommit||'unknown') +' errors='+errors.length);
 for(const item of errors)console.error('[seo-runtime] FAIL '+item.url+' : '+item.reason);
