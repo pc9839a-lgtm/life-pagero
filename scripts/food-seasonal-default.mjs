@@ -30,7 +30,8 @@ export function monthlyInitialRows(script, month) {
   const sourceRows=all[month];
   if(!Array.isArray(sourceRows)||sourceRows.length<3||sourceRows.length>12)
     throw Error('[food-initial] Month has no verified menu options: '+month);
-  return sourceRows.map(([name,recipe,keep,query])=>{
+  // Convert sandbox-backed data into native Node arrays for deterministic builds.
+  return Array.from(sourceRows,([name,recipe,keep,query])=>{
     const steps=byMeal.get(recipe);
     if(![name,recipe,keep,query].every(v=>typeof v==='string'&&v.trim().length>0)
         ||query.trim().length<2||query.length>40
