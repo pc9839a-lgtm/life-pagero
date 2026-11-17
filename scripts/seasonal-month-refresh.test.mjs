@@ -53,3 +53,17 @@ test('monthly deployment and full SHA verification are explicitly chained',()=>{
   const stamp=JSON.parse(fs.readFileSync('content/seasonal-build-month.json','utf8'));
   assert.match(stamp.month,/^\d{4}-(0[1-9]|1[0-2])$/);
 });
+
+test('monthly release waits for successful QA of the exact committed SHA',()=>{
+  const monthly=fs.readFileSync('.github/workflows/life-seasonal-month-refresh.yml','utf8');
+  const qa=fs.readFileSync('.github/workflows/life-seo-quality.yml','utf8');
+  assert.match(monthly,/timeout-minutes: 60/);
+  assert.match(monthly,/monthly_sha="\$\(git rev-parse HEAD\)"/);
+  assert.match(monthly,/seasonal_expected_sha="\$monthly_sha"/);
+  assert.match(monthly,/--event workflow_dispatch --branch main/);
+  assert.match(monthly,/\.headSha == \$sha and \.createdAt >= \$after/);
+  assert.match(monthly,/gh run watch "\$run_id" --exit-status/);
+  assert.match(qa,/seasonal_expected_sha:/);
+  assert.match(qa,/test -n "\$MONTHLY_EXPECTED_SHA"/);
+  assert.match(qa,/test "\$MONTHLY_EXPECTED_SHA" = "\$GITHUB_SHA"/);
+});
