@@ -54,6 +54,9 @@ async function waitForDeployment(){
     MAX_WAIT+'ms; observed='+last+' expected='+SHA+'. Do NOT claim deployed.');
 }
 async function auditMetadata(){
+  const deployment=await request(SITE+'/deployment.json');
+  check(deployment.status===200 && /no-store/i.test(deployment.headers.get('cache-control')||''),
+    'fresh-deployment-manifest','Expected no-store but received: '+deployment.headers.get('cache-control'));
   const [robots,sitemap,rss,index,search,home,unknown,origin]=await Promise.all([
     request('https://pagero.kr/robots.txt'),
     request(SITE+'/sitemap.xml'),
@@ -178,6 +181,45 @@ async function auditBrowser(){
       check(original.includes('원')&&modified.includes('원')&&original!==modified,
         'real-savings-calculation',original+' -> '+modified);
     }catch(e){errors.push({label:'real-savings-calculation',detail:String(e.message||e)});}
+    await open('/finance/mortgage-calculator/','mortgage-live');
+    try{
+      const initial=await page.locator('#mortgage-limit').innerText();
+      await page.locator('#mortgage-annual-income').fill('2000');
+      const revised=await page.locator('#mortgage-limit').innerText();
+      check(initial.includes('만원') && revised.includes('만원') && initial!==revised,
+        'real-mortgage-change','Income did not change lending estimate: '+initial+' -> '+revised);
+    }catch(e){errors.push({label:'real-mortgage-change',detail:String(e.message||e)});}
+
+    await open('/finance/loan-payment/','loan-live');
+    try{
+      const result=page.locator('#portal-loan-result .loan-result-primary strong');
+      const original=await result.innerText();
+      const input=page.locator('#loan-principal');
+      await input.fill(String(Number(await input.inputValue())+10000000));
+      const changed=await result.innerText();
+      check(original.includes('원') && changed.includes('원') && original!==changed,
+        'real-loan-payment-change','Loan payment unchanged: '+original+' -> '+changed);
+    }catch(e){errors.push({label:'real-loan-payment-change',detail:String(e.message||e)});}
+
+    await open('/tools/car-cost/','car-live');
+    try{
+      const result=page.locator('#car-cost-monthly');
+      const original=await result.innerText();
+      await page.locator('#car-annual-km').fill('25000');
+      const changed=await result.innerText();
+      check(original.includes('원') && changed.includes('원') && original!==changed,
+        'real-car-cost-change','Car cost unchanged: '+original+' -> '+changed);
+    }catch(e){errors.push({label:'real-car-cost-change',detail:String(e.message||e)});}
+
+    await open('/search/','search-form-live');
+    try{
+      await page.locator('#page-search').fill('주거급여');
+      await page.locator('#page-search-form button').click();
+      await page.locator('#search-results .search-result a').first().waitFor({timeout:12000});
+      check(new URL(page.url()).searchParams.get('q')==='주거급여',
+        'real-search-submit-query','Query parameter not updated');
+    }catch(e){errors.push({label:'real-search-form-submit',detail:String(e.message||e)});}
+
     await open('/car/car-inspection-period/','toc-interaction');
     try{
       const anchors=page.locator('.life-guide-jumps a');
