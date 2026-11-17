@@ -21,6 +21,7 @@ export function monthRefreshState(existing,date=new Date()){
     !/^\d{4}-(0[1-9]|1[0-2])$/.test(existing.month))
     throw Error('[seasonal-refresh] Invalid tracked month stamp; do not silently overwrite');
   const current=seoulYearMonth(date);
+  if(existing.month>current)throw Error('[seasonal-refresh] Refusing to roll the production stamp backward');
   return {changed:existing.month!==current,month:current,previous:existing.month};
 }
 
