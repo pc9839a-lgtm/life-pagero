@@ -86,6 +86,6 @@ if(!sitemap.includes('<loc>'+SITE+'/food/</loc>')){
 }
 const search=JSON.parse(read('search-index.json'));
 if(!search.some(item=>item.url==='/food/'))search.push({title,description:desc,url:'/food/',
-  keywords:['제철음식','제철 식재료','제철 레시피','오늘 뭐 먹지','장보기','식재료 보관법','11월 제철음식']});
+  keywords:['제철음식','제철 식재료','제철 레시피','오늘 뭐 먹지','장보기','식재료 보관법',currentMonth+'월 제철음식']});
 save('search-index.json',JSON.stringify(search));
 console.log('[food] /food/ monthly food hub, menu picker, recipes, storage tips and existing ADPICK shopping search linked.');
