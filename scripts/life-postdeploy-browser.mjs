@@ -54,6 +54,12 @@ async function waitForDeployment(){
     MAX_WAIT+'ms; observed='+last+' expected='+SHA+'. Do NOT claim deployed.');
 }
 async function auditMetadata(){
+  const loanModule=await request(SITE+'/finance-loan-math.mjs');
+  check(loanModule.status===200 &&
+    /(?:text|application)\/(?:javascript|ecmascript)/i.test(loanModule.headers.get('content-type')||'') &&
+    loanModule.text.includes('export function loanSchedule'),
+    'real-loan-esm-mime',
+    'HTTP='+loanModule.status+' MIME='+loanModule.headers.get('content-type'));
   const deployment=await request(SITE+'/deployment.json');
   check(deployment.status===200 && /no-store/i.test(deployment.headers.get('cache-control')||''),
     'fresh-deployment-manifest','Expected no-store but received: '+deployment.headers.get('cache-control'));
