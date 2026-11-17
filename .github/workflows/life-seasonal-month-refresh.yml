@@ -1,0 +1,58 @@
+name: LIFE seasonal food month refresh (KST)
+
+# At 16:23 UTC it is 01:23 the next day in Korea. Check daily but only
+# create a new Git commit if the Asia/Seoul month has actually changed.
+# This keeps the month-specific first HTML/SEO and search aliases fresh
+# without deploying daily or consuming Functions per page view.
+on:
+  schedule:
+    - cron: '23 16 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: life-seasonal-month-refresh-main
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout current production branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Compare current Seoul month with the last production build stamp
+        id: month
+        run: node scripts/seasonal-month-refresh.mjs --apply
+      - name: Validate all existing site behavior and rebuild current-month food HTML
+        if: steps.month.outputs.changed == 'true'
+        run: |
+          npm run check
+          npm run build
+      - name: Push exact monthly content revision to Cloudflare Git integration
+        if: steps.month.outputs.changed == 'true'
+        run: |
+          git add -- content/seasonal-build-month.json
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -m "chore(food): refresh Seoul seasonal HTML for ${{ steps.month.outputs.month }}"
+          git push origin HEAD:main
+      - name: Trigger full CI and real Cloudflare SHA/browser verification
+        if: steps.month.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # GitHub suppresses push-triggered Actions workflows for a
+          # GITHUB_TOKEN push. workflow_dispatch is explicitly exempt.
+          gh workflow run life-seo-quality.yml --ref main -f seasonal_refresh=true
+      - name: Record whether a rebuild was necessary
+        run: echo "KST month ${{ steps.month.outputs.month }}; changed=${{ steps.month.outputs.changed }}"
