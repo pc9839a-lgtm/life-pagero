@@ -49,4 +49,11 @@ for(const expected of [
 }
 assert.ok(!invokes('/deployment.json'),
   'Deployment provenance static JSON must not invoke Pages Functions');
+const jsModules=headers.match(/(?:^|\n)\/\*\.mjs\n((?:[ \t]+[^\n]+\n)+)/);
+assert.ok(jsModules,'Missing content-type override for imported ES modules');
+assert.ok(jsModules[1].includes('Content-Type: text/javascript; charset=utf-8'),
+  'Cloudflare may serve ESM calculators with an unsafe MIME type');
+assert.ok(!invokes('/finance-loan-math.mjs'),
+  'Calculator math ES module should bypass Pages Functions');
+
 console.log('[function-routes] PASS: static assets not billed as Functions; API endpoints and legacy redirect HTML retained.');
