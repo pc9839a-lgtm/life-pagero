@@ -80,3 +80,39 @@ test('search destination resolver fails closed on traversal, external and malfor
   assert.throws(()=>searchResultHref('/finance/','file:///life-search.js'),
     /Unsupported script origin/);
 });
+
+
+test('Pagero HTML/JSON proxy path rewriting must not double-prefix search links',()=>{
+  // Pagero's functions/life/[[path]].js rewrites JSON quoted root paths.
+  const originJson='{"url":"/finance/loan-payment/"}';
+  const proxiedJson=originJson.replace(/(["'])\/(?!\/|life(?:\/|["']))/g,'$1/life/');
+  const canonicalModule='https://pagero.kr/life/life-search.js';
+  const raw=JSON.parse(originJson).url;
+  const rewritten=JSON.parse(proxiedJson).url;
+  assert.equal(raw,'/finance/loan-payment/');
+  assert.equal(rewritten,'/life/finance/loan-payment/');
+  assert.equal(searchResultHref(raw,canonicalModule),
+    'https://pagero.kr/life/finance/loan-payment/');
+  assert.equal(searchResultHref(rewritten,canonicalModule),
+    'https://pagero.kr/life/finance/loan-payment/');
+});
+test('already-prefixed and raw index URLs resolve identically for all guides',()=>{
+  const module='https://pagero.kr/life/life-search.js';
+  for(const item of items){
+    const raw=searchResultHref(item.url,module);
+    const proxy=searchResultHref('/life'+item.url,module);
+    assert.equal(raw,proxy,'Proxy must not duplicate prefix for '+item.url);
+    assert.ok(raw.startsWith('https://pagero.kr/life/'));
+    assert.doesNotMatch(proxy,/\/life\/life\//);
+  }
+  assert.throws(()=>searchResultHref('/life/life/car/foo/',module),
+    /Duplicate site prefix/);
+});
+test('standalone pages keep their own root and module query strings do not matter',()=>{
+  const canonicalModule='https://pagero.kr/life/life-search.js?v=20261117';
+  const legacyModule='https://life-pagero.pages.dev/life-search.js';
+  assert.equal(searchResultHref('/life/support/child-allowance-2026/',canonicalModule),
+    'https://pagero.kr/life/support/child-allowance-2026/');
+  assert.equal(searchResultHref('/support/child-allowance-2026/',legacyModule),
+    'https://life-pagero.pages.dev/support/child-allowance-2026/');
+});
