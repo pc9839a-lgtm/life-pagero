@@ -236,6 +236,32 @@ async function auditBrowser(){
           'real-guide-jump-'+(i+1),'Hash='+new URL(page.url()).hash);
       }
     }catch(e){errors.push({label:'real-guide-navigation',detail:String(e.message||e)});}
+
+    await open('/food/','seasonal-food-live');
+    try{
+      const expected=String(Number(new Intl.DateTimeFormat('en-US',{
+        month:'numeric',timeZone:'Asia/Seoul'
+      }).format(new Date())));
+      check(await page.locator('#food-month').inputValue()===expected,
+        'real-food-current-kst-month','Food picker starts on stale month');
+      await page.locator('#food-month').selectOption('12');
+      check((await page.locator('#food-list .food-card').first().innerText()).includes('굴'),
+        'real-food-month-change','December options were not rendered');
+      await page.locator('#food-list .food-card').first().locator('summary').click();
+      await page.locator('#food-list .food-card').first()
+        .locator('button.food-add-basket').click();
+      check(await page.locator('#food-shopping-list .food-shopping-row').count()>0,
+        'real-food-shopping-add','Food grocery list stayed empty');
+      await page.reload({waitUntil:'domcontentloaded'});
+      await page.locator('#food-shopping-list .food-shopping-row').first()
+        .waitFor({timeout:12000});
+      check(await page.locator('#food-shopping-list .food-shopping-row').count()>0,
+        'real-food-shopping-persist','Grocery list did not persist');
+      await page.locator('#food-clear-all').click();
+      check(await page.locator('#food-shopping-list .food-shopping-row').count()===0,
+        'real-food-shopping-delete','Saved grocery list did not clear');
+    }catch(e){errors.push({label:'real-food-shopping-flow',detail:String(e.message||e)});}
+
     await snapshot('search-and-article-mobile');
   }finally{
     await page?.close();
