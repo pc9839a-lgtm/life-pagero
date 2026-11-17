@@ -45,6 +45,6 @@ test('monthly deployment and full SHA verification are explicitly chained',()=>{
   assert.match(builder,/'식재료 보관법',currentMonth\+'월 제철음식'/);
   assert.doesNotMatch(builder,/'식재료 보관법','11월 제철음식'/);
   assert.doesNotMatch(verifier,/page\.includes\('삼치'\)&&page\.includes\('가리비'\)/);
-  assert.deepEqual(JSON.parse(fs.readFileSync('content/seasonal-build-month.json','utf8')),
-    {month:'2026-11'});
+  const stamp=JSON.parse(fs.readFileSync('content/seasonal-build-month.json','utf8'));
+  assert.match(stamp.month,/^\d{4}-(0[1-9]|1[0-2])$/);
 });
