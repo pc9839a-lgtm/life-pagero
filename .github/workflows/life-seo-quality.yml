@@ -93,3 +93,38 @@ jobs:
           path: artifacts/seo-runtime-audit.json
           if-no-files-found: warn
           retention-days: 14
+
+  postdeploy-browser:
+    # Validate the exact merge commit against real Cloudflare after main pushes.
+    # A PR's simulated proxy is not proof of a production deployment.
+    if: github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      EXPECTED_SHA: ${{ github.sha }}
+      LIFE_DEPLOY_WAIT_MS: '480000'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Chrome for the actual deployed production
+        run: |
+          npm install --no-save --no-package-lock playwright@1.64.1
+          npx playwright install --with-deps chromium
+      - name: Wait for exact Cloudflare commit and test real desktop/mobile/browser SEO
+        run: node scripts/life-postdeploy-browser.mjs
+      - name: Run full live URL, redirects, robots and canonical verification
+        run: npm run seo:audit:live
+      - name: Save real-user-flow screenshots and final deployment SHA even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: life-production-postdeploy-browser
+          path: |
+            artifacts/life-production-browser-audit.json
+            artifacts/life-production-browser/*.png
+            artifacts/seo-runtime-audit.json
+          if-no-files-found: warn
+          retention-days: 21
