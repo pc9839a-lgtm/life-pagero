@@ -26,12 +26,22 @@ const clearDone=document.getElementById('food-clear-done'),clearAll=document.get
 if(!month||!servingsSelect||!heading||!list||!result||!picker||!reveal||!basket||!count||!copy||!clearDone||!clearAll)return;
 const prefix=location.pathname.startsWith('/life/')?'/life/':'/';
 const storageKey='life_food_grocery_v1';
+
+// The ADPICK destination rejects searches shorter than 2 characters.
+// Keep the user's exact ingredient label in storage/UI; only normalize the
+// outbound shopping query. Existing saved groceries use this on every draw.
+const basketSearchNames=Object.freeze({"무":"국산 무","물":"생수","귤":"감귤","쑥":"국산 쑥","쌀":"백미 쌀","배":"신고배","굴":"생굴"});
+const basketSearchQuery=name=>{
+ const value=String(name||'').trim().replace(/\s+/g,' ');
+ const search=basketSearchNames[value]||(value.length<2?'식재료 '+value:value);
+ return search.slice(0,40);
+};
 const el=(tag,cls,value)=>{const x=document.createElement(tag);if(cls)x.className=cls;if(value!==undefined)x.textContent=value;return x;};
 const format=n=>String(Number(n.toFixed(2)));
 function load(){
  try{
   const v=JSON.parse(localStorage.getItem(storageKey)||'[]');
-  return Array.isArray(v)?v.filter(x=>x&&typeof x.name==='string'&&x.name.length<=60&&typeof x.unit==='string'&&x.unit.length<=20&&Number.isFinite(x.qty)&&x.qty>0&&x.qty<100000&&typeof x.checked==='boolean').slice(0,100):[];
+  return Array.isArray(v)?v.filter(x=>x&&typeof x.name==='string'&&x.name.trim().length>0&&x.name.length<=60&&typeof x.unit==='string'&&x.unit.length<=20&&Number.isFinite(x.qty)&&x.qty>0&&x.qty<100000&&typeof x.checked==='boolean').slice(0,100):[];
  }catch{return [];}
 }
 let groceries=load(),current=[],selected='',open=new Set();
@@ -77,7 +87,7 @@ function drawBasket(){
   cb.addEventListener('change',()=>{x.checked=cb.checked;save();drawBasket();});
   label.append(cb,el('span',x.checked?'food-checked':'',x.name+' '+format(x.qty)+x.unit));
   const search=el('a','food-shopping-search','상품 검색');
-  search.href=prefix+'deals/?q='+encodeURIComponent(x.name)+'&src=food';
+  search.href=prefix+'deals/?q='+encodeURIComponent(basketSearchQuery(x.name))+'&src=food';
   const remove=el('button','food-shopping-remove','삭제');remove.type='button';
   remove.setAttribute('aria-label',x.name+' 삭제');
   remove.addEventListener('click',()=>{groceries.splice(index,1);save();drawBasket();});
