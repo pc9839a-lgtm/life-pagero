@@ -260,6 +260,20 @@ async function auditBrowser(){
       await page.locator('#food-clear-all').click();
       check(await page.locator('#food-shopping-list .food-shopping-row').count()===0,
         'real-food-shopping-delete','Saved grocery list did not clear');
+      // A saved item named '무' must search groceries, not default deals.
+      await page.evaluate(()=>localStorage.setItem('life_food_grocery_v1',
+        JSON.stringify([{name:'무',qty:1,unit:'개',checked:false}])));
+      await page.reload({waitUntil:'domcontentloaded'});
+      await page.locator('#food-shopping-list .food-shopping-search')
+        .first().waitFor({timeout:10000});
+      const shoppingUrl=new URL(await page.locator(
+        '#food-shopping-list .food-shopping-search').first().getAttribute('href'),
+        page.url());
+      check(shoppingUrl.pathname==='/life/deals/' &&
+        shoppingUrl.searchParams.get('q')==='국산 무' &&
+        shoppingUrl.searchParams.get('src')==='food',
+        'real-food-one-letter-grocery-search','Saved "무" linked to '+shoppingUrl.href);
+      await page.locator('#food-clear-all').click();
     }catch(e){errors.push({label:'real-food-shopping-flow',detail:String(e.message||e)});}
 
     await snapshot('search-and-article-mobile');

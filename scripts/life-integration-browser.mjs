@@ -300,6 +300,32 @@ try{
     await page.locator('#food-clear-all').click();
     expect(await page.locator('#food-shopping-list .food-shopping-row').count()===0,
       'food-basket-clear','Clear-all did not remove saved items');
+
+    // Prior grocery lists are retained in localStorage. A one-character
+    // ingredient used to send ADPICK an invalid q, showing unrelated defaults.
+    // Test the real generated hrefs, not a duplicate of the query function.
+    const legacy=[['무','국산 무'],['물','생수'],['귤','감귤'],['쑥','국산 쑥'],
+      ['쌀','백미 쌀'],['배','신고배'],['굴','생굴']];
+    await page.evaluate(items=>localStorage.setItem('life_food_grocery_v1',
+      JSON.stringify(items.map(([name])=>({name,qty:1,unit:'개',checked:false})))),
+      legacy);
+    await page.reload({waitUntil:'domcontentloaded'});
+    await page.locator('#food-shopping-list .food-shopping-row').first()
+      .waitFor({timeout:10000});
+    const savedLinks=await page.locator('#food-shopping-list .food-shopping-search')
+      .evaluateAll(links=>links.map(a=>({
+        query:new URL(a.href).searchParams.get('q'),
+        pathname:new URL(a.href).pathname,
+        source:new URL(a.href).searchParams.get('src')
+      })));
+    expect(savedLinks.length===legacy.length &&
+      savedLinks.every((link,i)=>link.query===legacy[i][1] &&
+        link.pathname==='/life/deals/' && link.source==='food'),
+      'food-stored-single-character-shopping-links',
+      'A saved ingredient failed to search a meaningful query: '+JSON.stringify(savedLinks));
+    await page.locator('#food-clear-all').click();
+    expect(await page.locator('#food-shopping-list .food-shopping-row').count()===0,
+      'food-legacy-basket-cleanup','Legacy search test left saved groceries behind');
   }catch(error){fail('food-shopping-interaction',String(error.message||error));}
 
   expect(missingAssets.length===0,'static-asset-delivery',
