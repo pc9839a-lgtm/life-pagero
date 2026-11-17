@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {seoulMonth,monthlyInitialRows} from './food-seasonal-default.mjs';
 
 // A useful indexable food hub, with a live shopping search only after user click.
 const DIST = path.resolve('dist');
@@ -23,21 +24,29 @@ const items=[
   {name:'단감',kind:'과일',recipe:'단감 샐러드',method:'단감을 얇게 썰어 잎채소와 섞고 올리브유로 간단히 마무리합니다.',keep:'익은 과일은 냉장 보관하고, 눌린 부위가 있는지 살펴 먼저 드세요.',query:'단감'},
   {name:'고구마',kind:'뿌리채소',recipe:'군고구마',method:'씻어 물기를 닦은 뒤 오븐이나 에어프라이어에서 속까지 익혀 먹습니다.',keep:'물기 없는 통풍이 잘되는 서늘한 곳에 두고, 저온 냉장 보관은 피하세요.',query:'고구마'}
 ];
-const cards=items.map(item=>'<article class="food-card"><div class="food-card-top"><span class="food-kind">'+esc(item.kind)+'</span><h3>'+esc(item.name)+'</h3></div>'
+const currentMonth=seoulMonth();
+const canonicalRows=monthlyInitialRows(fs.readFileSync('public/life-food.js','utf8'),currentMonth);
+// Preserve the source-annotated November example and verify it matches the
+// browser's data. In other months render exactly the same actual menu names.
+if(currentMonth===11 && (canonicalRows.length!==items.length ||
+  canonicalRows.some((row,i)=>row.name!==items[i].name||row.recipe!==items[i].recipe)))
+  throw Error('[food] Static November items drifted from interactive catalogue');
+const displayItems=currentMonth===11?items:canonicalRows;
+const cards=displayItems.map(item=>'<article class="food-card"><div class="food-card-top"><span class="food-kind">'+esc(item.kind)+'</span><h3>'+esc(item.name)+'</h3></div>'
  +'<p class="food-recipe"><strong>추천 메뉴</strong> '+esc(item.recipe)+'</p>'
  +'<p>'+esc(item.method)+'</p><p class="food-keep"><strong>보관 팁</strong> '+esc(item.keep)+'</p>'
  +'<a class="food-buy" href="/deals/?q='+encodeURIComponent(item.query)+'&amp;src=food">관련 상품 검색 <span aria-hidden="true">↗</span></a></article>').join('');
-const months=Array.from({length:12},(_,i)=>'<option value="'+(i+1)+'"'+(i===10?' selected':'')+'>'+(i+1)+'월</option>').join('');
+const months=Array.from({length:12},(_,i)=>'<option value="'+(i+1)+'"'+(i+1===currentMonth?' selected':'')+'>'+(i+1)+'월</option>').join('');
 const main='<div class="site-shell"><article class="food-hub">'
  +'<nav class="portal-breadcrumbs" aria-label="현재 위치"><a href="/">홈</a> / 제철음식</nav>'
  +'<header class="food-hero">'
  +'<h1>제철음식</h1><p class="food-hero-lead">제철 식재료와 집밥 메뉴를 확인하고 장보기 목록까지 관리하세요.</p></header>'
- +'<section class="food-section" aria-labelledby="food-month-heading"><div class="food-section-head"><h2 id="food-month-heading">11월 제철 식재료</h2>'
+ +'<section class="food-section" aria-labelledby="food-month-heading"><div class="food-section-head"><h2 id="food-month-heading">'+currentMonth+'월 제철 식재료</h2>'
  +'<div class="food-controls"><label class="food-month-label" for="food-month">월 <select id="food-month">'+months+'</select></label>'
  +'<label class="food-month-label" for="food-servings">인원 <select id="food-servings"><option value="1">1인</option><option value="2" selected>2인</option><option value="4">4인</option></select></label></div></div>'
  +'<div class="food-grid" id="food-list" aria-live="polite">'+cards+'</div>'
- +'<p class="food-source">지역과 시기에 따라 제철이 달라질 수 있습니다. <span id="food-november-source">11월 수산물: <a href="https://www.mof.go.kr/doc/ko/selectDoc.do?bbsSeq=10&amp;docSeq=69193&amp;menuSeq=971" target="_blank" rel="noopener noreferrer">해양수산부 발표 확인</a></span></p></section>'
- +'<section class="food-section food-choice" aria-labelledby="food-choice-heading"><div><h2 id="food-choice-heading">오늘 뭐 먹지?</h2><p id="food-result" class="food-choice-result" role="status">오늘의 추천: 삼치 소금구이</p></div>'
+ +'<p class="food-source">지역과 시기에 따라 제철이 달라질 수 있습니다. <span id="food-november-source"'+(currentMonth===11?'':' hidden')+'>11월 수산물: <a href="https://www.mof.go.kr/doc/ko/selectDoc.do?bbsSeq=10&amp;docSeq=69193&amp;menuSeq=971" target="_blank" rel="noopener noreferrer">해양수산부 발표 확인</a></span></p></section>'
+ +'<section class="food-section food-choice" aria-labelledby="food-choice-heading"><div><h2 id="food-choice-heading">오늘 뭐 먹지?</h2><p id="food-result" class="food-choice-result" role="status">오늘의 추천: '+esc(displayItems[0].recipe)+'</p></div>'
  +'<div class="food-choice-actions"><button id="food-pick" type="button">다른 메뉴 추천</button><button id="food-show-recipe" type="button">레시피 보기</button></div></section>'
  +'<section class="food-section food-shopping" aria-labelledby="food-shopping-heading"><h2 id="food-shopping-heading">장보기</h2>'
 
