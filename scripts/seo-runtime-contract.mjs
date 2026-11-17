@@ -20,17 +20,29 @@ const expectedCommit=['schedule','workflow_dispatch'].includes(process.env.GITHU
 let deployedCommit=null;
 function assert(condition,message){if(!condition)throw Error(message);}
 function fail(url,reason){errors.push({url,reason});}
+let transientRetries=0;
 async function get(url){
-  const response=await fetch(url,{
-    redirect:'manual',
-    signal:AbortSignal.timeout(15000),
-    headers:{
-      accept:'text/html,application/xml,application/json,text/plain;q=0.9,*/*;q=0.5',
-      'user-agent':'LifePageroSeoQA/2.0 (+https://pagero.kr/life/)'
+  // Only retry transport errors (DNS, connection reset, timeout) for a safe
+  // GET. Real HTTP statuses, robots blocks and SEO metadata failures still
+  // fail without being concealed by a retry.
+  for(let attempt=0;attempt<2;attempt++){
+    try{
+      const response=await fetch(url,{
+        redirect:'manual',
+        signal:AbortSignal.timeout(15000),
+        headers:{
+          accept:'text/html,application/xml,application/json,text/plain;q=0.9,*/*;q=0.5',
+          'user-agent':'LifePageroSeoQA/2.0 (+https://pagero.kr/life/)'
+        }
+      });
+      const content=await response.text();
+      return {status:response.status,headers:response.headers,content};
+    }catch(error){
+      if(attempt===1)throw error;
+      transientRetries++;
+      await new Promise(resolve=>setTimeout(resolve,350));
     }
-  });
-  const content=await response.text();
-  return {status:response.status,headers:response.headers,content};
+  }
 }
 async function check(label,url,validate){
   try{
@@ -142,6 +154,7 @@ const report={
   indexableUrls:urls.length,
   liveSearchItems,
   proxyPrefixedSearchItems,
+  transientRetries,
   checked:checked.length,
   checkedUrls:checked,
   warnings,errors
@@ -149,7 +162,7 @@ const report={
 const reportPath=process.env.SEO_AUDIT_REPORT||'artifacts/seo-runtime-audit.json';
 fs.mkdirSync(path.dirname(reportPath),{recursive:true});
 fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
-console.log('[seo-runtime] searchTargets='+liveSearchItems+' proxyPrefixed='+proxyPrefixedSearchItems);
+console.log('[seo-runtime] searchTargets='+liveSearchItems+' proxyPrefixed='+proxyPrefixedSearchItems+' transportRetries='+transientRetries);
 console.log('[seo-runtime] checked='+checked.length+' sitemapURLs='+urls.length
   +' deployed='+ (deployedCommit||'unknown') +' errors='+errors.length);
 for(const item of errors)console.error('[seo-runtime] FAIL '+item.url+' : '+item.reason);
