@@ -42,14 +42,20 @@ export function searchGuides(index, query, limit = 20) {
   return scored.slice(0, Math.min(limit, 50)).map(item=>item.record);
 }
 
-// Search results are stored as site-root paths, but the canonical LIFE site
-// lives beneath /life/ on pagero.kr. Derive the public prefix from the actual
-// loaded search module, not location.origin or a hardcoded root path.
+// The canonical Pagero proxy rewrites *JSON* root paths (/car/foo/) to
+// /life/car/foo/, whereas the raw Pages origin keeps /car/foo/. Use the loaded
+// module's directory as the site prefix and accept either representation once.
 export function searchResultHref(pathname, moduleUrl) {
   if (typeof pathname !== 'string' || !/^\/(?:[a-z0-9-]+\/)*$/.test(pathname))
     throw new Error('[search] Invalid indexed destination');
   const module = new URL(moduleUrl);
   if (!['http:', 'https:'].includes(module.protocol))
     throw new Error('[search] Unsupported script origin');
-  return new URL('.' + pathname, module).href;
+  const site = new URL('.', module);
+  const prefix = site.pathname; // /life/ in Pagero; / at standalone origin
+  const destination = prefix !== '/' && pathname.startsWith(prefix)
+    ? pathname : prefix + pathname.slice(1);
+  if (prefix !== '/' && destination.startsWith(prefix + prefix.slice(1)))
+    throw new Error('[search] Duplicate site prefix in indexed destination');
+  return new URL(destination, site.origin).href;
 }
