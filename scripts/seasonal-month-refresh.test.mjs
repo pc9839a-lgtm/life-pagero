@@ -21,6 +21,11 @@ test('same Seoul month skips deploys and future month changes exactly once',()=>
     new Date('2026-12-15T04:00:00.000Z')).changed,false);
 });
 
+test('future stamps cannot be rolled backwards by runner timezone or clock errors',()=>{
+  assert.throws(()=>monthRefreshState({month:'2026-12'},
+    new Date('2026-11-17T11:27:00Z')),/Refusing to roll/);
+});
+
 test('missing, malformed or impossible production stamp fails closed',()=>{
   for(const invalid of [{},null,{month:''},{month:'2026-00'},
     {month:'2026-13'},{month:'Nov 2026'},{month:202611}]){
