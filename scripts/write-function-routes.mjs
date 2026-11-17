@@ -10,7 +10,7 @@ const routes={
   version:1,
   include:['/*'],
   exclude:[
-    '/*.js','/*.css','/*.svg','/*.png','/*.jpg','/*.jpeg','/*.webp',
+    '/*.js','/*.mjs','/*.css','/*.svg','/*.png','/*.jpg','/*.jpeg','/*.webp',
     '/*.avif','/*.gif','/*.ico','/*.woff','/*.woff2','/*.ttf','/*.otf',
     '/*.map','/*.json','/*.xml','/*.txt','/*.webmanifest',
     '/images/*','/food-images/*','/assets/*','/.well-known/*'

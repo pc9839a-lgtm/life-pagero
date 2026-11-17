@@ -5,6 +5,16 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   X-Frame-Options: SAMEORIGIN
 
+/deployment.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: no-store, max-age=0, must-revalidate
+  CDN-Cache-Control: no-store
+  Cloudflare-CDN-Cache-Control: no-store
+
+# JavaScript module imports require an executable MIME type.
+/*.mjs
+  Content-Type: text/javascript; charset=utf-8
+
 /sitemap.xml
   Content-Type: application/xml; charset=utf-8
   Cache-Control: public, max-age=300
