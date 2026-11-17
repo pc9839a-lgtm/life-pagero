@@ -38,7 +38,6 @@ check(page.includes('<option value="'+publishedMonth+'" selected>'),
   'Initial month selector differs from visible food heading');
 check(page.includes('오늘의 추천: '+firstPaintRows[0].recipe),
   'The initial menu recommendation contradicts the selected month');
-const foodSection=page.match(/<div class="food-grid" id="food-list"[^>]*>([\s\S]*?)<\/div>\s*<p class="food-source">/)?.[1];
 // The food grid contains nested tags, so validate at the full page boundary
 // and count only the generated food cards within the initial food-list block.
 const foodRegion=page.split('<div class="food-grid" id="food-list"')[1]?.split('<p class="food-source">')[0]||'';
