@@ -44,6 +44,14 @@ jobs:
             artifacts/life-browser/*.png
           if-no-files-found: warn
           retention-days: 14
+      - name: Save full homepage-to-sitemap link graph (including failures)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: life-canonical-link-graph
+          path: artifacts/life-internal-link-graph.json
+          if-no-files-found: warn
+          retention-days: 14
       - name: Save original-source review and duplication triage
         if: always()
         uses: actions/upload-artifact@v4
