@@ -151,6 +151,7 @@ try{
       await link.click();
       expect(new URL(page.url()).pathname==='/life/finance/loan-payment/',
         'search-result-click','Actual browser navigation wrong: '+page.url());
+      await page.locator('h1').first().waitFor({state:'visible',timeout:10000});
       expect(await page.locator('h1').count()===1,'search-destination-content','Missing destination H1');
     }
   }catch(error){fail('search-interaction',String(error.message||error));}
@@ -175,9 +176,17 @@ try{
     const links=page.locator('.life-guide-jumps a');
     expect(await links.count()===3,'article-section-navigation','Expected 3 actual article sections');
     if(await links.count()===3){
-      await links.first().click();
-      expect(new URL(page.url()).hash==='#life-guide-part-1',
-        'article-anchor-click','Guide anchor click failed: '+page.url());
+      for(let i=0;i<3;i++){
+        await links.nth(i).click();
+        expect(new URL(page.url()).hash==='#life-guide-part-'+(i+1),
+          'article-anchor-click-'+(i+1),'Guide anchor click failed: '+page.url());
+      }
+      const full=page.locator('.compact-read[data-compact-open="true"]');
+      if(await full.count()){
+        await full.first().click();
+        expect(new URL(page.url()).hash==='#compact-full-guide',
+          'article-read-full-action','Original read-full link lost its anchor');
+      }
     }
   }catch(error){fail('article-interaction',String(error.message||error));}
 
