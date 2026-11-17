@@ -33,4 +33,20 @@ for(const p of [
 }
 assert.equal(routes.exclude.some(x=>x==='/today/*'||x==='/finance/*'),false,
   'never block API paths in entire dynamic prefixes');
+
+// deployment.json is a public provenance proof, NOT a content asset that may
+// be cached. Its exact SHA must be read fresh after every Cloudflare deploy.
+const headers=fs.readFileSync(path.resolve('dist/_headers'),'utf8');
+const deployment=headers.match(/(?:^|\n)\/deployment\.json\n((?:[ \t]+[^\n]+\n)+)/);
+assert.ok(deployment,'Missing deployment.json response headers');
+for(const expected of [
+  'Content-Type: application/json; charset=utf-8',
+  'Cache-Control: no-store, max-age=0, must-revalidate',
+  'CDN-Cache-Control: no-store',
+  'Cloudflare-CDN-Cache-Control: no-store',
+]){
+  assert.ok(deployment[1].includes(expected),'Deployment provenance cache policy lost: '+expected);
+}
+assert.ok(!invokes('/deployment.json'),
+  'Deployment provenance static JSON must not invoke Pages Functions');
 console.log('[function-routes] PASS: static assets not billed as Functions; API endpoints and legacy redirect HTML retained.');
