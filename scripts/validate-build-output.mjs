@@ -775,7 +775,10 @@ const repairedLegalCitations=[
     slug:'car/car-scrap-deregistration-tax-refund',
     old:'https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=00&joNo=0031&lsiSeq=286481&urlMode=lsScJoRltInfoR',
     url:'https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1033355687',
-    originalReview:'2026-07-19',
+    // 2026-11-17 independently re-reviewed: not just the November 15 link fix.
+    originalReview:'2026-11-17',
+    reviewedUpdate:'2026-11-17',
+    lawChecked:'2026-11-17',
   },
   {
     slug:'support/car-tax-relief-guide',
@@ -798,11 +801,13 @@ const repairedLegalCitations=[
 ];
 for(const entry of repairedLegalCitations) {
   const post=JSON.parse(fs.readFileSync(path.join(CONTENT_ROOT,entry.slug+'.json'),'utf8'));
-  if(post.slug!==entry.slug.split('/')[1]||post.updatedAt!=='2026-11-15'
+  if(post.slug!==entry.slug.split('/')[1]
+     ||post.updatedAt!==(entry.reviewedUpdate||'2026-11-15')
      ||post.reviewedAt!==entry.originalReview) {
     throw new Error('Legal-citation-only edit must preserve earlier factual review: '+entry.slug);
   }
-  const refs=(post.sources||[]).filter(s=>s.url===entry.url && s.checkedAt==='2026-11-15');
+  const refs=(post.sources||[]).filter(s=>s.url===entry.url &&
+    s.checkedAt===(entry.lawChecked||'2026-11-15'));
   if(refs.length!==1||(post.sources||[]).some(s=>s.url===entry.old)){
     throw new Error('Broken official-law source citation reinstated after hydration: '+entry.slug);
   }

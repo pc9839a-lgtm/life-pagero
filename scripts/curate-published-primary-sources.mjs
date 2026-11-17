@@ -159,11 +159,14 @@ const TODAY = '2026-10-23';
 // A later, fully reviewed inspection cluster supersedes the October
 // one-time citation cleanup. Protect the primary source record and the
 // articles' unique user intent; still fail closed on weak evidence.
-const NEWER_REVIEWED_INSPECTION = new Set([
+const NEWER_REVIEWED_DIRECT_SOURCE_ARTICLES = new Set([
   'car-inspection-period',
   'car-inspection-reservation',
   'car-inspection-late-penalty',
   'car-inspection-fall-check-2026',
+  // Independently rechecked on 2026-11-17 against Car365, Gov24 and two
+  // current law articles. This guide no longer cites the generic Wetax root.
+  'car-scrap-deregistration-tax-refund',
 ]);
 const root = path.resolve('content/posts');
 const walk = dir => fs.readdirSync(dir, {withFileTypes:true}).flatMap(e => {
@@ -189,7 +192,7 @@ for (const [slug, retireUrls] of expectedHome.entries()) {
   if (!post.officialCta?.href) throw Error('Missing official service/action link: '+slug);
   originalActions.set(slug,JSON.stringify(post.officialCta));
 
-  if (NEWER_REVIEWED_INSPECTION.has(slug)
+  if (NEWER_REVIEWED_DIRECT_SOURCE_ARTICLES.has(slug)
       && Date.parse(post.reviewedAt || '') > Date.parse(TODAY)) {
     const verified = existing.filter(s => {
       try {
@@ -199,13 +202,13 @@ for (const [slug, retireUrls] of expectedHome.entries()) {
           && Date.parse(s.checkedAt || '') >= Date.parse('2026-10-21');
       } catch { return false; }
     });
-    if (verified.length < 2) throw Error('Newer inspection guide lacks two verified direct sources: ' + slug);
+    if (verified.length < 2) throw Error('Newer reviewed guide lacks two verified direct sources: ' + slug);
     if (retireUrls.some(url => existing.some(s => s.url === url))) {
-      throw Error('Newer inspection guide still contains superseded portal homepage citations: ' + slug);
+      throw Error('Newer reviewed guide still contains superseded portal homepage citations: ' + slug);
     }
     if (!post.series?.parts || post.series.parts.length !== 3
         || post.series.parts.some(p => (p.body || '').length < 1000)) {
-      throw Error('Newer inspection guide missing substantive parts: ' + slug);
+      throw Error('Newer reviewed guide missing substantive parts: ' + slug);
     }
     changed.push({slug,removed:0,remaining:existing.length,portal:post.officialCta.href,comparison:true,preservedNewerReview:true});
     console.log('SOURCE_PRECISION',JSON.stringify(changed.at(-1)));
