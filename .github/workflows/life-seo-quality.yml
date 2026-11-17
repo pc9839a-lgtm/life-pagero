@@ -28,7 +28,7 @@ jobs:
           npm run build
       - name: Install headless Chromium for real responsive regression
         run: |
-          npm install --no-save --no-package-lock playwright@1.56.1
+          npm install --no-save --no-package-lock playwright@1.64.1
           npx playwright install --with-deps chromium
       - name: Validate live page interactions against rebuilt LIFE through a simulated Pagero proxy
         run: node scripts/life-integration-browser.mjs
