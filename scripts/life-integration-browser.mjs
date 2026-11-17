@@ -171,6 +171,72 @@ try{
     expect(value.includes('원'),'car-cost-calculation','Car cost calculation missing: '+value);
   }catch(error){fail('car-cost-interaction',String(error.message||error));}
 
+
+  // Exercise real financial calculation changes, not merely visible results.
+  await open('/finance/mortgage-calculator/','mortgage-calculator-interaction');
+  try{
+    const before=await page.locator('#mortgage-limit').innerText();
+    await page.locator('#mortgage-annual-income').fill('2000');
+    const after=await page.locator('#mortgage-limit').innerText();
+    expect(before.includes('만원') && after.includes('만원') && before!==after,
+      'mortgage-income-affects-limit','Expected mortgage income to change loan limit: '+before+' -> '+after);
+    expect(await page.locator('#mortgage-error').isHidden(),
+      'mortgage-no-calculation-error','Mortgage validation error after valid income');
+  }catch(error){fail('mortgage-interaction',String(error.message||error));}
+
+  await open('/finance/loan-payment/','loan-payment-interaction');
+  try{
+    const initial=await page.locator('#portal-loan-result .loan-result-primary strong').innerText();
+    const principal=page.locator('#loan-principal');
+    const original=Number(await principal.inputValue());
+    await principal.fill(String(original+10000000));
+    const changed=await page.locator('#portal-loan-result .loan-result-primary strong').innerText();
+    expect(initial.includes('원') && changed.includes('원') && changed!==initial,
+      'loan-principal-affects-payment','Changing principal must change monthly payment: '+initial+' -> '+changed);
+  }catch(error){fail('loan-payment-interaction',String(error.message||error));}
+
+  await open('/tools/car-cost/','car-cost-input-interaction');
+  try{
+    const original=await page.locator('#car-cost-monthly').innerText();
+    await page.locator('#car-annual-km').fill('25000');
+    const modified=await page.locator('#car-cost-monthly').innerText();
+    expect(original.includes('원') && modified.includes('원') && modified!==original,
+      'car-distance-affects-cost','Car cost unchanged after distance edit: '+original+' -> '+modified);
+    await page.locator('#car-fuel').selectOption('electric');
+    expect((await page.locator('#car-unit-label').innerText()).includes('kWh'),
+      'car-electric-units','Switching to EV failed to update units');
+    expect((await page.locator('#car-cost-monthly').innerText()).includes('원'),
+      'car-electric-calculation','EV estimate not calculated');
+  }catch(error){fail('car-cost-input-interaction',String(error.message||error));}
+
+  await open('/search/','search-submit-interaction');
+  try{
+    await page.locator('#page-search').fill('주거급여');
+    await page.locator('#page-search-form button').click();
+    await page.locator('#search-results .search-result a').first().waitFor({timeout:12000});
+    const query=new URL(page.url()).searchParams.get('q');
+    expect(query==='주거급여','search-form-updates-query','Search URL missing submitted keyword '+query);
+    const urls=await page.locator('#search-results .search-result a').evaluateAll(
+      nodes=>nodes.map(node=>node.href));
+    expect(urls.length>0 && urls.every(url=>url.startsWith(base+'/')&&!url.includes('/life/life/')),
+      'search-form-valid-results','Invalid search result links '+JSON.stringify(urls.slice(0,3)));
+  }catch(error){fail('search-form-interaction',String(error.message||error));}
+
+  await open('/','home-nav-interaction');
+  try{
+    const nav=page.locator('nav.main-nav');
+    expect(await nav.locator('a').count()===8,'home-nav-eight-services','Site navigation item count changed');
+    const finance=nav.locator('a[href$="/finance/"]');
+    expect(await finance.count()===1,'home-finance-navigation-present',
+      'Finance menu link unavailable');
+    if(await finance.count()){
+      await finance.click();
+      await page.locator('h1').first().waitFor({state:'visible',timeout:10000});
+      expect(new URL(page.url()).pathname==='/life/finance/',
+        'home-finance-navigation-click','Menu navigated outside LIFE: '+page.url());
+    }
+  }catch(error){fail('home-navigation-interaction',String(error.message||error));}
+
   await open('/car/car-inspection-period/','guide-contents');
   try{
     const links=page.locator('.life-guide-jumps a');
