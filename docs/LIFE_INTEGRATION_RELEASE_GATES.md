@@ -21,6 +21,8 @@
 - 병합 직후의 GitHub Actions 빌드 통과는 배포 완료 증거가 아니다.
 - Cloudflare 프로덕션이 갱신되었는지 `/life/deployment.json` SHA와 병합 SHA를 **직접 비교**한다.
 - `npm run seo:audit:live`의 프록시·canonical·robots·검색 JSON·사이트맵·legacy 301·프리뷰 noindex를 확인한다.
+- **main 병합 직후 GitHub Actions `postdeploy-browser`** 작업이 같은 SHA가 실제 배포될 때까지 최대 8분간 확인하고, 실제 `pagero.kr/life/` 페이지에서 모바일 360·390px/PC 1280px, 검색 클릭, 적금 입력, 가이드 목차, 실제 콘텐츠·사이트맵·RSS·noindex·404 등을 점검한다. 성공 조건은 체크아웃 SHA=Cloudflare `deployment.json` SHA의 정확한 일치이며, 만료·기능 오류는 별도 실패로 기록한다.
+- 산출물은 `life-production-postdeploy-browser` artifact의 `life-production-browser-audit.json` 및 스크린샷·전체 SEO HTTP 감사에 남긴다. PR 통합 테스트는 생성물 검증이고, 병합 뒤 운영 브라우저 점검은 별개의 배포 검증이다.
 - 최신 커밋의 운영 배포를 확인하지 못했으면 *미확인*으로 기록하고 다음 패치에서 누락 없이 재확인한다.
 - 사이트맵이 유효하더라도 Google 실제 색인/노출/클릭 및 AdSense 승인은 증명되지 않는다. 해당 지표는 Search Console 및 광고 승인 결과를 별도 조회해야 한다.
 
