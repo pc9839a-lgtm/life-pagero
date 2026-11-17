@@ -33,6 +33,7 @@ export function monthlyInitialRows(script, month) {
   return sourceRows.map(([name,recipe,keep,query])=>{
     const steps=byMeal.get(recipe);
     if(![name,recipe,keep,query].every(v=>typeof v==='string'&&v.trim().length>0)
+        ||query.trim().length<2||query.length>40
         ||!Array.isArray(steps)||steps.length<2)
       throw Error('[food-initial] Monthly food item lacks an authored recipe');
     return {name,kind:'제철 식재료',recipe,method:steps.join(' '),keep,query};
