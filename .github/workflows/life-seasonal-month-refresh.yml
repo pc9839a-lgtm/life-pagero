@@ -20,7 +20,7 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 60
     steps:
       - name: Checkout current production branch
         uses: actions/checkout@v4
@@ -46,13 +46,30 @@ jobs:
               -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
               commit -m "chore(food): refresh Seoul seasonal HTML for ${{ steps.month.outputs.month }}"
           git push origin HEAD:main
-      - name: Trigger full CI and real Cloudflare SHA/browser verification
+      - name: Trigger exact-commit production QA and require its successful completion
         if: steps.month.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # GitHub suppresses push-triggered Actions workflows for a
-          # GITHUB_TOKEN push. workflow_dispatch is explicitly exempt.
-          gh workflow run life-seo-quality.yml --ref main -f seasonal_refresh=true
+          # A successful workflow_dispatch request only means QA was queued.
+          # Treat this monthly release as successful ONLY after the exact SHA's
+          # Cloudflare/browser/SEO workflow has completed successfully.
+          monthly_sha="$(git rev-parse HEAD)"
+          dispatched_after="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          gh workflow run life-seo-quality.yml --ref main -f seasonal_refresh=true -f seasonal_expected_sha="$monthly_sha"
+          run_id=""
+          for attempt in $(seq 1 30); do
+            run_id="$(gh run list --workflow life-seo-quality.yml --event workflow_dispatch --branch main --limit 30 \
+              --json databaseId,headSha,createdAt | jq -r --arg sha "$monthly_sha" --arg after "$dispatched_after" \
+              '[.[] | select(.headSha == $sha and .createdAt >= $after)] | sort_by(.createdAt) | last | .databaseId // empty')"
+            if [ -n "$run_id" ]; then break; fi
+            sleep 10
+          done
+          if [ -z "$run_id" ]; then
+            echo "::error::Monthly production QA did not start for $monthly_sha"
+            exit 1
+          fi
+          echo "Watching production QA run $run_id for commit $monthly_sha"
+          gh run watch "$run_id" --exit-status
       - name: Record whether a rebuild was necessary
         run: echo "KST month ${{ steps.month.outputs.month }}; changed=${{ steps.month.outputs.changed }}"
