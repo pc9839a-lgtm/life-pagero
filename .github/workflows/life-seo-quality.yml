@@ -27,13 +27,15 @@ jobs:
           npm run check
           npm run build
       - name: Install headless Chromium for real responsive regression
+        if: github.event_name == 'pull_request'
         run: |
           npm install --no-save --no-package-lock playwright@1.64.1
           npx playwright install --with-deps chromium
       - name: Validate live page interactions against rebuilt LIFE through a simulated Pagero proxy
+        if: github.event_name == 'pull_request'
         run: node scripts/life-integration-browser.mjs
       - name: Upload browser screenshots and failure details
-        if: always()
+        if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: life-mobile-desktop-browser-qa
