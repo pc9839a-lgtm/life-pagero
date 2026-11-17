@@ -13,6 +13,10 @@ on:
         description: 'Validate monthly Seoul food rebuild and exact Cloudflare deployment SHA'
         type: boolean
         default: false
+      seasonal_expected_sha:
+        description: 'Exact main SHA of the monthly food release (required for seasonal refresh)'
+        type: string
+        required: false
 
 permissions:
   contents: read
@@ -27,6 +31,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - name: Reject stale or unintended monthly QA revisions
+        if: github.event_name == 'workflow_dispatch' && inputs.seasonal_refresh == true
+        env:
+          MONTHLY_EXPECTED_SHA: ${{ inputs.seasonal_expected_sha }}
+        run: |
+          test -n "$MONTHLY_EXPECTED_SHA"
+          test "$MONTHLY_EXPECTED_SHA" = "$GITHUB_SHA" || {
+            echo "::error::Monthly QA SHA mismatch; refusing to verify a different deployment"
+            exit 1
+          }
       - name: Validate source and generated pages
         run: |
           npm run check
