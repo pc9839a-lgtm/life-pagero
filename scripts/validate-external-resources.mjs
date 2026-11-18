@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {classifyExternalResponse} from './external-resource-status.mjs';
 
 const CONTENT_ROOT = path.resolve('content/posts');
 const CONCURRENCY = Number(process.env.EXTERNAL_CHECK_CONCURRENCY || 6);
@@ -48,12 +49,12 @@ for (const guide of foodGuides.guides) {
   for (const photo of guide.visuals) add(photo.source, 'image-credit', owner);
 }
 
-async function request(record, method) {
+async function request(record) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
     const response = await fetch(record.url, {
-      method,
+      method: 'GET',
       headers: {
         'user-agent': 'Mozilla/5.0 (compatible; life-pagero-link-validator/1.0)',
         accept: record.types.has('image')
@@ -90,17 +91,9 @@ async function inspect(record) {
 
   for (let attempt = 1; attempt <= 2; attempt += 1) {
     try {
-      try {
-        response = await request(record, 'HEAD');
-      } catch (headError) {
-        networkError = headError;
-        response = await request(record, 'GET');
-      }
-
-      if (response.status >= 400) {
-        response = await request(record, 'GET');
-      }
-
+      // Verify the page a reader opens, not just a HEAD response. Some
+      // protected portals return HEAD 200 while GET is blocked/redirected.
+      response = await request(record);
       networkError = null;
       break;
     } catch (error) {
@@ -113,22 +106,20 @@ async function inspect(record) {
   if (!response) {
     return {
       level: 'warning',
+      cause: 'network-unverifiable',
       message: `network check unavailable (${networkError?.name || 'Error'}: ${networkError?.message || 'unknown error'})`,
+      httpStatus: null, finalUrl: null,
     };
   }
 
-  const status = response.status;
-  if ([404, 410].includes(status)) return { level: 'error', message: `hard failure HTTP ${status}` };
-  if (status >= 500) return { level: 'warning', message: `temporary server response HTTP ${status}` };
-  if ([401, 403, 405, 429].includes(status)) return { level: 'ok', message: `reachable but restricted HTTP ${status}` };
-  if (status < 200 || status >= 400) return { level: 'warning', message: `unexpected HTTP ${status}` };
-
-  const contentType = response.headers.get('content-type') || '';
-  if (record.types.has('image') && contentType && !contentType.startsWith('image/')) {
-    return { level: 'warning', message: `image URL returned ${contentType}` };
-  }
-
-  return { level: 'ok', message: `HTTP ${status}` };
+  const classification = classifyExternalResponse({
+    requestedUrl: record.url,
+    responseUrl: response.url,
+    status: response.status,
+    contentType: response.headers.get('content-type') || '',
+    isImage: record.types.has('image'),
+  });
+  return {...classification, httpStatus: response.status, finalUrl: response.url};
 }
 
 const queue = [...records.values()];
@@ -151,6 +142,10 @@ const errors = [];
 const warnings = [];
 const warningsByCause = {
   'network-unverifiable': 0,
+  'access-restricted': 0,
+  'security-interstitial': 0,
+  'homepage-redirect': 0,
+  'insecure-redirect': 0,
   'temporary-server-response': 0,
   'unexpected-http-response': 0,
   'image-content-type': 0,
@@ -158,13 +153,7 @@ const warningsByCause = {
 };
 const warningDetails = [];
 const hardFailures = [];
-function warningCause(message) {
-  if (message.startsWith('network check unavailable')) return 'network-unverifiable';
-  if (message.startsWith('temporary server response')) return 'temporary-server-response';
-  if (message.startsWith('unexpected HTTP')) return 'unexpected-http-response';
-  if (message.startsWith('image URL returned')) return 'image-content-type';
-  return 'other';
-}
+const warningsByPage = new Map();
 
 
 for (const { record, result } of results) {
@@ -173,12 +162,20 @@ for (const { record, result } of results) {
   const line = `${result.message} | ${types} | ${record.url} | ${owners}`;
   if (result.level === 'error') {
     errors.push(line);
-    hardFailures.push({url:record.url, types:[...record.types], owners:[...record.owners], message:result.message});
+    hardFailures.push({url:record.url, types:[...record.types], owners:[...record.owners],
+      message:result.message, httpStatus:result.httpStatus ?? null, finalUrl:result.finalUrl ?? null});
   } else if (result.level === 'warning') {
     warnings.push(line);
-    const cause=warningCause(result.message);
-    warningsByCause[cause]+=1;
-    warningDetails.push({url:record.url, types:[...record.types], owners:[...record.owners], cause, message:result.message});
+    const cause=result.cause || 'other';
+    warningsByCause[cause]=(warningsByCause[cause]||0)+1;
+    const detail={url:record.url, types:[...record.types], owners:[...record.owners],
+      cause, message:result.message, httpStatus:result.httpStatus ?? null,
+      finalUrl:result.finalUrl ?? null};
+    warningDetails.push(detail);
+    for(const owner of record.owners){
+      if(!warningsByPage.has(owner))warningsByPage.set(owner,[]);
+      warningsByPage.get(owner).push({url:record.url,cause,message:result.message});
+    }
   }
 }
 
@@ -186,12 +183,17 @@ for (const { record, result } of results) {
 // source is dead. Keep all warnings visible and write machine-readable evidence
 // for targeted manual verification, without silently recategorizing them as OK.
 const report={
+  checkedAt: new Date().toISOString(),
+  requestMethod: 'GET',
   uniqueUrlsChecked:queue.length,
   hardFailureCount:hardFailures.length,
   warningCount:warningDetails.length,
   warningCategories:warningsByCause,
   hardFailures,
   warnings:warningDetails,
+  affectedPublishedPages:[...warningsByPage.entries()]
+    .sort((a,b)=>a[0].localeCompare(b[0]))
+    .map(([page,items])=>({page,warningCount:items.length,warnings:items})),
 };
 fs.writeFileSync('external-validation-report.json',JSON.stringify(report,null,2)+'\n','utf8');
 console.log('External resource report written: external-validation-report.json');
