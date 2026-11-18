@@ -626,8 +626,9 @@ const livelihood=JSON.parse(fs.readFileSync(
   path.join(CONTENT_ROOT,'support','livelihood-benefit-2026.json'),'utf8'
 ));
 if(livelihood.slug!=='livelihood-benefit-2026'
-  ||livelihood.updatedAt!=='2026-11-15'
-  ||livelihood.reviewedAt!=='2026-11-15') {
+  ||livelihood.updatedAt<'2026-11-15'
+  ||livelihood.reviewedAt<'2026-11-15'
+  ||livelihood.reviewedAt>livelihood.updatedAt) {
   throw new Error('2026 livelihood reviewed article identity or date reverted');
 }
 for(const url of [
@@ -636,18 +637,21 @@ for(const url of [
   'https://www.mohw.go.kr/menu.es?mid=a10708010200',
 ]) {
   const source=livelihood.sources.find(s=>s.url===url);
-  if(!source||source.checkedAt!=='2026-11-15') {
+  if(!source||source.checkedAt<'2026-11-15'||source.checkedAt>livelihood.reviewedAt) {
     throw new Error('Verified 2026 livelihood primary source lost during content hydration: '+url);
   }
 }
-for(const oldUrl of [
-  'https://www.mohw.go.kr/board.es?act=view&bid=0027&list_no=1487098&mid=a10503010100&nPage=1&tag=',
-  'https://www.gov.kr/portal/service/serviceInfo/WII000001410',
-]) {
-  const original=livelihood.sources.find(s=>s.url===oldUrl);
-  if(!original||original.checkedAt!=='2026-07-20') {
-    throw new Error('Historical livelihood source date was incorrectly promoted: '+oldUrl);
-  }
+// The old 2026 press record was dropped because current ministry guidance
+// supersedes it. The Government24 application CTA was separately checked,
+ // so do not require its historic July metadata once it is actually reverified.
+const historicMinistryRelease='https://www.mohw.go.kr/board.es?act=view&bid=0027&list_no=1487098&mid=a10503010100&nPage=1&tag=';
+if(livelihood.sources.some(s=>s.url===historicMinistryRelease)){
+  throw new Error('Outdated 2026 press source must not be silently presented as a new fact-check');
+}
+const government24=livelihood.sources.find(s=>
+  s.url==='https://www.gov.kr/portal/service/serviceInfo/WII000001410');
+if(!government24||government24.checkedAt<'2026-11-15'||government24.checkedAt>livelihood.reviewedAt){
+  throw new Error('Current Government24 livelihood application guidance missing');
 }
 for(const phrase of ['520,556원','578,316원','2,015,660원','3,351,791원']) {
   if(!livelihood.series.parts[0].body.includes(phrase)) {
@@ -677,8 +681,8 @@ if(!livelihoodHtml.includes('href="https://pagero.kr/life/support/housing-benefi
   throw new Error('2026 livelihood legal exception or appeal links absent in final visible HTML');
 }
 if(!livelihoodHtml.includes('rel="canonical" href="'+SITE_URL+livelihoodPath+'"')
-  ||!livelihoodHtml.includes('"dateModified":"2026-11-15"')
-  ||!sitemap.includes('<loc>'+SITE_URL+livelihoodPath+'</loc><lastmod>2026-11-15</lastmod>')) {
+  ||!livelihoodHtml.includes('"dateModified":"'+livelihood.updatedAt+'"')
+  ||!sitemap.includes('<loc>'+SITE_URL+livelihoodPath+'</loc><lastmod>'+livelihood.updatedAt+'</lastmod>')) {
   throw new Error('2026 livelihood published canonical, article date or sitemap lastmod out of sync');
 }
 for(const continuation of [livelihoodPart2,livelihoodPart3]) {
