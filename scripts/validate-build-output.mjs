@@ -486,8 +486,8 @@ const parentalPath='/support/parental-benefit-2026/';
 const parental=JSON.parse(fs.readFileSync(
   path.join(CONTENT_ROOT,'support','parental-benefit-2026.json'),'utf8'
 ));
-if(parental.slug!=='parental-benefit-2026'||parental.updatedAt!=='2026-11-15'
-    ||parental.reviewedAt!=='2026-11-15') {
+if(parental.slug!=='parental-benefit-2026'||parental.updatedAt<'2026-11-15'
+    ||parental.reviewedAt<'2026-11-15' || parental.reviewedAt>parental.updatedAt) {
   throw new Error('Parental benefit fact-check date or article identity reverted');
 }
 for(const official of [
@@ -496,7 +496,7 @@ for(const official of [
   'https://www.easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=3&cciNo=1&cnpClsNo=1&csmSeq=2604&popMenu=ov',
 ]) {
   const ref=parental.sources.find(s=>s.url===official);
-  if(!ref||ref.checkedAt!=='2026-11-15') {
+  if(!ref||ref.checkedAt<'2026-11-15'||ref.checkedAt>parental.reviewedAt) {
     throw new Error('Parental benefit verified official source lost after hydration: '+official);
   }
 }
@@ -518,8 +518,8 @@ if(!parentalPage3.includes('다음 달 20일')||!parentalPage3.includes('매월 
   throw new Error('Parental benefit payout timelines absent on final follow-up page');
 }
 if(!parentalPage1.includes('rel="canonical" href="'+SITE_URL+parentalPath+'"')
-  ||!parentalPage1.includes('"dateModified":"2026-11-15"')
-  ||!sitemap.includes('<loc>'+SITE_URL+parentalPath+'</loc><lastmod>2026-11-15</lastmod>')) {
+  ||!parentalPage1.includes('"dateModified":"'+parental.updatedAt+'"')
+  ||!sitemap.includes('<loc>'+SITE_URL+parentalPath+'</loc><lastmod>'+parental.updatedAt+'</lastmod>')) {
   throw new Error('Parental benefit indexable canonical, schema or sitemap changed unexpectedly');
 }
 for(const page of [parentalPage2,parentalPage3]) {
