@@ -48,15 +48,27 @@ export function robotsAllows(text, pathname = '/life/', agent = 'Googlebot') {
   return matching.length ? matching[0].allow : true;
 }
 
-export function checkRootRobots(text) {
+export function checkRootRobots(text, paths = [
+  '/life/', '/life/car/car-inspection-period/', '/life/support/child-allowance-2026/'
+]) {
   const sitemap = String(text).split(/\r?\n/)
     .map(line=>line.trim())
     .filter(line=>/^Sitemap:\s*/i.test(line))
     .map(line=>line.replace(/^Sitemap:\s*/i,''));
   if (!sitemap.includes(EXPECTED_SITEMAP)) throw Error('Canonical /life/sitemap.xml absent from HOST ROOT robots.txt');
-  for (const pathname of ['/life/', '/life/car/car-inspection-period/', '/life/support/child-allowance-2026/']) {
-    if (!robotsAllows(text,pathname)) throw Error('Host-root Googlebot robots disallows '+pathname);
+  // The entire public sitemap must be permitted to both major Korean
+  // search crawlers. Checking only three sample URLs misses path-specific
+  // Disallow directives (for example /life/food/ or /life/finance/).
+  for (const target of paths) {
+    const pathname = String(target).startsWith('https://') ? new URL(target).pathname : target;
+    if (typeof pathname !== 'string' || !pathname.startsWith('/life/'))
+      throw Error('Unexpected non-LIFE URL in robots coverage: ' + String(target));
+    for (const crawler of ['Googlebot', 'Yeti']) {
+      if (!robotsAllows(text,pathname,crawler))
+        throw Error('Host-root ' + crawler + ' robots disallows ' + pathname);
+    }
   }
+  return paths.length;
 }
 
 export function robotsMeta(html) {
@@ -74,6 +86,13 @@ export function ensureIndexable({status,headers,content},url) {
   const robots=robotsMeta(content);
   if (!robots || /\bnoindex\b/i.test(robots)) throw Error('Missing or noindex HTML robots tag');
   if (canonicalHref(content)!==url) throw Error('Canonical mismatch: '+canonicalHref(content));
+  const titles = [...content.matchAll(/<title(?:\s[^>]*)?>([\s\S]*?)<\/title>/gi)];
+  if (titles.length !== 1 || !titles[0][1].replace(/<[^>]+>/g,'').trim())
+    throw Error('Missing, empty or duplicated HTML title');
+  const descriptions = [...content.matchAll(/<meta\b(?=[^>]*\bname\s*=\s*["']description["'])[^>]*>/gi)];
+  if (descriptions.length !== 1 ||
+      !/\bcontent\s*=\s*["'][^"']{20,}["']/i.test(descriptions[0][0]))
+    throw Error('Missing, empty, short or duplicated HTML meta description');
   if ((content.match(/<h1(?:\s[^>]*)?>/gi)||[]).length!==1)
     throw Error('Expected exactly one H1');
 }

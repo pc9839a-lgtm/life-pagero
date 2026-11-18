@@ -8,7 +8,9 @@ import {
 
 const headers=(items={})=>new Headers(items);
 const articleUrl=SITE+'/car/car-inspection-period/';
-const canonicalHTML='<html><head><meta name="robots" content="index,follow,max-image-preview:large">'
+const canonicalHTML='<html><head><title>자동차 검사기간 | 생활비서</title>'
+  +'<meta name="description" content="자동차 검사기간과 검사 예약 방법을 공식 자료로 확인하는 생활정보 안내 페이지입니다.">'
+  +'<meta name="robots" content="index,follow,max-image-preview:large">'
   +'<link rel="canonical" href="'+articleUrl+'"></head><body><h1>자동차 검사기간</h1></body></html>';
 const noindexHTML=(url)=>'<html><head><meta name="robots" content="noindex,follow">'
   +'<link rel="canonical" href="'+url+'"></head><body><h1>상세 내용</h1></body></html>';
@@ -77,4 +79,32 @@ test('live manifest must identify a deployed main-branch Cloudflare build',()=>{
   assert.throws(()=>ensureDeploymentManifest({
     status:200,content:JSON.stringify({...manifest,branch:'preview'})
   }),/not main/);
+});
+
+test('every sitemap route is checked against Googlebot and Naver Yeti, not three samples',()=>{
+  const siteMapRoutes=[
+    SITE+'/',SITE+'/car/car-inspection-period/',SITE+'/support/child-allowance-2026/',
+    SITE+'/food/',SITE+'/finance/savings/'
+  ];
+  const targeted='User-agent: *\nAllow: /\nDisallow: /life/food/\n'
+    +'Sitemap: '+SITE+'/sitemap.xml';
+  // Existing representative URL checks were falsely green.
+  assert.doesNotThrow(()=>checkRootRobots(targeted));
+  assert.throws(()=>checkRootRobots(targeted,siteMapRoutes),/Googlebot robots disallows \/life\/food\//);
+  const naverOnly='User-agent: *\nAllow: /\n'
+    +'User-agent: Yeti\nDisallow: /life/finance/\n'
+    +'Sitemap: '+SITE+'/sitemap.xml';
+  assert.throws(()=>checkRootRobots(naverOnly,siteMapRoutes),/Yeti robots disallows \/life\/finance\//);
+  const good='User-agent: *\nAllow: /\nSitemap: '+SITE+'/sitemap.xml';
+  assert.equal(checkRootRobots(good,siteMapRoutes),siteMapRoutes.length);
+});
+
+test('live indexability rejects absent, duplicated or short SEO snippets',()=>{
+  const good={status:200,headers:headers({'X-Pagero-Life-Proxy':'1'}),content:canonicalHTML};
+  const title='<title>자동차 검사기간 | 생활비서</title>';
+  const desc='<meta name="description" content="자동차 검사기간과 검사 예약 방법을 공식 자료로 확인하는 생활정보 안내 페이지입니다.">';
+  assert.throws(()=>ensureIndexable({...good,content:canonicalHTML.replace(title,'')},articleUrl),/HTML title/);
+  assert.throws(()=>ensureIndexable({...good,content:canonicalHTML.replace(title,title+title)},articleUrl),/HTML title/);
+  assert.throws(()=>ensureIndexable({...good,content:canonicalHTML.replace(desc,'')},articleUrl),/meta description/);
+  assert.throws(()=>ensureIndexable({...good,content:canonicalHTML.replace(desc,'<meta name="description" content="짧음">')},articleUrl),/meta description/);
 });

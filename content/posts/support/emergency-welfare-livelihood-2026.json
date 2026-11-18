@@ -4,8 +4,8 @@
   "slug": "emergency-welfare-livelihood-2026",
   "category": "support",
   "publishedAt": "2026-07-20",
-  "updatedAt": "2026-07-20",
-  "reviewedAt": "2026-07-20",
+  "updatedAt": "2026-11-18",
+  "reviewedAt": "2026-11-18",
   "author": "생활비서 편집팀",
   "featured": true,
   "evergreen": false,
@@ -25,22 +25,12 @@
     {
       "name": "보건복지부 긴급복지지원 제도 안내",
       "url": "https://www.mohw.go.kr/menu.es?mid=a10708010100",
-      "checkedAt": "2026-07-20"
+      "checkedAt": "2026-11-18"
     },
     {
-      "name": "보건복지부 2026년 긴급복지 생계지원 안내",
-      "url": "https://www.mohw.go.kr/gallery.es?act=view&bid=0003&list_no=379776&mid=a10505000000&tag=",
-      "checkedAt": "2026-07-20"
-    },
-    {
-      "name": "복지로 긴급복지 생계지원 서비스 상세",
-      "url": "https://www.bokjiro.go.kr/ssis-tbu/twataa/wlfareInfo/moveTWAT52011M.do?wlfareInfoId=WLF00003180",
-      "checkedAt": "2026-07-20"
-    },
-    {
-      "name": "국가법령정보센터 위기상황으로 인정하는 사유",
-      "url": "https://www.law.go.kr/LSW//admRulInfoP.do?admRulSeq=2100000280438&chrClsCd=010201",
-      "checkedAt": "2026-07-20"
+      "name": "대한민국 정책브리핑 2026년 보건·복지 정책 긴급복지 생계지원 변화",
+      "url": "https://m.korea.kr/news/policyFocusView.do?newsId=148956615&pkgId=49500828",
+      "checkedAt": "2026-11-18"
     }
   ],
   "faqs": [

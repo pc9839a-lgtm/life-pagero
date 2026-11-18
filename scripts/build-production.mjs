@@ -101,6 +101,7 @@ const steps = [
   // Final article inventory exists only after food content and SEO finalization.
   ['node', ['scripts/build-published-rss.mjs']],
   ['node', ['scripts/verify-published-rss.mjs']],
+  ['node', ['scripts/verify-seo-search-snippets.mjs']],
   ['node', ['scripts/verify-internal-link-graph.mjs']],
 ];
 

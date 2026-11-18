@@ -5,7 +5,7 @@
   "category": "support",
   "publishedAt": "2026-07-20",
   "updatedAt": "2026-07-20",
-  "reviewedAt": "2026-07-20",
+  "reviewedAt": "2026-11-18",
   "author": "생활비서 편집팀",
   "featured": true,
   "evergreen": false,
@@ -25,17 +25,17 @@
     {
       "name": "고용노동부 2026년 두루누리 사회보험지원사업 운영지침",
       "url": "https://www.moel.go.kr/info/publict/publictDataView.do?bbs_seq=20260600516",
-      "checkedAt": "2026-07-20"
+      "checkedAt": "2026-11-18"
     },
     {
       "name": "두루누리 근로자 사회보험료 지원 공식 안내",
       "url": "https://insurancesupport.or.kr/durunuri/intro.php",
-      "checkedAt": "2026-07-20"
+      "checkedAt": "2026-11-18"
     },
     {
       "name": "국민연금공단 두루누리 지원 및 신청방법 안내",
       "url": "https://www.nps.or.kr/pnsinfo/ntpsklg/getOHAF0006M0.do",
-      "checkedAt": "2026-07-20"
+      "checkedAt": "2026-11-18"
     }
   ],
   "faqs": [
