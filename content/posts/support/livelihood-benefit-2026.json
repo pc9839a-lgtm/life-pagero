@@ -4,8 +4,8 @@
   "slug": "livelihood-benefit-2026",
   "category": "support",
   "publishedAt": "2026-07-20",
-  "updatedAt": "2026-11-15",
-  "reviewedAt": "2026-11-15",
+  "updatedAt": "2026-11-18",
+  "reviewedAt": "2026-11-18",
   "author": "생활비서 편집팀",
   "featured": true,
   "evergreen": false,
@@ -23,34 +23,24 @@
   ],
   "sources": [
     {
-      "name": "보건복지부 2026년도 기준 중위소득·생계급여 선정기준",
-      "url": "https://www.mohw.go.kr/board.es?act=view&bid=0027&list_no=1487098&mid=a10503010100&nPage=1&tag=",
-      "checkedAt": "2026-07-20"
-    },
-    {
-      "name": "복지로 생계급여 서비스 상세",
-      "url": "https://www.bokjiro.go.kr/ssis-teu/twataa/wlfareInfo/moveTWAT52011M.do?wlfareInfoId=WLF00001132&wlfareInfoReldBztpCd=01",
-      "checkedAt": "2026-07-20"
-    },
-    {
       "name": "정부24 생계급여 신청 안내",
       "url": "https://www.gov.kr/portal/service/serviceInfo/WII000001410",
-      "checkedAt": "2026-07-20"
+      "checkedAt": "2026-11-18"
     },
     {
       "name": "보건복지부 2026 기초생활보장 소득인정액·부양의무자 고소득 고재산 예외",
       "url": "https://www.mohw.go.kr/menu.es?mid=a10708010300",
-      "checkedAt": "2026-11-15"
+      "checkedAt": "2026-11-18"
     },
     {
       "name": "보건복지부 2026 생계급여 지급액 산정과 7·8인가구 기준",
       "url": "https://www.mohw.go.kr/menu.es?mid=a10708010500",
-      "checkedAt": "2026-11-15"
+      "checkedAt": "2026-11-18"
     },
     {
       "name": "보건복지부 기초생활보장 신청·조사·90일 이의신청 절차",
       "url": "https://www.mohw.go.kr/menu.es?mid=a10708010200",
-      "checkedAt": "2026-11-15"
+      "checkedAt": "2026-11-18"
     }
   ],
   "faqs": [
