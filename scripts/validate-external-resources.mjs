@@ -198,6 +198,33 @@ const report={
 fs.writeFileSync('external-validation-report.json',JSON.stringify(report,null,2)+'\n','utf8');
 console.log('External resource report written: external-validation-report.json');
 console.log('External warning categories: '+JSON.stringify(warningsByCause));
+if (process.env.GITHUB_STEP_SUMMARY) {
+  const groups=Object.entries(warningsByCause).filter(([,count])=>count>0)
+    .sort((a,b)=>b[1]-a[1]);
+  const pages=report.affectedPublishedPages
+    .sort((a,b)=>b.warningCount-a.warningCount||a.page.localeCompare(b.page));
+  const lines=[
+    '## LIFE official outbound references — HTTP GET audit',
+    '',
+    'Checked '+queue.length+' unique references. Verified 404/410: '+hardFailures.length+
+      '. Unverified / restricted: '+warningDetails.length+'.',
+    '',
+    '| Cause | URLs |',
+    '|---|---:|',
+    ...groups.map(([cause,count])=>'| '+cause+' | '+count+' |'),
+    '',
+    '### Pages requiring source verification',
+    '',
+    '| Page | Unverified references |',
+    '|---|---:|',
+    ...pages.slice(0,30).map(x=>'| '+x.page+' | '+x.warningCount+' |'),
+    '',
+    'A bot-blocked, HTTP 417/403, timed-out or security-redirected URL is **unverified**, not confirmed dead.',
+    'Full URL, HTTP status and final redirect URL: external-validation-report.json (workflow artifact).'
+  ];
+  fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,lines.join('\\n')+'\\n');
+}
+
 
 if (warnings.length) {
   console.warn(`External resource warnings: ${warnings.length}`);
