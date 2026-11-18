@@ -46,7 +46,7 @@ jobs:
           name: build-log
           path: build.log
           if-no-files-found: error
-          retention-days: 1
+          retention-days: 14
       - name: Fail when build validation failed
         if: steps.site_build.outputs.status != '0'
         run: exit 1
@@ -67,4 +67,4 @@ jobs:
             external.log
             external-validation-report.json
           if-no-files-found: error
-          retention-days: 1
+          retention-days: 14
