@@ -5,7 +5,7 @@
   "category": "support",
   "publishedAt": "2026-07-20",
   "updatedAt": "2026-07-20",
-  "reviewedAt": "2026-07-20",
+  "reviewedAt": "2026-11-18",
   "author": "생활비서 편집팀",
   "featured": true,
   "evergreen": false,
@@ -25,12 +25,12 @@
     {
       "name": "고용24 국민내일배움카드 발급 안내",
       "url": "https://www.work24.go.kr/hr/h/a/1100/selectIssuGudn.do",
-      "checkedAt": "2026-07-20"
+      "checkedAt": "2026-11-18"
     },
     {
       "name": "고용24 국민내일배움카드 정책 안내",
       "url": "https://m.work24.go.kr/cm/c/f/1100/selecSystInfo.do?currentPageNo=1&recordCountPerPage=10&systClId=SC00000004&systId=SI00000351",
-      "checkedAt": "2026-07-20"
+      "checkedAt": "2026-11-18"
     }
   ],
   "faqs": [
