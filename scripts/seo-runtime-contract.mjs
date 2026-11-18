@@ -53,9 +53,11 @@ async function check(label,url,validate){
 }
 
 const sitemapUrl=EXPECTED_SITEMAP;
+let hostRootRobots = '';
 await check('host-root-robots',ROOT+'/robots.txt',({status,content})=>{
   assert(status===200,'HOST ROOT robots.txt HTTP '+status);
   checkRootRobots(content);
+  hostRootRobots = content;
 });
 let urls=[];
 await check('sitemap',sitemapUrl,({status,content})=>{
@@ -68,6 +70,18 @@ await check('sitemap',sitemapUrl,({status,content})=>{
   assert(urls.every(url=>url.startsWith(PUBLIC+'/')),'Noncanonical sitemap URL found');
   assert(urls.every(url=>!/(?:\/2\/|\/3\/)$/.test(url)),'Continuation URL leaked into sitemap');
 });
+
+// Check every sitemap route against the ACTUAL host-root crawl policy for
+// Googlebot and Naver Yeti. One sample path passing is insufficient.
+let fullSitemapRobotsRoutes = 0;
+if (hostRootRobots && urls.length) {
+  try {
+    fullSitemapRobotsRoutes = checkRootRobots(hostRootRobots, urls);
+    checked.push({label:'full-sitemap-googlebot-yeti-robots',url:ROOT+'/robots.txt',status:200});
+  } catch (error) {
+    fail(ROOT+'/robots.txt',String(error?.message || error));
+  }
+}
 
 // The Pagero reverse proxy rewrites JSON quoted paths to /life/*. Verify the
 // *actual public JSON payload*, not only local dist/search-index.json.
@@ -152,6 +166,8 @@ const report={
   expectedCommit:expectedCommit||null,
   deployedCommit,
   indexableUrls:urls.length,
+  fullSitemapRobotsRoutes,
+  checkedCrawlerAgents:['Googlebot','Yeti'],
   liveSearchItems,
   proxyPrefixedSearchItems,
   transientRetries,
@@ -164,7 +180,8 @@ fs.mkdirSync(path.dirname(reportPath),{recursive:true});
 fs.writeFileSync(reportPath,JSON.stringify(report,null,2)+'\n');
 console.log('[seo-runtime] searchTargets='+liveSearchItems+' proxyPrefixed='+proxyPrefixedSearchItems+' transportRetries='+transientRetries);
 console.log('[seo-runtime] checked='+checked.length+' sitemapURLs='+urls.length
-  +' deployed='+ (deployedCommit||'unknown') +' errors='+errors.length);
+  +' deployed='+ (deployedCommit||'unknown') +' robotsRoutes='+fullSitemapRobotsRoutes
+  +' crawlerAgents=Googlebot,Yeti errors='+errors.length);
 for(const item of errors)console.error('[seo-runtime] FAIL '+item.url+' : '+item.reason);
 for(const warning of warnings)console.warn('[seo-runtime] WARN '+warning);
 if(errors.length)process.exitCode=1;
