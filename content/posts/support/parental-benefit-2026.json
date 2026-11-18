@@ -4,8 +4,8 @@
   "slug": "parental-benefit-2026",
   "category": "support",
   "publishedAt": "2026-07-20",
-  "updatedAt": "2026-11-15",
-  "reviewedAt": "2026-11-15",
+  "updatedAt": "2026-11-18",
+  "reviewedAt": "2026-11-18",
   "author": "생활비서 편집팀",
   "featured": true,
   "evergreen": false,
@@ -23,34 +23,19 @@
   ],
   "sources": [
     {
-      "name": "복지로 2026년 부모급여 지원 안내",
-      "url": "https://www.bokjiro.go.kr/ssis-tbu/cms/pc/customer/notice/1309189_1141.html",
-      "checkedAt": "2026-07-20"
-    },
-    {
-      "name": "복지로 부모급여 서비스 안내·신청",
-      "url": "https://www.bokjiro.go.kr/ssis-tbu/twataa/wlfareInfo/moveTWAT52011M.do?wlfareInfoId=WLF00004657",
-      "checkedAt": "2026-07-20"
-    },
-    {
-      "name": "복지로 2026 영유아 보육서비스 사전신청 안내",
-      "url": "https://www.bokjiro.go.kr/ssis-tbu/link/WFletter2017.jsp?cmsUrl=%2Fssis-tbu%2Fcms%2Fpc%2Fcustomer%2Fnotice%2F1309244_1141.html",
-      "checkedAt": "2026-07-20"
-    },
-    {
       "name": "보건복지부 2026년 부모급여 연령·금액·지급일·차액 공식 안내",
       "url": "https://www.korea.kr/news/policyNewsView.do?newsId=148957936",
-      "checkedAt": "2026-11-15"
+      "checkedAt": "2026-11-18"
     },
     {
       "name": "아이사랑 2026 보육료 단가 및 부모급여 차액·상위반 적용 공지",
       "url": "https://www.childcare.go.kr/?BVIEWGB=2&bgb=1&bid=1895876&flag=Sl&menuno=326&searchType=1",
-      "checkedAt": "2026-11-15"
+      "checkedAt": "2026-11-18"
     },
     {
       "name": "법제처 생활법령 부모급여·아동수당·양육수당 구분",
       "url": "https://www.easylaw.go.kr/CSP/CnpClsMain.laf?ccfNo=3&cciNo=1&cnpClsNo=1&csmSeq=2604&popMenu=ov",
-      "checkedAt": "2026-11-15"
+      "checkedAt": "2026-11-18"
     }
   ],
   "faqs": [
