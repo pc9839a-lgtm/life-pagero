@@ -800,7 +800,8 @@ const repairedLegalCitations=[
     slug:'support/unemployment-benefit-eligibility-2026',
     old:'https://www.law.go.kr/LSW/lsSideInfoP.do?docCls=jo&joBrNo=00&joNo=0050&lsiSeq=279807&urlMode=lsScJoRltInfoR',
     url:'https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1034325293',
-    originalReview:'2026-07-20',
+    originalReview:'2026-11-18',
+    lawChecked:'2026-11-18',
   }
 ];
 for(const entry of repairedLegalCitations) {
