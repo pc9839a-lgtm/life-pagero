@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {groupPosts} from './life-topic-catalog.mjs';
 
 // Final presentation pass: retain all original articles, slugs, canonical URLs,
 // structured data and ad slots. Never fabricate live news or market rates.
@@ -33,30 +34,16 @@ const write = (relative, html) => {
   fs.writeFileSync(filename, html);
 };
 
-const topics = [
-  { title: '금융·세금', desc: '대출 상환액 · 세금 · 환급', href: '/finance/',
-    pattern: /연말정산|종합소득세|소득세|세금|자동차세|환급|공제|금융|대출/ },
-  { title: '지원금·복지', desc: '대상 조건 · 지급액 · 신청', href: '/support/',
-    pattern: /지원금|급여|수당|연금|바우처|지원제도|복지/ },
-  { title: '주거·부동산', desc: '주거급여 · 월세 · 이사', href: '/support/',
-    pattern: /주거|임차|월세|전세|주택|임대|이사/ },
-  { title: '자동차', desc: '검사 · 이전등록 · 비용', href: '/car/',
-    pattern: /자동차|중고차|검사|명의이전/ },
-  { title: '취업·노동', desc: '구직 · 취업 · 근로', href: '/support/',
-    pattern: /취업|구직|근로|퇴직|노동|실업/ },
-  { title: '생활·건강', desc: '여권 · 주민등록 · 건강 · 생활요금', href: '/support/',
-    pattern: /건강|접종|돌봄|의료|병원|전기|관리비|요금|여권|주민등록|신분증/ },
-];
-
+// Show each category's actual articles, not an arbitrary support/ listing.
+const topics = groupPosts(posts);
 const sections = topics.map(topic => {
-  const matches = (topic.title === '자동차'
-    ? posts.filter(post => post.category === 'car').sort(compareNew)
-    : byTitle(topic.pattern)).slice(0, 4);
+  const href = topic.id === 'car' ? '/car/' : '/topics/' + topic.id + '/';
+  const matches = topic.posts.slice(0, 4);
   return '<section class="portal-topic-card" aria-label="' + esc(topic.title) + '">'
-    + '<div class="portal-topic-card-head"><h3>' + link(topic.href, topic.title) + '</h3>'
-    + '<p>' + esc(topic.desc) + '</p></div>'
+    + '<div class="portal-topic-card-head"><h3>' + link(href, topic.title) + '</h3>'
+    + '<p>' + esc(topic.description) + '</p></div>'
     + '<ul>' + articleLinks(matches, 4) + '</ul>'
-    + '<a class="portal-more" href="' + esc(topic.href) + '">분야별 정보 보기</a>'
+    + '<a class="portal-more" href="' + esc(href) + '">분야별 정보 보기</a>'
     + '</section>';
 }).join('');
 
@@ -76,6 +63,7 @@ const newHome = '<section class="hero portal-home-hero">'
   + '<input id="portal-home-q" name="q" type="search" placeholder="예: 자동차 검사기간, 주거급여, 연말정산" required>'
   + '<button type="submit">검색</button></form>'
   + '<div class="portal-search-suggestions" aria-label="자주 찾는 정보">'
+  + link('/finance/', '금융·대출 전체 보기')
   + link('/finance/loan-payment/', '대출 이자 계산')
   + link('/car/car-inspection-period/', '자동차 검사기간')
   + link('/support/housing-benefit-2026/', '주거급여 기준')
