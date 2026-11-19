@@ -17,8 +17,10 @@ assert(home.includes('class="modern-section-heading"'),'situation-based explorat
 for(const destination of ['/car/','/topics/finance-tax/','/topics/welfare/','/topics/housing/','/topics/work/','/topics/daily/']){
   assert(home.includes('href="'+destination+'"'),'topic destination missing: '+destination);
 }
-assert(home.includes('href="/finance/"')&&home.includes('href="/support/'),
-  'finance tools and original support archive must remain discoverable');
+assert(home.includes('href="/finance/"'),'finance tools must remain accessible from homepage');
+const topicsHub=read('topics/index.html');
+assert(topicsHub.includes('href="/support/"')&&topicsHub.includes('href="/car/"'),
+  'original support and car archives must remain discoverable from topic hub');
 assert((home.match(/data-affiliate="tenping-/g)||[]).length===2,'homepage affiliate density must be limited to two cards');
 assert((home.match(/data-life-coupang-kind="(?:middle|body)"/g)||[]).length===2,'homepage body ads changed');
 assert((home.match(/data-life-coupang-kind="rail"/g)||[]).length===1,'homepage rail ad changed');
