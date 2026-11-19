@@ -63,6 +63,7 @@ const newHome = '<section class="hero portal-home-hero">'
   + '<input id="portal-home-q" name="q" type="search" placeholder="예: 자동차 검사기간, 주거급여, 연말정산" required>'
   + '<button type="submit">검색</button></form>'
   + '<div class="portal-search-suggestions" aria-label="자주 찾는 정보">'
+  + link('/finance/', '금융·대출 전체 보기')
   + link('/finance/loan-payment/', '대출 이자 계산')
   + link('/car/car-inspection-period/', '자동차 검사기간')
   + link('/support/housing-benefit-2026/', '주거급여 기준')
