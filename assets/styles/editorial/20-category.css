@@ -265,3 +265,23 @@
   .life-editorial .topics-article-row strong{font-size:15px}
   .life-editorial .topics-article-row span{font-size:12px}
 }
+/* Search has useful, safe alternatives when the exact query returns no articles. */
+.life-editorial #search-results .search-topic-suggestions{
+  display:flex;flex-wrap:wrap;gap:9px;margin:14px 0 24px
+}
+.life-editorial #search-results .search-topic-suggestions a{
+  display:inline-flex;align-items:center;min-height:40px;padding:9px 13px;
+  border:1px solid #dce3e8;border-radius:7px;background:#fff;
+  color:#354550;text-decoration:none;font-size:14px;font-weight:650;
+  word-break:keep-all
+}
+.life-editorial #search-results .search-topic-suggestions a:hover,
+.life-editorial #search-results .search-topic-suggestions a:focus-visible{
+  border-color:var(--brand);color:var(--brand);outline-offset:2px
+}
+@media(max-width:700px){
+  .life-editorial #search-results .search-topic-suggestions{gap:7px}
+  .life-editorial #search-results .search-topic-suggestions a{
+    font-size:13px;min-height:42px;padding:9px 11px
+  }
+}
