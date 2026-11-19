@@ -233,3 +233,35 @@
   .life-editorial .topics-quick a{min-height:52px;padding:11px 15px}
   .life-editorial .topics-quick a strong{font-size:13px}
 }
+
+/* LIFE topic collections: single-column editorial lists, not decorative cards. */
+.life-editorial .topics-sections{margin:34px 0 0}
+.life-editorial .topics-preview-group{padding:17px 0;border-top:1px solid #e2e7ea}
+.life-editorial .topics-preview-group h3{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 8px;font-size:17px;gap:12px}
+.life-editorial .topics-preview-group h3 a{color:#273746;text-decoration:none}
+.life-editorial .topics-preview-group h3 a:hover{color:var(--brand)}
+.life-editorial .topics-count{font-size:12px;font-weight:500;color:#697985;white-space:nowrap}
+.life-editorial .topics-preview-group ul{margin:0;padding:0;list-style:none}
+.life-editorial .topics-preview-group li{padding:6px 0}
+.life-editorial .topics-preview-group li a{display:block;color:#40505f;text-decoration:none;font-size:14px;line-height:1.55}
+.life-editorial .topics-preview-group li a:hover{color:var(--brand)}
+.life-editorial .topics-original-links{margin:13px 0;color:#687986;font-size:13px}
+.life-editorial .topics-original-links a{color:inherit}
+.life-editorial .topics-detail{max-width:860px;margin-inline:auto}
+.life-editorial .topics-catalog{margin:24px 0 0}
+.life-editorial .topics-article-list{list-style:none;margin:0;padding:0}
+.life-editorial .topics-article-row{border-bottom:1px solid #e0e5e8}
+.life-editorial .topics-article-row:first-child{border-top:1px solid #e0e5e8}
+.life-editorial .topics-article-row a{display:block;padding:17px 0;text-decoration:none;color:#273746}
+.life-editorial .topics-article-row a:hover strong{color:var(--brand)}
+.life-editorial .topics-article-row strong{display:block;font-size:16px;font-weight:720;line-height:1.5;word-break:keep-all}
+.life-editorial .topics-article-row span{display:block;margin-top:5px;font-size:13px;line-height:1.6;color:#62717c;word-break:keep-all}
+.life-editorial .topics-collection-more{display:flex;flex-wrap:wrap;gap:10px;margin-top:23px}
+.life-editorial .topics-collection-more a{padding:10px 14px;border:1px solid #dce3e8;border-radius:7px;color:#344653;text-decoration:none;font-weight:650;font-size:13px}
+.life-editorial .topics-collection-more a:hover{border-color:var(--brand);color:var(--brand)}
+@media(max-width:700px){
+  .life-editorial .topics-preview-group{padding:15px 0}
+  .life-editorial .topics-article-row a{padding:15px 0}
+  .life-editorial .topics-article-row strong{font-size:15px}
+  .life-editorial .topics-article-row span{font-size:12px}
+}
