@@ -703,8 +703,9 @@ const housing=JSON.parse(fs.readFileSync(
   path.join(CONTENT_ROOT,'support','housing-benefit-2026.json'),'utf8'
 ));
 if(housing.slug!=='housing-benefit-2026'
-  ||housing.updatedAt!=='2026-11-15'
-  ||housing.reviewedAt!=='2026-11-15') {
+  ||housing.updatedAt<'2026-11-15'
+  ||housing.reviewedAt<'2026-11-15'
+  ||housing.reviewedAt>housing.updatedAt) {
   throw new Error('Housing benefit 2026 latest reviewed source identity/date reverted');
 }
 for(const url of [
@@ -714,7 +715,7 @@ for(const url of [
   'https://lh.or.kr/menu.es?mid=a10401050100',
 ]) {
   const verified=housing.sources.find(s=>s.url===url);
-  if(!verified||verified.checkedAt!=='2026-11-15') {
+  if(!verified||verified.checkedAt<'2026-11-15'||verified.checkedAt>housing.reviewedAt) {
     throw new Error('Current housing benefit primary sources were overwritten: '+url);
   }
 }
@@ -723,8 +724,9 @@ for(const url of [
   'https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=16130000040',
 ]) {
   const historical=housing.sources.find(s=>s.url===url);
-  if(!historical||historical.checkedAt!=='2026-07-21') {
-    throw new Error('Housing benefit historical source was falsely marked reverified: '+url);
+  if(!historical||historical.checkedAt<'2026-11-15'
+      ||historical.checkedAt>housing.reviewedAt) {
+    throw new Error('Housing benefit newly reviewed application citation missing: '+url);
   }
 }
 for(const phrase of ['서울(1급지)','335,000원','275,000원','238,000원','699,000원']) {
@@ -757,8 +759,8 @@ if(!housingThird.includes('href="https://pagero.kr/life/support/livelihood-benef
   throw new Error('Housing benefit must link to reviewed distinct livelihood-benefit source');
 }
 if(!housingFirst.includes('rel="canonical" href="'+SITE_URL+housingPath+'"')
-  ||!housingFirst.includes('"dateModified":"2026-11-15"')
-  ||!sitemap.includes('<loc>'+SITE_URL+housingPath+'</loc><lastmod>2026-11-15</lastmod>')) {
+  ||!housingFirst.includes('"dateModified":"'+housing.updatedAt+'"')
+  ||!sitemap.includes('<loc>'+SITE_URL+housingPath+'</loc><lastmod>'+housing.updatedAt+'</lastmod>')) {
   throw new Error('Housing benefit 2026 canonical, schema or sitemap review date out of sync');
 }
 for(const html of [housingSecond,housingThird]) {

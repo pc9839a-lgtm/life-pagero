@@ -44,23 +44,23 @@ const topics = [
     pattern: /자동차|중고차|검사|명의이전/ },
   { title: '취업·노동', desc: '구직 · 취업 · 근로', href: '/support/',
     pattern: /취업|구직|근로|퇴직|노동|실업/ },
-  { title: '생활·건강', desc: '건강 · 돌봄 · 생활요금', href: '/support/',
-    pattern: /건강|접종|돌봄|의료|병원|전기|관리비|요금/ },
+  { title: '생활·건강', desc: '여권 · 주민등록 · 건강 · 생활요금', href: '/support/',
+    pattern: /건강|접종|돌봄|의료|병원|전기|관리비|요금|여권|주민등록|신분증/ },
 ];
 
 const sections = topics.map(topic => {
   const matches = (topic.title === '자동차'
     ? posts.filter(post => post.category === 'car').sort(compareNew)
-    : byTitle(topic.pattern)).slice(0, 3);
+    : byTitle(topic.pattern)).slice(0, 4);
   return '<section class="portal-topic-card" aria-label="' + esc(topic.title) + '">'
     + '<div class="portal-topic-card-head"><h3>' + link(topic.href, topic.title) + '</h3>'
     + '<p>' + esc(topic.desc) + '</p></div>'
-    + '<ul>' + articleLinks(matches, 3) + '</ul>'
+    + '<ul>' + articleLinks(matches, 4) + '</ul>'
     + '<a class="portal-more" href="' + esc(topic.href) + '">분야별 정보 보기</a>'
     + '</section>';
 }).join('');
 
-const updated = [...posts].sort(compareNew).slice(0, 5);
+const updated = [...posts].sort(compareNew).slice(0, 9);
 const updates = updated.map(post =>
   '<li><a href="' + esc(url(post)) + '"><strong>' + esc(post.title) + '</strong>'
   + '<span>최종 수정 ' + esc(post.updatedAt || post.publishedAt)
@@ -83,7 +83,7 @@ const newHome = '<section class="hero portal-home-hero">'
   + '</div></section>'
   + '<section class="portal-home-section" aria-labelledby="portal-topic-title">'
   + '<div class="portal-section-heading"><h2 id="portal-topic-title">분야별 바로가기</h2>'
-  + '<p>자주 찾는 정보를 주제별로 모았습니다.</p></div>'
+  + '<p>각 분야에서 먼저 확인할 글과 신청 절차를 모았습니다.</p></div>'
   + '<div class="portal-topic-grid">' + sections + '</div></section>'
   + '<section class="portal-home-section portal-updates" aria-labelledby="portal-updates-title">'
   + '<div class="portal-section-heading"><h2 id="portal-updates-title">최근 확인된 생활정보</h2>'

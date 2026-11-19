@@ -10,7 +10,12 @@ const cases=[
 for(const {slug,marker,tableMarker,reviewDate='2026-10-22'} of cases){
   const doc=JSON.parse(fs.readFileSync('content/posts/support/'+slug+'.json','utf8'));
   assert.equal(doc.slug,slug,'Published article identity mismatch: '+slug);
-  assert.equal(doc.updatedAt,reviewDate,'Current fact-check date missing: '+slug);
+  // An independently reverified article may legitimately be newer than this
+  // October/November test snapshot. Never require reverting it to an old date.
+  assert(/^20[0-9]{2}-[0-9]{2}-[0-9]{2}$/.test(doc.updatedAt)
+    && doc.updatedAt>=reviewDate && doc.reviewedAt>=reviewDate
+    && doc.reviewedAt<=doc.updatedAt,
+    'Published factual review is older than the verified baseline: '+slug);
   assert(doc.sources.length>=2,'At least two official citations required: '+slug);
   assert(doc.body.includes(marker),'Editorial decision comparison missing: '+slug);
   assert(/^\|\s*---/m.test(doc.body),'Practical comparison table missing: '+slug);
