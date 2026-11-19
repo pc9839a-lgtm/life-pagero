@@ -1,4 +1,8 @@
-# 생활비서 (`life.pagero.kr`)
+# 생활비서 (https://pagero.kr/life/)
+
+**전체 사이트 점검·개선 우선순위:** [2026-11-19 전 영역 감사 및 콘텐츠 확장 실행안](docs/LIFE_SITEWIDE_AUDIT_AND_CONTENT_ROADMAP_2026-11-19_KO.md)
+
+현재 정식 URL은 https://pagero.kr/life/ 입니다. 과거 life.pagero.kr은 구 주소입니다.
 
 자동차 생활행정과 정부지원·생활정책을 공식 출처 기반으로 정리하는 의존성 없는 정적 블로그입니다.
 
@@ -54,7 +58,7 @@ AdSense 소유권 확인과 실제 광고 노출을 분리합니다.
 
 ## 자연유입 확장 및 매일 주제 발굴
 
-20개 생활경제·행정 주제군을 automation/growth-taxonomy.json에서 관리합니다.
+21개 생활경제·행정 주제 후보군을 automation/growth-taxonomy.json에서 관리합니다. 현재 공개 글 카테고리는 자동차(car)·정부지원(support) 2개이며, 주제 후보 21개가 독립적으로 발행되었다는 뜻은 아닙니다.
 
 - 자동 발견: npm run radar (금융위원회·행정안전부·고용노동부·서울시 공식 RSS 수집 및 KOSIS 통계 참고)
 - 검사: npm run radar:test
