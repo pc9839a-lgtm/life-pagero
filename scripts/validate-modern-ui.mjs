@@ -14,7 +14,11 @@ assert(home.includes('role="search"')&&home.includes('portal-home-q'),'working h
 assert((home.match(/class="modern-topic-icon"/g)||[]).length===6,'six topic icons required');
 assert(home.includes('class="modern-all-articles"'),'archive must be collapsible, not lost');
 assert(home.includes('class="modern-section-heading"'),'situation-based exploration missing');
-assert(home.includes('href="/car/"')&&home.includes('href="/support/"')&&home.includes('href="/finance/"'),'core destinations missing');
+for(const destination of ['/car/','/topics/finance-tax/','/topics/welfare/','/topics/housing/','/topics/work/','/topics/daily/']){
+  assert(home.includes('href="'+destination+'"'),'topic destination missing: '+destination);
+}
+assert(home.includes('href="/finance/"')&&home.includes('href="/support/'),
+  'finance tools and original support archive must remain discoverable');
 assert((home.match(/data-affiliate="tenping-/g)||[]).length===2,'homepage affiliate density must be limited to two cards');
 assert((home.match(/data-life-coupang-kind="(?:middle|body)"/g)||[]).length===2,'homepage body ads changed');
 assert((home.match(/data-life-coupang-kind="rail"/g)||[]).length===1,'homepage rail ad changed');
