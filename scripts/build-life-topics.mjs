@@ -152,21 +152,21 @@ for(const group of groups.filter(group=>group.id!=='car')){
     +'<a href="'+esc(group.moreHref)+'">'+esc(group.moreLabel)+'</a>'
     +'<a href="/topics/">다른 분야 찾아보기</a></nav>'
     +'</article></div></main>';
-  let page=html.replace(/<main id="main-content">[\\s\\S]*?<\\/main>/,main)
-    .replace(/<title>[\\s\\S]*?<\\/title>/,'<title>'+esc(title)+'</title>')
+  let page=html.replace(/<main id="main-content">[\s\S]*?<\/main>/,main)
+    .replace(/<title>[\s\S]*?<\/title>/,'<title>'+esc(title)+'</title>')
     .replace(/<meta name="description"[^>]*>/,'<meta name="description" content="'+esc(description)+'">')
     .replace(/<link rel="canonical"[^>]*>/,'<link rel="canonical" href="'+SITE+pathname+'">')
     .replace(/<meta property="og:title"[^>]*>/,'<meta property="og:title" content="'+esc(title)+'">')
     .replace(/<meta property="og:description"[^>]*>/,'<meta property="og:description" content="'+esc(description)+'">')
     .replace(/<meta property="og:url"[^>]*>/,'<meta property="og:url" content="'+SITE+pathname+'">');
   // Do not inherit the /topics/ CollectionPage structured-data URL.
-  page=page.replace(/<script type="application\\/ld\\+json">[\\s\\S]*?<\\/script>/g,'');
+  page=page.replace(/<script type="application\/ld\\+json">[\s\S]*?<\/script>/g,'');
   page=page.replace('</head>','<script type="application/ld+json">'+JSON.stringify({
     '@context':'https://schema.org','@type':'CollectionPage',
     name:title,description,url:SITE+pathname,inLanguage:'ko',
     isPartOf:{'@type':'WebSite',name:'생활비서',url:SITE+'/'}
   })+'</script></head>');
-  check((page.match(/<h1(?:\\s[^>]*)?>/g)||[]).length===1,'duplicate H1 '+pathname);
+  check((page.match(/<h1(?:\s[^>]*)?>/g)||[]).length===1,'duplicate H1 '+pathname);
   check((page.match(/<link rel="canonical"/g)||[]).length===1,'duplicate canonical '+pathname);
   check(group.posts.length>=3,'too few articles for published collection '+group.id);
   save(pathname.slice(1)+'index.html',page);
