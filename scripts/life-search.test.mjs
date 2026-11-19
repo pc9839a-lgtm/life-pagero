@@ -116,3 +116,26 @@ test('standalone pages keep their own root and module query strings do not matte
   assert.equal(searchResultHref('/support/child-allowance-2026/',legacyModule),
     'https://life-pagero.pages.dev/support/child-allowance-2026/');
 });
+
+test('common real-life task synonyms find the same published policy article',()=>{
+  const cases=[
+    {url:'/support/2026-vat-tax-guide/',title:'개인사업자 부가가치세 일반과세자·간이과세자 신고',description:'2026 부가가치세 신고',keywords:['부가가치세']},
+    {url:'/support/lease-renewal-notice-guide/',title:'전세계약 계약갱신요구권과 해지 통지',description:'계약갱신',keywords:['임대차']},
+    {url:'/support/wage-arrears-simple-payment-guide/',title:'임금체불 진정과 간이대지급금 신청',description:'임금체불',keywords:['체불임금']},
+    {url:'/support/health-examination-eligibility-guide/',title:'국민건강검진 대상자 조회',description:'건강검진',keywords:['일반건강검진']}
+  ];
+  assert.equal(searchGuides(cases,'부가세')[0]?.url,cases[0].url);
+  assert.equal(searchGuides(cases,'전세연장')[0]?.url,cases[1].url);
+  assert.equal(searchGuides(cases,'못받은월급')[0]?.url,cases[2].url);
+  assert.equal(searchGuides(cases,'국가검진')[0]?.url,cases[3].url);
+});
+
+test('an exact match keeps priority over a synonym hit and limit works across both',()=>{
+  const list=[
+    {url:'/support/vat-tax/',title:'부가가치세 간이과세',description:'부가가치세 신고',keywords:[]},
+    {url:'/support/direct/',title:'부가세 신고',description:'부가세 납부',keywords:[]}
+  ];
+  assert.equal(searchGuides(list,'부가세',1)[0]?.url,'/support/direct/');
+  assert.equal(searchGuides(list,'부가세',2).length,2);
+  assert.deepEqual(searchGuides(list,'부가세',0),[]);
+});
