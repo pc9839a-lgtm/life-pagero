@@ -4,7 +4,7 @@ export function normalizeQuery(value) {
     .replace(/[^\p{L}\p{N}]+/gu, ' ').trim().replace(/\s+/g, ' ');
 }
 const compact = value => normalizeQuery(value).replace(/\s+/g, '');
-export function searchGuides(index, query, limit = 20) {
+function searchGuidesDirect(index, query, limit = 20) {
   const cleaned = normalizeQuery(query);
   if (!cleaned || !Array.isArray(index) || limit <= 0) return [];
   const tokens = cleaned.split(' ');
@@ -40,6 +40,38 @@ export function searchGuides(index, query, limit = 20) {
     String(a.record.title).localeCompare(String(b.record.title), 'ko') ||
     a.record.url.localeCompare(b.record.url, 'en'));
   return scored.slice(0, Math.min(limit, 50)).map(item=>item.record);
+}
+
+// Keep only deliberate colloquial task synonyms; do not broaden a query into
+// unrelated government policies or invent nonexistent pages. Exact matches win.
+const QUERY_SYNONYMS = new Map([
+  ['부가세', ['부가가치세']],
+  ['종소세', ['종합소득세']],
+  ['주담대', ['주택담보대출']],
+  ['전세계약연장', ['계약갱신']],
+  ['전세연장', ['계약갱신']],
+  ['월세계약연장', ['계약갱신']],
+  ['미지급임금', ['임금체불']],
+  ['못받은월급', ['임금체불']],
+  ['핸드폰환급', ['통신미환급액']],
+  ['휴대폰환급', ['통신미환급액']],
+  ['국가검진', ['건강검진']],
+  ['건강보험검진', ['건강검진']],
+  ['주민증재발급', ['주민등록증재발급']],
+  ['가족증명서', ['가족관계증명서']],
+]);
+export function searchGuides(index,query,limit=20){
+  if(!Number.isFinite(limit)||limit<=0)return [];
+  const max=Math.min(Math.floor(limit),50);
+  const first=searchGuidesDirect(index,query,50);
+  const terms=QUERY_SYNONYMS.get(normalizeQuery(query).replace(/\s+/g,''))||[];
+  const seen=new Set(first.map(item=>item.url));
+  for(const term of terms){
+    for(const result of searchGuidesDirect(index,term,50)){
+      if(!seen.has(result.url)){seen.add(result.url);first.push(result);}
+    }
+  }
+  return first.slice(0,max);
 }
 
 // The canonical Pagero proxy rewrites *JSON* root paths (/car/foo/) to

@@ -44,6 +44,12 @@ const assertions=[
   ['자동차 검사기간','/car/car-inspection-period/'],
   ['주거 급여','/support/housing-benefit-2026/'],
   ['금리비교','/finance/savings/'],
+  ['부가세','/support/sole-proprietor-vat-general-simplified-2026/'],
+  ['전세연장','/support/housing-lease-renewal-right-notice-2026/'],
+  ['못받은월급','/support/wage-arrears-labor-petition-simple-payment-2026/'],
+  ['국가검진','/support/national-health-examination-eligibility-booking-2026/'],
+  ['인감증명서','/support/official-seal-certificate-online-issuance-scope-2026/'],
+  ['주담대','/finance/mortgage-calculator/'],
 ];
 for(const [query,url] of assertions){
   if(!items.has(url))fail('Important indexable destination absent '+url);
@@ -55,6 +61,12 @@ for(const [query,url] of assertions){
 const browserSearchScript=read('life-search.js');
 if(!browserSearchScript.includes('anchor.href = searchResultHref(item.url, import.meta.url);'))
   fail('Search result anchors bypass canonical module-base resolver');
+if(!browserSearchScript.includes('function offerTopics(') ||
+   !browserSearchScript.includes('search-topic-suggestions') ||
+   !browserSearchScript.includes('offerTopics(\'일치하는 글이 없습니다.')) {
+  fail('No-result topic navigation is missing from client search');
+}
+
 const canonicalModule='https://pagero.kr/life/life-search.js';
 for(const item of index){
   const actual=searchResultHref(item.url,canonicalModule);

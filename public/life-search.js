@@ -13,10 +13,38 @@ if (form && input && results) {
     p.textContent = value;
     results.replaceChildren(p);
   }
+  function offerTopics(label) {
+    const fragment = document.createDocumentFragment();
+    const intro = document.createElement('p');
+    intro.textContent = label;
+    fragment.append(intro);
+    const choices = [
+      ['/topics/finance-tax/', '금융·세금'],
+      ['/topics/welfare/', '지원금·복지'],
+      ['/topics/housing/', '주거·부동산'],
+      ['/topics/work/', '취업·노동'],
+      ['/topics/daily/', '생활·건강'],
+      ['/car/', '자동차'],
+    ].filter(([url]) => index.some(item => item.url === url));
+    if (choices.length) {
+      const nav = document.createElement('nav');
+      nav.className = 'search-topic-suggestions';
+      nav.setAttribute('aria-label', '분야별 검색 안내');
+      for (const [url, title] of choices) {
+        const link = document.createElement('a');
+        link.href = searchResultHref(url, import.meta.url);
+        link.textContent = title;
+        nav.append(link);
+      }
+      fragment.append(nav);
+    }
+    results.replaceChildren(fragment);
+  }
   function show(query) {
     const text = normalizeQuery(query);
     if (!text) {
-      message('찾을 내용을 입력해 주세요.');
+      if (ready) offerTopics('찾을 내용을 입력하거나 분야를 선택해 주세요.');
+      else message('찾을 내용을 입력해 주세요.');
       return;
     }
     if (!ready) {
@@ -25,7 +53,7 @@ if (form && input && results) {
     }
     const matches = searchGuides(index, text, 20);
     if (!matches.length) {
-      message('일치하는 글이 없습니다. 다른 검색어로 다시 검색해 주세요.');
+      offerTopics('일치하는 글이 없습니다. 아래 분야에서 관련 내용을 찾아보세요.');
       return;
     }
     const fragment = document.createDocumentFragment();
