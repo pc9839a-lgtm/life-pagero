@@ -3121,19 +3121,21 @@
       "visuals": [
         {
           "placement": "hero",
-          "filename": "Bowl of strawberries.jpg",
-          "caption": "구입한 딸기의 색·수분·눌림을 확인할 때 참고할 수 있는 실제 과실 사진",
-          "alt": "그릇에 담긴 붉은 딸기",
-          "attribution": "michael warren · CC BY 2.0",
-          "source": "https://commons.wikimedia.org/wiki/File:Bowl_of_strawberries.jpg"
+          "filename": "pexels-8804989.jpg",
+          "caption": "신선한 딸기를 그릇에 담은 모습 — 구입한 딸기의 겉면부터 점검하세요",
+          "alt": "접시와 그릇에 담긴 신선한 붉은 딸기",
+          "attribution": "Mike Jones · Pexels License",
+          "source": "https://www.pexels.com/photo/strawberries-in-white-ceramic-bowl-8804989/",
+          "downloadUrl": "https://images.pexels.com/photos/8804989/pexels-photo-8804989.jpeg?auto=compress&cs=tinysrgb&w=960"
         },
         {
-          "placement": "딸기 요거트 볼 2인분 만들기",
-          "filename": "Strawberries in white bowl.jpg",
-          "caption": "익은 딸기 모습 — 요거트 조리 과정 자체를 촬영한 사진은 아닙니다",
-          "alt": "흰 그릇에 담긴 붉게 익은 딸기",
-          "attribution": "Alisdair McDiarmid · CC BY 2.0",
-          "source": "https://commons.wikimedia.org/wiki/File:Strawberries_in_white_bowl.jpg"
+          "placement": "식약처 딸기 세척: 담금 1분·흐르는 물 30초",
+          "filename": "pexels-6858690.jpg",
+          "caption": "물에 담긴 딸기 모습(식약처 세척과정의 실제 촬영 사진은 아닙니다)",
+          "alt": "물에 담긴 붉은 딸기가 그릇에 놓인 사진",
+          "attribution": "Jill Burrow · Pexels License",
+          "source": "https://www.pexels.com/photo/delicious-ripe-strawberries-in-bowl-placed-on-table-6858690/",
+          "downloadUrl": "https://images.pexels.com/photos/6858690/pexels-photo-6858690.jpeg?auto=compress&cs=tinysrgb&w=960"
         }
       ],
       "publishedAt": "2026-11-20",
@@ -3369,19 +3371,21 @@
       "visuals": [
         {
           "placement": "hero",
-          "filename": "Liat Portal for Foodie Disorder - Fresh spinach leaves.jpg",
-          "caption": "손질 전 생시금치 원물(보관 시연 사진은 아닙니다)",
-          "alt": "신선한 시금치 잎과 줄기의 모습",
-          "attribution": "HaJunkiyada · CC BY-SA 4.0",
-          "source": "https://commons.wikimedia.org/wiki/File:Liat_Portal_for_Foodie_Disorder_-_Fresh_spinach_leaves.jpg"
+          "filename": "pexels-7129380.jpg",
+          "caption": "그릇에 담긴 신선한 시금치 — 조리 전 세척과 저장방법을 확인하세요",
+          "alt": "그릇 안에 신선한 녹색 시금치 잎이 담긴 사진",
+          "attribution": "Michael Burrows · Pexels License",
+          "source": "https://www.pexels.com/photo/spinach-leaves-in-bowl-on-table-in-kitchen-7129380/",
+          "downloadUrl": "https://images.pexels.com/photos/7129380/pexels-photo-7129380.jpeg?auto=compress&cs=tinysrgb&w=960"
         },
         {
-          "placement": "시금치나물 2인분: 간단한 데치기·무침",
-          "filename": "Spinach leaves boiled.jpg",
-          "caption": "끓는 물에 데친 시금치 상태를 보여주는 실제 사진(양념한 나물 사진은 아닙니다)",
-          "alt": "데친 시금치 잎의 모습",
-          "attribution": "Nillerdk · CC BY 3.0",
-          "source": "https://commons.wikimedia.org/wiki/File:Spinach_leaves_boiled.jpg"
+          "placement": "시금치 잎·뿌리 사이 세척부터 데치기까지",
+          "filename": "pexels-6824475.jpg",
+          "caption": "채반에 담긴 씻은 생시금치(데친 시금치나물 사진은 아닙니다)",
+          "alt": "물방울이 맺힌 시금치가 채반에 담겨 있는 사진",
+          "attribution": "Eva Bronzini · Pexels License",
+          "source": "https://www.pexels.com/photo/green-leaves-with-water-droplets-in-the-strainer-6824475/",
+          "downloadUrl": "https://images.pexels.com/photos/6824475/pexels-photo-6824475.jpeg?auto=compress&cs=tinysrgb&w=960"
         }
       ],
       "publishedAt": "2026-11-20",
