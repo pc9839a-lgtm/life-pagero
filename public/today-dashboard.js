@@ -12,6 +12,13 @@
         month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).format(date)
       :'';
   };
+  // Retrieved timestamps describe our last verified source fetch, not
+  // a guarantee that the underlying quote or observation is live.
+  const snapshotAgeNote=(retrievedAt,maxAgeMs)=>{
+    const at=new Date(retrievedAt).getTime();
+    if(!Number.isFinite(at))return ' · 조회시각 확인 불가';
+    return Date.now()-at>maxAgeMs?' · 이전 조회 자료':'';
+  };
   const status=(node,message)=>{
     const label=node.querySelector('[data-today-status]');
     if(label)label.textContent=message;
@@ -107,7 +114,8 @@
           +' · 1시간 강수 '+(data.precipitationMm==null?'—':data.precipitationMm+'mm'));
         box.hidden=false;box.replaceChildren(temp,summary,details);
         status(node,'기상청 · 관측 '+data.observationDate+' '+data.observationTime
-          +' · 조회 '+localTime(data.retrievedAt));
+          +' · 조회 '+localTime(data.retrievedAt)
+          +snapshotAgeNote(data.retrievedAt,20*60*1000));
       }catch(_){
         if(id!==requestId)return;
         fallback(box,'기상청 날씨 보기','https://www.weather.go.kr/');
@@ -171,7 +179,8 @@
         initial=null;
         all=Array.isArray(data.items)?data.items:[];
         render();
-        status(node,'언론사 · '+localTime(data.retrievedAt));
+        status(node,'언론사 · 조회 '+localTime(data.retrievedAt)
+          +snapshotAgeNote(data.retrievedAt,3*60*60*1000));
       }catch(_){
         fallback(box,'주요 뉴스 보기','https://www.yna.co.kr/');
         status(node,'');
@@ -224,7 +233,8 @@
           });
           box.append(more);
         }
-        status(node,'업비트 KRW · 조회 '+localTime(data.retrievedAt)+' · 전일 종가 대비');
+        status(node,'업비트 KRW · 조회 '+localTime(data.retrievedAt)
+          +snapshotAgeNote(data.retrievedAt,10*60*1000)+' · 전일 종가 대비');
       }catch(_){
         fallback(box,'업비트 시세 보기','https://upbit.com/exchange?code=CRIX.UPBIT.KRW-BTC');
         status(node,'');
