@@ -47,6 +47,36 @@ for(const slug of ['winter-strawberry-wash-refrigerate-freeze',
     'winter SEO title duplicates another article '+slug);
 }
 check(model.guides.length>=16,'winter food expansion reduced article count');
+// 24th editorial batch: two additional winter vegetables, verified photos,
+// a current November fishery reference, and a sweet-potato storage source.
+for(const slug of ['ginger-clean-store-freeze-tea','broccoli-wash-blanch-refrigerate-freeze']){
+  const guide=model.guides.find(g=>g.slug===slug);
+  check(Boolean(guide),'24th winter guide missing '+slug);
+  check(guide.publishedAt==='2026-11-20'&&guide.updatedAt==='2026-11-20',
+    'unexpected 24th winter guide publication date '+slug);
+  check(guide.sections.length>=7&&guide.faq.length>=4&&guide.sources.length>=3,
+    '24th winter guide lacks useful depth '+slug);
+  check(guide.summaryPoints.length===3&&guide.visuals.length===2,
+    '24th winter guide lacks summary or photo pair '+slug);
+  check(guide.sources.some(([,u])=>u.includes('rda.go.kr'))&&
+    guide.sources.some(([,u])=>u.includes('mfds.go.kr')),
+    '24th guide missing original agricultural and food-safety sources '+slug);
+  check(guide.visuals.every(p=>p.source.startsWith('https://www.pexels.com/photo/')
+      &&p.downloadUrl.startsWith('https://images.pexels.com/photos/')
+      &&p.attribution.includes('Pexels License')),
+    '24th guide lacks verifiable Pexels photo origin '+slug);
+}
+check(model.guides.length>=18,'24th winter food expansion reduced article count');
+const refreshedFish=model.guides.find(g=>g.slug==='samchi-grill-clean-freeze');
+check(refreshedFish?.updatedAt==='2026-11-20'&&
+  refreshedFish.sources.some(([,u])=>u.includes('docSeq=69193')),
+  'samchi article still cites obsolete 2025 seasonal seafood list');
+const refreshedPotato=model.guides.find(g=>g.slug==='sweet-potato-storage-guide');
+check(refreshedPotato?.updatedAt==='2026-11-20'&&
+  refreshedPotato.sources.some(([,u])=>u.includes('dataNo=100000801839'))&&
+  refreshedPotato.sections.some(s=>s.title.includes('농가 실증 저장온도')),
+  'sweet potato article lacks current source and farm-vs-home caveat');
+
 check(model.guides.every(g=>g.visuals.length===2),'each guide must have 2 photos');
 for(const slug of ['samchi-grill-clean-freeze','autumn-radish-storage-beef-soup','oyster-clean-cook-storage','sweet-persimmon-storage-salad'])
   check(model.guides.some(g=>g.slug===slug),'new seasonal food guide missing '+slug);
