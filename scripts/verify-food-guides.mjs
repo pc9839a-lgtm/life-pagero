@@ -28,6 +28,25 @@ for(const slug of newlyPublished){
 
 for(const slug of ['cooked-rice-cool-reheat-storage','chicken-thaw-safe-cook-storage'])
   check(model.guides.some(g=>g.slug===slug),'new source-backed food guide missing '+slug);
+// Winter 2026 additions must be full, licensed-photo articles rather than
+// swapping labels on the existing seasonal 14.
+for(const slug of ['winter-strawberry-wash-refrigerate-freeze',
+  'spinach-clean-blanch-refrigerate-freeze']){
+  const guide=model.guides.find(item=>item.slug===slug);
+  check(Boolean(guide),'winter food article missing '+slug);
+  check(guide.publishedAt==='2026-11-20'&&guide.updatedAt==='2026-11-20',
+    'winter publication/modification date incorrect '+slug);
+  check(guide.sections.length>=7&&guide.faq.length>=4&&guide.sources.length>=3,
+    'winter food guide lacks practical depth or government evidence '+slug);
+  check(guide.summaryPoints.length===3&&guide.visuals.length===2,
+    'winter article summary or licensed photo pair missing '+slug);
+  check(guide.sources.some(([,u])=>u.includes('www.rda.go.kr'))&&
+    guide.sources.some(([,u])=>u.includes('www.foodsafetykorea.go.kr')),
+    'winter article must cite both food agency and rural development sources '+slug);
+  check(!model.guides.some(item=>item.slug!==slug&&item.seoTitle===guide.seoTitle),
+    'winter SEO title duplicates another article '+slug);
+}
+check(model.guides.length>=16,'winter food expansion reduced article count');
 check(model.guides.every(g=>g.visuals.length===2),'each guide must have 2 photos');
 for(const slug of ['samchi-grill-clean-freeze','autumn-radish-storage-beef-soup','oyster-clean-cook-storage','sweet-persimmon-storage-salad'])
   check(model.guides.some(g=>g.slug===slug),'new seasonal food guide missing '+slug);
