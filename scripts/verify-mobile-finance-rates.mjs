@@ -23,6 +23,11 @@ check(savings.includes('id="finance-kind"')&&savings.includes('id="finance-group
   savings.includes('id="finance-query"'),
   'existing term, sorting or keyword filter missing');
 
+check(js.includes('const rateSourceLabel = retrievedAt =>') &&
+  js.includes('이전 조회 자료(최신 가입금리는 금융기관 확인)') &&
+  js.includes('source.textContent=rateSourceLabel(data.retrievedAt)') &&
+  js.includes('source.textContent=rateSourceLabel(initial.retrievedAt)'),
+  'Finance must label source retrieval dates and older cached FSS snapshots');
 for(const asset of ['finance/savings-calculator/index.html',
   'finance/mortgage-calculator/index.html','tools/car-cost/index.html']){
   check(!read(asset).includes('src="/finance-live.js'),
