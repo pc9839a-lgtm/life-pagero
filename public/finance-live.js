@@ -33,6 +33,17 @@
       timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'
     }).format(date) + ' KST';
   };
+  // FSS product snapshots use a six-hour fresh edge cache and may serve a
+  // previous verified snapshot for up to 24 hours if the source is unavailable.
+  // retrievedAt is OUR retrieval time, never the bank's last rate-change date.
+  const rateSourceLabel = retrievedAt => {
+    const stamp=time(retrievedAt);
+    if(!stamp)return '금융감독원 공시 · 조회시각 확인 불가 · 공식 공시에서 최신 조건 확인';
+    const age=Date.now()-new Date(retrievedAt).getTime();
+    return '금융감독원 공시 · 조회 '+stamp
+      +(Number.isFinite(age)&&age>6*60*60*1000
+        ? ' · 이전 조회 자료(최신 가입금리는 금융기관 확인)' : '');
+  };
   const preview = document.getElementById('finance-rate-preview');
   const products = document.getElementById('finance-products');
   const ratePanel = document.getElementById('finance-rate-panel');
@@ -147,7 +158,7 @@
       const data=await fetchProducts(kind,group);
       if(id!==selectedRequest)return;
       allProducts=data.products;
-      if(source)source.textContent='금융감독원 · '+time(data.retrievedAt);
+      if(source)source.textContent=rateSourceLabel(data.retrievedAt);
       renderProducts();
       if(ratePanel)ratePanel.hidden=false;
       if(rateOfficial)rateOfficial.hidden=true;
@@ -174,7 +185,7 @@
         allProducts=initial.products;
         productsMemo.set('deposit|bank',initial);
         renderProducts();
-        if(source)source.textContent='금융감독원 · '+time(initial.retrievedAt);
+        if(source)source.textContent=rateSourceLabel(initial.retrievedAt);
         if(ratePanel)ratePanel.hidden=false;
         if(rateOfficial)rateOfficial.hidden=true;
       }catch(error){whenVisible(rateOfficial||ratePanel,loadProducts);}
