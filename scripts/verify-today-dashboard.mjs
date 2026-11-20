@@ -106,6 +106,12 @@ yes(wideCss.includes('@media(min-width:901px)') &&
   wideCss.includes('align-self:stretch;display:flex;flex-direction:column') &&
   wideCss.includes('.today-news-list li{\n    flex:1;align-content:center'),
   'Desktop news panel must stretch to the weather and FX column height');
+yes(dashboardJs.includes('const snapshotAgeNote=') &&
+  dashboardJs.includes('이전 조회 자료') &&
+  dashboardJs.includes('snapshotAgeNote(data.retrievedAt,20*60*1000)') &&
+  dashboardJs.includes('snapshotAgeNote(data.retrievedAt,3*60*60*1000)') &&
+  dashboardJs.includes('snapshotAgeNote(data.retrievedAt,10*60*1000)'),
+  'Weather/news/crypto must clearly label previously fetched snapshots');
 yes(dashboardJs.includes('today-source-prompt'),
   'API unavailable fallback must remain readable');
 yes(!dashboardJs.includes('attachRefresh(') &&
