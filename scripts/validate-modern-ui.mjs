@@ -21,7 +21,7 @@ assert(home.includes('href="/finance/"'),'finance tools must remain accessible f
 const topicsHub=read('topics/index.html');
 assert(topicsHub.includes('href="/support/"')&&topicsHub.includes('href="/car/"'),
   'original support and car archives must remain discoverable from topic hub');
-assert(!/data-affiliate=|life-affiliate|life-sponsor-collection|iryan\\.kr/i.test(home),
+assert(!/data-affiliate=|life-affiliate|life-sponsor-collection|iryan\.kr/i.test(home),
   'Tenping advertisement must not be present on homepage');
 assert((home.match(/data-life-coupang-kind="(?:middle|body)"/g)||[]).length===2,'homepage body ads changed');
 assert((home.match(/data-life-coupang-kind="rail"/g)||[]).length===1,'homepage rail ad changed');
@@ -38,7 +38,7 @@ for(const category of ['car','support']){
     'Retired sponsored wrapper must be gone: '+category);
   const posts=(html.match(/<article class="post-card">/g)||[]).length;
   assert(posts>2,'category cards missing: '+category);
-  assert(!/data-affiliate=|iryan\\.kr|life-sponsor-collection/i.test(html),
+  assert(!/data-affiliate=|iryan\.kr|life-sponsor-collection/i.test(html),
     'Category Tenping advertisements remain: '+category);
   cardCount+=posts;
 }
