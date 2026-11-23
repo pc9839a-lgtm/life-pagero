@@ -541,8 +541,9 @@ const childAllowance=JSON.parse(fs.readFileSync(
   path.join(CONTENT_ROOT,'support','child-allowance-2026.json'),'utf8'
 ));
 if(childAllowance.slug!=='child-allowance-2026'
-   ||childAllowance.updatedAt!=='2026-11-15'
-   ||childAllowance.reviewedAt!=='2026-11-15') {
+   ||childAllowance.updatedAt<'2026-11-15'
+   ||childAllowance.reviewedAt<'2026-11-15'
+   ||childAllowance.reviewedAt>childAllowance.updatedAt) {
   throw new Error('Child allowance legal-review date or article identity reverted');
 }
 for(const url of [
@@ -552,20 +553,20 @@ for(const url of [
   'https://www.ep.go.kr/dong/selectBbsNttView.do?bbsNo=42&key=4141&nttNo=313956',
 ]) {
   const source=childAllowance.sources.find(s=>s.url===url);
-  if(!source||source.checkedAt!=='2026-11-15') {
+  if(!source||source.checkedAt<'2026-11-15') {
     throw new Error('2026 child allowance verified direct official source not preserved: '+url);
   }
 }
-// Old records were NOT reverified in November. Prevent false freshness
-// attribution when old source URLs survive the effective content hydration.
+// In the 2026-11-23 review, the original central application
+// records were checked again; require that evidence and their real dates.
 for(const url of [
-  'https://www.bokjiro.go.kr/ssis-tbu/ssis-tbu/twataa/wlfareInfo/moveTWAT52011M.do?wlfareInfoId=WLF00001171',
+  'https://www.bokjiro.go.kr/ssis-tbu/twataa/wlfareInfo/moveTWAT52011M.do?wlfareInfoId=WLF00001171&wlfareInfoReldBztpCd=01',
   'https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=14600000275&HighCtgCD=A05007&tp_seq=',
   'https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=13520000073',
 ]) {
   const source=childAllowance.sources.find(s=>s.url===url);
-  if(!source||source.checkedAt!=='2026-07-22') {
-    throw new Error('Original child allowance source verification date must remain historical: '+url);
+  if(!source||source.checkedAt!=='2026-11-23') {
+    throw new Error('2026-11-23 reverified child allowance source missing or stale: '+url);
   }
 }
 for(const phrase of [
@@ -604,8 +605,8 @@ if(!childAllowancePart2.includes('2026년 1월부터 소급')||
   throw new Error('Child allowance legacy-recipient process missing on continuation pages');
 }
 if(!childAllowanceHtml.includes('rel="canonical" href="'+SITE_URL+childAllowancePath+'"')
-  ||!childAllowanceHtml.includes('"dateModified":"2026-11-15"')
-  ||!sitemap.includes('<loc>'+SITE_URL+childAllowancePath+'</loc><lastmod>2026-11-15</lastmod>')) {
+  ||!childAllowanceHtml.includes('"dateModified":"2026-11-23"')
+  ||!sitemap.includes('<loc>'+SITE_URL+childAllowancePath+'</loc><lastmod>2026-11-23</lastmod>')) {
   throw new Error('Child allowance 2026 canonical, structured-data date or sitemap update lost');
 }
 for(const html of [childAllowancePart2,childAllowancePart3]) {
