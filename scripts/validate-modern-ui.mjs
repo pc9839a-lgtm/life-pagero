@@ -21,10 +21,12 @@ assert(home.includes('href="/finance/"'),'finance tools must remain accessible f
 const topicsHub=read('topics/index.html');
 assert(topicsHub.includes('href="/support/"')&&topicsHub.includes('href="/car/"'),
   'original support and car archives must remain discoverable from topic hub');
-assert((home.match(/data-affiliate="tenping-/g)||[]).length===2,'homepage affiliate density must be limited to two cards');
+assert(!/data-affiliate=|life-affiliate|life-sponsor-collection|iryan\\.kr/i.test(home),
+  'Tenping advertisement must not be present on homepage');
 assert((home.match(/data-life-coupang-kind="(?:middle|body)"/g)||[]).length===2,'homepage body ads changed');
 assert((home.match(/data-life-coupang-kind="rail"/g)||[]).length===1,'homepage rail ad changed');
-assert(home.indexOf('class="modern-sponsored-area"')>home.indexOf('class="modern-all-articles"'),'ads must follow primary information on home');
+assert(!home.includes('class="modern-sponsored-area"'),
+  'Empty legacy sponsored section must not remain on homepage');
 assert(!home.includes('class="portal-home-section portal-updates"'),'duplicated latest listing retained');
 let cardCount=0;
 for(const category of ['car','support']){
@@ -32,10 +34,12 @@ for(const category of ['car','support']){
   assert(html.includes('class="life-modern life-modern-category"'),'category redesign missing: '+category);
   assert(html.includes('id="modern-list-filter"')&&html.includes('id="modern-article-list"'),'searchable category missing: '+category);
   assert(html.includes('id="modern-list-empty"'),'empty-search state missing: '+category);
-  assert(html.includes('class="modern-sponsored-area"'),'sponsored disclosure below content missing: '+category);
+  assert(!html.includes('class="modern-sponsored-area"'),
+    'Retired sponsored wrapper must be gone: '+category);
   const posts=(html.match(/<article class="post-card">/g)||[]).length;
   assert(posts>2,'category cards missing: '+category);
-  assert(html.indexOf('class="modern-sponsored-area"')>html.indexOf('id="modern-article-list"'),'category ads placed before articles: '+category);
+  assert(!/data-affiliate=|iryan\\.kr|life-sponsor-collection/i.test(html),
+    'Category Tenping advertisements remain: '+category);
   cardCount+=posts;
 }
 assert(cardCount===publishedGuideCount,'published category article count changed: '+cardCount);
@@ -64,4 +68,4 @@ for(const file of walk(DIST).filter(x=>x.endsWith('.html'))){
   pages++;
 }
 assert(pages>=140,'sitewide modern theme coverage incomplete: '+pages);
-console.log('[modern-qa] '+pages+' pages, six categories, '+cardCount+' linked article cards, '+publishedGuideCount+' untouched editorial bodies, mobile CSS, working search/filters, canonical and affiliate integrity verified.');
+console.log('[modern-qa] '+pages+' pages, six categories, '+cardCount+' linked article cards, '+publishedGuideCount+' untouched editorial bodies, mobile CSS, working search/filters, canonical and retired-Tenping removal verified.');
