@@ -18,7 +18,7 @@ check(count(home,/<li><a href="/g)>=3,'Home has lost popular links');
 check(count(home.match(/<section class="compact-popular"[\s\S]*?<\/section>/)?.[0]||'',/<li><a href="/g)===3,
   'Homepage popular section must have precisely three links');
 check(home.includes('href="/today/"'),'Dedicated Today page link must remain available');
-check(!/data-affiliate=|life-affiliate|life-sponsor-collection|iryan\\.kr/i.test(home),
+check(!/data-affiliate=|life-affiliate|life-sponsor-collection|iryan\.kr/i.test(home),
   'Retired Tenping advertisement found on homepage');
 check(count(home,/data-life-coupang-kind="(?:body|middle)"/g)===2,'Homepage sponsor count changed');
 const actualArticles=[];
