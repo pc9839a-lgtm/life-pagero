@@ -143,10 +143,8 @@ for(const route of ['/finance/loan-payment/','/finance/savings-calculator/','/to
   check(home.includes('class="life-home-tool-link" href="'+route+'"'),
     'calculator entry missing: '+route);
 }
-const sponsorPosition=home.indexOf('<section class="modern-sponsored-area"');
-const archivePosition=home.indexOf('<details class="modern-all-articles">');
-check(sponsorPosition>0 && archivePosition>sponsorPosition,
-  'original full-width ad section must appear before deep article archive');
+check(!home.includes('class="modern-sponsored-area"'),
+  'Retired sponsor section must be fully removed from homepage');
 const editorialStyle=read('life-editorial-20261106.css');
 check(editorialStyle.includes('.life-editorial .nav-inner{display:grid;grid-template-columns:repeat(8,minmax(0,1fr))') &&
       editorialStyle.includes('.life-editorial .nav-inner{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))') &&
@@ -192,8 +190,8 @@ check((home.match(/class="portal-topic-card compact-topic"/g)||[]).length===6,
   'six original topic links lost');
 check(home.includes('<details class="compact-explore compact-latest" open>'),
   'recently updated original articles still hidden');
-check((home.match(/data-affiliate="tenping-/g)||[]).length===2,
-  'affiliate density must stay reduced on homepage');
+check(!/data-affiliate=|life-affiliate|life-sponsor-collection|iryan\\.kr/i.test(home),
+  'Retired Tenping ads or destination links found on homepage');
 check((home.match(/data-life-coupang-banner="sitewide-v4"/g)||[]).length===1,
   'homepage must show exactly one Coupang banner');
 check((home.match(/data-life-coupang-kind="body"/g)||[]).length===1 &&
@@ -273,4 +271,4 @@ for(const marker of [
  '@media(max-width:700px)',
  'max-width:none'
 ])check(style.includes(marker),'editorial CSS missing critical rule: '+marker);
-console.log('[editorial-qa] PASS '+checked+' pages, '+publishedGuideCount+' fully open articles, one stylesheet, 4 live info sources, original ads, finance/calculator and canonical links.');
+console.log('[editorial-qa] PASS '+checked+' pages, '+publishedGuideCount+' fully open articles, one stylesheet, 4 live info sources, Coupang placement, finance/calculator and canonical links.');
