@@ -42,7 +42,6 @@ const steps = [
   ['node', ['scripts/add-naver-verification.mjs']],
   ['node', ['scripts/adsense-readiness.mjs']],
   ['node', ['scripts/add-reader-decision-guides.mjs']],
-  ['node', ['scripts/inject-tenping-ad.mjs']],
   ['node', ['scripts/inject-coupang-ad.mjs']],
   ['node', ['scripts/verify-editorial-depth.mjs']],
   ['node', ['scripts/remove-editorial-fluff.mjs']],
@@ -103,6 +102,8 @@ const steps = [
   ['node', ['scripts/verify-published-rss.mjs']],
   ['node', ['scripts/verify-seo-search-snippets.mjs']],
   ['node', ['scripts/verify-internal-link-graph.mjs']],
+  // Fail the release if a publisher HTML/JS/CSS asset still carries Tenping.
+  ['node', ['scripts/verify-no-tenping.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);
