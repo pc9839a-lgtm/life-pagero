@@ -202,19 +202,8 @@ const transformHome=html=>{
   check(html.includes(toolAnchor),'latest articles missing for tool placement');
   html=html.replace(toolAnchor,toolSection+toolAnchor);
 
-  // Move existing labelled ads above the deep archive, not below every other block.
-  const sponsorOpen='<section class="modern-sponsored-area" aria-label="광고 및 제휴">';
-  const sponsorStart=html.indexOf(sponsorOpen);
-  const sponsorClose='</section></div><aside class="sidebar">';
-  const sponsorEnd=html.indexOf(sponsorClose,sponsorStart);
-  check(sponsorStart>0 && sponsorEnd>sponsorStart,'sponsored section boundary missing');
-  const sponsorSection=html.slice(sponsorStart,sponsorEnd+'</section>'.length);
-  html=html.slice(0,sponsorStart)+html.slice(sponsorEnd+'</section>'.length);
-  const sponsorTarget='<details class="modern-all-articles">';
-  check(html.includes(sponsorTarget),'cannot relocate preserved sponsors');
-  html=html.replace(sponsorTarget,sponsorSection+sponsorTarget);
-  check((html.match(/data-affiliate="tenping-/g)||[]).length===2,'homepage should retain exactly two labelled affiliate cards');
-
+  // The old Tenping sponsorship section has been deleted. The final
+  // homepage still retains one existing Coupang unit below the article archive.
   const latest='<details class="compact-explore compact-latest">';
   check(html.includes(latest),'home recently updated posts missing');
   // Readers should not need to open an accordion to see actual articles.
