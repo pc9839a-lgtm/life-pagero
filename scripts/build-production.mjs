@@ -102,6 +102,7 @@ const steps = [
   ['node', ['scripts/verify-published-rss.mjs']],
   ['node', ['scripts/verify-seo-search-snippets.mjs']],
   ['node', ['scripts/verify-internal-link-graph.mjs']],
+  ['node', ['scripts/verify-adsense-editorial-quality.mjs']],
   // Fail the release if a publisher HTML/JS/CSS asset still carries Tenping.
   ['node', ['scripts/verify-no-tenping.mjs']],
 ];
