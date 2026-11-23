@@ -15,10 +15,10 @@ yes((home.match(/data-life-coupang-kind="(?:body|middle)"/g)||[]).length===2,
   'existing homepage body advertising count changed');
 yes((home.match(/data-life-coupang-kind="rail"/g)||[]).length===1,
   'sidebar advertising count changed');
-yes((home.match(/data-affiliate="tenping-/g)||[]).length===2,
-  'existing affiliate card placement changed');
-yes(home.includes('class="modern-sponsored-area"'),
-  'existing advertisements lost');
+yes(!/data-affiliate=|life-affiliate|life-sponsor-collection|iryan\.kr/i.test(home),
+  'Retired Tenping advertisements must not appear on homepage');
+yes(!home.includes('class="modern-sponsored-area"'),
+  'Retired sponsored wrapper must not remain on homepage');
 yes((home.match(/href="\/today\/"/g)||[]).length>=1,
   'home not linked to today page');
 for(const [name,html,canonical] of [
@@ -148,4 +148,4 @@ yes(!index.some(x=>x.url.includes('today/api')),'API must never be in public sea
 for(const name of ['today-dashboard.css','today-dashboard.js']){
   yes(fs.statSync(path.join(DIST,name)).size>2500,'dashboard asset not generated: '+name);
 }
-console.log('[today-qa] /today/ weather, news, FX, crypto; finance/markets stocks unchanged; SEO, ads and mobile passed.');
+console.log('[today-qa] /today/ weather, news, FX, crypto; finance/markets stocks unchanged; SEO, Coupang placement, Tenping removal and mobile passed.');

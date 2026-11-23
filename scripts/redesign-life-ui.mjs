@@ -39,20 +39,8 @@ function redesignHome(html){
   // The separate updates list repeats the verified latest-article cards and
   // needlessly extends the landing page. Keep the full article archive below.
   html=html.replace(/<section class="portal-home-section portal-updates"[\s\S]*?<\/section>/,'');
-  // Preserve every sponsor with its identifiers, script and disclosure. Move
-  // it after editorial navigation and articles so information comes first.
-  const sponsored=[];
-  html=moveBlock(html,
-    /<div class="life-affiliate-placement life-affiliate-placement--top">[\s\S]*?<\/aside><\/div>/,
-    sponsored);
-  html=moveBlock(html,
-    /<section class="section life-sponsor-collection[^"]*"[^>]*>[\s\S]*?<\/section>/,
-    sponsored);
-  html=moveBlock(html,
-    /<aside class="life-coupang-placement life-coupang-placement--(?:middle|body)"[\s\S]*?<\/aside>/g,
-    sponsored);
-  check(sponsored.length===3,'expected two lower affiliate blocks and two original Coupang body units in three wrappers; got '+sponsored.length);
-
+  // Tenping sponsor units are no longer generated; keep the archive and
+  // publisher-owned Coupang units for the final placement pass.
   const archiveStart=html.indexOf('<section class="section life-archive"');
   check(archiveStart>=0,'sitewide archive missing');
   const archiveEnd=html.indexOf('</div></section>',archiveStart);
@@ -63,14 +51,6 @@ function redesignHome(html){
     archive+'</details>';
   html=html.slice(0,archiveStart)+wrapped+html.slice(end);
 
-  const rail='<aside class="sidebar">';
-  const anchor='</div>'+rail;
-  check(html.includes(anchor),'home main/sidebar wrapper missing');
-  const sponsorBlock='<section class="modern-sponsored-area" aria-label="광고 및 제휴">'+
-    '<div class="modern-section-heading"><h2>광고 · 제휴</h2></div>'+
-    sponsored.join('')+'</section>';
-  html=html.replace(anchor,sponsorBlock+'</div>'+rail);
-  check(html.includes('data-life-affiliate-layout="wide-v2"'),'affiliate version marker lost');
   return html;
 }
 function redesignCategory(html, category){
@@ -88,14 +68,7 @@ function redesignCategory(html, category){
   html=html.replace('</div></section></div><aside class="sidebar">',
     '<p id="modern-list-empty" class="modern-empty" hidden>검색 결과가 없습니다. 다른 검색어를 입력해 보세요.</p></div></section></div><aside class="sidebar">');
 
-  // Related sponsor cards stay clearly marked, but below the article list.
-  const moved=[];
-  html=moveBlock(html,
-    /<section class="section life-sponsor-collection[^"]*"[^>]*>[\s\S]*?<\/section>/,
-    moved);
-  check(moved.length===1,'category sponsor block missing: '+category);
-  html=html.replace('</div><aside class="sidebar">',
-    '<div class="modern-sponsored-area">'+moved.join('')+'</div></div><aside class="sidebar">');
+  // Keep category article filtering without the retired sponsorship area.
   return html;
 }
 function decorate(file){
@@ -128,4 +101,4 @@ for(const file of walk(DIST).filter(file=>file.endsWith('.html'))){
   if(decorate(file))processed++;
 }
 check(processed>=140,'expected generated LIFE HTML coverage, got '+processed);
-console.log('[modern-ui] Redesigned '+processed+' pages, six visual subject cards, category filters, and content-first sponsor order. Editorial HTML and ad identifiers preserved.');
+console.log('[modern-ui] Redesigned '+processed+' pages, six subject cards and category filters; Tenping sponsorship markup retired.');
