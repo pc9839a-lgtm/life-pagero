@@ -190,7 +190,7 @@ check((home.match(/class="portal-topic-card compact-topic"/g)||[]).length===6,
   'six original topic links lost');
 check(home.includes('<details class="compact-explore compact-latest" open>'),
   'recently updated original articles still hidden');
-check(!/data-affiliate=|life-affiliate|life-sponsor-collection|iryan\\.kr/i.test(home),
+check(!/data-affiliate=|life-affiliate|life-sponsor-collection|iryan\.kr/i.test(home),
   'Retired Tenping ads or destination links found on homepage');
 check((home.match(/data-life-coupang-banner="sitewide-v4"/g)||[]).length===1,
   'homepage must show exactly one Coupang banner');
