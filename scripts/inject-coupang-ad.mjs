@@ -104,6 +104,11 @@ let filesChanged = 0;
 let adsPlaced = 0;
 for (const file of walk(DIST).filter(file => file.endsWith('.html'))) {
   const relative = path.relative(DIST, file).replaceAll(path.sep, '/');
+  // Content-first review: do not insert monetization widgets on the
+  // 64 original information articles or their 128 noindex continuations.
+  // This leaves the company's chosen banners on the homepage, category
+  // archives and utility pages; shopping intent pages stay untouched.
+  if (/^(?:car|support)\/[^/]+\/(?:[23]\/)?index\.html$/.test(relative)) continue;
   let html = fs.readFileSync(file, 'utf8');
   if (html.includes(MARKER) || !html.includes('</head>') || !html.includes('</main>')) continue;
   const previous = html;
@@ -114,25 +119,6 @@ for (const file of walk(DIST).filter(file => file.endsWith('.html'))) {
   } else if (/^(car|support)\/index\.html$/.test(relative)) {
     // Only one end-of-category affiliate widget, after the article cards.
     html = insertBefore(html, '</div></section></div><aside class="sidebar">');
-  } else if (/^(car|support)\/[^/]+\/index\.html$/.test(relative)) {
-    // Use factual article paragraphs for ad spacing; never reintroduce
-    // artificial headings, summaries or editor notes just to anchor ads.
-    function inPart(content, partNo, nth, fragment) {
-      const marker = '<!-- life-body-part-' + partNo + ' -->';
-      const start = content.indexOf(marker);
-      if (start < 0) throw new Error('[coupang] Missing real article part ' + partNo + ': ' + relative);
-      const next = content.indexOf('<!-- life-body-part-' + (partNo + 1) + ' -->', start);
-      const limit = next > 0 ? next : content.indexOf('<div class="disclaimer">', start);
-      const segment = content.slice(start, limit > start ? limit : undefined);
-      const paras = [...segment.matchAll(/<\/p>/g)];
-      const index = paras.length
-        ? start + paras[Math.min(nth - 1, paras.length - 1)].index + '</p>'.length
-        : start + marker.length;
-      return content.slice(0, index) + fragment + content.slice(index);
-    }
-    html = inPart(html, 2, 2, block('middle'));
-  } else if (/^(car|support)\/[^/]+\/[23]\/index\.html$/.test(relative)) {
-    html = insertBefore(html, '<section class="source-box">');
   } else {
     html = insertBefore(html, '</main>');
   }
@@ -159,5 +145,5 @@ for (const file of walk(DIST).filter(file => file.endsWith('.html'))) {
   adsPlaced += bodyUnits + railUnits;
 }
 
-if (!filesChanged) throw new Error('[coupang] No HTML pages updated.');
-console.log('[coupang] ' + adsPlaced + ' larger body/rail slots in ' + filesChanged + ' HTML pages.');
+if (filesChanged < 4) throw new Error('[coupang] Expected the existing homepage and archive placements.');
+console.log('[coupang] review-mode: '+adsPlaced+' labelled placements in '+filesChanged+' non-article HTML pages; 192 information/article continuations intentionally ad-free.');
