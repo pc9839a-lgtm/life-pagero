@@ -105,6 +105,7 @@ const steps = [
   ['node', ['scripts/verify-adsense-editorial-quality.mjs']],
   // Fail the release if a publisher HTML/JS/CSS asset still carries Tenping.
   ['node', ['scripts/verify-no-tenping.mjs']],
+  ['node', ['scripts/verify-adsense-content-first.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);
