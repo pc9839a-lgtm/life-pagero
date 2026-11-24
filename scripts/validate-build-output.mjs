@@ -238,8 +238,8 @@ for (const post of posts) {
 
 const htmlFiles = walk(DIST).filter((file) => file.endsWith('.html'));
 
-// Coupang Partners: validate large desktop body units, the right-rail unit,
-// the mobile fallback and one third-party loader per generated HTML page.
+// Review mode: all 192 government/auto information article pages carry no
+// affiliate ad scripts. Validate original layout on remaining non-article pages.
 const coupangCss = fs.readFileSync(path.join(DIST, 'coupang-banner.css'), 'utf8');
 for (const token of ['1320px', 'max-width:300px', 'max-width:320px', '.life-coupang-placement--rail{display:none}']) {
   if (!coupangCss.includes(token)) throw new Error('Coupang layout rule missing: ' + token);
@@ -249,7 +249,8 @@ for (const file of htmlFiles) {
   const html = fs.readFileSync(file, 'utf8');
   if (!html.includes('</main>')) continue;
 
-  const expectedBody = relative === 'index.html' ? 2 : 1;
+  const editorialArticle = /^(?:car|support)\/[^/]+\/(?:[23]\/)?index\.html$/.test(relative);
+  const expectedBody = editorialArticle ? 0 : relative === 'index.html' ? 2 : 1;
   const expectedRail = relative === 'index.html' && html.includes('<aside class="sidebar">') ? 1 : 0;
   const actualBody = count(html, /data-life-coupang-kind="(?:body|middle)"/g);
   const actualRail = count(html, /data-life-coupang-kind="rail"/g);
@@ -258,6 +259,14 @@ for (const file of htmlFiles) {
       + ' expected ' + expectedBody + '/' + expectedRail);
   }
   const total = expectedBody + expectedRail;
+  // No ad renderer, script, tracking ID or placeholder should load on
+  // informational articles during review. Official sources remain intact.
+  if (editorialArticle) {
+    if (/ads-partners\.coupang\.com|new PartnersCoupang\.G|coupang-banner\.css|life-coupang-placement|AF2358798/i.test(html)) {
+      throw new Error('AdSense content-first mode: third-party banner still in '+relative);
+    }
+    continue;
+  }
   if (count(html, /data-life-coupang-banner="sitewide-v4"/g) !== total) {
     throw new Error('Coupang placement marker count mismatch: ' + relative);
   }
