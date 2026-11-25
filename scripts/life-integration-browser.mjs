@@ -144,6 +144,33 @@ try{
     for(const route of routes)await inspectLayout(route,viewport);
   }
 
+  // 2026 government benefit comparison is a real browser interaction, not
+  // an ad-supported placeholder. Check valid and unsupported rate combinations.
+  await page.setViewportSize({width:360,height:760});
+  await open('/support/disabled-child-allowance-2026/','benefit-tool-live');
+  try{
+    await page.locator('#benefit-grade').selectOption('severe');
+    await page.locator('#benefit-group').selectOption('livelihood');
+    await page.locator('#benefit-place').selectOption('home');
+    const monthly=await page.locator('#benefit-monthly').innerText();
+    const annual=await page.locator('#benefit-annual').innerText();
+    expect(monthly==='220,000원' && annual==='2,640,000원','benefit-tool-live-home',
+      '2026 source schedule mismatch: '+monthly+' / '+annual);
+    await page.locator('#benefit-place').selectOption('facility');
+    expect((await page.locator('#benefit-monthly').innerText())==='90,000원',
+      'benefit-tool-live-facility','Facility benefit did not recalculate');
+    await page.locator('#benefit-group').selectOption('housing');
+    const invalid=await page.locator('#benefit-monthly').innerText();
+    const reason=await page.locator('#benefit-explanation').innerText();
+    expect(invalid==='—'&&reason.includes('주민센터'),
+      'benefit-tool-live-unsupported','Undefined facility benefit was invented: '+invalid);
+    const horizontal=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
+    expect(horizontal<=2,'benefit-tool-live-responsive',
+      'New comparison form causes horizontal overflow: '+horizontal);
+  }catch(error){
+    fail('benefit-tool-live-browser',String(error?.message||error));
+  }
+
   await page.setViewportSize({width:360,height:760});
   await open('/search/?q='+encodeURIComponent('대출 이자 계산'),'search-query');
   try{
