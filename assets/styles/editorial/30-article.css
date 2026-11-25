@@ -39,3 +39,14 @@
 .life-editorial.life-modern-article .benefit-compare-source,.life-editorial.life-modern-article .benefit-compare-caution{margin:0 0 7px;font-size:12px;line-height:1.7;color:#596474}
 .life-editorial.life-modern-article .benefit-compare-source a{text-decoration:underline;text-underline-offset:2px}
 @media(max-width:700px){.life-editorial.life-modern-article .benefit-compare{padding:16px;margin:20px 0 24px}.life-editorial.life-modern-article .benefit-compare-fields,.life-editorial.life-modern-article .benefit-compare-result{grid-template-columns:1fr}.life-editorial.life-modern-article .benefit-compare-result strong{font-size:22px}}
+
+/* On 360px phones the legacy .series-photo {-18px margins} pushes the
+   original editorial photo from -6px to 366px. Keep images inside the article
+   column; tables remain individually scrollable for their full data width. */
+@media(max-width:680px){
+  .life-editorial.life-modern-article .series-photo,
+  .life-editorial.life-modern-article .series-full-part>.series-photo{
+    box-sizing:border-box;margin-left:0;margin-right:0;max-width:100%;width:100%
+  }
+  .life-editorial.life-modern-article .series-photo img{display:block;width:100%;max-width:100%;height:auto}
+}
