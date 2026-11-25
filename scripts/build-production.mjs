@@ -33,6 +33,7 @@ const steps = [
   ['node', ['--check', 'public/today-dashboard.js']],
   ['node', ['--check', 'public/events-ui.js']],
   ['node', ['--test', 'scripts/events.test.mjs']],
+  ['node', ['--test', 'scripts/disability-child-allowance-tool.test.mjs']],
   [npm, ['run', 'validate:content']],
   ['node', ['scripts/build.mjs']],
   ['node', ['scripts/build-editorial-css.mjs']],
@@ -73,6 +74,8 @@ const steps = [
   ['node', ['scripts/verify-global-navigation.mjs']],
   ['node', ['scripts/verify-sitewide-clean-ui.mjs']],
   ['node', ['scripts/build-editorial-life.mjs']],
+  // Visible original user utility inserted only after the content-first layout.
+  ['node', ['scripts/add-disability-child-benefit-tool.mjs']],
   ['node', ['scripts/add-article-section-navigation.mjs']],
   ['node', ['scripts/verify-editorial-life.mjs']],
   ['node', ['scripts/verify-life-visual-consistency.mjs']],
@@ -106,6 +109,7 @@ const steps = [
   // Fail the release if a publisher HTML/JS/CSS asset still carries Tenping.
   ['node', ['scripts/verify-no-tenping.mjs']],
   ['node', ['scripts/verify-adsense-content-first.mjs']],
+  ['node', ['scripts/verify-disability-child-benefit-tool.mjs']],
 ];
 
 console.log(`[build] PUBLIC_SITE_URL=${canonicalSiteUrl}`);
