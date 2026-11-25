@@ -28,6 +28,7 @@ const PROTECTED_EDITORIAL_POSTS = new Set([
   'content/posts/support/basic-pension-2026.json',
   'content/posts/support/disability-allowance-2026.json',
   'content/posts/support/disabled-child-allowance-2026.json',
+  'content/posts/support/first-meeting-voucher-2026.json',
   'content/posts/support/child-allowance-2026.json',
   'content/posts/car/car-tax-annual-payment-2026.json',
   'content/posts/car/car-tax-second-half-2026.json',
