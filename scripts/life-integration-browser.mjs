@@ -165,6 +165,16 @@ try{
     expect(invalid==='—'&&reason.includes('주민센터'),
       'benefit-tool-live-unsupported','Undefined facility benefit was invented: '+invalid);
     const horizontal=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
+    if(horizontal>2){
+      const outliers=await page.evaluate(()=>[...document.querySelectorAll('body *')]
+        .map(el=>{
+          const rect=el.getBoundingClientRect();
+          return {tag:el.tagName,cls:String(el.className).slice(0,80),id:el.id,
+            left:Math.round(rect.left),right:Math.round(rect.right),
+            width:Math.round(rect.width)};
+        }).filter(x=>x.width>0&&x.right>window.innerWidth+2).slice(0,12));
+      console.error('[browser-qa] benefit-tool-overflow-elements '+JSON.stringify(outliers));
+    }
     expect(horizontal<=2,'benefit-tool-live-responsive',
       'New comparison form causes horizontal overflow: '+horizontal);
   }catch(error){
