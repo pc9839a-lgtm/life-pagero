@@ -21,3 +21,21 @@
 .life-editorial.life-modern-article .sidebar{max-width:1060px;margin-left:auto;margin-right:auto}
 .life-editorial.life-modern-article .disclaimer{font-size:12px;line-height:1.7;color:#7b848f}
 
+
+/* 2026 child benefit quick comparison: original utility; no extra visual system. */
+.life-editorial.life-modern-article .benefit-compare{margin:24px 0 28px;padding:22px;border:1px solid var(--line);background:#fff;border-radius:10px}
+.life-editorial.life-modern-article .benefit-compare-head h2{margin:0 0 8px;font-size:21px;line-height:1.4;color:var(--life-heading-color)}
+.life-editorial.life-modern-article .benefit-compare-head p{margin:0 0 20px;font-size:14px;line-height:1.7;color:#4b5563}
+.life-editorial.life-modern-article .benefit-compare-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.life-editorial.life-modern-article .benefit-compare-fields label{display:block;min-width:0;font-size:13px;font-weight:720;color:#303841}
+.life-editorial.life-modern-article .benefit-compare-fields label span{display:block;margin:0 0 6px}
+.life-editorial.life-modern-article .benefit-compare-fields select{box-sizing:border-box;display:block;width:100%;height:44px;min-width:0;padding:0 10px;font:inherit;font-weight:500;color:#1f2937;background:#fff;border:1px solid #bdc7d0;border-radius:6px}
+.life-editorial.life-modern-article .benefit-compare-fields select:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.life-editorial.life-modern-article .benefit-compare-result{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0 12px;padding:16px;background:#f7f9fb;border-radius:8px}
+.life-editorial.life-modern-article .benefit-compare-result div{display:flex;flex-direction:column;gap:6px}
+.life-editorial.life-modern-article .benefit-compare-result span{font-size:12px;color:#515d6a}
+.life-editorial.life-modern-article .benefit-compare-result strong{font-size:23px;color:var(--brand);font-variant-numeric:tabular-nums}
+.life-editorial.life-modern-article .benefit-compare-explanation{margin:0 0 12px;font-size:14px;line-height:1.7;color:#303841}
+.life-editorial.life-modern-article .benefit-compare-source,.life-editorial.life-modern-article .benefit-compare-caution{margin:0 0 7px;font-size:12px;line-height:1.7;color:#596474}
+.life-editorial.life-modern-article .benefit-compare-source a{text-decoration:underline;text-underline-offset:2px}
+@media(max-width:700px){.life-editorial.life-modern-article .benefit-compare{padding:16px;margin:20px 0 24px}.life-editorial.life-modern-article .benefit-compare-fields,.life-editorial.life-modern-article .benefit-compare-result{grid-template-columns:1fr}.life-editorial.life-modern-article .benefit-compare-result strong{font-size:22px}}
